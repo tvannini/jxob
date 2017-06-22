@@ -1,0 +1,369 @@
+date/time         : 2007-05-02, 10:45:26, 272ms
+computer name     : SONYVAIO
+user name         : alessio <admin>
+operating system  : Windows XP Service Pack 2 build 2600
+system language   : Italian
+system up time    : 15 hours 9 minutes
+program up time   : 5 seconds
+processor         : Intel(R) Pentium(R) M processor 1.73GHz
+physical memory   : 249/1014 MB (free/total)
+free disk space   : (C:) 1,26 GB (D:) 8,48 GB
+display mode      : 1280x800, 32 bit
+process id        : $1c0
+allocated memory  : 21,41 MB
+executable        : o2generator.exe
+exec. date/time   : 2007-05-02 10:45
+madExcept version : 3.0b
+callstack crc     : $f60bd411, $c3b03866, $c3b03866
+exception number  : 1
+exception class   : EAccessViolation
+exception message : Access violation at address 0071D207 in module 'o2generator.exe'. Read of address 00000010.
+
+main thread ($a7c):
+0071d207 +a497 o2generator.exe MidasLib             DllGetDataSnapClassObject
+005775f5 +0025 o2generator.exe DBClient             TCustomClientDataSet.BookmarkValid
+0077ef27 +0047 o2generator.exe checkprg    2002  +5 Tf_checkprg.ripristina_posizioniExecute
+00474fdb +000f o2generator.exe Classes              TBasicAction.Execute
+004dd155 +0031 o2generator.exe ActnList             TContainedAction.Execute
+004dddf7 +004f o2generator.exe ActnList             TCustomAction.Execute
+0081f491 +0119 o2generator.exe work        6246 +11 Tf_work.salvaExecute
+00474fdb +000f o2generator.exe Classes              TBasicAction.Execute
+004dd155 +0031 o2generator.exe ActnList             TContainedAction.Execute
+004dddf7 +004f o2generator.exe ActnList             TCustomAction.Execute
+00474eaf +0013 o2generator.exe Classes              TBasicActionLink.Execute
+004e3973 +008f o2generator.exe Menus                TMenuItem.Click
+004e4d46 +00ee o2generator.exe Menus                DoClick
+004e4e5e +00b2 o2generator.exe Menus                TMenu.IsShortCut
+004ef112 +0056 o2generator.exe Forms                TCustomForm.IsShortCut
+004d6a62 +0066 o2generator.exe Controls             TWinControl.IsMenuKey
+004d6aad +001d o2generator.exe Controls             TWinControl.CNKeyDown
+004d1d34 +0188 o2generator.exe Controls             TControl.WndProc
+004d4d9f +0157 o2generator.exe Controls             TWinControl.WndProc
+004aa693 +0083 o2generator.exe ComCtrls             TCustomTreeView.WndProc
+005a5a02 +0012 o2generator.exe WinSubClass  540  +2 TSkinControl.Default
+005a599e +0032 o2generator.exe WinSubClass  528  +4 TSkinControl.NewWndProc
+004d4a1c +002c o2generator.exe Controls             TWinControl.MainWndProc
+00475c90 +0014 o2generator.exe Classes              StdWndProc
+7c91eae0 +0010 ntdll.dll                            KiUserCallbackDispatcher
+
+thread $2d8:
+7c91eb94 +00 ntdll.dll                 KiFastSystemCallRet
+7c91e9be +0a ntdll.dll                 NtWaitForSingleObject
+7c8025c5 +85 kernel32.dll              WaitForSingleObjectEx
+7c80252d +0d kernel32.dll              WaitForSingleObject
+77c0a3ad +a6 msvcrt.dll                _endthreadex
+0044d8d5 +0d o2generator.exe madExcept CallThreadProcSafe
+0044d93f +37 o2generator.exe madExcept ThreadExceptFrame
+>> created by main thread ($a7c) at:
+77c0a43d +62 msvcrt.dll                _beginthreadex
+
+thread $168:
+7c91eb94 +0 ntdll.dll  KiFastSystemCallRet
+7c91d85a +a ntdll.dll  NtDelayExecution
+
+thread $1ac:
+7c91eb94 +0 ntdll.dll  KiFastSystemCallRet
+7c91e319 +a ntdll.dll  NtRemoveIoCompletion
+
+modules:
+00400000 o2generator.exe                     D:\o2generator
+02b30000 btwpimif.dll       3.0.1.912        C:\WINDOWS\system32
+02b60000 CSH.dll            2.0.39.0         C:\WINDOWS\system32
+02c80000 btneighborhood.dll 3.0.1.912        C:\WINDOWS\system32
+02db0000 wbtapi.dll         3.0.1.912        C:\WINDOWS\system32
+02e80000 msi.dll            3.1.4000.2435    C:\WINDOWS\system32
+03150000 btosif.dll         3.0.1.912        C:\WINDOWS\system32
+03170000 btrez.dll          3.0.1.912        C:\WINDOWS\system32
+035b0000 CAPTLIB.DLL        4.0.5.6          C:\Programmi\Babylon
+03d80000 btkeyind.dll                        C:\Programmi\WIDCOMM\Software Bluetooth
+10000000 TrtseShl.dll       1.8.30.1         C:\Programmi\TortoiseCVS
+5b180000 uxtheme.dll        6.0.2900.2180    C:\WINDOWS\system32
+5bc70000 netapi32.dll       5.1.2600.2976    C:\WINDOWS\system32
+5d4d0000 comctl32.dll       5.82.2900.2982   C:\WINDOWS\system32
+5f210000 olepro32.dll       5.1.2600.2180    C:\WINDOWS\system32
+61e00000 MFC42LOC.DLL       6.0.8665.0       C:\WINDOWS\system32
+71a20000 WS2HELP.dll        5.1.2600.2180    C:\WINDOWS\system32
+71a30000 WS2_32.dll         5.1.2600.2180    C:\WINDOWS\system32
+71a50000 wsock32.dll        5.1.2600.2180    C:\WINDOWS\system32
+71aa0000 mpr.dll            5.1.2600.2180    C:\WINDOWS\system32
+71b80000 SAMLIB.dll         5.1.2600.2180    C:\WINDOWS\System32
+71ba0000 ntlanman.dll       5.1.2600.2180    C:\WINDOWS\System32
+71c10000 NETRAP.dll         5.1.2600.2180    C:\WINDOWS\System32
+71c20000 NETUI1.dll         5.1.2600.2180    C:\WINDOWS\System32
+71c60000 NETUI0.dll         5.1.2600.2180    C:\WINDOWS\System32
+72f70000 winspool.drv       5.1.2600.2180    C:\WINDOWS\system32
+73d40000 MFC42.DLL          6.2.4131.0       C:\WINDOWS\system32
+746b0000 MSCTF.dll          5.1.2600.2180    C:\WINDOWS\system32
+74a70000 CFGMGR32.dll       5.1.2600.2180    C:\WINDOWS\system32
+75f10000 drprov.dll         5.1.2600.2180    C:\WINDOWS\System32
+75f20000 davclnt.dll        5.1.2600.2180    C:\WINDOWS\System32
+76030000 MSVCP60.dll        6.2.3104.0       C:\WINDOWS\system32
+76340000 imm32.dll          5.1.2600.2180    C:\WINDOWS\system32
+76360000 comdlg32.dll       6.0.2900.2180    C:\WINDOWS\system32
+765b0000 CSCDLL.dll         5.1.2600.2180    C:\WINDOWS\System32
+76890000 CRYPTUI.dll        5.131.2600.2180  C:\WINDOWS\system32
+76950000 ntshrui.dll        5.1.2600.2180    C:\WINDOWS\system32
+76980000 USERENV.dll        5.1.2600.2180    C:\WINDOWS\system32
+76ae0000 ATL.DLL            3.5.2284.0       C:\WINDOWS\system32
+76b00000 winmm.dll          5.1.2600.2180    C:\WINDOWS\system32
+76bf0000 WINTRUST.dll       5.131.2600.2180  C:\WINDOWS\system32
+76c50000 IMAGEHLP.dll       5.1.2600.2180    C:\WINDOWS\system32
+76e40000 rtutils.dll        5.1.2600.2180    C:\WINDOWS\system32
+76e50000 rasman.dll         5.1.2600.2180    C:\WINDOWS\system32
+76e70000 TAPI32.dll         5.1.2600.2180    C:\WINDOWS\system32
+76ea0000 RASAPI32.dll       5.1.2600.2180    C:\WINDOWS\system32
+76f20000 WLDAP32.dll        5.1.2600.2180    C:\WINDOWS\system32
+76f90000 CLBCATQ.DLL        2001.12.4414.308 C:\WINDOWS\system32
+77010000 COMRes.dll         2001.12.4414.258 C:\WINDOWS\system32
+770f0000 oleaut32.dll       5.1.2600.2180    C:\WINDOWS\system32
+77180000 WININET.dll        6.0.2900.3020    C:\WINDOWS\system32
+773a0000 comctl32.dll       6.0.2900.2982    C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2982_x-ww_ac3f9c03
+774b0000 ole32.dll          5.1.2600.2726    C:\WINDOWS\system32
+77730000 shdocvw.dll        6.0.2900.3020    C:\WINDOWS\system32
+778f0000 SETUPAPI.dll       5.1.2600.2180    C:\WINDOWS\system32
+779f0000 cscui.dll          5.1.2600.2180    C:\WINDOWS\System32
+77a50000 CRYPT32.dll        5.131.2600.2180  C:\WINDOWS\system32
+77af0000 MSASN1.dll         5.1.2600.2180    C:\WINDOWS\system32
+77b10000 appHelp.dll        5.1.2600.2180    C:\WINDOWS\system32
+77bd0000 version.dll        5.1.2600.2180    C:\WINDOWS\system32
+77be0000 msvcrt.dll         7.0.2600.2180    C:\WINDOWS\system32
+77d10000 user32.dll         5.1.2600.2622    C:\WINDOWS\system32
+77da0000 RPCRT4.dll         5.1.2600.2180    C:\WINDOWS\system32
+77e40000 GDI32.dll          5.1.2600.2818    C:\WINDOWS\system32
+77e90000 SHLWAPI.dll        6.0.2900.3020    C:\WINDOWS\system32
+77f10000 Secur32.dll        5.1.2600.2180    C:\WINDOWS\system32
+77f40000 advapi32.dll       5.1.2600.2180    C:\WINDOWS\system32
+7c340000 MSVCR71.dll        7.10.3052.4      C:\WINDOWS\system32
+7c3a0000 MSVCP71.dll        7.10.3077.0      C:\WINDOWS\system32
+7c800000 kernel32.dll       5.1.2600.2945    C:\WINDOWS\system32
+7c910000 ntdll.dll          5.1.2600.2180    C:\WINDOWS\system32
+7c9d0000 shell32.dll        6.0.2900.2951    C:\WINDOWS\system32
+
+processes:
+000 Idle
+004 System                      normal
+3a4 smss.exe                    normal C:\WINDOWS\system32
+400 csrss.exe
+418 winlogon.exe                high   C:\WINDOWS\system32
+444 services.exe                normal C:\WINDOWS\system32
+450 lsass.exe                   normal C:\WINDOWS\system32
+4f0 svchost.exe                 normal C:\WINDOWS\system32
+528 svchost.exe
+60c svchost.exe                 normal C:\WINDOWS\System32
+630 EvtEng.exe                  normal C:\Programmi\Intel\Wireless\Bin
+7d8 S24EvMon.exe                normal C:\Programmi\Intel\Wireless\Bin
+0cc svchost.exe
+134 svchost.exe
+3d4 aswUpdSv.exe                normal C:\Programmi\Alwil Software\Avast4
+490 ashServ.exe                 high   C:\Programmi\Alwil Software\Avast4
+780 spoolsv.exe                 normal C:\WINDOWS\system32
+640 scardsvr.exe
+13c schedul2.exe                normal C:\Programmi\File comuni\Acronis\Schedule2
+1e0 svchost.exe
+218 btwdins.exe                 normal C:\Programmi\WIDCOMM\Software Bluetooth\bin
+4c0 crypserv.exe                high   C:\WINDOWS\system32
+284 inetinfo.exe                normal C:\WINDOWS\system32\inetsrv
+348 mdm.exe                     normal C:\Programmi\File comuni\Microsoft Shared\VS7Debug
+374 mysqld-nt.exe               normal C:\Programmi\MySQL\MySQL Server 5.0\bin
+314 RegSrvc.exe                 normal C:\Programmi\Intel\Wireless\Bin
+6a8 sp_rsser.exe                normal C:\Programmi\Spyware Terminator
+6d8 svchost.exe                 normal C:\WINDOWS\system32
+714 ULCDRSvr.exe                normal C:\Programmi\File comuni\Ulead Systems\DVD
+734 wdfmgr.exe
+8ac vmware-authd.exe            normal C:\Programmi\VMware\VMware Workstation
+958 vmount2.exe                 normal C:\Programmi\File comuni\VMware\VMware Virtual Image Editing
+9ac vmnat.exe                   normal C:\WINDOWS\system32
+a64 vmnetdhcp.exe               normal C:\WINDOWS\system32
+fd8 Explorer.EXE                normal C:\WINDOWS
+238 ashMaiSv.exe                normal C:\Programmi\Alwil Software\Avast4
+584 ashWebSv.exe                normal C:\Programmi\Alwil Software\Avast4
+c0c alg.exe
+d38 hkcmd.exe                   normal C:\WINDOWS\system32
+d94 igfxpers.exe                normal C:\WINDOWS\system32
+dcc RTHDCPL.EXE                 normal C:\WINDOWS
+808 vsnpstd.exe                 normal C:\WINDOWS
+97c SpywareTerminatorShield.exe normal C:\Programmi\Spyware Terminator
+b04 qttask.exe                  normal C:\Programmi\QuickTime
+b2c TrueImageMonitor.exe        normal C:\Programmi\Acronis\TrueImage
+b78 schedhlp.exe                normal C:\Programmi\File comuni\Acronis\Schedule2
+eec rundll32.exe                normal C:\WINDOWS\system32
+f00 ashDisp.exe                 normal C:\PROGRA~1\ALWILS~1\Avast4
+f58 winampa.exe                 normal C:\Programmi\Winamp
+f9c ZCfgSvc.exe                 normal C:\Programmi\Intel\Wireless\bin
+764 ifrmewrk.exe                normal C:\Programmi\Intel\Wireless\Bin
+bf8 jusched.exe                 normal C:\Programmi\Java\jre1.6.0\bin
+384 ctfmon.exe                  normal C:\WINDOWS\system32
+a00 Babylon.exe                 normal C:\Programmi\Babylon
+85c Skype.exe                   normal C:\Programmi\Skype\Phone
+660 feedreader.exe              normal C:\Programmi\FeedReader30
+7e8 BTTray.exe                  normal C:\Programmi\WIDCOMM\Software Bluetooth
+ea0 dslmon.exe                  normal C:\Programmi\SAGEM\SAGEM F@st 800-840
+ce0 getright.exe                normal C:\Programmi\GetRight
+ea4 getright.exe                normal C:\Programmi\GetRight
+a94 mRouterConfig.exe           normal C:\Programmi\Intuwave Ltd\Shared\mRouterRunTime
+a60 DesktopSuite.exe            normal C:\Programmi\Motorola\Motorola Desktop Suite
+ba4 mRouterRuntime.exe          normal C:\Programmi\Intuwave Ltd\Shared\mRouterRunTime
+db4 Dot1XCfg.exe                normal C:\Programmi\Intel\Wireless\Bin
+a5c SYMBIA~1.EXE                normal C:\PROGRA~1\Symbian\Shared\SYMBIA~1
+c98 SCBAL.exe                   normal C:\PROGRA~1\Symbian\Shared\SYMBIA~1
+570 SkypePM.exe                 normal C:\Programmi\Skype\Plugin Manager
+e84 igfxsrvc.exe                normal C:\WINDOWS\system32
+c58 thunderbird.exe             normal C:\Programmi\Mozilla Thunderbird
+8d0 firefox.exe                 normal C:\Programmi\Mozilla Firefox
+d00 delphi32.exe                normal C:\Programmi\Borland\Delphi7\Bin
+1c0 o2generator.exe             normal D:\o2generator
+
+hardware:
++ Acronis Devices
+  - Acronis TrueImage Backup Archive Explorer (driver 3-13-2002)
++ Batterie
+  - Batteria a metodo di controllo compatibile ACPI Microsoft
+  - Scheda AC Microsoft
++ Computer
+  - PC uniprocessore ACPI
++ Controller audio, video e giochi
+  - Audio Bluetooth (driver 3.0.1.912)
+  - Codec audio
+  - Codec video
+  - Driver audio precedenti
+  - Periferiche di acquisizione video precedenti
+  - Periferiche di Controllo supporto
+  - Realtek High Definition Audio (driver 5.10.0.5129)
++ Controller host bus IEEE 1394
+  - Controller host Texas Instruments IEEE 1394 compatibile OHCI
++ Controller IDE ATA/ATAPI
+  - Canale primario IDE
+  - Intel(R) 82801FB/FBM Ultra ATA Storage Controllers - 266F (driver 6.1.0.1004)
++ Controller USB (Universal serial bus)
+  - Hub principale USB
+  - Hub principale USB
+  - Hub principale USB
+  - Hub principale USB
+  - Hub principale USB
+  - Intel(R) 82801FB/FBM USB Universal Host Controller - 2658 (driver 6.0.0.1011)
+  - Intel(R) 82801FB/FBM USB Universal Host Controller - 2659 (driver 6.0.0.1011)
+  - Intel(R) 82801FB/FBM USB Universal Host Controller - 265A (driver 6.0.0.1011)
+  - Intel(R) 82801FB/FBM USB Universal Host Controller - 265B (driver 6.0.0.1011)
+  - Intel(R) 82801FB/FBM USB2 Enhanced Host Controller - 265C (driver 6.0.0.1011)
++ Human Interface Device (HID)
+  - Mouse USB Cypress
+  - Periferica di controllo del notebook Sony
++ Modem
+  - HDAUDIO SoftV92 Data Fax Modem with SmartCP (driver 7.28.0.50)
+  - Modem Bluetooth (driver 3.0.1.912)
++ Mouse e altre periferiche di puntamento
+  - Mouse compatibile PS/2
+  - Mouse USB Cypress
++ Periferiche di memoria Flash e PCMCIA
+  - Texas Instruments PCI7420 Integrated FlashMedia Controller (driver 2.0.4.3)
++ Periferiche di sistema
+  - Archiviazione volumi
+  - Batteria composita Microsoft
+  - Bus PCI
+  - Controller di accesso diretto alla memoria (DMA)
+  - Controller di interrupt programmabile (PIC)
+  - Controller integrato compatibile ACPI Microsoft
+  - Coperchio ACPI
+  - Coprocessore matematico
+  - Driver BIOS Microsoft System Management
+  - Driver mouse di Terminal Server
+  - Driver tastiera di Terminal Server
+  - Enumeratore di periferiche software Plug and Play
+  - Gestione dischi logici
+  - Intel(R) 82801 PCI Bridge - 2448 (driver 6.0.0.1013)
+  - Intel(R) 82801FB/FBM SMBus Controller - 266A (driver 6.0.0.1013)
+  - Intel(R) 82801FBM LPC Interface Controller - 2641 (driver 6.0.0.1013)
+  - Microsoft UAA Bus Driver for High Definition Audio
+  - Mobile Intel(R) 915GM/PM/GMS/910GML Express Processor to DRAM Controller - 2590 (driver 6.1.0.1008)
+  - Orologio di sistema CMOS a tempo reale
+  - Periferica aggiornamento microcodice
+  - Periferica hub firmware Intel(R) 82802
+  - Porta lettura dati ISAPNP
+  - Pulsante alimentazione ACPI
+  - Pulsante caratteristica ACPI fissa
+  - Redirector periferica Terminal Server
+  - Risorse scheda madre
+  - Sistema compatibile ACPI Microsoft
+  - Timer di sistema
+  - Zona termica ACPI
++ Porte (COM e LPT)
+  - Porta di comunicazione Bluetooth (COM7) (driver 3.0.1.912)
+  - Porta di comunicazione Bluetooth (COM8) (driver 3.0.1.912)
+  - Porta di comunicazione Bluetooth (COM9) (driver 3.0.1.912)
++ Processori
+  - Intel(R) Pentium(R) M processor 1.73GHz
++ RAM Disk
+  - Ramdisk [ QSoft ] (driver 5.0.1.0)
++ Schede di rete
+  - 1394 Net Adapter
+  - Driver del server di accesso alla rete LAN Bluetooth (driver 3.0.1.912)
+  - Intel(R) PRO/100 VE Network Connection (driver 8.0.15.0)
+  - Intel(R) PRO/Wireless 2200BG Network Connection (driver 9.0.4.27)
+  - Scheda Microsoft Loopback
+  - VMware Virtual Ethernet Adapter for VMnet1 (driver 4.0.0.0)
+  - VMware Virtual Ethernet Adapter for VMnet8 (driver 4.0.0.0)
++ Schede PCMCIA
+  - Controller CardBus generico
++ Schede video
+  - Mobile Intel(R) 915GM/GMS,910GML Express Chipset Family (driver 6.14.10.4333)
+  - Mobile Intel(R) 915GM/GMS,910GML Express Chipset Family (driver 6.14.10.4333)
++ Schermi
+  - Monitor Plug and Play
+  - Monitor Plug and Play
+  - Monitor Plug and Play
++ Tastiere
+  - Tastiera standard 101/102 tasti o Tastiera Microsoft Natural PS/2
++ Unità disco
+  - HTS421280H9AT00
+  - MemoryStick or MemoryStickPro Device
++ Unità DVD/CD-ROM
+  - PIONEER DVD-RW  DVR-K15
+
+cpu registers:
+eax = 0000000d
+ebx = 00fed45c
+ecx = 00000003
+edx = 00fed804
+esi = 00000000
+edi = 00000000
+eip = 0071d207
+esp = 0013fa84
+ebp = 0013fa90
+
+stack dump:
+0013fa84  28 9c 7a 03 00 00 00 00 - e8 97 f8 00 3c fb 13 00  (.z.........<...
+0013fa94  f8 75 57 00 5c d4 fe 00 - 00 00 00 00 68 a9 84 00  .uW.\.......h...
+0013faa4  f0 3f 7a 03 2d ef 77 00 - dc d4 4d 00 c8 b0 7a 03  .?z.-.w...M...z.
+0013fab4  de 4f 47 00 c8 b0 7a 03 - 5a d1 4d 00 98 fb 4b 02  .OG...z.Z.M...K.
+0013fac4  a8 dd 4d 00 c8 b0 7a 03 - fc dd 4d 00 c4 96 00 01  ..M...z...M.....
+0013fad4  96 f4 81 00 dc d4 4d 00 - 24 37 4c 02 de 4f 47 00  ......M.$7L..OG.
+0013fae4  24 37 4c 02 5a d1 4d 00 - 00 00 00 00 a8 dd 4d 00  $7L.Z.M.......M.
+0013faf4  24 37 4c 02 fc dd 4d 00 - a0 ff 4c 02 b4 4e 47 00  $7L...M...L..NG.
+0013fb04  a0 ff 4c 02 08 77 4b 02 - 76 39 4e 00 00 00 00 00  ..L..wK.v9N.....
+0013fb14  74 fb 13 00 49 4d 4e 00 - 48 fb 13 00 78 45 40 00  t...IMN.H...xE@.
+0013fb24  3c fb 13 00 00 00 00 00 - ac 4d 4e 00 78 fd 13 00  <........MN.x...
+0013fb34  98 74 4b 02 00 00 00 01 - 78 fb 13 00 63 4e 4e 00  .tK.....x...cNN.
+0013fb44  78 fb 13 00 54 fb 13 00 - 7f 4e 4e 00 78 fb 13 00  x...T....NN.x...
+0013fb54  2c fd 13 00 aa 4e 4e 00 - 78 fb 13 00 08 60 4b 02  ,....NN.x....`K.
+0013fb64  a4 55 4b 02 03 00 00 00 - 08 60 4b 02 91 41 53 40  .UK......`K..AS@
+0013fb74  08 77 4b 02 94 fb 13 00 - 17 f1 4e 00 bc f0 4e 00  .wK.......N...N.
+0013fb84  c4 96 00 01 00 00 00 00 - 78 fd 13 00 c4 96 00 01  ........x.......
+0013fb94  78 fd 13 00 67 6a 4d 00 - c4 85 fa 00 01 91 4e 00  x...gjM.......N.
+0013fba4  e8 fc 13 00 00 bd 00 00 - 78 fd 13 00 c4 85 fa 00  ........x.......
+0013fbb4  b2 6a 4d 00 00 bd 00 00 - c4 85 fa 00 78 fd 13 00  .jM.........x...
+
+disassembling:
+[...]
+0077ef12        call    -$2691b7 ($515d60)     ; DB.TDataSet.GotoBookmark
+0077ef17 2002   mov     eax, [esi]
+0077ef19        mov     eax, [eax+$20c]
+0077ef1f        mov     edx, [ebx+$39c]
+0077ef25        mov     ecx, [eax]
+0077ef27      > call    dword ptr [ecx+$208]
+0077ef2d        test    al, al
+0077ef2f        jz      loc_77ef44
+0077ef31        mov     eax, [esi]
+0077ef33        mov     eax, [eax+$37c]
+0077ef39        mov     edx, [ebx+$39c]
+[...]
+

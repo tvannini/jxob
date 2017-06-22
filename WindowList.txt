@@ -1,0 +1,63 @@
+ Window List Component 1.5 by Jerry Ryle
+
+ This component will enumerate windows and return
+ information about them in the Windows property.
+ The component currently returns a handle, caption text,
+ associated ProcessID, visibility, and dimensions.
+
+ The component appears in the System palette.
+
+ This component is completely free of course. If you find
+ it useful, and are compelled to send me cash, beer, or
+ dead things in envelopes, please feel free to do so.
+
+ email me if you make it better:  gryle@calpoly.edu
+
+ NEW in 1.5:
+
+  I accidentally uploaded an older version of my source code
+  with a nasty bug in the refresh procedure. I forgot to clear
+  the Window List before rebuilding it.  Thanks to Serge who
+  found this bug and suggested a few other improvements!
+
+  In TWindowObject, Handle is now named WinHandle, Caption is
+  now WinCaption, and two new properties have been added.
+
+  The refresh procedure now clears the list before
+  rebuilding it. (*doh!*)
+
+  The component no longer builds the list in design time,
+  since it wasn't really necessary. I was only having it
+  do this before for debugging purposes.
+
+  Thanks again Serge!
+
+- Types -------------------------------------------------------
+
+  TWindowObject = record
+                    WinHandle     : HWnd;    {Window Handle}
+                    WinCaption    : String;  {Window Caption Text (If any)}
+                    ProcessID     : Integer; {Process the window belongs to}
+                    IsVisible     : Boolean; {Is the window visible?}
+                    WindowRect    : TRect;   {Window Dimensions}
+                    IsEnabled     : Boolean; {Is the window enabled for mouse/keyboard input?}
+                    IsIconic      : Boolean; {Is the window minimized?}
+                  end;
+
+
+- Properties ---------------------------------------------------
+
+  Windows[Index : Integer]: TWindowObject
+    {This property contains a list of window information which is filled in on creation
+     and whenever the Refresh procedure is called. Note that the index is zero based.}
+
+  Count : Integer
+    {This is the number of windows that the Windows property contains. To access the
+     last window in the list, you would reference ...Windows[Count-1]... since the
+     Windows index is zero based}
+
+- Procedures----------------------------------------------------
+
+  Refresh
+    {This procedure will update the window list. It should be called whenever
+     current information is needed}

@@ -1,0 +1,19 @@
+0=delete from citta_dist
+1=select * from INSERZIONI
+2=" SELECT DATE('now')"
+3=" SELECT DATE('YYYYMMGG')"
+4=" SELECT DATE('YYYYMMDD')"
+5=" SELECT DATE(\"YYYY-MM-DD\")"
+6=" SELECT DATE('YYYY-MM-DD')"
+7=" SELECT DATE('now','YYYYMMDD')"
+8=SELECT DATE('now')
+9=select date('YYYY-MM-DD')
+10=select timestamp()
+11=select time()
+12=select date()
+13=select date('yyyymmdd')
+14=select date('Ymd')
+15=select distinct citta, '1' as tipo from inserzioni where tipo='1'
+16=SELECT name FROM sqlite_master WHERE (type='table' or type='view')
+17=SELECT * FROM sqlite_master
+18=create view citta_dist as\r\n select distinct citta, '1' as tipo from inserzioni where tipo='1'\r\n union\r\n select distinct citta, '2' as tipo from inserzioni where tipo='2'\r\n union\r\n select distinct citta, '3' as tipo from inserzioni where tipo='3'

@@ -1,0 +1,22 @@
+[app]
+_o2license     = 
+_o2models      = mod_repository.inc
+_o2dbs         = db_repository.inc
+_o2tables      = file_repository.inc
+_o2menus       = menu_repository.inc
+_o2vars        = vars_repository.inc
+_o2viewmodels  = viewmodels_repository.inc
+_o2title       = 
+_o2activemenu  = 
+_o2css         = 
+_o2defaultpage = 
+_o2footer      = 
+_o2header      = 
+_o2nologin     = 
+_o2validate    = 0
+_o2timeout     = 10
+_o2reporter    = 
+_o2startprg    = 
+_o2reqprg      = 
+_o2doc         = off
+_o2sharedir    = 

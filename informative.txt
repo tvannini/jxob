@@ -1,0 +1,41 @@
+o2exp::app
+
+	sid (session id)
+	user (utente di login)
+	developer (utente di sviluppo)
+	css (nome file css dell'applicazione)*
+	prg (array con i nomi dei prg in esecuzione vedi prog() di Magic)
+	name (nome dell'applicazione)
+	title (titolo dell'applicazione)*
+	validate (true false se abilitata la validazione)
+	sessiontype (tipo di sessione gestita)
+	timeout (impostazione timeout della sessione)
+	nologin (pagina di errore di login)
+	menu  (menu attivo)
+	menus (array dei menu specificati nell'applicazione)
+	models (array delle maschere)
+	servers (array dei servers)
+	dbs(array dei databases)
+	tables (array del table_repository)
+	runlevel (prod/svil)
+	dir_sessions (nome completo ove vengono salvate le sessioni)
+	dir_o2
+	dir_tools
+	dir_home  (basedir)
+	dir_htdocs
+	dir_progs
+	dir_cvsprogs
+	dir_tmp
+	dir_css
+	dir_templates
+	dir_usertemplates
+	dir_img  (sotto htdocs)
+	dir_user
+	dir_uploads (sotto user)
+	
+	
+	
+	
+	
+	
+	o2exp::app("sid")

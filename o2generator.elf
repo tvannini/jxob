@@ -1,0 +1,148 @@
+EurekaLog 4.6.4
+
+Application:
+-------------------------------------------------------
+  1.1 Start Date      : Thu, 10 Mar 2005 16:44:11 +0100
+  1.2 Name/Description: o2generator.exe
+  1.3 Version Number  : 
+  1.4 Parameters      : 
+
+Exception:
+------------------------------------------------------------
+  2.1 Date   : Thu, 10 Mar 2005 16:44:30 +0100
+  2.2 Address: 004DD15F
+  2.3 Module : o2generator.exe
+  2.4 Type   : EDatabaseError
+  2.5 Message: t_tabelle: Cannot modify a read-only dataset.
+
+Active Controls:
+--------------------------------
+  3.1 Form Class   : TEditWindow
+  3.2 Form Text    : work.pas
+  3.3 Control Class: TDBGrid
+  3.4 Control Text : 
+
+Computer:
+---------------------------
+  4.1 Name        : CELSIUS
+  4.2 User        : alessio
+  4.3 Total Memory: 511 Mb
+  4.4 Free Memory : 141 Mb
+  4.5 Total Disk  : 8,4 Gb
+  4.6 Free Disk   : 0,17 Gb
+
+Operating System:
+------------------------------------
+  5.1 Type    : Microsoft Windows XP
+  5.2 Build # : 2600
+  5.3 Update  : Service Pack 2
+  5.4 Language: Italiano (Italia)
+
+Call Stack Information:
+-------------------------------------------------------------------------------
+|Address |Module         |Unit           |Class  |Procedure/Method       |Line|
+-------------------------------------------------------------------------------
+|0065F9E5|o2generator.exe|work.pas       |Tf_work|creazioneExecute       |756 |
+|77D1BDB7|user32.dll     |               |       |IsWindowVisible        |    |
+|7C9110ED|ntdll.dll      |               |       |RtlLeaveCriticalSection|    |
+|77D1E2AE|user32.dll     |               |       |SendMessageA           |    |
+|00684066|o2generator.exe|o2generator.dpr|       |                       |121 |
+|7C91E64C|ntdll.dll      |               |       |NtSetInformationThread |    |
+-------------------------------------------------------------------------------
+
+Modules Information:
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|Handle  |Name           |Description                                      |Version         |Size   |Path                                                                                                |
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|00400000|o2generator.exe|                                                 |                |3630080|D:\o2generator                                                                                      |
+|013A0000|mdiui.dll      |Microsoft® Document Imaging                      |0.3.1897.0      |35328  |C:\WINDOWS\System32\spool\DRIVERS\W32X86\3                                                          |
+|01430000|mdigraph.dll   |Microsoft® Document Imaging                      |0.3.1897.0      |758784 |C:\WINDOWS\System32\spool\DRIVERS\W32X86\3                                                          |
+|10000000|CAPTLIB.DLL    |Babylon Information Tool                         |4.0.5.6         |94208  |C:\Programmi\Babylon                                                                                |
+|1B5D0000|MSWSTR10.DLL   |Microsoft Jet Sort Library                       |4.0.8905.0      |614429 |C:\WINDOWS\system32                                                                                 |
+|20000000|xpsp2res.dll   |Messaggi del Service Pack 2                      |5.1.2600.2180   |2962944|C:\WINDOWS\system32                                                                                 |
+|4DD90000|msado15.dll    |Microsoft Data Access - ActiveX Data Objects     |2.81.1117.0     |536576 |C:\Programmi\File comuni\System\ado                                                                 |
+|5B180000|uxtheme.dll    |Libreria UxTheme di Microsoft                    |6.0.2900.2180   |219648 |C:\WINDOWS\system32                                                                                 |
+|5BC70000|netapi32.dll   |Net Win32 API DLL                                |5.1.2600.2180   |332288 |C:\WINDOWS\system32                                                                                 |
+|5D4D0000|comctl32.dll   |Common Controls Library                          |5.82.2900.2180  |611328 |C:\WINDOWS\system32                                                                                 |
+|5F210000|olepro32.dll   |                                                 |5.1.2600.2180   |83456  |C:\WINDOWS\system32                                                                                 |
+|719D0000|mswsock.dll    |Service Provider Microsoft Windows Sockets 2.0   |5.1.2600.2180   |247296 |C:\WINDOWS\System32                                                                                 |
+|71A20000|WS2HELP.dll    |Helper di Windows Socket 2.0 per Windows NT      |5.1.2600.2180   |19968  |C:\WINDOWS\system32                                                                                 |
+|71A30000|WS2_32.dll     |Windows Socket 2.0 32-Bit DLL                    |5.1.2600.2180   |82944  |C:\WINDOWS\system32                                                                                 |
+|71A50000|wsock32.dll    |DLL Windows Socket 32-Bit                        |5.1.2600.2180   |24576  |C:\WINDOWS\system32                                                                                 |
+|72F70000|winspool.drv   |Driver dello spooler di Windows                  |5.1.2600.2180   |146944 |C:\WINDOWS\system32                                                                                 |
+|746B0000|MSCTF.dll      |MSCTF Server DLL                                 |5.1.2600.2180   |294400 |C:\WINDOWS\system32                                                                                 |
+|76030000|MSVCP60.dll    |Microsoft (R) C++ Runtime Library                |6.2.3104.0      |413696 |C:\WINDOWS\system32                                                                                 |
+|76330000|MSIMG32.dll    |GDIEXT Client DLL                                |5.1.2600.2180   |4608   |C:\WINDOWS\system32                                                                                 |
+|76340000|imm32.dll      |Windows XP IMM32 API Client DLL                  |5.1.2600.2180   |110080 |C:\WINDOWS\system32                                                                                 |
+|76360000|comdlg32.dll   |DLL delle finestre di dialogo comuni             |6.0.2900.2180   |280576 |C:\WINDOWS\system32                                                                                 |
+|76560000|MSDART.DLL     |Microsoft Data Access - OLE DB Runtime Routines  |2.81.1117.0     |151552 |C:\WINDOWS\system32                                                                                 |
+|765B0000|CSCDLL.dll     |Agente rete disconnessa                          |5.1.2600.2180   |102400 |C:\WINDOWS\System32                                                                                 |
+|76890000|CRYPTUI.dll    |Provider di interfaccia utente di Microsoft Trust|5.131.2600.2180 |523776 |C:\WINDOWS\system32                                                                                 |
+|76950000|ntshrui.dll    |Estensioni shell per la condivisione             |5.1.2600.2180   |145408 |C:\WINDOWS\system32                                                                                 |
+|76980000|USERENV.dll    |Userenv                                          |5.1.2600.2180   |729088 |C:\WINDOWS\system32                                                                                 |
+|76AE0000|ATL.DLL        |ATL Module for Windows XP (Unicode)              |3.5.2284.0      |58880  |C:\WINDOWS\system32                                                                                 |
+|76B00000|winmm.dll      |DLL API MCI                                      |5.1.2600.2180   |178688 |C:\WINDOWS\system32                                                                                 |
+|76BB0000|PSAPI.DLL      |Process Status Helper                            |5.1.2600.2180   |23040  |C:\WINDOWS\system32                                                                                 |
+|76BF0000|WINTRUST.dll   |API di verifica attendibilità Microsoft          |5.131.2600.2180 |176640 |C:\WINDOWS\system32                                                                                 |
+|76C50000|IMAGEHLP.dll   |Windows NT Image Helper                          |5.1.2600.2180   |144384 |C:\WINDOWS\system32                                                                                 |
+|76EE0000|DNSAPI.dll     |DNS Client API DLL                               |5.1.2600.2180   |148480 |C:\WINDOWS\system32                                                                                 |
+|76F20000|WLDAP32.dll    |Win32 LDAP API DLL                               |5.1.2600.2180   |173056 |C:\WINDOWS\system32                                                                                 |
+|76F70000|winrnr.dll     |LDAP RnR Provider DLL                            |5.1.2600.2180   |16896  |C:\WINDOWS\System32                                                                                 |
+|76F80000|rasadhlp.dll   |Remote Access AutoDial Helper                    |5.1.2600.2180   |8192   |C:\WINDOWS\system32                                                                                 |
+|76F90000|CLBCATQ.DLL    |                                                 |2001.12.4414.258|501248 |C:\WINDOWS\system32                                                                                 |
+|77010000|COMRes.dll     |                                                 |2001.12.4414.258|845824 |C:\WINDOWS\system32                                                                                 |
+|770F0000|oleaut32.dll   |                                                 |5.1.2600.2180   |553472 |C:\WINDOWS\system32                                                                                 |
+|77180000|WININET.dll    |Internet Extensions per Win32                    |6.0.2900.2577   |659456 |C:\WINDOWS\system32                                                                                 |
+|77230000|urlmon.dll     |Estensioni OLE32 per Win32                       |6.0.2900.2574   |604672 |C:\WINDOWS\system32                                                                                 |
+|773A0000|comctl32.dll   |User Experience Controls Library                 |6.0.2900.2180   |1050624|C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2180_x-ww_a84f1ff9|
+|774B0000|ole32.dll      |Microsoft OLE per Windows                        |5.1.2600.2595   |1284608|C:\WINDOWS\system32                                                                                 |
+|77730000|shdocvw.dll    |Shell Doc Object e Control Library               |6.0.2900.2573   |1483776|C:\WINDOWS\system32                                                                                 |
+|778F0000|SETUPAPI.dll   |API dell'installazione di Windows                |5.1.2600.2180   |999936 |C:\WINDOWS\system32                                                                                 |
+|779F0000|cscui.dll      |Interfaccia della cache sul lato client          |5.1.2600.2180   |333824 |C:\WINDOWS\System32                                                                                 |
+|77A50000|CRYPT32.dll    |Crypto API32                                     |5.131.2600.2180 |601600 |C:\WINDOWS\system32                                                                                 |
+|77AF0000|MSASN1.dll     |ASN.1 Runtime APIs                               |5.1.2600.2180   |57344  |C:\WINDOWS\system32                                                                                 |
+|77B10000|appHelp.dll    |Application Compatibility Client Library         |5.1.2600.2180   |126976 |C:\WINDOWS\system32                                                                                 |
+|77BD0000|version.dll    |Version Checking and File Installation Libraries |5.1.2600.2180   |18944  |C:\WINDOWS\system32                                                                                 |
+|77BE0000|msvcrt.dll     |Windows NT CRT DLL                               |7.0.2600.2180   |343040 |C:\WINDOWS\system32                                                                                 |
+|77D10000|user32.dll     |Windows XP USER API Client DLL                   |5.1.2600.2180   |578048 |C:\WINDOWS\system32                                                                                 |
+|77DA0000|RPCRT4.dll     |Remote Procedure Call Runtime                    |5.1.2600.2180   |581120 |C:\WINDOWS\system32                                                                                 |
+|77E40000|GDI32.dll      |GDI Client DLL                                   |5.1.2600.2180   |278016 |C:\WINDOWS\system32                                                                                 |
+|77E90000|SHLWAPI.dll    |Libreria leggera di utilità per la shell         |6.0.2900.2573   |474112 |C:\WINDOWS\system32                                                                                 |
+|77F10000|Secur32.dll    |Security Support Provider Interface              |5.1.2600.2180   |55808  |C:\WINDOWS\system32                                                                                 |
+|77F40000|advapi32.dll   |API Windows 32 Base avanzato                     |5.1.2600.2180   |683008 |C:\WINDOWS\system32                                                                                 |
+|7C800000|kernel32.dll   |DLL client di Windows NT BASE API                |5.1.2600.2180   |1027584|C:\WINDOWS\system32                                                                                 |
+|7C910000|ntdll.dll      |DLL del livello NT                               |5.1.2600.2180   |729600 |C:\WINDOWS\system32                                                                                 |
+|7C9D0000|shell32.dll    |DLL comune della shell di Windows                |6.0.2900.2578   |8479232|C:\WINDOWS\system32                                                                                 |
+|7D1F0000|msi.dll        |Windows Installer                                |3.0.3790.2180   |2804224|C:\WINDOWS\system32                                                                                 |
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Registers:
+-----------------------------
+EAX: 01099064   EDI: 01226DC4
+EBX: 01226DC4   ESI: 00FB8484
+ECX: 00000000   ESP: 0012FB48
+EDX: 004DD164   EIP: 004DD15F
+
+Stack:               Memory Dump:
+------------------   ---------------------------------------------------------------------------
+0012FB48: 0012FB78   004DD15F: E8 EC 71 F2 FF EB 13 8B CE B2 01 A1 68 70 4D 00  ..q.........hpM.
+0012FB4C: 00404284   004DD16F: E8 04 20 F3 FF E8 D7 71 F2 FF 33 C0 5A 59 59 64  .. ....q..3.ZYYd
+0012FB50: 0012FB70   004DD17F: 89 10 68 96 D1 4D 00 8D 45 FC E8 46 78 F2 FF C3  ..h..M..E..Fx...
+0012FB54: 00D329DC   004DD18F: E9 C0 70 F2 FF EB F0 5E 5B 8B E5 5D C3 FF FF FF  ..p....^[..]....
+0012FB58: 01226DC4   004DD19F: FF 06 00 00 00 25 73 3A 20 25 73 00 00 55 8B EC  .....%s: %s..U..
+0012FB5C: 01226650   004DD1AF: 6A 00 53 56 57 8B F9 8B F2 8B D8 33 C0 55 68 F8  j.SVW......3.Uh.
+0012FB60: 0000000B   004DD1BF: D1 4D 00 64 FF 30 64 89 20 8D 45 FC 50 8B D6 8B  .M.d.0d. .E.P...
+0012FB64: 00FB8484   004DD1CF: CF 8B C3 E8 89 E1 F2 FF 8B 45 FC 8B 55 08 E8 1E  .........E..U...
+0012FB68: 0000000B   004DD1DF: FF FF FF 33 C0 5A 59 59 64 89 10 68 FF D1 4D 00  ...3.ZYYd..h..M.
+0012FB6C: 00000000   004DD1EF: 8D 45 FC E8 DD 77 F2 FF C3 E9 57 70 F2 FF EB F0  .E...w....Wp....
+0012FB70: 0012FB8C   004DD1FF: 5F 5E 5B 59 5D C2 04 00 90 55 8B EC 83 C4 F4 53  _^[Y]....U.....S
+0012FB74: 004ECE6F   004DD20F: 56 57 33 DB 89 5D FC 8B F1 8B FA 33 D2 55 68 6F  VW3..].....3.Uho
+0012FB78: 0012FB9C   004DD21F: D2 4D 00 64 FF 32 64 89 22 8B D6 E8 A1 D9 00 00  .M.d.2d.".......
+0012FB7C: 00404284   004DD22F: 8B D8 85 DB 75 24 57 8D 55 FC A1 A8 FF 68 00 E8  ....u$W.U....h..
+0012FB80: 0012FB8C   004DD23F: 99 9B F2 FF 8B 45 FC 50 89 75 F4 C6 45 F8 0B 8D  .....E.P.u..E...
+0012FB84: 01226DC4   004DD24F: 55 F4 33 C9 58 E8 53 FF FF FF 33 C0 5A 59 59 64  U.3.X.S...3.ZYYd
+
+
+
+
+

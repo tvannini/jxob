@@ -1,0 +1,75 @@
+package controlli;
+
+{$R *.res}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'Controlli form o2'}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vcl,
+  JVCL200_R70,
+  DJCL70,
+  vcljpg,
+  inet,
+  qrpt,
+  vclx,
+  bdertl,
+  dbrtl,
+  vcldb,
+  visualclx,
+  visualdbclx,
+  vclactnband,
+  designide,
+  dsnap,
+  vclie,
+  dbexpress,
+  VclSmp,
+  dbxcds,
+  adortl,
+  ibxpress,
+  vclshlctrls,
+  dclusr;
+
+contains
+  o2label in 'o2label.pas',
+  o2edit in 'o2edit.pas',
+  o2textarea in 'o2textarea.pas',
+  o2agente in 'o2agente.pas',
+  o2button in 'o2button.pas',
+  o2checkbox in 'o2checkbox.pas',
+  o2combobox in 'o2combobox.pas',
+  o2groupbox in 'o2groupbox.pas',
+  o2image in 'o2image.pas',
+  o2separator in 'o2separator.pas',
+  o2navigator in 'o2navigator.pas',
+  o2table in 'o2table.pas',
+  o2ListBox in 'o2ListBox.pas',
+  o2multipage in 'o2multipage.pas',
+  o2file in 'o2file.pas',
+  o2htmlarea in 'o2htmlarea.pas',
+  o2document in 'o2document.pas',
+  o2Map in 'o2Map.pas',
+  o2dbnavigator in 'o2dbnavigator.pas';
+
+end.

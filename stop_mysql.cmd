@@ -1,0 +1,1 @@
+mysql\bin\mysqladmin.exe --user=root --password=root --port=3302 shutdown
