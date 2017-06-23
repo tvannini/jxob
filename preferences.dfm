@@ -3,7 +3,7 @@ object f_config: Tf_config
   Top = 176
   Width = 405
   Height = 620
-  Caption = 'Preferences'
+  Caption = 'Settings'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -64,7 +64,7 @@ object f_config: Tf_config
         Left = 20
         Top = 32
         Width = 200
-        Height = 21
+        Height = 19
         Ctl3D = False
         ParentCtl3D = False
         TabOrder = 0
@@ -73,7 +73,7 @@ object f_config: Tf_config
         Left = 20
         Top = 208
         Width = 330
-        Height = 21
+        Height = 19
         Ctl3D = False
         ParentCtl3D = False
         TabOrder = 1
@@ -83,7 +83,7 @@ object f_config: Tf_config
         Left = 20
         Top = 96
         Width = 330
-        Height = 21
+        Height = 19
         Ctl3D = False
         ParentCtl3D = False
         TabOrder = 2
@@ -93,7 +93,7 @@ object f_config: Tf_config
         Left = 20
         Top = 152
         Width = 330
-        Height = 21
+        Height = 19
         Ctl3D = False
         ParentCtl3D = False
         TabOrder = 3
@@ -1219,7 +1219,7 @@ object f_config: Tf_config
       Left = 20
       Top = 38
       Width = 355
-      Height = 21
+      Height = 19
       Ctl3D = False
       ParentCtl3D = False
       ReadOnly = True
