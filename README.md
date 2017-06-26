@@ -7,3 +7,7 @@
 #
 
 Please visit [Janox site](http://www.janox.it)
+
+#
+
+Janox is **free** and **open source** software.
