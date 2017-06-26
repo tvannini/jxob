@@ -2,7 +2,7 @@
 
 *Janox development interface*
 
-![Janox](![Janox](http://www.janox.it/images/j.png))
+![Janox](http://www.janox.it/images/j.png)
 
 #
 
