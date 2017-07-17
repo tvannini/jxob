@@ -75,6 +75,7 @@ begin
 
   f_editorphp.Save1.Enabled  := False;
   f_editorphp.Save1.ShortCut := 0;
+  f_editorphp.singleLine     := False;
   f_editorphp.ShowModal;
 
   if f_editorphp.ModalResult = mrOk then
@@ -129,6 +130,7 @@ begin
 
   f_editorphp.Save1.Enabled  := True;
   f_editorphp.Save1.ShortCut := TextToShortCut('Enter');
+  f_editorphp.singleLine     := True;
   f_editorphp.ShowModal;
   if f_editorphp.ModalResult = mrOk then
   begin

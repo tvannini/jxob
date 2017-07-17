@@ -41,6 +41,7 @@ type
     FBracketBG: TColor;
   public
   item_funzioni, item_variabili,insert_funzioni, insert_variabili : TStringList;
+  singleLine: Boolean;
 
     { Public declarations }
   end;
@@ -309,6 +310,11 @@ procedure Tf_editorphp.EditorChange(Sender: TObject);
 var r: TRegExpr;
     word: String;
 begin
+  if singleLine and (Length(Editor.Text) > 254) then
+  begin
+    ShowMessage('Attention: expression code too long!' + #13 +
+                'Please use script code instead.');
+  end;
   insert_variabili.Clear;
   item_variabili.Clear;
   r            := TRegExpr.Create;
@@ -316,7 +322,6 @@ begin
   if r.Exec(editor.Lines.Text) then
   begin
     repeat
-//    showmessage(Editor.WordAtCursor);
       word := r.Match[0];
       if (insert_variabili.IndexOf(word) = -1) and
          ('$' + Editor.WordAtCursor <> word) then

@@ -1,6 +1,6 @@
 object f_editorphp: Tf_editorphp
-  Left = 448
-  Top = 134
+  Left = 460
+  Top = 194
   Width = 927
   Height = 705
   Caption = 'ScriptEditor'
