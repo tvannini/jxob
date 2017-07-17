@@ -210,7 +210,6 @@ type
     prg_sceltachiave: TAction;
     prg_sceltafiletask: TAction;
     prg_sceltacampofile: TAction;
-    caricafunzioniphp: TAction;
     next_row: TAction;
     prev_row: TAction;
     check: TAction;
@@ -313,7 +312,6 @@ type
     db_title: TDBEdit;
     Label61: TLabel;
     db_status: TDBEdit;
-    UpdatePHPfunctionlist1: TMenuItem;
     dbgrid_aggreg: TDBGrid;
     Label63: TLabel;
     pop_aggreg: TPopupMenu;
@@ -500,7 +498,6 @@ type
     procedure prg_sceltachiaveExecute(Sender: TObject);
     procedure prg_sceltafiletaskExecute(Sender: TObject);
     procedure up1Click(Sender: TObject);
-    procedure caricafunzioniphpExecute(Sender: TObject);
     procedure DB_exp1operazDblClick(Sender: TObject);
     procedure DB_exp2operazDblClick(Sender: TObject);
     procedure bt_salvaapplicazClick(Sender: TObject);
@@ -1111,71 +1108,6 @@ procedure Tf_work.up1Click(Sender: TObject);
 begin
   dbnav.BtnClick(nbPrior);
 end;
-
-
-
-
-
-procedure Tf_work.caricafunzioniphpExecute(Sender: TObject);
-var
-  i: integer;
-  tmp_itemlist, tmp_insertlist, tmpfile : TStringList;
-begin
-  tmp_itemlist:=TStringList.Create;
-  tmp_insertlist:=TStringList.Create;
-  tmpfile:=TStringList.Create;
-
-    r := TRegExpr.Create;
-    r.ModifierM := True;
-    r.ModifierS := False;
-
-    tmp_itemlist.Clear;
-    tmp_insertlist.Clear;
-
-
-    //acquisisce dal file di Zend
-    Memo2.Lines.Clear;
-    tmpfile.LoadFromFile('o2fnx.php');
-    Memo2.Lines.AddStrings(tmpfile);
-    tmpfile.LoadFromFile('phpfunctions5.php');
-    Memo2.Lines.AddStrings(tmpfile);
-
-    r.Expression := '^function(.*?)\)';
-    if r.Exec(Memo2.Text) then
-    begin
-      repeat
-        tmp_insertlist.Append(
-          trim(copy(r.Match[0], 10, pos('(', r.Match[0]) - 10)));
-
-        tmp_itemlist.Append('\style{+B}' +
-          trim(copy(r.Match[0], 10, pos('(', r.Match[0]) - 10)) + '\style{-B}' +
-          Trim(copy(r.Match[0], pos('(', r.Match[0]), 1000)));
-      until not r.ExecNext
-    end;
-
-
-
-  // aggiunge anche le parole riservate PHP
-    Memo2.Lines.LoadFromFile('phpreserved.txt');
-
-    for i := 0 to Memo2.Lines.Count do
-    begin
-      if Memo2.Lines[i] <> '' then
-      begin
-        tmp_insertlist.Append(Memo2.Lines[i]);
-        tmp_itemlist.Append(
-          '\style{+B}' + Memo2.Lines[i]);
-      end;
-
-    end;
-
-
-  tmp_itemlist.SaveToFile('itemlist_php.txt');
-  tmp_insertlist.SaveToFile('insertlist_php.txt');
-
-end;
-
-
 
 
 procedure Tf_work.DB_exp1operazDblClick(Sender: TObject);

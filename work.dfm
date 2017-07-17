@@ -8513,11 +8513,6 @@ object f_work: Tf_work
         Visible = False
         OnClick = Conversion1Click
       end
-      object UpdatePHPfunctionlist1: TMenuItem
-        Action = caricafunzioniphp
-        Caption = 'Update PHP Functions list(service)'
-        Visible = False
-      end
       object Gettablesdefinition1: TMenuItem
         Caption = 'Get tables definition'
         Visible = False
@@ -9980,10 +9975,6 @@ object f_work: Tf_work
     end
     object prg_sceltacampofile: TAction
       Caption = 'prg_sceltacampofile'
-    end
-    object caricafunzioniphp: TAction
-      Caption = 'caricafunzioniphp'
-      OnExecute = caricafunzioniphpExecute
     end
     object next_row: TAction
       Caption = 'next_row'
