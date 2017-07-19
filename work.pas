@@ -3135,9 +3135,9 @@ var
 begin
   checkinBat := 'check-in.bat';
   Params     := f_work.user +
-                ' "' + f_work.prgdir +
-                '" "' + ObjFile +
-                '" "' + TmpFile + '"';
+                ' ' + f_work.prgdir +
+                ' ' + ObjFile +
+                ' ' + TmpFile;
   ResCode    := ExecAndWait(checkinBat + ' ' + Params);
   if ResCode then
   begin
