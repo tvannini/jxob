@@ -3112,8 +3112,8 @@ var
 begin
   checkoutBat := 'check-out.bat';
   Params      := f_work.user +
-                 ' "' + f_work.prgdir +
-                 '" "' + ObjFile + '"';
+                 ' ' + f_work.prgdir +
+                 ' ' + ObjFile;
   ResCode := ExecAndWait(checkoutBat + ' ' + Params);
   if ResCode then
   begin
