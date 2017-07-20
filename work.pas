@@ -2522,6 +2522,7 @@ begin
   begin
     dm_form.t_task.Insert;
     dm_form.t_tasknome.Value := nome_view;
+    dm_form.t_taskautoaggregate.Value := False;
     dm_form.t_task.Post;
     nodotemp := supertree.Items.AddChild(supertree.Selected, nome_view);
     nodotemp.ImageIndex := 2;
