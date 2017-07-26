@@ -83,7 +83,7 @@ object f_work: Tf_work
     Top = 32
     Width = 870
     Height = 662
-    ActivePage = ts_applicazione
+    ActivePage = ts_programmi
     Align = alClient
     MultiLine = True
     PopupMenu = pop_pagecontrol1
@@ -757,7 +757,7 @@ object f_work: Tf_work
         Top = 0
         Width = 862
         Height = 607
-        ActivePage = ts_main
+        ActivePage = ts_taskprop
         Align = alClient
         Style = tsButtons
         TabOrder = 1

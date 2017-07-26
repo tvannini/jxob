@@ -820,7 +820,7 @@ uses dm, area_form, start, sceltacampofile, sceltaprogramma,
   import, export, cvs, cvsinfo, scelta_message, sceltamodello,
   sceltaio, sceltalabel, sceltamenu, print, preferences, users,
   locate, go_to, about, conversioni, sceltacampiview, getdef, importfrom,
-  JvColorCombo, find,sceltacampotab, TypInfo, crossref, newview, wizmask, DateUtils, shortcut, debug,
+  JvColorCombo, find,sceltacampotab, TypInfo, crossref, wizmask, DateUtils, shortcut, debug,
   JvTypedEdit;
 
 {$R *.dfm}
@@ -2686,12 +2686,11 @@ var
   nomenewview: string;
   temp_table, temp_table2:  TClientDataSet;
   tmp_stream : TStream;
+  nodotemp, nodotemp2 : TTreeNode;
 begin
   // _______________________________________________ Ask for a new view name ___
-  f_newview.ShowModal;
-  if f_newview.ModalResult = mrOk then
+  if InputQuery('New view name', 'Name', nomenewview) then
   begin
-    nomenewview := f_newview.e_view.Text;
     with dm_form do
     begin
       Inc(id_ultima_view);
@@ -2780,12 +2779,21 @@ begin
                            t_tasktipo.Value,
                            t_taskmatchpos.Value,
                            t_taskrecordprefix.Value,
-                           t_taskrecordsufix.Value]);
+                           t_taskrecordsufix.Value,
+                           t_taskpost_auto.Value,
+                           t_taskrighevisexp.Value,
+                           t_taskautoaggregate.Value]);
     end;
-    nodo_temp1 := supertree.Items.Add(supertree.Selected.Parent, nomenewview);
-    nodo_temp1.ImageIndex := 23;
-    nodo_temp1.SelectedIndex := 23;
-    supertree.Items.AddChild(nodo_temp1, 'View properties');
+    // _______________________________________ Add view to program tree-view ___
+    nodotemp                := supertree.Items.Add(supertree.Selected.Parent,
+                                                   nomenewview);
+    nodotemp.ImageIndex     := 2;
+    nodotemp.SelectedIndex  := 2;
+    nodotemp2               := supertree.Items.AddChild(nodotemp,
+                                                        'View properties');
+    nodotemp2.ImageIndex    := 1;
+    nodotemp2.SelectedIndex := 1;
+
   end;
 end;
 
