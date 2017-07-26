@@ -2713,7 +2713,10 @@ begin
                                  temp_table.FieldValues['tipo'],
                                  temp_table.FieldValues['con_nome'],
                                  temp_table.FieldValues['tabella'],
-                                 temp_table.FieldValues['chiave']]);
+                                 temp_table.FieldValues['chiave'],
+                                 temp_table.FieldValues['chiave_exp'],
+                                 temp_table.FieldValues['dbname_exp'],
+                                 temp_table.FieldValues['tablename_exp']]);
         temp_table.Next;
       end;
       temp_table.Free;   //fine usafile
