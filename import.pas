@@ -1764,14 +1764,11 @@ begin
       r.Expression := 'function ' + nomeprg + '§§' + trim(t_azioniazione.Value) +
         '_act\((.*?)\|o2_fine_act\|';
 
-
-
       if r.Exec(programma.Lines.Text) then
       begin
         programma.SelStart := r.MatchPos[0] - 1;
         programma.SelLength := r.MatchLen[0];
         selezione := programma.SelText;
-
 
         id_operazione := 0;
         // singoli passi
@@ -1806,8 +1803,8 @@ begin
               begin
                 par7 := '0'
               end
-              else begin
-
+              else
+              begin
                 par7 := trim(copy(trim(ExtractWord(1, par7, ['|'])), 2, 300));
                 par7 := decodifica_exp(par7, nomeprg);
               end;
@@ -1820,12 +1817,10 @@ begin
               selezione3 := trim(copy(selezione2, pos('(', selezione2) +
                 1, length(trim(selezione2)) - pos('(', selezione2) - 1));
 
-
               if tipo = 'o2act::block' then
               begin
                 par2 := 'Block';
               end;
-
 
               if tipo = 'o2act::block_end' then
               begin
@@ -1855,11 +1850,7 @@ begin
                 par6 := trim(copy(par6, length(trim(nomeprg)) + 6, 10));
                 par6 := copy(trim(par6), 1, length(trim(par6)) - 2);
 
-
-
-
               end;   //fine update
-
 
               if tipo = 'o2act::confirm' then
               begin
@@ -1869,7 +1860,6 @@ begin
                 par8 := copy(trim(par8), 2, length(trim(par8)) - 2);
                 par3 := chr(127) + par8;
                 //alias campo
-
                 par8 := extractword(2, selezione3, [',']);
                 par8 := copy(trim(par8), 2, length(trim(par8)) - 2);
 
@@ -1877,18 +1867,13 @@ begin
                    f_crossref.Memo1.Lines.Append('Program: [' + nomeprg + ']' +chr(9)+ 'Action: [' + t_azioniazione.Value + ']'
                    +chr(9) + 'Line: [' + par1 +']');
 
-
                 par3 := trim(par3) + chr(129) + par8;
                 //valore exp1
                 par6 := trim(extractword(3, selezione3, [',']));
                 par6 := trim(copy(par6, length(trim(nomeprg)) + 6, 10));
                 par6 := copy(trim(par6), 1, length(trim(par6)) - 2);
 
-
-
-
               end;   //fine confirm
-
 
               if tipo = 'o2act::io' then
               begin
@@ -1912,13 +1897,9 @@ begin
 
               end;   //fine I/O
 
-
               if tipo = 'o2act::report' then
               begin
                 par2 := 'Print';
-
-             //   ShowMessage(tmp1);
-
                 r4.Expression:='(.*?)\s*\,\s*(.*?)\s*\,\s*(.*?)\)\)\,\s*(.*?)\s*\,\s*(\".*?\")';
                 if r4.Exec(selezione3) then
                 begin
@@ -1930,7 +1911,6 @@ begin
                   num4:= strtoint(decodifica_exp(trim(r4.Match[1]), nomeprg));
                   num5:= strtoint(decodifica_exp(trim(r4.Match[2]), nomeprg));
                   num6:= strtoint(decodifica_exp(trim(r4.Match[4]), nomeprg));
-
 
                 // array risorse in par5 (parametri call)
                 r3.Expression := 'array\(\"id\"\s\=\>\s(.*?)\)';
@@ -1987,24 +1967,24 @@ begin
                 i := 0;
                 repeat
                   par8 := trim(extractword(3 + i, selezione3, [',']));
-                  if pos('_exp_', par8) = 0 then
+                  // _________________________________ Variable by reference ___
+                  if pos('"', par8) > 0 then
                   begin
                     par8 := copy(trim(par8), 2, length(trim(par8)) - 2)
-                  end;
-                  // in caso di expression togli parentesi
-                  if pos('_exp_', par8) > 0 then
+                  end
+                  // ____________________________________________ Expression ___
+                  else
                   begin
+                    // in caso di expression togli parentesi
                     par8 := copy(par8, 1, length(trim(par8)) - 2);
                     par8 := '[o2exp_' + trim(copy(trim(par8), length(nomeprg) + 6, 10)) + ']';
                   end;
                   if pos('§§', par8) > 0 then
                   begin
 
-
                     if (crossref_oggetto = 'Application variable') and (crossref_ricerca = extractword(2, par8, ['§'])) and (Pos('_o2SESSION', par8) > 0) then
                        f_crossref.Memo1.Lines.Append('Program: [' + nomeprg + ']' +chr(9)+ 'Action: [' + t_azioniazione.Value + ']'
                        +chr(9) + 'Line: [' + par1 +']');
-
 
                     par8 := chr(127) + Stringreplace(par8, '§§', chr(129), [rfReplaceAll])
                   end;
