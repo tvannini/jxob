@@ -597,7 +597,7 @@ type
     function albero_folder(nodo: TTreeNode): string;
 
     procedure checkout(Sender: TObject; oggetto: string);
-    procedure checkin(Sender: TObject; oggetto: string);
+    procedure checkin(Sender: TObject; oggetto: string; cvsSet: Boolean);
     procedure uncheck(Sender: TObject; oggetto: string);
     procedure copia_file(Sender: TObject; origine, destinazione: string);
 
@@ -3207,10 +3207,14 @@ begin
 end;
 
 
-procedure Tf_work.checkin(Sender: TObject; oggetto: string);
+procedure Tf_work.checkin(Sender: TObject; oggetto: string; cvsSet: Boolean);
 var
   ori, nuovo: TFileStream;
+  cvsError: Boolean;
+  TmpFile: String;
 begin
+  cvsError := cvsSet;
+  TmpFile  := f_work.tempdir + 'jxcvs' + f_work.user + '.tmp';
   {con l'azione di checkin viene spostato il file dalla cartella dell'user a
    quella dei prgs}
   nuovo := TFileStream.Create(userdir + oggetto,
@@ -3219,14 +3223,21 @@ begin
     ori := TFileStream.Create(prgdir + oggetto, fmCreate);
     try
       ori.CopyFrom(nuovo, nuovo.Size);
+      if (not cvsSet) or cvs_checkin(oggetto, TmpFile) then
+      begin
+        cvsError := False;
+      end;
     finally
       FreeAndNil(ori);
     end;
   finally
     FreeAndNil(nuovo);
-    DeleteFile(userdir + oggetto);
-    cancella_versioni(strtoken(oggetto, '.'));
-    mycheck_local := false;
+    if (not cvsError) then
+    begin
+      DeleteFile(userdir + oggetto);
+      cancella_versioni(strtoken(oggetto, '.'));
+      mycheck_local := false;
+    end
   end;
 end;
 
@@ -3433,72 +3444,44 @@ begin
     end;
     if PageControl1.ActivePage = ts_appvars then
     begin
-      if (not cvsSet) or
-         cvs_checkin(dm_form.t_applicazioneappvars.Value, TmpFile) then
-      begin
-        f_export.appvars_export.Execute;
-        checkin(self, dm_form.t_applicazioneappvars.Value);
-        dm_form.appvar_modificato := false;
-      end;
+      f_export.appvars_export.Execute;
+      checkin(self, dm_form.t_applicazioneappvars.Value, cvsSet);
+      dm_form.appvar_modificato := false;
     end
     else if PageControl1.ActivePage = ts_models then
     begin
-      if (not cvsSet) or
-         (cvs_checkin(dm_form.t_applicazionemodels.Value, TmpFile) and
-          cvs_checkin('__source__\models.cache', TmpFile)) then
-      begin
-        f_export.models_export.Execute;
-        checkin(self, dm_form.t_applicazionemodels.Value);
-        checkin(self, '__source__\models.cache');
-        dm_form.datatypes_modificato := false;
-      end;
+      f_export.models_export.Execute;
+      checkin(self, dm_form.t_applicazionemodels.Value, cvsSet);
+      checkin(self, '__source__\models.cache', cvsSet);
+      dm_form.datatypes_modificato := false;
     end
     else if PageControl1.ActivePage = ts_labels then
     begin
-      if (not cvsSet) or cvs_checkin('labels.rep', TmpFile) then
-      begin
-        f_export.labels_export.Execute;
-        checkin(self, 'labels.rep');
-        dm_form.labels_modificato := false;
-      end;
+      f_export.labels_export.Execute;
+      checkin(self, 'labels.rep', cvsSet);
+      dm_form.labels_modificato := false;
     end
     else if PageControl1.ActivePage = ts_menu then
     begin
-      if (not cvsSet) or
-         cvs_checkin(dm_form.t_applicazionemenus.Value, TmpFile) then
-      begin
-        f_export.menu_export.Execute;
-        checkin(self, dm_form.t_applicazionemenus.Value);
-        dm_form.menu_modificato := false;
-      end;
+      f_export.menu_export.Execute;
+      checkin(self, dm_form.t_applicazionemenus.Value, cvsSet);
+      dm_form.menu_modificato := false;
     end
     else if PageControl1.ActivePage = ts_database then
     begin
-      if (not cvsSet) or
-         cvs_checkin(dm_form.t_applicazionedbs.Value, TmpFile) then
-      begin
-        f_export.db_export.Execute;
-        checkin(self, dm_form.t_applicazionedbs.Value);
-        dm_form.database_modificato := false;
-      end;
+      f_export.db_export.Execute;
+      checkin(self, dm_form.t_applicazionedbs.Value, cvsSet);
+      dm_form.database_modificato := false;
     end
     else if PageControl1.ActivePage = ts_tabelle then
     begin
-      if (not cvsSet) or
-         (cvs_checkin(dm_form.t_applicazionetables.Value, TmpFile) and
-          cvs_checkin('__source__\tables.cache', TmpFile) and
-          cvs_checkin('__source__\fields.cache', TmpFile) and
-          cvs_checkin('__source__\indexes.cache', TmpFile) and
-          cvs_checkin('__source__\segments.cache', TmpFile)) then
-      begin
-        f_export.tables_export.Execute;
-        checkin(self, dm_form.t_applicazionetables.Value);
-        checkin(self, '__source__\tables.cache');
-        checkin(self, '__source__\fields.cache');
-        checkin(self, '__source__\indexes.cache');
-        checkin(self, '__source__\segments.cache');
-        dm_form.tables_modificato := false;
-      end;
+      f_export.tables_export.Execute;
+      checkin(self, dm_form.t_applicazionetables.Value, cvsSet);
+      checkin(self, '__source__\tables.cache', cvsSet);
+      checkin(self, '__source__\fields.cache', cvsSet);
+      checkin(self, '__source__\indexes.cache', cvsSet);
+      checkin(self, '__source__\segments.cache', cvsSet);
+      dm_form.tables_modificato := false;
     end
     else if PageControl1.ActivePage = ts_programmi then
     begin
@@ -3516,69 +3499,64 @@ begin
       end;
       if (f_checkprg.Memo2.Lines.Count <= 1) or (forzacheckin) then
       begin
-        if (not cvsSet) or
-           (cvs_checkin(dm_form.t_programminome.Value + '.prg', TmpFile) and
-            cvs_checkin(dm_form.t_programminome.Value + '.prf', TmpFile)) then
+        f_export.prg_exportExecute(self, dm_form.t_programminome.Value);
+        // f_checkprg.ripristina_posizioni.Execute;
+        dm_form.program_modificato := false;
+        checkin(self, dm_form.t_programminome.Value + '.prg', cvsSet);
+        if dm_form.t_programminome.Value <> '_o2viewmodels' then
         begin
-          f_export.prg_exportExecute(self, dm_form.t_programminome.Value);
-          // f_checkprg.ripristina_posizioni.Execute;
-          dm_form.program_modificato := false;
-          checkin(self, dm_form.t_programminome.Value + '.prg');
-          if dm_form.t_programminome.Value <> '_o2viewmodels' then
-          begin
-            checkin(self, dm_form.t_programminome.Value + '.prf') ;
-            // muove i files cds
-            // copia i files sources (cds)
-            nomeprg     := dm_form.t_programminome.Value;
-            dircds      := f_work.prgdir + '__source__\' + nomeprg + '\';
-            dircds_user := f_work.userdir + '__source__\' + nomeprg + '\';
-            Jvfileopera.Operation := foMove;
-            Jvfileopera.SourceFiles.Clear;
-            Jvfileopera.SourceFiles.Append(dircds_user + 'program.cds');
-            Jvfileopera.SourceFiles.Append(dircds_user + 'view.cds');
-            Jvfileopera.SourceFiles.Append(dircds_user + 'select.cds');
-            Jvfileopera.SourceFiles.Append(dircds_user + 'tab.cds');
-            Jvfileopera.SourceFiles.Append(dircds_user + 'link.cds');
-            Jvfileopera.SourceFiles.Append(dircds_user + 'action.cds');
-            Jvfileopera.SourceFiles.Append(dircds_user + 'operation.cds');
-            Jvfileopera.SourceFiles.Append(dircds_user + 'expression.cds');
-            Jvfileopera.SourceFiles.Append(dircds_user + 'aggregation.cds');
-            Jvfileopera.SourceFiles.Append(dircds_user + 'prgvar.cds');
-            Jvfileopera.SourceFiles.Append(dircds_user + 'parameter.cds');
-            Jvfileopera.SourceFiles.Append(dircds_user + 'form.cds');
-            Jvfileopera.SourceFiles.Append(dircds_user + 'control.cds');
-            Jvfileopera.SourceFiles.Append(dircds_user + 'io.cds');
-            Jvfileopera.SourceFiles.Append(dircds_user + 'report.cds');
-            Jvfileopera.SourceFiles.Append(dircds_user + 'reportfield.cds');
-            Jvfileopera.DestFiles.Clear;
-            Jvfileopera.DestFiles.Append(dircds + 'program.cds');
-            Jvfileopera.DestFiles.Append(dircds + 'view.cds');
-            Jvfileopera.DestFiles.Append(dircds + 'select.cds');
-            Jvfileopera.DestFiles.Append(dircds + 'tab.cds');
-            Jvfileopera.DestFiles.Append(dircds + 'link.cds');
-            Jvfileopera.DestFiles.Append(dircds + 'action.cds');
-            Jvfileopera.DestFiles.Append(dircds + 'operation.cds');
-            Jvfileopera.DestFiles.Append(dircds + 'expression.cds');
-            Jvfileopera.DestFiles.Append(dircds + 'aggregation.cds');
-            Jvfileopera.DestFiles.Append(dircds + 'prgvar.cds');
-            Jvfileopera.DestFiles.Append(dircds + 'parameter.cds');
-            Jvfileopera.DestFiles.Append(dircds + 'form.cds');
-            Jvfileopera.DestFiles.Append(dircds + 'control.cds');
-            Jvfileopera.DestFiles.Append(dircds + 'io.cds');
-            Jvfileopera.DestFiles.Append(dircds + 'report.cds');
-            Jvfileopera.DestFiles.Append(dircds + 'reportfield.cds');
-            Jvfileopera.Execute;
-            RmDir(dircds_user);
-          end
-          else
-          begin
-            checkin(self, dm_form.t_applicazioneviews.Value);
-          end;
+          nomeprg := dm_form.t_programminome.Value;
+          checkin(self, nomeprg + '.prf', cvsSet) ;
+          // muove i files cds
+          // copia i files sources (cds)
+          dircds      := f_work.prgdir + '__source__\' + nomeprg + '\';
+          dircds_user := f_work.userdir + '__source__\' + nomeprg + '\';
+          Jvfileopera.Operation := foMove;
+          Jvfileopera.SourceFiles.Clear;
+          Jvfileopera.SourceFiles.Append(dircds_user + 'program.cds');
+          Jvfileopera.SourceFiles.Append(dircds_user + 'view.cds');
+          Jvfileopera.SourceFiles.Append(dircds_user + 'select.cds');
+          Jvfileopera.SourceFiles.Append(dircds_user + 'tab.cds');
+          Jvfileopera.SourceFiles.Append(dircds_user + 'link.cds');
+          Jvfileopera.SourceFiles.Append(dircds_user + 'action.cds');
+          Jvfileopera.SourceFiles.Append(dircds_user + 'operation.cds');
+          Jvfileopera.SourceFiles.Append(dircds_user + 'expression.cds');
+          Jvfileopera.SourceFiles.Append(dircds_user + 'aggregation.cds');
+          Jvfileopera.SourceFiles.Append(dircds_user + 'prgvar.cds');
+          Jvfileopera.SourceFiles.Append(dircds_user + 'parameter.cds');
+          Jvfileopera.SourceFiles.Append(dircds_user + 'form.cds');
+          Jvfileopera.SourceFiles.Append(dircds_user + 'control.cds');
+          Jvfileopera.SourceFiles.Append(dircds_user + 'io.cds');
+          Jvfileopera.SourceFiles.Append(dircds_user + 'report.cds');
+          Jvfileopera.SourceFiles.Append(dircds_user + 'reportfield.cds');
+          Jvfileopera.DestFiles.Clear;
+          Jvfileopera.DestFiles.Append(dircds + 'program.cds');
+          Jvfileopera.DestFiles.Append(dircds + 'view.cds');
+          Jvfileopera.DestFiles.Append(dircds + 'select.cds');
+          Jvfileopera.DestFiles.Append(dircds + 'tab.cds');
+          Jvfileopera.DestFiles.Append(dircds + 'link.cds');
+          Jvfileopera.DestFiles.Append(dircds + 'action.cds');
+          Jvfileopera.DestFiles.Append(dircds + 'operation.cds');
+          Jvfileopera.DestFiles.Append(dircds + 'expression.cds');
+          Jvfileopera.DestFiles.Append(dircds + 'aggregation.cds');
+          Jvfileopera.DestFiles.Append(dircds + 'prgvar.cds');
+          Jvfileopera.DestFiles.Append(dircds + 'parameter.cds');
+          Jvfileopera.DestFiles.Append(dircds + 'form.cds');
+          Jvfileopera.DestFiles.Append(dircds + 'control.cds');
+          Jvfileopera.DestFiles.Append(dircds + 'io.cds');
+          Jvfileopera.DestFiles.Append(dircds + 'report.cds');
+          Jvfileopera.DestFiles.Append(dircds + 'reportfield.cds');
+          Jvfileopera.Execute;
+          RmDir(dircds_user);
+        end
+        else
+        begin
+          checkin(self, dm_form.t_applicazioneviews.Value, cvsSet);
         end;
       end;
     end;
     refresh_bottoni_check(self);
-    dm_form.program_modificato:=false;
+    dm_form.program_modificato := false;
   end;
 end;
 
