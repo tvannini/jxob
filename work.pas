@@ -3223,20 +3223,21 @@ begin
     oggetto := oggetti[i];
     {con l'azione di checkin viene spostato il file dalla cartella dell'user a
      quella dei prgs}
-    nuovo := TFileStream.Create(userdir + oggetto,
-                                fmOpenRead or fmShareDenyWrite);
     try
-      ori := TFileStream.Create(prgdir + oggetto, fmCreate);
+      nuovo := TFileStream.Create(userdir + oggetto,
+                                  fmOpenRead or fmShareDenyWrite);
       try
+        ori := TFileStream.Create(prgdir + oggetto, fmCreate);
         ori.CopyFrom(nuovo, nuovo.Size);
         if (cvsSet and (not(cvs_checkin(oggetto, TmpFile)))) then
         begin
           anyError := True;
         end;
-      finally
-        FreeAndNil(ori);
+      except
+        anyError := True;
       end;
     finally
+      FreeAndNil(ori);
       FreeAndNil(nuovo);
     end;
   end;
