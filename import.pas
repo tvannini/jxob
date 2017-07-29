@@ -1973,11 +1973,18 @@ begin
                     par8 := copy(trim(par8), 2, length(trim(par8)) - 2)
                   end
                   // ____________________________________________ Expression ___
-                  else
+                  else if pos('exp', par8) > 0 then
                   begin
                     // in caso di expression togli parentesi
                     par8 := copy(par8, 1, length(trim(par8)) - 2);
-                    par8 := '[o2exp_' + trim(copy(trim(par8), length(nomeprg) + 6, 10)) + ']';
+                    par8 := '[o2exp_' +
+                            trim(copy(trim(par8), length(nomeprg) + 6, 10)) +
+                            ']';
+                  end
+                  // _________________________________________________ Empty ___
+                  else
+                  begin
+                    par8 := '';
                   end;
                   if pos('§§', par8) > 0 then
                   begin
