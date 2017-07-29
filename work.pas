@@ -7495,7 +7495,6 @@ begin
                                         dm_form.t_operazionio2ref.Value;
       end;
       f_parametri.ShowModal;
-
       if f_parametri.ModalResult = mrOk then
       begin
         if not(dm_form.t_operazioni.ReadOnly) then

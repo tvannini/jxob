@@ -73,6 +73,11 @@ var
   EParName, EParModel: string;
   EParID : integer;
 begin
+  // ____________ For "GOTO" operations don't allow passing variables by ref ___
+  if dm_form.t_operazionioperazione.Value <> 'Call program' then
+  begin
+    ParamsGrid.Columns[4].Visible := False;
+  end;
   memo_noteprg.Clear;
   ParsNullExp := 0;
   ResParsText.Clear;
