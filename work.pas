@@ -597,7 +597,7 @@ type
     function albero_folder(nodo: TTreeNode): string;
 
     procedure checkout(Sender: TObject; oggetto: string);
-    procedure checkin(Sender: TObject; oggetto: string; cvsSet: Boolean);
+    procedure checkin(Sender: TObject; const oggetti: array of string; cvsSet: Boolean);
     procedure uncheck(Sender: TObject; oggetto: string);
     procedure copia_file(Sender: TObject; origine, destinazione: string);
 
@@ -3207,38 +3207,51 @@ begin
 end;
 
 
-procedure Tf_work.checkin(Sender: TObject; oggetto: string; cvsSet: Boolean);
+procedure Tf_work.checkin(Sender: TObject;
+                          const oggetti: array of string;
+                          cvsSet: Boolean);
 var
   ori, nuovo: TFileStream;
-  cvsError: Boolean;
-  TmpFile: String;
+  anyError: Boolean;
+  TmpFile, oggetto: String;
+  i: integer;
 begin
-  cvsError := cvsSet;
+  anyError := False;
   TmpFile  := f_work.tempdir + 'jxcvs' + f_work.user + '.tmp';
-  {con l'azione di checkin viene spostato il file dalla cartella dell'user a
-   quella dei prgs}
-  nuovo := TFileStream.Create(userdir + oggetto,
-                              fmOpenRead or fmShareDenyWrite);
-  try
-    ori := TFileStream.Create(prgdir + oggetto, fmCreate);
+  for i := 0 to High(oggetti) do
+  begin
+    oggetto := oggetti[i];
+    {con l'azione di checkin viene spostato il file dalla cartella dell'user a
+     quella dei prgs}
+    nuovo := TFileStream.Create(userdir + oggetto,
+                                fmOpenRead or fmShareDenyWrite);
     try
-      ori.CopyFrom(nuovo, nuovo.Size);
-      if (not cvsSet) or cvs_checkin(oggetto, TmpFile) then
-      begin
-        cvsError := False;
+      ori := TFileStream.Create(prgdir + oggetto, fmCreate);
+      try
+        ori.CopyFrom(nuovo, nuovo.Size);
+        if (cvsSet and (not(cvs_checkin(oggetto, TmpFile)))) then
+        begin
+          anyError := True;
+        end;
+      finally
+        FreeAndNil(ori);
       end;
     finally
-      FreeAndNil(ori);
+      FreeAndNil(nuovo);
     end;
-  finally
-    FreeAndNil(nuovo);
-    if (not cvsError) then
+  end;
+  // _______________________________ If not error delete files from user dir ___
+  if not(anyError) then
+  begin
+    for i := 0 to High(oggetti) do
     begin
+      oggetto := oggetti[i];
       DeleteFile(userdir + oggetto);
       cancella_versioni(strtoken(oggetto, '.'));
-      mycheck_local := false;
-    end
+    end;
+    mycheck_local := false;
   end;
+
 end;
 
 
@@ -3442,47 +3455,57 @@ begin
         Exit;
       end;
     end;
+    // _______________________________________________ Application variables ___
     if PageControl1.ActivePage = ts_appvars then
     begin
       f_export.appvars_export.Execute;
-      checkin(self, dm_form.t_applicazioneappvars.Value, cvsSet);
+      checkin(self, [dm_form.t_applicazioneappvars.Value], cvsSet);
       dm_form.appvar_modificato := false;
     end
+    // ______________________________________________________________ Models ___
     else if PageControl1.ActivePage = ts_models then
     begin
       f_export.models_export.Execute;
-      checkin(self, dm_form.t_applicazionemodels.Value, cvsSet);
-      checkin(self, '__source__\models.cache', cvsSet);
+      checkin(self,
+              [dm_form.t_applicazionemodels.Value, '__source__\models.cache'],
+              cvsSet);
       dm_form.datatypes_modificato := false;
     end
+    // ___________________________________________________ Labels (NOT USED) ___
     else if PageControl1.ActivePage = ts_labels then
     begin
       f_export.labels_export.Execute;
-      checkin(self, 'labels.rep', cvsSet);
+      checkin(self, ['labels.rep'], cvsSet);
       dm_form.labels_modificato := false;
     end
+    // ________________________________________________________________ Menu ___
     else if PageControl1.ActivePage = ts_menu then
     begin
       f_export.menu_export.Execute;
-      checkin(self, dm_form.t_applicazionemenus.Value, cvsSet);
+      checkin(self, [dm_form.t_applicazionemenus.Value], cvsSet);
       dm_form.menu_modificato := false;
     end
+    // _______________________________________________ Servers and databases ___
     else if PageControl1.ActivePage = ts_database then
     begin
       f_export.db_export.Execute;
-      checkin(self, dm_form.t_applicazionedbs.Value, cvsSet);
+      checkin(self, [dm_form.t_applicazionedbs.Value], cvsSet);
       dm_form.database_modificato := false;
     end
+    // ______________________________________________________________ Tables ___
     else if PageControl1.ActivePage = ts_tabelle then
     begin
       f_export.tables_export.Execute;
-      checkin(self, dm_form.t_applicazionetables.Value, cvsSet);
-      checkin(self, '__source__\tables.cache', cvsSet);
-      checkin(self, '__source__\fields.cache', cvsSet);
-      checkin(self, '__source__\indexes.cache', cvsSet);
-      checkin(self, '__source__\segments.cache', cvsSet);
+      checkin(self,
+              [dm_form.t_applicazionetables.Value,
+               '__source__\tables.cache',
+               '__source__\fields.cache',
+               '__source__\indexes.cache',
+               '__source__\segments.cache'],
+              cvsSet);
       dm_form.tables_modificato := false;
     end
+    // _____________________________________________________________ Program ___
     else if PageControl1.ActivePage = ts_programmi then
     begin
       // fa sempre il controllo sintattico del programma e se ci sono problemi
@@ -3501,12 +3524,10 @@ begin
       begin
         f_export.prg_exportExecute(self, dm_form.t_programminome.Value);
         // f_checkprg.ripristina_posizioni.Execute;
-        dm_form.program_modificato := false;
-        checkin(self, dm_form.t_programminome.Value + '.prg', cvsSet);
         if dm_form.t_programminome.Value <> '_o2viewmodels' then
         begin
           nomeprg := dm_form.t_programminome.Value;
-          checkin(self, nomeprg + '.prf', cvsSet) ;
+          checkin(self, [nomeprg + '.prg', nomeprg + '.prf'], cvsSet);
           // muove i files cds
           // copia i files sources (cds)
           dircds      := f_work.prgdir + '__source__\' + nomeprg + '\';
@@ -3551,8 +3572,12 @@ begin
         end
         else
         begin
-          checkin(self, dm_form.t_applicazioneviews.Value, cvsSet);
+          checkin(self,
+                  [dm_form.t_programminome.Value + '.prg',
+                   dm_form.t_applicazioneviews.Value],
+                  cvsSet);
         end;
+        dm_form.program_modificato := false;
       end;
     end;
     refresh_bottoni_check(self);
