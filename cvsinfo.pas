@@ -40,7 +40,34 @@ begin
 end;
 
 procedure Tf_CVSInfo.BtnOKClick(Sender: TObject);
+var
+  i, words: integer;
+  s: string;
 begin
+  // ________________________________________________ Count words in message ___
+  s     := Trim(cvs_comment.Text);
+  words := 0;
+  for i := 1 to Length(s) do
+  begin
+    if s[i] = ' ' then
+    begin
+      Inc(words);
+    end;
+  end;
+  Inc(words);
+  // ______________________________________________ Check minimal conditions ___
+  if (words < 3) and (Length(s) < 20) then
+  begin
+    ShowMessage('Comment is too short.' + #13 + #10 +
+                'Please write something more..!');
+    Exit;
+  end
+  else if Trim(cvs_worksheet.Text) = '' then
+  begin
+    ShowMessage('Please provide a worksheet code!');
+    Exit;
+  end;
+  // ________________________________________________________ Compose result ___
   f_work.CVSCheckInData := Trim(cvs_worksheet.Text) + ' - ' +
                            Trim(cvs_comment.Text);
   ModalResult := mrOk;
