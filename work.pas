@@ -3229,6 +3229,7 @@ begin
       try
         ori := TFileStream.Create(prgdir + oggetto, fmCreate);
         ori.CopyFrom(nuovo, nuovo.Size);
+        FreeAndNil(ori);
         if (cvsSet and (not(cvs_checkin(oggetto, TmpFile)))) then
         begin
           anyError := True;
