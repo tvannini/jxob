@@ -1259,12 +1259,12 @@ object dm_form: Tdm_form
       item
         Name = 'prg'
         DataType = ftString
-        Size = 40
+        Size = 100
       end
       item
         Name = 'nomeform'
         DataType = ftString
-        Size = 30
+        Size = 150
       end
       item
         Name = 'nomecontrollo'
