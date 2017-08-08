@@ -748,7 +748,6 @@ type
     procedure bt_refreshClick(Sender: TObject);
     procedure Moverow1Click(Sender: TObject);
     procedure DEBUG1Click(Sender: TObject);
-    procedure ts_variabili_prgShow(Sender: TObject);
     procedure Openproject1Click(Sender: TObject);
     procedure ts_vars_actionEnter(Sender: TObject);
     procedure dbgrid_vars_actionExit(Sender: TObject);
@@ -776,7 +775,7 @@ type
     nodo_prg: TTreeNode;
     nodo_temp1: TTreeNode;
     treemenu_incarica: boolean;
-    elenco_prg_caricato:Boolean;
+    elenco_prg_caricato: Boolean;
   public
     { Public declarations }
     settings: TIniFile;
@@ -2232,6 +2231,7 @@ begin
       nodo_ultimo_selezionato := supertree.Selected;
       // ___________________________________________ Close active prg if any ___
       if (nodo_prg_attivo <> nil) and
+         (nodo_prg_attivo.Parent <> nil) and 
          (not (supertree.Selected.HasAsParent(nodo_prg_attivo))) and
          nodo_prg_attivo.HasChildren then
       begin
@@ -2247,7 +2247,6 @@ begin
           begin
             // ______________________________________________ Load prgs list ___
             carica_prgExecute(self, false);
-            elenco_prg_caricato := true;
           end;
           // _______________________________________ Show programs tab-sheet ___
           PageControl1.ActivePage := ts_programs;
@@ -2304,7 +2303,6 @@ begin
         end
         else if supertree.Selected.Text = 'Variables' then
         begin
-          ts_variabili_prgShow(self);
           Pagecontrol2.ActivePage := ts_variabili_prg;
         end
         else if supertree.Selected.Text = 'I/O Files' then
@@ -2536,68 +2534,80 @@ end;
 
 procedure Tf_work.Delete1Click(Sender: TObject);
 begin
-
-  if MessageDlg('Confirm delete??', mtConfirmation, mbOKCancel, 1) = mrOk then
+  if MessageDlg('Confirm delete?', mtConfirmation, mbOKCancel, 1) = mrOk then
   begin
-
-    // sono su un programma???
-    if (supertree.Selected.ImageIndex = 17) or (supertree.Selected.ImageIndex = 21) then
+    // ____________________________________________ If a program is selected ___
+    if (supertree.Selected.ImageIndex = 17) or
+       (supertree.Selected.ImageIndex = 21) then
     begin
+      Screen.Cursor := crHourGlass;
+      // ______________________________________ Delete PRG file if it exists ___
       if FileExists(prgdir + supertree.Selected.Text + '.prg') then
       begin
-        DeleteFile(prgdir + supertree.Selected.Text + '.prg')
+        DeleteFile(prgdir + supertree.Selected.Text + '.prg');
       end;
+      // ______________________________________ Delete PRF file if it exists ___
       if FileExists(prgdir + supertree.Selected.Text + '.prf') then
       begin
-        DeleteFile(prgdir + supertree.Selected.Text + '.prf')
+        DeleteFile(prgdir + supertree.Selected.Text + '.prf');
       end;
-
+      // ______________________________ Remove "__source__" dir if it exists ___
       if DirectoryExists(prgdir + '__source__\' + supertree.Selected.Text) then
       begin
-        Jvfileopera.Operation:=foDelete;
+        Jvfileopera.Operation := foDelete;
         Jvfileopera.SourceFiles.Clear;
-        Jvfileopera.SourceFiles.Append(prgdir + '__source__\' + supertree.Selected.Text);
+        Jvfileopera.SourceFiles.Append(prgdir + '__source__\' +
+                                       supertree.Selected.Text);
         Jvfileopera.Execute;
       end;
-
+      // ________________________ Delete PRG file from user dir if it exists ___
       if FileExists(userdir + supertree.Selected.Text + '.prg') then
       begin
-        DeleteFile(userdir + supertree.Selected.Text + '.prg')
+        DeleteFile(userdir + supertree.Selected.Text + '.prg');
       end;
+      // ________________________ Delete PRF file from user dir if it exists ___
       if FileExists(userdir + supertree.Selected.Text + '.prf') then
       begin
-        DeleteFile(userdir + supertree.Selected.Text + '.prf')
+        DeleteFile(userdir + supertree.Selected.Text + '.prf');
       end;
-
+      // ________________ Remove "__source__" dir from user dir if it exists ___
       if DirectoryExists(userdir + '__source__\' + supertree.Selected.Text) then
       begin
-        Jvfileopera.Operation:=foDelete;
+        Jvfileopera.Operation := foDelete;
         Jvfileopera.SourceFiles.Clear;
-        Jvfileopera.SourceFiles.Append(userdir + '__source__\' + supertree.Selected.Text);
+        Jvfileopera.SourceFiles.Append(userdir + '__source__\' +
+                                       supertree.Selected.Text);
         Jvfileopera.Execute;
       end;
-
-
-    end;
-    //sono una view?
-
-    if supertree.Selected.Parent.Text = 'Views' then
+      // ______________________________________________ Remove treeview item ___
+      supertree.Selected.Delete;
+      // ____________________________________________________ Load prgs list ___
+      carica_prgExecute(self, false);
+      // ___________________________________________ Show programs tab-sheet ___
+      PageControl1.ActivePage := ts_programs;
+      refresh_bottoni_check(self);
+      nodo_prg.Expand(false);
+      nodo_prg_attivo := nil;
+      Screen.Cursor := crDefault;
+      Exit;
+    end // ______________________________________________ End program delete ___
+    // _______________________________________________ If a view is selected ___
+    else if supertree.Selected.Parent.Text = 'Views' then
     begin
       dm_form.t_task.Locate('nome', supertree.Selected.Text, []);
       dm_form.t_task.Delete;
-    end;
-    //sono una azione???
-    if supertree.Selected.Parent = nodo_azioni_all then
+    end
+    // ____________________________________________ If an action is selected ___
+    else if supertree.Selected.Parent = nodo_azioni_all then
     begin
       dm_form.t_azioni.Locate('azione', supertree.Selected.Text, []);
       dm_form.t_azioni.Delete;
     end;
-
-
-    //per tutti cancella dal treeview
+    // ________________________________________________ Remove treeview item ___
     supertree.Selected.Delete;
   end;
 end;
+
 
 procedure Tf_work.dbgrid_parametriEnter(Sender: TObject);
 begin
@@ -3011,18 +3021,17 @@ var
 
 begin
 
-  if (supertree.Selected.ImageIndex <> 17) and (supertree.Selected.ImageIndex <> 21) then
+  if (supertree.Selected = nil) or
+      ((supertree.Selected.ImageIndex <> 17) and
+       (supertree.Selected.ImageIndex <> 21)) then
   begin
     nomenew := 'Newprogram';
     if InputQuery('New program', 'Program name', nomenew) then
-
     begin
-
       trovato := FileExists(prgdir + nomenew + '.prg');
       if trovato then
       begin
         ShowMessage('File already exists');
-
       end;
 
       if (nomenew <> '') and (not (trovato)) then
@@ -3041,6 +3050,7 @@ begin
           nodo_temp1.SelectedIndex := 17;
           carica_supertree.Execute;
           nodo_prg.Expand(False);
+          nodo_prg_attivo    := nil;
           supertree.Selected := nodo_prg;
         end;
 
@@ -3053,10 +3063,18 @@ function Tf_work.albero_folder(nodo: TTreeNode): string;
 var
   tmp: string;
 begin
+  Result := '';
   //se non arriva imposta il selezionato
   if nodo = nil then
   begin
-    nodo := supertree.Selected
+    if supertree.Selected <> nil then
+    begin
+      nodo := supertree.Selected;
+    end
+    else
+    begin
+      Exit;
+    end;
   end;
 
   while nodo.Text <> 'Programs' do
@@ -6523,8 +6541,7 @@ end;
 
 procedure Tf_work.carica_prgExecute(Sender: TObject; soloincheck : boolean = false);
 begin
-//
-//  dm_form.t_programmi.EmptyDataSet;
+
   dm_form.elenco_prg.EmptyDataSet;
   dm_form.elenco_prg.DisableControls;
 
@@ -6545,6 +6562,7 @@ begin
   end;
   dm_form.elenco_prg.EnableControls;
   nodo_prg.Expand(false);
+  elenco_prg_caricato := true;
 
 end;
 
@@ -6892,15 +6910,21 @@ end;
 
 procedure Tf_work.supertreeChange(Sender: TObject; Node: TTreeNode);
 begin
-  // abilita la cancellazione DAL supertree (F3) solo in alcuni casi
-  if
-  (supertree.Selected.Parent = nodo_prg) or
-  (
-  (supertree.Selected.HasAsParent(nodo_prg)) and
-     ((supertree.Selected.Parent.Text = 'Views') or (supertree.Selected.Parent = nodo_azioni_all))) then
-      Delete1.Enabled:=true
-      else
-      Delete1.Enabled:=false
+  if supertree.Selected <> nil then
+  begin
+    // abilita la cancellazione DAL supertree (F3) solo in alcuni casi
+    if (supertree.Selected.Parent = nodo_prg) or
+       (supertree.Selected.HasAsParent(nodo_prg) and
+       ((supertree.Selected.Parent.Text = 'Views') or
+        (supertree.Selected.Parent = nodo_azioni_all))) then
+    begin
+      Delete1.Enabled := true;
+    end
+    else
+    begin
+      Delete1.Enabled := false;
+    end;
+  end;
 end;
 
 procedure Tf_work.eliminasubitemtree(Nodo: TTreeNode;
@@ -7399,16 +7423,6 @@ begin
   //
   f_debug.ShowModal;
 end;
-
-
-
-procedure Tf_work.ts_variabili_prgShow(Sender: TObject);
-begin
-  dm_form.azione_x_init:=  '';
-  dm_form.t_variabili_prg.Filter:= 'action =' + chr(39) + dm_form.azione_x_init +chr(39);
-  dm_form.t_variabili_prg.Filtered:=true;
-end;
-
 
 
 procedure Tf_work.Openproject1Click(Sender: TObject);

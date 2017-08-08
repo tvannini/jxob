@@ -273,7 +273,6 @@ begin
       programma.SelLength := r.MatchLen[0];
       selezione := programma.SelText;
 
-
       r2.Expression := '\(.*\)';
 
       if r2.exec(selezione) then
@@ -310,12 +309,21 @@ begin
           boolean2 := True;
         end;
 
-
         if nometask <> 'prg§_§var' then
         begin
           //  Inc(dm_form.id_ultima_view);
-          dm_form.t_task.InsertRecord(
-            [nomeprg, dm_form.id_ultima_view, nometask, 10, '', '', 0, par1, par2, boolean1, 0, boolean2]);
+          dm_form.t_task.InsertRecord([nomeprg,
+                                       dm_form.id_ultima_view,
+                                       nometask,
+                                       10,
+                                       '',
+                                       '',
+                                       0,
+                                       par1,
+                                       par2,
+                                       boolean1,
+                                       0,
+                                       boolean2]);
         end;
       end;
 

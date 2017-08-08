@@ -83,7 +83,7 @@ object f_work: Tf_work
     Top = 32
     Width = 870
     Height = 662
-    ActivePage = ts_programmi
+    ActivePage = ts_programs
     Align = alClient
     MultiLine = True
     PopupMenu = pop_pagecontrol1
@@ -2458,7 +2458,6 @@ object f_work: Tf_work
         object ts_variabili_prg: TTabSheet
           Caption = 'Variables'
           ImageIndex = 7
-          OnShow = ts_variabili_prgShow
           object dbgrid_varprg: TDBGrid
             Left = 0
             Top = 0
@@ -8423,7 +8422,7 @@ object f_work: Tf_work
     Visible = False
   end
   object MainMenu1: TMainMenu
-    Left = 48
+    Left = 40
     Top = 40
     object File1: TMenuItem
       Caption = '&File'
@@ -8827,8 +8826,8 @@ object f_work: Tf_work
     Top = 200
   end
   object PopupMenu1: TPopupMenu
-    Left = 88
-    Top = 506
+    Left = 104
+    Top = 42
     object zoom7: TMenuItem
       Caption = 'Zoom'
       ShortCut = 13
@@ -11369,8 +11368,8 @@ object f_work: Tf_work
     Top = 128
   end
   object pop_apphandler: TPopupMenu
-    Left = 146
-    Top = 36
+    Left = 138
+    Top = 44
     object Zoom26: TMenuItem
       Caption = 'Zoom'
       ShortCut = 116
@@ -11378,7 +11377,7 @@ object f_work: Tf_work
     end
   end
   object pop_vars_action: TPopupMenu
-    Left = 178
+    Left = 170
     Top = 40
     object Zoom27: TMenuItem
       Caption = 'Zoom'
@@ -11388,7 +11387,7 @@ object f_work: Tf_work
   object CVSImages: TImageList
     Height = 24
     Width = 24
-    Left = 88
+    Left = 72
     Top = 38
     Bitmap = {
       494C010103000400040018001800FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600

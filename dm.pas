@@ -1508,26 +1508,24 @@ end;
 
 
 procedure Tdm_form.attiva_disattiva_prg(attivo: boolean);
-//attiva e disattiva tutte le tabelle dei prg per CVS
-
 begin
-  t_programmi.ReadOnly := not (attivo);
-  t_task.ReadOnly      := not (attivo);
-  t_aggreg.ReadOnly    := not (attivo);
-  t_usa_file.ReadOnly  := not (attivo);
-  t_select.ReadOnly    := not (attivo);
-  t_form.ReadOnly      := not (attivo);
+  //attiva e disattiva tutte le tabelle dei prg per CVS
+  t_programmi.ReadOnly     := not (attivo);
+  t_task.ReadOnly          := not (attivo);
+  t_aggreg.ReadOnly        := not (attivo);
+  t_usa_file.ReadOnly      := not (attivo);
+  t_select.ReadOnly        := not (attivo);
+  t_form.ReadOnly          := not (attivo);
   t_controlliform.ReadOnly := not (attivo);
-  t_input_output.ReadOnly := not (attivo);
-  t_report.ReadOnly    := not (attivo);
-  t_union.ReadOnly     := not (attivo);
+  t_input_output.ReadOnly  := not (attivo);
+  t_report.ReadOnly        := not (attivo);
+  t_union.ReadOnly         := not (attivo);
   t_variabili_prg.ReadOnly := not (attivo);
-  t_parametri.ReadOnly := not (attivo);
-  t_reportfield.ReadOnly := not (attivo);
-  t_espressioni.ReadOnly := not (attivo);
-  t_azioni.ReadOnly    := not (attivo);
-  t_operazioni.ReadOnly := not (attivo);
-
+  t_parametri.ReadOnly     := not (attivo);
+  t_reportfield.ReadOnly   := not (attivo);
+  t_espressioni.ReadOnly   := not (attivo);
+  t_azioni.ReadOnly        := not (attivo);
+  t_operazioni.ReadOnly    := not (attivo);
 end;
 
 
@@ -1540,7 +1538,7 @@ end;
 
 procedure Tdm_form.attiva_disattiva_menu(attivo: boolean);
 begin
-  t_menu.ReadOnly   := not (attivo);
+  t_menu.ReadOnly := not (attivo);
 end;
 
 procedure Tdm_form.attiva_disattiva_models(attivo: boolean);
@@ -1551,10 +1549,10 @@ end;
 
 procedure Tdm_form.attiva_disattiva_tables(attivo: boolean);
 begin
-  t_tabelle.ReadOnly := not (attivo);
-  t_campi.ReadOnly   := not (attivo);
+  t_tabelle.ReadOnly     := not (attivo);
+  t_campi.ReadOnly       := not (attivo);
   t_indicitesta.ReadOnly := not (attivo);
-  t_indici.ReadOnly  := not (attivo);
+  t_indici.ReadOnly      := not (attivo);
 end;
 
 
