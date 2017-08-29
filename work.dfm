@@ -83,7 +83,7 @@ object f_work: Tf_work
     Top = 32
     Width = 870
     Height = 662
-    ActivePage = ts_programs
+    ActivePage = ts_programmi
     Align = alClient
     MultiLine = True
     PopupMenu = pop_pagecontrol1
