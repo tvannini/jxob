@@ -195,39 +195,33 @@ begin
     // __________________________________________________________ Data model ___
     if f_work.dbnav.DataSource = dm_form.ds_modelli then
     begin
-      // ______________________________________________ Compose command text ___
       cmdTxt := ' model ' + dm_form.t_modelliidmodello.Value;
     end
     // _______________________________________________________________ Table ___
     else if f_work.dbnav.DataSource = dm_form.ds_tabelle then
     begin
-      // ______________________________________________ Compose command text ___
       cmdTxt := ' table ' + dm_form.t_tabelleNome.Value;
     end
     // _________________________________________________________ Table Index ___
     else if f_work.dbnav.DataSource = dm_form.ds_indicitesta then
     begin
-      // ______________________________________________ Compose command text ___
       cmdTxt := ' table_key ' + dm_form.t_tabelleNome.Value +
                 ' ' + dm_form.t_indicitestanomekey.Value;
     end
     // _________________________________________________________ Table Field ___
     else if f_work.dbnav.DataSource = dm_form.ds_campi then
     begin
-      // ______________________________________________ Compose command text ___
       cmdTxt := ' table_field ' + dm_form.t_tabelleNome.Value +
                 ' ' + dm_form.t_campinomecampo.Value;
     end
     // _______________________________________________ Application Variables ___
     else if f_work.dbnav.DataSource = dm_form.ds_variabili_app then
     begin
-      // ______________________________________________ Compose command text ___
       cmdTxt := ' app_var ' + dm_form.t_variabili_appalias.Value;
     end
     // _____________________________________________________________ Program ___
     else if f_work.PageControl1.ActivePage = f_work.ts_programs then
     begin
-      // ______________________________________________ Compose command text ___
       cmdTxt := ' prg ' + dm_form.elenco_prgnome.Value;
     end
     // _____________________________________________________ Menu (NOT USED) ___
@@ -282,11 +276,16 @@ begin
         cmdTxt := ' prg_exp ' + dm_form.t_programminome.Value + ' ' +
                   dm_form.t_espressioniidexp.AsString;
       end
+      // ___________________________________________________________ Program ___
+      else if (dm_form.t_programminome.Value <> '') then
+      begin
+        cmdTxt := ' prg ' + dm_form.t_programminome.Value;
+      end
       else
       begin
         ShowMessage('Cross reference not implemented for selected item');
         Screen.Cursor := crDefault;
-      end;
+      end
     end
     else
     begin
