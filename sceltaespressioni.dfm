@@ -28,7 +28,7 @@ object f_sceltaexpr: Tf_sceltaexpr
     ParentCtl3D = False
     TabOrder = 0
     object DBNavigator1: TDBNavigator
-      Left = 8
+      Left = 152
       Top = 8
       Width = 200
       Height = 25
@@ -39,7 +39,7 @@ object f_sceltaexpr: Tf_sceltaexpr
     object Button1: TButton
       Left = 359
       Top = 8
-      Width = 75
+      Width = 90
       Height = 25
       Caption = '&Select'
       ModalResult = 1
@@ -48,11 +48,20 @@ object f_sceltaexpr: Tf_sceltaexpr
     object Button2: TButton
       Left = 704
       Top = 8
-      Width = 75
+      Width = 90
       Height = 25
       Caption = '&Change script'
       TabOrder = 2
       OnClick = modifica_expExecute
+    end
+    object Button3: TButton
+      Left = 7
+      Top = 8
+      Width = 90
+      Height = 25
+      Caption = 'C&ross ref (F10)'
+      TabOrder = 3
+      OnClick = Crossreference1Click
     end
   end
   object PageControl1: TPageControl
@@ -176,6 +185,11 @@ object f_sceltaexpr: Tf_sceltaexpr
       Caption = 'Cancel'
       ShortCut = 117
       OnClick = CancelClick
+    end
+    object Crossreference1: TMenuItem
+      Caption = 'Cross reference'
+      ShortCut = 121
+      OnClick = Crossreference1Click
     end
   end
   object ActionList1: TActionList

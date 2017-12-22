@@ -24,7 +24,7 @@ type
   posizione :TBookmark;
   elencoprgprocessati : TStringList;
   public
-
+    fromWin: string;
     { Public declarations }
   end;
 
@@ -192,8 +192,20 @@ begin
   end;
   cmdTxt := '';
   try
+    // ________ Not from fWork (from other windows, like selections, ecc...) ___
+    if (fromWin <> '') then
+    begin
+      // ______________________________________ Expressions selection window ___
+      if (fromWin = 'exps') then
+      begin
+        // ____________________________________________ Compose command text ___
+        cmdTxt := ' prg_exp ' + dm_form.t_programminome.Value + ' ' +
+                  dm_form.t_espressioniidexp.AsString;
+      end;
+      fromWin := '';
+    end
     // __________________________________________________________ Data model ___
-    if f_work.dbnav.DataSource = dm_form.ds_modelli then
+    else if f_work.dbnav.DataSource = dm_form.ds_modelli then
     begin
       cmdTxt := ' model ' + dm_form.t_modelliidmodello.Value;
     end

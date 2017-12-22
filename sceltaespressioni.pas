@@ -39,6 +39,8 @@ type
     dbgrid1DBTableView1idexp: TcxGridDBColumn;
     dbgrid1DBTableView1return: TcxGridDBColumn;
     cxSplitter1: TcxSplitter;
+    Crossreference1: TMenuItem;
+    Button3: TButton;
     procedure modifica_expExecute(Sender: TObject);
     procedure scelta1Click(Sender: TObject);
     procedure Esc1Click(Sender: TObject);
@@ -51,6 +53,7 @@ type
     procedure PageControl1Change(Sender: TObject);
     procedure CancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Crossreference1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -62,7 +65,7 @@ var
 
 implementation
 
-uses work, editorphp;
+uses work, editorphp, crossref;
 
 {$R *.dfm}
 
@@ -205,6 +208,16 @@ begin
     dm_form.t_espressioni.Post
   end;
 
+end;
+
+procedure Tf_sceltaexpr.Crossreference1Click(Sender: TObject);
+begin
+  if f_crossref.Showing then
+  begin
+    f_crossref.Close;
+  end;
+  f_crossref.fromWin := 'exps';
+  f_crossref.Show();
 end;
 
 end.
