@@ -92,6 +92,7 @@ type
     procedure GetPropLists(InspectList,CaptionList:TStrings);virtual;abstract;
     function GetOutProps:TStrings;
     property Designing:Boolean read FDesigning write SetDesigning;
+    procedure BlurEditing; virtual; abstract;
   end;
 
   TContextProps = class
@@ -155,9 +156,7 @@ begin
   if FList.IndexOf(Item) > -1 then
     Exit;
   FList.Add(Item);
-
   ObjInfo:= TObjInfo.Create(TObject(Item));
-
   //First Item Entry
   if FList.Count = 1 then
   begin
@@ -225,6 +224,7 @@ end;
 
 procedure TMultiProps.Clear;
 begin
+  FInspector.BlurEditing;
   FClassList.Clear;
   FSuperList.Clear;
   FList.Clear;

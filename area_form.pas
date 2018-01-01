@@ -116,8 +116,6 @@ type
     procedure Scrollontheleft1Click(Sender: TObject);
     procedure DesignOFF1Click(Sender: TObject);
     procedure DesignON1Click(Sender: TObject);
-    procedure DsnSelect1ChangeSelected(Sender: TObject;
-      Targets: TSelectedComponents; Operation: TSelectOperation);
     function CercaElementoTree(st: String; Nodo: TTreeNode): Integer;
     procedure Splitter1Moved(Sender: TObject);
     procedure SaveObjectsToFile(Sender: TObject);
@@ -3237,24 +3235,6 @@ end;
 procedure Tf_areaform.DesignON1Click(Sender: TObject);
 begin
     DsnSwitch1.DesignOn;
-end;
-
-procedure Tf_areaform.DsnSelect1ChangeSelected(Sender: TObject;
-  Targets: TSelectedComponents; Operation: TSelectOperation);
-var elemento:integer;
-begin
-{    if (f_oggettiform.PageControl1.ActivePage = f_oggettiform.ts_objects) and (Targets.Count > 0) then
-    with f_oggettiform do
-    begin
-      elemento := CercaElementoTree(Targets[0].Name,tree_object.TopItem);
-      ShowMessage(inttostr(elemento));
-      if elemento <> -1 then tree_object.Items[elemento].Selected:=true;
-
-    //    f_oggettiform.Caption:= Targets[0].Name;
-
-      // ShowMessage(TSelectedComponents);
-    end;
- }
 end;
 
 function Tf_areaform.CercaElementoTree(st: String;

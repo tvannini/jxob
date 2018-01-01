@@ -568,7 +568,6 @@ object f_areaform: Tf_areaform
   end
   object DsnSelect1: TDsnSelect
     DsnRegister = Dsn8Register1
-    OnChangeSelected = DsnSelect1ChangeSelected
     Left = 344
     Top = 80
   end

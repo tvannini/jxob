@@ -119,6 +119,7 @@ type
     property Button: TSpeedButton read FButton;
     property StringGrid: TStringGrid read FStringGrid;
     procedure DockTo(Container: TPanel);
+    procedure BlurEditing; override;
   published
     property SelfProps;
     property BtnProps;
@@ -467,12 +468,12 @@ begin
       end;
     end;
     Control := TControl(FInspector.MultiProps.List[0]);
-    EditingCtrl := Control.Name;
     if Control = nil then
     begin
       Exit;
     end;
-    LastProp := Cells[0, RowNum];
+    EditingCtrl := Control.Name;
+    LastProp    := Cells[0, RowNum];
     if not (Control is TComponent) then
     begin
       Exit;
@@ -532,18 +533,21 @@ procedure TInspectorFm.Edit1Exit(Sender: TObject);
 var
   PropName : String;
 begin
-  if Edit1.Left < 0 then
+  if ((FInspector.MultiProps.List.Count > 0) and
+      (TControl(FInspector.MultiProps.List[0]).Name = EditingCtrl)) then
   begin
-    Exit;
-  end;
-  PropName := StringGrid1.Cells[0, StringGrid1.Row];
-  if PropName = LastProp then
-  begin
-    if (TControl(FInspector.MultiProps.List[0]).Name = EditingCtrl) then
+    // _______________________________________________ Probably always FALSE ___
+    if Edit1.Left < 0 then
+    begin
+      Exit;
+    end;
+    PropName := StringGrid1.Cells[0, StringGrid1.Row];
+    if PropName = LastProp then
     begin
       FInspector.SetProperty(PropName, Edit1.Text);
     end;
   end;
+  EditingCtrl := '';
 end;
 
 
@@ -651,6 +655,11 @@ end;
 procedure TDsnInspector.DockTo(Container: TPanel);
 begin
   DockContainer := Container;
+end;
+
+procedure TDsnInspector.BlurEditing();
+begin
+  FInspectorFm.Edit1Exit(FInspectorFm);
 end;
 
 procedure TInspectorFm.FormClose(Sender: TObject;
