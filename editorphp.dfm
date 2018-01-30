@@ -22,6 +22,8 @@ object f_editorphp: Tf_editorphp
     Width = 919
     Height = 637
     Align = alClient
+    Ctl3D = False
+    ParentCtl3D = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -13
@@ -29,12 +31,15 @@ object f_editorphp: Tf_editorphp
     Font.Style = []
     PopupMenu = PopupMenu1
     TabOrder = 0
+    BorderStyle = bsNone
     Gutter.AutoSize = True
+    Gutter.DigitCount = 3
     Gutter.Font.Charset = DEFAULT_CHARSET
     Gutter.Font.Color = clWindowText
     Gutter.Font.Height = -11
     Gutter.Font.Name = 'Terminal'
     Gutter.Font.Style = []
+    Gutter.RightOffset = 4
     Gutter.ShowLineNumbers = True
     Highlighter = SynPHPSyn1
     OnChange = EditorChange
@@ -46,6 +51,9 @@ object f_editorphp: Tf_editorphp
     Width = 919
     Height = 41
     Align = alBottom
+    BevelOuter = bvNone
+    Ctl3D = False
+    ParentCtl3D = False
     TabOrder = 1
     object Label1: TLabel
       Left = 24
@@ -141,11 +149,13 @@ object f_editorphp: Tf_editorphp
     end
   end
   object SynPHPSyn1: TSynPHPSyn
-    IdentifierAttri.Foreground = clGreen
-    KeyAttri.Foreground = clPurple
-    StringAttri.Foreground = clRed
-    SymbolAttri.Foreground = clMaroon
-    VariableAttri.Foreground = clMenuHighlight
+    CommentAttri.Foreground = 11842740
+    IdentifierAttri.Foreground = clBlack
+    KeyAttri.Foreground = clBlue
+    NumberAttri.Foreground = clRed
+    StringAttri.Foreground = 2600231
+    SymbolAttri.Foreground = clGray
+    VariableAttri.Foreground = 213
     Left = 672
     Top = 256
   end

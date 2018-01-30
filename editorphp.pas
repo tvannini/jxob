@@ -58,7 +58,7 @@ uses work, sceltastatiview, sceltacampiprg, dm, Math;
 procedure Tf_editorphp.EditorPaintTransient(Sender: TObject; Canvas: TCanvas;
   TransientType: TTransientType);
 const
-  AllBrackets = ['{', '[', '(', '<', '}', ']', ')', '>'];
+  AllBrackets = ['{', '[', '(', '}', ']', ')'];
 var
   Editor:     TSynEdit;
   OpenChars:  array of char; // [0..2] of Char=();
@@ -112,11 +112,6 @@ begin
       begin
         OpenChars[i]  := '[';
         CloseChars[i] := ']';
-      end;
-      3:
-      begin
-        OpenChars[i]  := '<';
-        CloseChars[i] := '>';
       end;
     end
   end;
@@ -294,21 +289,25 @@ end;
 
 
 procedure Tf_editorphp.aggiornavarExecute(Sender: TObject);
+var w: integer;
 begin
-  // carica proposal
+  // __________________________________________________ Reload proposal list ___
   SynCompletionProposal1.ItemList.Clear;
-  SynCompletionProposal1.ItemList.AddStrings(item_funzioni);
-  SynCompletionProposal1.ItemList.AddStrings(item_variabili);
-
   SynCompletionProposal1.InsertList.Clear;
+
+  SynCompletionProposal1.ItemList.AddStrings(item_funzioni);
   SynCompletionProposal1.InsertList.AddStrings(insert_funzioni);
+
+  SynCompletionProposal1.ItemList.AddStrings(item_variabili);
   SynCompletionProposal1.InsertList.AddStrings(insert_variabili);
+
 end;
 
 
 procedure Tf_editorphp.EditorChange(Sender: TObject);
 var r: TRegExpr;
     word: String;
+    InsertPos, WordPos: Integer;
 begin
   if singleLine and (Length(Editor.Text) > 254) then
   begin
@@ -317,17 +316,25 @@ begin
   end;
   insert_variabili.Clear;
   item_variabili.Clear;
+  InsertPos    := Editor.RowColToCharIndex(Editor.WordStart);
   r            := TRegExpr.Create;
   r.Expression := '\$(\w*)';
   if r.Exec(editor.Lines.Text) then
   begin
     repeat
-      word := r.Match[0];
-      if (insert_variabili.IndexOf(word) = -1) and
-         ('$' + Editor.WordAtCursor <> word) then
+      word    := r.Match[0];
+      WordPos := r.MatchPos[0];
+      // ________________ Include only variables defined BEFORE insert point ___
+      if WordPos > InsertPos - 1 then
+      begin
+       Break;
+      end
+      // ___________________________ Not in list yet and not typing variable ___
+      else if (insert_variabili.IndexOf(word) = -1) and
+         (WordPos <> InsertPos - 1) then
       begin
         insert_variabili.Append(word);
-        item_variabili.Append('\style{+B}' + word);
+        item_variabili.Append('\style{+B}' + word + '\style{-B}');
       end;
     until not r.ExecNext;
   end;
