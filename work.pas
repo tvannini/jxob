@@ -767,6 +767,8 @@ type
     procedure DBGrid_dbfileKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure LogProjectLoad(LoadItem: String = ''; Progress: Integer = 0);
+    procedure dbgrid_formCellClick(Column: TColumn);
+    procedure dbgrid_formColEnter(Sender: TObject);
 
   private
     { Private declarations }
@@ -7636,6 +7638,25 @@ begin
     LogPanel.Visible   := False;
     LogPanel.Repaint;
   end;
+end;
+
+procedure Tf_work.dbgrid_formCellClick(Column: TColumn);
+begin
+  // __________ Allow design forms visibility switching in a not checked prg ___
+  if Column.FieldName <> 'tmpselez' then
+  begin
+    dm_form.t_form.ReadOnly := dm_form.t_task.ReadOnly;
+  end
+  else
+  begin
+    dbgrid_form.SelectedIndex := 0;
+  end;
+end;
+
+procedure Tf_work.dbgrid_formColEnter(Sender: TObject);
+begin
+  // __________ Allow design forms visibility switching in a not checked prg ___
+  dm_form.t_form.ReadOnly := false;
 end;
 
 end.

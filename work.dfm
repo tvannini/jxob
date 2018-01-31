@@ -2256,6 +2256,8 @@ object f_work: Tf_work
             TitleFont.Height = -11
             TitleFont.Name = 'MS Sans Serif'
             TitleFont.Style = []
+            OnCellClick = dbgrid_formCellClick
+            OnColEnter = dbgrid_formColEnter
             OnEnter = dbgrid_form_savEnter
             MTOptions = [mtCheck, mtMemo, mtFind, mtFilter]
             MTRichEditForMemo = False
