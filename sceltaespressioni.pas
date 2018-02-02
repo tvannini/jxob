@@ -117,11 +117,6 @@ end;
 
 procedure Tf_sceltaexpr.Zoom1Click(Sender: TObject);
 begin
-  if not (f_work.mycheck_local) then
-  begin
-    ShowMessage('Read Only' + chr(13) + chr(10) + 'The program is not checked')
-  end;
-
   if dm_form.t_espressioni.State = dsInsert then
   begin
     dm_form.t_espressioni.Post
@@ -140,7 +135,6 @@ begin
     dm_form.t_espressioni.Edit;
     dm_form.t_espressionireturn.Value := TRIM(f_editorphp.Editor.Lines.Text);
   end;
-
 end;
 
 

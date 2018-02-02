@@ -277,6 +277,7 @@ end;
 procedure Tf_editorphp.FormShow(Sender: TObject);
 begin
   aggiornavar.Execute;
+  Editor.ReadOnly := not f_work.mycheck_local;
   Editor.SetFocus;
 end;
 
