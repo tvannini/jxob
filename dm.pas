@@ -4,7 +4,7 @@ interface
 
 uses
   SysUtils, Classes, DB, DBTables, DBClient, MidasLib, JclStrings, jbstr,
-  ActnList,ActnMan, variants, regexpr, Dialogs, Comctrls;
+  ActnList, ActnMan, variants, regexpr, Dialogs, Comctrls;
 
 type
   Tdm_form = class(TDataModule)
@@ -1096,20 +1096,154 @@ begin
 end;
 
 
+{*
+ * Reacts when, in a view, selected field alias is chanaged
+ *}
+procedure Tdm_form.t_selectcon_nomeSetText(Sender: TField; const Text: string);
+var
+  str_old, str_new: string;
+  progr : integer;
+  r : TRegExpr;
+begin
+  // _______________________________________________ Changing existing alias ___
+  if (Sender.AsString <> '') and (Sender.AsString <> Text) then
+  try
+    t_operazioni.DisableControls;
+    t_espressioni.DisableControls;
+    t_controlliform.DisableControls;
+
+    //espressioni
+    r            := TRegExpr.Create;
+    r.expression := '((o2val|o2pre|o2zero)\s*\(\s*[' + #34#39 + ']' +
+                    t_tasknome.Value +
+                    '[' + #34#39 + ']\s*,\s*[' + #34#39 + '])' +
+                    Sender.AsString + '([' + #34#39 + ']\s*[),])';
+    t_espressioni.First;
+    while not t_espressioni.EOF do
+    begin
+      t_espressioni.Edit;
+      if r.Exec(t_espressionireturn.Value) then
+      begin
+        t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
+                                               '$1' + Text + '$3',
+                                               true);
+      end;
+      if r.Exec(t_espressioniexpr.Value) then
+      begin
+        t_espressioniexpr.Value := r.Replace(t_espressioniexpr.Value,
+                                             '$1' + Text + '$3',
+                                             true);
+      end;
+      t_espressioni.Next
+    end;
+
+    //sistema istruzioni
+    //operazioni
+    str_old                   := #127 + t_tasknome.Value + #129 +
+                                 Sender.AsString;
+    str_new                   := #127 + t_tasknome.Value + #129 + Text;
+    t_operazioni.MasterSource := nil;
+    t_operazioni.First;
+    while not t_operazioni.EOF do
+    begin
+      t_operazioni.Edit;
+      t_operazionio2ref.Value     := StringReplace(t_operazionio2ref.Value,
+                                                   str_old,
+                                                   str_new,
+                                                   [rfReplaceAll]);
+      t_operazionicallparam.Value := StringReplace(t_operazionicallparam.Value,
+                                                   str_old,
+                                                   str_new,
+                                                   [rfReplaceAll]);
+      t_operazioni.Next
+    end;
+    t_operazioni.MasterSource := ds_azioni;
+
+    //controlli form
+    t_controlliform.MasterSource:=nil;
+    t_controlliform.First;
+    while not t_controlliform.EOF do
+    begin
+    t_controlliform.Edit;
+      if t_controlliformriferimento.Value = str_old then
+      begin
+
+        t_controlliformriferimento.Value :=
+        StringReplace(t_controlliformriferimento.Value, str_old, str_new, [rfReplaceAll]);
+       t_controlliformcaption.Value     :=
+        StringReplace(t_controlliformcaption.Value, str_old, str_new, [rfReplaceAll]);
+      end;
+
+      if PosEx('2_view2list("' + t_tasknome.Value +'"', t_controlliformscelte_possibili.Value) > 0 then
+      begin
+        str_old := '", "' + Sender.AsString +'")';
+        str_new := '", "' + Text +'")';
+        t_controlliformscelte_possibili.Value:= StringReplace(t_controlliformscelte_possibili.Value, str_old, str_new, [rfReplaceAll]);
+
+        str_old := '", "' + Sender.AsString +'", "';
+        str_new := '", "' + Text +'", "';
+        t_controlliformscelte_possibili.Value:= StringReplace(t_controlliformscelte_possibili.Value, str_old, str_new, [rfReplaceAll]);
+      end;
+
+      t_controlliform.Next
+    end;
+    t_controlliform.MasterSource:=ds_form;
+
+    //funzioni aggregazione
+    str_old := Sender.AsString;
+    str_new := Text;
+    t_aggreg.First;
+    while not t_aggreg.EOF do
+    begin
+      t_aggreg.Edit;
+      t_aggregcampo_view.Value := StringReplace(t_aggregcampo_view.Value,
+        str_old, str_new, [rfReplaceAll]);
+
+      t_aggreg.Next
+    end;
+
+      //protocols
+    str_old := chr(127) + t_tasknome.Value + chr(129) + Sender.AsString;
+    str_new := chr(127) + t_tasknome.Value + chr(129) + Text;
+    t_reportfield.MasterSource:=nil;
+    t_reportfield.First;
+    while not t_reportfield.EOF do
+    begin
+      t_reportfield.Edit;
+      t_reportfieldcampo.Value := StringReplace(t_reportfieldcampo.Value,
+        str_old, str_new, [rfReplaceAll]);
+
+      t_reportfield.Next
+    end;
+    t_reportfield.MasterSource:=ds_report;
+
+
+  finally
+    t_operazioni.EnableControls;
+    t_espressioni.EnableControls;
+    t_controlliform.EnableControls;
+  end;
+
+  Sender.Value := Text;
+end;
+
+
+{*
+ * [COPY] Reacts when, in a view, selected field alias is chanaged
+
 procedure Tdm_form.t_selectcon_nomeSetText(Sender: TField; const Text: string);
 var
   str_old, str_new: string;
   progr : integer;
 begin
-
-  //se c'e' variazione di valore preesistente
-  if Sender.AsString <> '' then
+  // _______________________________________________ Changing existing alias ___
+  if (Sender.AsString <> '') and (Sender.AsString <> Text) then
   try
     t_operazioni.DisableControls;
     t_espressioni.DisableControls;
     t_controlliform.DisableControls;
-    //espressioni
 
+    //espressioni
     t_espressioni.First;
     while not t_espressioni.EOF do
     begin
@@ -1144,7 +1278,6 @@ begin
 
       t_espressioni.Next
     end;
-
 
     //sistema istruzioni
     //operazioni
@@ -1229,13 +1362,11 @@ begin
     t_controlliform.EnableControls;
   end;
 
-
-
-
-
-
-  Sender.Value := text;
+  Sender.Value := Text;
 end;
+
+ *}
+
 
 procedure Tdm_form.t_azioniazioneSetText(Sender: TField; const Text: string);
 var
@@ -1802,9 +1933,6 @@ end;
 
 procedure Tdm_form.t_selectBeforePost(DataSet: TDataSet);
 begin
-
-
-
 if ds_select.State = dsInsert then
   begin
     stato_recordset_select := 'I';
@@ -1813,13 +1941,7 @@ if ds_select.State = dsInsert then
   begin
     stato_recordset_select := ''
   end;
-
-
-
 end;
-
-
-
 
 
 procedure Tdm_form.t_aggregCalcFields(DataSet: TDataSet);
@@ -2545,7 +2667,7 @@ begin
       until not r.ExecNext
     end;
     t_espressioniestesa.Value:=espr_local;
-   end; 
+   end;
 end;
 
 procedure Tdm_form.t_usa_fileNewRecord(DataSet: TDataSet);
