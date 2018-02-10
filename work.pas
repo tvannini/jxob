@@ -2233,7 +2233,7 @@ begin
       nodo_ultimo_selezionato := supertree.Selected;
       // ___________________________________________ Close active prg if any ___
       if (nodo_prg_attivo <> nil) and
-         (nodo_prg_attivo.Parent <> nil) and 
+         (nodo_prg_attivo.Parent <> nil) and
          (not (supertree.Selected.HasAsParent(nodo_prg_attivo))) and
          nodo_prg_attivo.HasChildren then
       begin
@@ -2262,7 +2262,7 @@ begin
                (supertree.Selected.Parent <> nodo_azioni)) then
       begin
         dm_form.t_azioni.Locate('azione', supertree.Selected.Text, []);
-        dbnav.DataSource         := dm_form.ds_azioni; 
+        dbnav.DataSource         := dm_form.ds_azioni;
         Pagecontrol2.ActivePage  := ts_azioni;
         Panel_expression.Visible := False;
       end
@@ -7300,7 +7300,9 @@ end;
 
 procedure Tf_work.bt_refreshClick(Sender: TObject);
 begin
-  carica_prgExecute(self,false);
+  nodo_prg_attivo    := nil;
+  supertree.Selected := nil;
+  carica_prgExecute(self, false);
 end;
 
 
