@@ -153,7 +153,7 @@ object f_editorphp: Tf_editorphp
     IdentifierAttri.Foreground = clBlack
     KeyAttri.Foreground = clBlue
     NumberAttri.Foreground = clRed
-    StringAttri.Foreground = 2600231
+    StringAttri.Foreground = 48896
     SymbolAttri.Foreground = clGray
     VariableAttri.Foreground = 213
     Left = 672
