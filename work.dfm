@@ -757,7 +757,7 @@ object f_work: Tf_work
         Top = 0
         Width = 862
         Height = 607
-        ActivePage = ts_form
+        ActivePage = ts_taskprop
         Align = alClient
         Style = tsButtons
         TabOrder = 1
@@ -774,9 +774,9 @@ object f_work: Tf_work
           object Label27: TLabel
             Left = 10
             Top = 60
-            Width = 115
+            Width = 113
             Height = 13
-            Caption = 'Action on read new row:'
+            Caption = 'Action on row selection:'
           end
           object Label28: TLabel
             Left = 10
