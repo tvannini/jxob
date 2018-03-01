@@ -24,7 +24,7 @@ object f_sceltacampiprg: Tf_sceltacampiprg
     Top = 0
     Width = 529
     Height = 673
-    ActivePage = ts_fnx
+    ActivePage = ts_expression
     Align = alClient
     TabOrder = 0
     object ts_fields: TTabSheet

@@ -2840,7 +2840,6 @@ var
 
 begin
   dm_form.t_applicazione.EmptyDataSet;
-  dm_form.t_services.EmptyDataSet;
   // _____________________________________ Load application main script file ___
   programma.Lines.LoadFromFile(f_work.OpenDialog1.FileName);
   // ________________________________________________________ Create reg-exp ___

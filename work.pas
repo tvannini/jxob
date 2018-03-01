@@ -1044,7 +1044,6 @@ begin
     t_input_output.EmptyDataSet;
     t_printdef.EmptyDataSet;
     t_value_list.EmptyDataSet;
-    t_services.EmptyDataSet;
     tmp_postab.EmptyDataSet;
   end;
 
@@ -3941,7 +3940,6 @@ begin
     t_value_list.Close;
     tab_ope.Close;
     tab_tipi_file.Close;
-    t_services.Close;
     t_labels.Close;
     t_ope_x_copia.Close;
     tmp_postab.Close;
@@ -3982,7 +3980,6 @@ begin
     t_value_list.FileName := tempdir + progetto + '_' + user + '_valuelist.cds';
     tab_ope.FileName     := tempdir + progetto + '_' + user + '_tabope.cds';
     tab_tipi_file.FileName := tempdir + progetto + '_' + user + '_tabfile.cds';
-    t_services.FileName  := tempdir + progetto + '_' + user + '_services.cds';
     t_labels.FileName    := tempdir + progetto + '_' + user + '_labels.cds';
     t_ope_x_copia.FileName    := tempdir + progetto + '_' + user + '_opecopy.cds';
     tmp_postab.FileName := tempdir + progetto + '_' + user + '_tmp_postab.cds';
@@ -4427,13 +4424,6 @@ begin
     else begin
       t_value_list.CreateDataSet
     end;
-    if FileExists(tempdir + progetto + '_' + user + '_services.cds') then
-    begin
-      t_services.Open
-    end
-    else begin
-      t_services.CreateDataSet
-    end;
     if FileExists(tempdir + progetto + '_' + user + '_labels.cds') then
     begin
       t_labels.Open
@@ -4517,7 +4507,6 @@ begin
     t_value_list.ReadOnly := False;
     tab_ope.ReadOnly     := False;
     tab_tipi_file.ReadOnly := False;
-    t_services.ReadOnly  := False;
     t_labels.ReadOnly    := False;
     t_ope_x_copia.ReadOnly:=false;
     t_apphandlers.ReadOnly    := False;

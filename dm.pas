@@ -92,10 +92,6 @@ type
     t_controlliformaltezza: TIntegerField;
     t_controlliformlarghezza: TIntegerField;
     ds_controlliform: TDataSource;
-    t_dafare: TClientDataSet;
-    t_dafarescadenza: TDateField;
-    t_dafareattivita: TMemoField;
-    ds_dafare: TDataSource;
     t_selecttipo: TStringField;
     t_agenti: TClientDataSet;
     t_agentiidtask: TIntegerField;
@@ -147,7 +143,6 @@ type
     t_menulabel: TStringField;
     t_menuvalore: TStringField;
     ds_menu: TDataSource;
-    ds_menu_m: TDataSource;
     t_formtmpselez: TBooleanField;
     t_controlliformvisibile: TIntegerField;
     t_controlliformabilitato: TIntegerField;
@@ -155,10 +150,6 @@ type
     t_controlliformriferimento: TStringField;
     t_controlliformazione: TStringField;
     t_controlliformnomecontrollo: TStringField;
-    t_utenti: TClientDataSet;
-    t_utentiuser: TStringField;
-    t_utentipassword: TStringField;
-    ds_utenti: TDataSource;
     t_taskmodo: TStringField;
     t_espressionireturn: TStringField;
     t_operazionio2ref: TStringField;
@@ -331,9 +322,6 @@ type
     t_aggregresult_var: TStringField;
     t_aggregresult_view: TStringField;
     t_aggregresult_alias: TStringField;
-    t_services: TClientDataSet;
-    ds_services: TDataSource;
-    t_servicesnome: TStringField;
     t_operazioniservice: TStringField;
     t_labels: TClientDataSet;
     ds_labels: TDataSource;
@@ -344,8 +332,6 @@ type
     t_formleft_exp: TIntegerField;
     t_formaltezza_exp: TIntegerField;
     t_formlarghezza_exp: TIntegerField;
-    ActionList1: TActionList;
-    dbmodificato: TAction;
     t_formcloseclick_action: TStringField;
     t_printdeftemp_xml: TStringField;
     tmp_exp: TClientDataSet;
@@ -480,7 +466,6 @@ type
     t_usa_filetablename_exp: TIntegerField;
     t_variabili_prgaction: TStringField;
     t_variabili_prgalias_senza_action: TStringField;
-    ds_variabili_act: TDataSource;
     t_taskautoaggregate: TBooleanField;
     t_databasesasp: TStringField;
     t_controlliformTooltipExp: TIntegerField;
@@ -567,9 +552,6 @@ type
     procedure t_labelsAfterDelete(DataSet: TDataSet);
     procedure t_labelsAfterEdit(DataSet: TDataSet);
     procedure t_labelsAfterInsert(DataSet: TDataSet);
-    procedure t_servicesAfterDelete(DataSet: TDataSet);
-    procedure t_servicesAfterEdit(DataSet: TDataSet);
-    procedure t_servicesAfterInsert(DataSet: TDataSet);
     procedure t_applicazioneAfterEdit(DataSet: TDataSet);
     procedure t_operazioniAfterDelete(DataSet: TDataSet);
     procedure t_operazioniAfterPost(DataSet: TDataSet);
@@ -2127,22 +2109,6 @@ procedure Tdm_form.t_labelsAfterInsert(DataSet: TDataSet);
 begin
   labels_modificato := True
 end;
-
-procedure Tdm_form.t_servicesAfterDelete(DataSet: TDataSet);
-begin
-  appprop_modificato := True
-end;
-
-procedure Tdm_form.t_servicesAfterEdit(DataSet: TDataSet);
-begin
-  appprop_modificato := True
-end;
-
-procedure Tdm_form.t_servicesAfterInsert(DataSet: TDataSet);
-begin
-  appprop_modificato := True
-end;
-
 
 procedure Tdm_form.t_applicazioneAfterEdit(DataSet: TDataSet);
 begin

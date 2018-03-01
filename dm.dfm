@@ -1,48 +1,48 @@
 object dm_form: Tdm_form
   OldCreateOrder = False
-  Left = 371
-  Top = 133
-  Height = 673
-  Width = 1034
+  Left = 362
+  Top = 145
+  Height = 805
+  Width = 1050
   object ds_tabelle: TDataSource
     DataSet = t_tabelle
-    Left = 64
-    Top = 8
+    Left = 184
+    Top = 208
   end
   object ds_campi: TDataSource
     DataSet = t_campi
-    Left = 64
-    Top = 64
+    Left = 256
+    Top = 208
   end
   object ds_indicitesta: TDataSource
     DataSet = t_indicitesta
-    Left = 64
-    Top = 120
+    Left = 328
+    Top = 208
   end
   object ds_indici: TDataSource
     DataSet = t_indici
-    Left = 64
-    Top = 168
+    Left = 400
+    Top = 208
   end
   object ds_databases: TDataSource
     DataSet = t_databases
-    Left = 64
-    Top = 264
+    Left = 112
+    Top = 208
   end
   object ds_task: TDataSource
     DataSet = t_task
-    Left = 216
-    Top = 48
+    Left = 632
+    Top = 192
   end
   object ds_usa_file: TDataSource
     DataSet = t_usa_file
-    Left = 216
-    Top = 168
+    Left = 712
+    Top = 192
   end
   object ds_select: TDataSource
     DataSet = t_select
-    Left = 208
-    Top = 216
+    Left = 872
+    Top = 192
   end
   object t_tabelle: TClientDataSet
     Aggregates = <>
@@ -101,8 +101,8 @@ object dm_form: Tdm_form
     BeforeDelete = t_tabelleBeforeDelete
     AfterDelete = t_tabelleAfterDelete
     OnNewRecord = t_tabelleNewRecord
-    Left = 8
-    Top = 8
+    Left = 184
+    Top = 160
     object t_tabelleId: TIntegerField
       FieldName = 'Id'
       OnSetText = t_tabelleIdSetText
@@ -197,8 +197,8 @@ object dm_form: Tdm_form
     AfterEdit = t_campiAfterEdit
     AfterDelete = t_campiAfterDelete
     OnNewRecord = t_campiNewRecord
-    Left = 8
-    Top = 64
+    Left = 256
+    Top = 160
     object t_campiid_tabella: TIntegerField
       FieldName = 'id_tabella'
     end
@@ -272,8 +272,8 @@ object dm_form: Tdm_form
     AfterEdit = t_indicitestaAfterEdit
     BeforeDelete = t_indicitestaBeforeDelete
     OnNewRecord = t_indicitestaNewRecord
-    Left = 8
-    Top = 120
+    Left = 328
+    Top = 160
     object t_indicitestaid_tabella: TIntegerField
       FieldName = 'id_tabella'
     end
@@ -344,8 +344,8 @@ object dm_form: Tdm_form
     AfterEdit = t_indiciAfterEdit
     AfterDelete = t_indiciAfterDelete
     OnNewRecord = t_indiciNewRecord
-    Left = 8
-    Top = 176
+    Left = 400
+    Top = 160
     object t_indiciid_tabella: TIntegerField
       FieldName = 'id_tabella'
     end
@@ -417,8 +417,8 @@ object dm_form: Tdm_form
     AfterEdit = t_databasesAfterEdit
     AfterDelete = t_databasesAfterDelete
     OnNewRecord = t_databasesNewRecord
-    Left = 8
-    Top = 248
+    Left = 112
+    Top = 160
     object t_databasesnomedb: TStringField
       FieldName = 'nomedb'
       Size = 30
@@ -521,8 +521,8 @@ object dm_form: Tdm_form
     BeforeDelete = t_taskBeforeDelete
     AfterDelete = t_taskAfterDelete
     OnNewRecord = t_taskNewRecord
-    Left = 880
-    Top = 112
+    Left = 632
+    Top = 144
     object t_taskprg: TStringField
       DisplayWidth = 8
       FieldName = 'prg'
@@ -648,8 +648,8 @@ object dm_form: Tdm_form
     BeforeDelete = t_usa_fileBeforeDelete
     AfterDelete = t_usa_fileAfterDelete
     OnNewRecord = t_usa_fileNewRecord
-    Left = 888
-    Top = 232
+    Left = 712
+    Top = 144
     object t_usa_fileprg: TStringField
       DisplayWidth = 5
       FieldName = 'prg'
@@ -780,8 +780,8 @@ object dm_form: Tdm_form
     BeforeDelete = t_selectBeforeDelete
     AfterDelete = t_selectAfterDelete
     OnNewRecord = t_selectNewRecord
-    Left = 880
-    Top = 288
+    Left = 872
+    Top = 144
     object t_selectprg: TStringField
       DisplayWidth = 17
       FieldName = 'prg'
@@ -883,8 +883,8 @@ object dm_form: Tdm_form
     AfterEdit = t_serversAfterEdit
     AfterDelete = t_serversAfterDelete
     OnNewRecord = t_serversNewRecord
-    Left = 8
-    Top = 312
+    Left = 40
+    Top = 160
     object t_serversnomeserver: TStringField
       DisplayWidth = 19
       FieldName = 'nomeserver'
@@ -916,8 +916,8 @@ object dm_form: Tdm_form
   end
   object ds_servers: TDataSource
     DataSet = t_servers
-    Left = 64
-    Top = 312
+    Left = 40
+    Top = 208
   end
   object t_form: TClientDataSet
     Aggregates = <>
@@ -1102,8 +1102,8 @@ object dm_form: Tdm_form
     BeforeDelete = t_formBeforeDelete
     AfterDelete = t_formAfterDelete
     OnNewRecord = t_formNewRecord
-    Left = 880
-    Top = 344
+    Left = 632
+    Top = 528
     object t_formprg: TStringField
       DisplayWidth = 7
       FieldName = 'prg'
@@ -1249,8 +1249,8 @@ object dm_form: Tdm_form
   end
   object ds_form: TDataSource
     DataSet = t_form
-    Left = 216
-    Top = 272
+    Left = 632
+    Top = 576
   end
   object t_controlliform: TClientDataSet
     Aggregates = <>
@@ -1594,8 +1594,8 @@ object dm_form: Tdm_form
     AfterInsert = t_controlliformAfterInsert
     AfterEdit = t_controlliformAfterEdit
     AfterDelete = t_controlliformAfterDelete
-    Left = 880
-    Top = 400
+    Left = 712
+    Top = 528
     object t_controlliformprg: TStringField
       DisplayWidth = 12
       FieldName = 'prg'
@@ -1886,43 +1886,8 @@ object dm_form: Tdm_form
   end
   object ds_controlliform: TDataSource
     DataSet = t_controlliform
-    Left = 216
-    Top = 328
-  end
-  object t_dafare: TClientDataSet
-    Aggregates = <>
-    FileName = 'dafare.cds'
-    FieldDefs = <
-      item
-        Name = 'scadenza'
-        DataType = ftDate
-      end
-      item
-        Name = 'attivita'
-        DataType = ftMemo
-      end>
-    IndexDefs = <
-      item
-        Name = 't_dafareIndex1'
-        Fields = 'scadenza'
-        Options = [ixPrimary]
-      end>
-    Params = <>
-    StoreDefs = True
-    Left = 440
-    Top = 432
-    object t_dafarescadenza: TDateField
-      FieldName = 'scadenza'
-    end
-    object t_dafareattivita: TMemoField
-      FieldName = 'attivita'
-      BlobType = ftMemo
-    end
-  end
-  object ds_dafare: TDataSource
-    DataSet = t_dafare
-    Left = 488
-    Top = 440
+    Left = 712
+    Top = 576
   end
   object t_agenti: TClientDataSet
     Aggregates = <>
@@ -1958,8 +1923,8 @@ object dm_form: Tdm_form
     PacketRecords = 0
     Params = <>
     StoreDefs = True
-    Left = 16
-    Top = 512
+    Left = 136
+    Top = 648
     object t_agentiprg: TStringField
       FieldName = 'prg'
       Size = 40
@@ -1978,8 +1943,8 @@ object dm_form: Tdm_form
   end
   object ds_agenti: TDataSource
     DataSet = t_agenti
-    Left = 16
-    Top = 560
+    Left = 136
+    Top = 696
   end
   object t_espressioni: TClientDataSet
     Aggregates = <>
@@ -2020,8 +1985,8 @@ object dm_form: Tdm_form
     AfterDelete = t_espressioniAfterDelete
     OnCalcFields = t_espressioniCalcFields
     OnNewRecord = t_espressioniNewRecord
-    Left = 880
-    Top = 456
+    Left = 632
+    Top = 272
     object t_espressioniprg: TStringField
       FieldName = 'prg'
       Size = 100
@@ -2049,8 +2014,8 @@ object dm_form: Tdm_form
   end
   object ds_espressioni: TDataSource
     DataSet = t_espressioni
-    Left = 216
-    Top = 384
+    Left = 632
+    Top = 320
   end
   object t_programmi: TClientDataSet
     Aggregates = <>
@@ -2100,7 +2065,7 @@ object dm_form: Tdm_form
     StoreDefs = True
     AfterEdit = t_programmiAfterEdit
     BeforeDelete = t_programmiBeforeDelete
-    Left = 880
+    Left = 632
     Top = 24
     object t_programminome: TStringField
       DisplayWidth = 100
@@ -2136,7 +2101,8 @@ object dm_form: Tdm_form
   end
   object ds_programmi: TDataSource
     DataSet = t_programmi
-    Left = 216
+    Left = 632
+    Top = 72
   end
   object t_azioni: TClientDataSet
     Aggregates = <>
@@ -2185,8 +2151,8 @@ object dm_form: Tdm_form
     AfterEdit = t_azioniAfterEdit
     BeforeDelete = t_azioniBeforeDelete
     AfterDelete = t_azioniAfterDelete
-    Left = 880
-    Top = 520
+    Left = 632
+    Top = 400
     object t_azioniprg: TStringField
       DisplayWidth = 17
       FieldName = 'prg'
@@ -2215,8 +2181,8 @@ object dm_form: Tdm_form
   end
   object ds_azioni: TDataSource
     DataSet = t_azioni
-    Left = 216
-    Top = 432
+    Left = 632
+    Top = 448
   end
   object t_operazioni: TClientDataSet
     Aggregates = <>
@@ -2317,8 +2283,8 @@ object dm_form: Tdm_form
     AfterDelete = t_operazioniAfterDelete
     OnCalcFields = t_operazioniCalcFields
     OnNewRecord = t_operazioniNewRecord
-    Left = 880
-    Top = 576
+    Left = 712
+    Top = 400
     object t_operazioniprg: TStringField
       DisplayWidth = 4
       FieldName = 'prg'
@@ -2428,8 +2394,8 @@ object dm_form: Tdm_form
   end
   object ds_operazioni: TDataSource
     DataSet = t_operazioni
-    Left = 216
-    Top = 488
+    Left = 712
+    Top = 448
   end
   object t_applicazione: TClientDataSet
     Aggregates = <>
@@ -2619,8 +2585,8 @@ object dm_form: Tdm_form
     Params = <>
     StoreDefs = True
     AfterEdit = t_applicazioneAfterEdit
-    Left = 344
-    Top = 264
+    Left = 40
+    Top = 24
     object t_applicazioneo2_alias: TStringField
       FieldName = 'o2_alias'
       Size = 80
@@ -2766,8 +2732,8 @@ object dm_form: Tdm_form
   end
   object ds_applicazione: TDataSource
     DataSet = t_applicazione
-    Left = 344
-    Top = 312
+    Left = 40
+    Top = 72
   end
   object t_menu: TClientDataSet
     Aggregates = <>
@@ -2825,8 +2791,8 @@ object dm_form: Tdm_form
     AfterEdit = t_menuAfterEdit
     AfterDelete = t_menuAfterEdit
     OnNewRecord = t_menuNewRecord
-    Left = 288
-    Top = 104
+    Left = 256
+    Top = 24
     object t_menuid: TStringField
       FieldName = 'id'
       Size = 40
@@ -2860,33 +2826,8 @@ object dm_form: Tdm_form
   end
   object ds_menu: TDataSource
     DataSet = t_menu
-    Left = 336
-    Top = 88
-  end
-  object ds_menu_m: TDataSource
-    Left = 336
-    Top = 160
-  end
-  object t_utenti: TClientDataSet
-    Aggregates = <>
-    FileName = 'utenti.cds'
-    Params = <>
-    Left = 136
-    Top = 528
-    object t_utentiuser: TStringField
-      FieldName = 'user'
-      EditMask = '<LCCCCCCCCCCCCCCCCCCCCCCCCCCCCC;1; '
-      Size = 30
-    end
-    object t_utentipassword: TStringField
-      FieldName = 'password'
-      Size = 10
-    end
-  end
-  object ds_utenti: TDataSource
-    DataSet = t_utenti
-    Left = 136
-    Top = 576
+    Left = 256
+    Top = 72
   end
   object t_agentitab: TClientDataSet
     Aggregates = <>
@@ -2948,8 +2889,8 @@ object dm_form: Tdm_form
     PacketRecords = 0
     Params = <>
     StoreDefs = True
-    Left = 280
-    Top = 424
+    Left = 216
+    Top = 648
     object t_agentitabprg: TStringField
       FieldName = 'prg'
       Size = 100
@@ -2987,18 +2928,18 @@ object dm_form: Tdm_form
   end
   object ds_agentitab: TDataSource
     DataSet = t_agentitab
-    Left = 344
-    Top = 408
+    Left = 216
+    Top = 696
   end
   object ds_variabili_prg: TDataSource
     DataSet = t_variabili_prg
-    Left = 568
-    Top = 208
+    Left = 792
+    Top = 72
   end
   object ds_variabili_app: TDataSource
     DataSet = t_variabili_app
-    Left = 576
-    Top = 296
+    Left = 184
+    Top = 72
   end
   object t_variabili_prg: TClientDataSet
     Aggregates = <>
@@ -3041,8 +2982,8 @@ object dm_form: Tdm_form
     AfterDelete = t_variabili_prgAfterDelete
     OnCalcFields = t_variabili_prgCalcFields
     OnNewRecord = t_variabili_prgNewRecord
-    Left = 944
-    Top = 176
+    Left = 792
+    Top = 24
     object t_variabili_prgprg: TStringField
       FieldName = 'prg'
       Size = 100
@@ -3096,8 +3037,8 @@ object dm_form: Tdm_form
     AfterInsert = t_variabili_appAfterInsert
     AfterEdit = t_variabili_appAfterEdit
     AfterDelete = t_variabili_appAfterDelete
-    Left = 480
-    Top = 288
+    Left = 184
+    Top = 24
     object t_variabili_appalias: TStringField
       FieldName = 'alias'
       Size = 40
@@ -3171,8 +3112,8 @@ object dm_form: Tdm_form
     AfterEdit = t_unionAfterEdit
     AfterDelete = t_unionAfterDelete
     OnNewRecord = t_unionNewRecord
-    Left = 880
-    Top = 72
+    Left = 792
+    Top = 144
     object t_unionprg: TStringField
       DisplayWidth = 18
       FieldName = 'prg'
@@ -3217,8 +3158,8 @@ object dm_form: Tdm_form
   end
   object ds_union: TDataSource
     DataSet = t_union
-    Left = 464
-    Top = 136
+    Left = 792
+    Top = 192
   end
   object t_modelli: TClientDataSet
     Aggregates = <>
@@ -3255,8 +3196,8 @@ object dm_form: Tdm_form
     AfterInsert = t_modelliAfterInsert
     AfterEdit = t_modelliAfterEdit
     AfterDelete = t_modelliAfterDelete
-    Left = 632
-    Top = 208
+    Left = 112
+    Top = 24
     object t_modelliidmodello: TStringField
       FieldName = 'idmodello'
       Size = 30
@@ -3276,8 +3217,8 @@ object dm_form: Tdm_form
   end
   object ds_modelli: TDataSource
     DataSet = t_modelli
-    Left = 712
-    Top = 232
+    Left = 112
+    Top = 72
   end
   object t_parametri: TClientDataSet
     Aggregates = <>
@@ -3315,8 +3256,8 @@ object dm_form: Tdm_form
     AfterInsert = t_parametriAfterInsert
     AfterEdit = t_parametriAfterEdit
     AfterDelete = t_parametriAfterDelete
-    Left = 952
-    Top = 232
+    Left = 712
+    Top = 24
     object t_parametriprg: TStringField
       FieldName = 'prg'
       Size = 100
@@ -3336,8 +3277,8 @@ object dm_form: Tdm_form
   end
   object ds_parametri: TDataSource
     DataSet = t_parametri
-    Left = 752
-    Top = 312
+    Left = 712
+    Top = 72
   end
   object t_report: TClientDataSet
     Aggregates = <>
@@ -3371,8 +3312,8 @@ object dm_form: Tdm_form
     AfterInsert = t_reportAfterInsert
     AfterEdit = t_reportAfterEdit
     AfterDelete = t_reportAfterDelete
-    Left = 952
-    Top = 428
+    Left = 632
+    Top = 656
     object t_reportprg: TStringField
       FieldName = 'prg'
       Size = 100
@@ -3388,8 +3329,8 @@ object dm_form: Tdm_form
   end
   object ds_report: TDataSource
     DataSet = t_report
-    Left = 720
-    Top = 80
+    Left = 632
+    Top = 704
   end
   object t_reportfield: TClientDataSet
     Aggregates = <>
@@ -3438,8 +3379,8 @@ object dm_form: Tdm_form
     AfterEdit = t_reportfieldAfterEdit
     AfterDelete = t_reportfieldAfterDelete
     OnNewRecord = t_reportfieldNewRecord
-    Left = 952
-    Top = 296
+    Left = 792
+    Top = 656
     object t_reportfieldprg: TStringField
       FieldName = 'prg'
       Size = 50
@@ -3467,8 +3408,8 @@ object dm_form: Tdm_form
   end
   object ds_reportfield: TDataSource
     DataSet = t_reportfield
-    Left = 720
-    Top = 128
+    Left = 792
+    Top = 704
   end
   object t_input_output: TClientDataSet
     Aggregates = <>
@@ -3511,8 +3452,8 @@ object dm_form: Tdm_form
     AfterInsert = t_input_outputAfterInsert
     AfterEdit = t_input_outputAfterEdit
     AfterDelete = t_input_outputAfterDelete
-    Left = 952
-    Top = 568
+    Left = 872
+    Top = 656
     object t_input_outputprg: TStringField
       FieldName = 'prg'
       Size = 100
@@ -3535,8 +3476,8 @@ object dm_form: Tdm_form
   end
   object ds_input_output: TDataSource
     DataSet = t_input_output
-    Left = 728
-    Top = 32
+    Left = 872
+    Top = 704
   end
   object t_printdef: TClientDataSet
     Aggregates = <>
@@ -3585,8 +3526,8 @@ object dm_form: Tdm_form
     IndexFieldNames = 'id'
     Params = <>
     StoreDefs = True
-    Left = 632
-    Top = 152
+    Left = 712
+    Top = 656
     object t_printdefid: TStringField
       FieldName = 'id'
       Size = 50
@@ -3619,7 +3560,7 @@ object dm_form: Tdm_form
   object ds_printdef: TDataSource
     DataSet = t_printdef
     Left = 712
-    Top = 176
+    Top = 704
   end
   object t_proprieta_controlli: TClientDataSet
     Aggregates = <>
@@ -3629,8 +3570,8 @@ object dm_form: Tdm_form
     MasterSource = ds_controlliform
     PacketRecords = 0
     Params = <>
-    Left = 648
-    Top = 432
+    Left = 792
+    Top = 528
     object t_proprieta_controlliprg: TStringField
       FieldName = 'prg'
       Size = 100
@@ -3655,8 +3596,8 @@ object dm_form: Tdm_form
   end
   object ds_proprieta_controlli: TDataSource
     DataSet = t_proprieta_controlli
-    Left = 752
-    Top = 440
+    Left = 792
+    Top = 576
   end
   object t_value_list: TClientDataSet
     Aggregates = <>
@@ -3680,8 +3621,8 @@ object dm_form: Tdm_form
     IndexName = 't_value_listIndex1'
     Params = <>
     StoreDefs = True
-    Left = 528
-    Top = 544
+    Left = 872
+    Top = 528
     object t_value_listchiave: TStringField
       FieldName = 'chiave'
       Size = 50
@@ -3693,8 +3634,8 @@ object dm_form: Tdm_form
   end
   object ds_value_list: TDataSource
     DataSet = t_value_list
-    Left = 592
-    Top = 544
+    Left = 872
+    Top = 576
   end
   object tab_ope: TClientDataSet
     Active = True
@@ -3709,8 +3650,8 @@ object dm_form: Tdm_form
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 72
-    Top = 512
+    Left = 872
+    Top = 400
     Data = {
       390000009619E0BD01000000180000000100000000000300000039000A6F7065
       72617A696F6E6501004900000001000557494454480200020014000000}
@@ -3720,14 +3661,14 @@ object dm_form: Tdm_form
   end
   object ds_tab_ope: TDataSource
     DataSet = tab_ope
-    Left = 72
-    Top = 576
+    Left = 872
+    Top = 448
   end
   object tab_tipi_file: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 400
-    Top = 56
+    Left = 952
+    Top = 656
     object tab_tipi_filetipo: TStringField
       FieldName = 'tipo'
       Size = 40
@@ -3735,8 +3676,8 @@ object dm_form: Tdm_form
   end
   object ds_tipi_file: TDataSource
     DataSet = tab_tipi_file
-    Left = 480
-    Top = 56
+    Left = 952
+    Top = 704
   end
   object t_aggreg: TClientDataSet
     Aggregates = <>
@@ -3785,8 +3726,8 @@ object dm_form: Tdm_form
     AfterEdit = t_aggregAfterEdit
     AfterDelete = t_aggregAfterDelete
     OnCalcFields = t_aggregCalcFields
-    Left = 880
-    Top = 168
+    Left = 952
+    Top = 144
     object t_aggregprg: TStringField
       FieldName = 'prg'
       Size = 100
@@ -3819,26 +3760,8 @@ object dm_form: Tdm_form
   end
   object ds_aggreg: TDataSource
     DataSet = t_aggreg
-    Left = 208
-    Top = 96
-  end
-  object t_services: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    AfterInsert = t_servicesAfterInsert
-    AfterEdit = t_servicesAfterEdit
-    AfterDelete = t_servicesAfterDelete
-    Left = 552
-    Top = 64
-    object t_servicesnome: TStringField
-      FieldName = 'nome'
-      Size = 40
-    end
-  end
-  object ds_services: TDataSource
-    DataSet = t_services
-    Left = 608
-    Top = 64
+    Left = 952
+    Top = 192
   end
   object t_labels: TClientDataSet
     Aggregates = <>
@@ -3876,8 +3799,8 @@ object dm_form: Tdm_form
     AfterEdit = t_labelsAfterEdit
     AfterDelete = t_labelsAfterDelete
     OnNewRecord = t_labelsNewRecord
-    Left = 672
-    Top = 368
+    Left = 296
+    Top = 648
     object t_labelsid: TIntegerField
       DisplayWidth = 12
       FieldName = 'id'
@@ -3893,15 +3816,8 @@ object dm_form: Tdm_form
   end
   object ds_labels: TDataSource
     DataSet = t_labels
-    Left = 768
-    Top = 368
-  end
-  object ActionList1: TActionList
-    Left = 408
-    Top = 552
-    object dbmodificato: TAction
-      Caption = 'dbmodificato'
-    end
+    Left = 296
+    Top = 696
   end
   object tmp_exp: TClientDataSet
     Aggregates = <>
@@ -3938,8 +3854,8 @@ object dm_form: Tdm_form
     Params = <>
     ReadOnly = True
     StoreDefs = True
-    Left = 824
-    Top = 552
+    Left = 712
+    Top = 272
     object tmp_expprg: TStringField
       FieldName = 'prg'
       Size = 100
@@ -3982,8 +3898,8 @@ object dm_form: Tdm_form
     IndexName = 'tmp_parametriIndex1'
     Params = <>
     StoreDefs = True
-    Left = 216
-    Top = 592
+    Left = 872
+    Top = 24
     object tmp_parametriid: TIntegerField
       FieldName = 'id'
     end
@@ -3997,14 +3913,14 @@ object dm_form: Tdm_form
   end
   object ds_tmp_parametri: TDataSource
     DataSet = tmp_parametri
-    Left = 216
-    Top = 544
+    Left = 872
+    Top = 72
   end
   object tmp_postab: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 680
-    Top = 560
+    Left = 952
+    Top = 528
     object tmp_postabnomepadre: TStringField
       FieldName = 'nomepadre'
       Size = 100
@@ -4040,8 +3956,8 @@ object dm_form: Tdm_form
   end
   object ds_tmp_postab: TDataSource
     DataSet = tmp_postab
-    Left = 752
-    Top = 560
+    Left = 952
+    Top = 576
   end
   object elenco_prg: TClientDataSet
     Aggregates = <>
@@ -4091,8 +4007,8 @@ object dm_form: Tdm_form
     StoreDefs = True
     AfterEdit = t_programmiAfterEdit
     BeforeDelete = t_programmiBeforeDelete
-    Left = 784
-    Top = 136
+    Left = 552
+    Top = 24
     object elenco_prgnome: TStringField
       DisplayWidth = 21
       FieldName = 'nome'
@@ -4127,8 +4043,8 @@ object dm_form: Tdm_form
   end
   object ds_elenco_prg: TDataSource
     DataSet = elenco_prg
-    Left = 776
-    Top = 192
+    Left = 552
+    Top = 72
   end
   object t_apphandlers: TClientDataSet
     Aggregates = <>
@@ -4158,8 +4074,8 @@ object dm_form: Tdm_form
     Params = <>
     StoreDefs = True
     OnCalcFields = t_apphandlersCalcFields
-    Left = 8
-    Top = 392
+    Left = 56
+    Top = 648
     object t_apphandlersalias: TStringField
       FieldName = 'alias'
       Size = 40
@@ -4180,14 +4096,14 @@ object dm_form: Tdm_form
   end
   object ds_apphandlers: TDataSource
     DataSet = t_apphandlers
-    Left = 64
-    Top = 392
+    Left = 56
+    Top = 696
   end
   object t_ope_x_copia: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 952
-    Top = 360
+    Top = 400
     object t_ope_x_copiaprg: TStringField
       FieldName = 'prg'
       Size = 100
@@ -4233,10 +4149,6 @@ object dm_form: Tdm_form
       Size = 50
     end
   end
-  object ds_variabili_act: TDataSource
-    Left = 952
-    Top = 496
-  end
   object tmp_callparams: TClientDataSet
     Aggregates = <>
     FieldDefs = <
@@ -4279,8 +4191,8 @@ object dm_form: Tdm_form
     StoreDefs = True
     AfterInsert = tmp_callparamsAfterInsert
     BeforePost = tmp_callparamsBeforePost
-    Left = 312
-    Top = 592
+    Left = 792
+    Top = 400
     object tmp_callparamsID: TIntegerField
       FieldName = 'ID'
     end
@@ -4305,7 +4217,7 @@ object dm_form: Tdm_form
   end
   object ds_tmp_callparams: TDataSource
     DataSet = tmp_callparams
-    Left = 312
-    Top = 544
+    Left = 792
+    Top = 448
   end
 end
