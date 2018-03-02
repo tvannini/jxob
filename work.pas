@@ -749,9 +749,6 @@ type
     procedure Moverow1Click(Sender: TObject);
     procedure DEBUG1Click(Sender: TObject);
     procedure Openproject1Click(Sender: TObject);
-    procedure ts_vars_actionEnter(Sender: TObject);
-    procedure dbgrid_vars_actionExit(Sender: TObject);
-    procedure dbgrid_vars_actionEnter(Sender: TObject);
     procedure dbgrid_varprgExit(Sender: TObject);
     function getJanoxRuntime(): String;
     procedure FormResize(Sender: TObject);
@@ -1575,10 +1572,8 @@ begin
           null then
         begin
           alias_trovato := 'S'
-        end;
-        //trovato copia
-        if dm_form.t_usa_file.Lookup('con_nome', alias_assegnato, 'con_nome') <>
-          null then
+        end
+        else
         begin
           Inc(progr);
           alias_assegnato := dm_form.t_usa_filetabella.Value + IntToStr(progr);
@@ -1723,16 +1718,10 @@ begin
      // si posiziona sul campo in questione
       dm_form.t_campi.Locate('nomecampo', dm_form.t_selectcampo.Value, []);
 
-
       f_sceltacampotab.ShowModal;
-
-
-
-
 
       if f_sceltacampotab.ModalResult = mrOk then
       begin
-
 
       // in caso di selezione multipla
      if f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRowCount > 1 then
@@ -1931,8 +1920,6 @@ end;
 procedure Tf_work.dbgrid_varprgEnter(Sender: TObject);
 begin
   dbnav.DataSource := dm_form.ds_variabili_prg;
-  dm_form.azione_x_init:='';
-
 end;
 
 procedure Tf_work.dbgrid_appvarsEnter(Sender: TObject);
@@ -2519,6 +2506,7 @@ var
 begin
   if InputQuery('New view name', 'Name', nome_view) then
   begin
+    nome_view := dm_form.formatName(nome_view);
     dm_form.t_task.Insert;
     dm_form.t_tasknome.Value := nome_view;
     dm_form.t_taskautoaggregate.Value := False;
@@ -3029,6 +3017,7 @@ begin
     nomenew := 'Newprogram';
     if InputQuery('New program', 'Program name', nomenew) then
     begin
+      nomenew := dm_form.formatName(nomenew);
       trovato := FileExists(prgdir + nomenew + '.prg');
       if trovato then
       begin
@@ -4649,6 +4638,7 @@ var
 begin
   if InputQuery('New action', 'Action name', nome_azione) then
   begin
+    nome_azione := dm_form.formatName(nome_azione);
     if dm_form.ds_operazioni.State = dsInsert then dm_form.t_operazioni.Post;
     azionepos:=dm_form.t_azioni.GetBookmark;
     ope_pos:=dm_form.t_operazioni.GetBookmark;
@@ -5245,6 +5235,7 @@ var
 begin
   if InputQuery('New child', 'Name', NewID) then
   begin
+    NewID := dm_form.formatName(NewID);
     if tree_menu.Selected = nil then
     begin
       ParentNode := tree_menu.TopItem;
@@ -7424,25 +7415,6 @@ begin
   begin
     apri_progettoExecute(Self)
   end;
-end;
-
-
-procedure Tf_work.ts_vars_actionEnter(Sender: TObject);
-begin
-  if dm_form.azione_x_init<>'' then dm_form.t_variabili_prg.Filtered:=true;
-end;
-
-
-procedure Tf_work.dbgrid_vars_actionExit(Sender: TObject);
-begin
-  dm_form.azione_x_init:='';
-end;
-
-
-procedure Tf_work.dbgrid_vars_actionEnter(Sender: TObject);
-begin
-  dbnav.DataSource := dm_form.ds_variabili_prg;
-  dm_form.azione_x_init:=dm_form.t_azioniazione.Value;
 end;
 
 

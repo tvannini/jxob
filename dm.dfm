@@ -110,10 +110,12 @@ object dm_form: Tdm_form
     object t_tabelleNome: TStringField
       FieldName = 'Nome'
       OnChange = t_tabelleNomeChange
+      OnSetText = t_tabelleNomeSetText
       Size = 30
     end
     object t_tabelleNome_fisico: TStringField
       FieldName = 'Nome_fisico'
+      OnSetText = t_tabelleNome_fisicoSetText
       Size = 30
     end
     object t_tabelledatabase: TStringField
@@ -208,11 +210,13 @@ object dm_form: Tdm_form
     object t_campinomecampo: TStringField
       FieldName = 'nomecampo'
       OnChange = t_campinomecampoChange
+      OnSetText = t_campinomecampoSetText
       Size = 30
     end
     object t_campidbname: TStringField
       DisplayWidth = 50
       FieldName = 'dbname'
+      OnSetText = t_campidbnameSetText
       Size = 50
     end
     object t_campitipo: TStringField
@@ -282,6 +286,7 @@ object dm_form: Tdm_form
     end
     object t_indicitestanomekey: TStringField
       FieldName = 'nomekey'
+      OnSetText = t_indicitestanomekeySetText
       Size = 30
     end
     object t_indicitestamatch: TIntegerField
@@ -421,6 +426,7 @@ object dm_form: Tdm_form
     Top = 160
     object t_databasesnomedb: TStringField
       FieldName = 'nomedb'
+      OnSetText = t_databasesnomedbSetText
       Size = 30
     end
     object t_databasesserver: TStringField
@@ -888,6 +894,7 @@ object dm_form: Tdm_form
     object t_serversnomeserver: TStringField
       DisplayWidth = 19
       FieldName = 'nomeserver'
+      OnSetText = t_serversnomeserverSetText
       Size = 30
     end
     object t_serverstiposerver: TStringField
@@ -1113,6 +1120,7 @@ object dm_form: Tdm_form
       DisplayWidth = 30
       FieldName = 'nomeform'
       OnChange = t_formnomeformChange
+      OnSetText = t_formnomeformSetText
       Size = 150
     end
     object t_formposizione: TIntegerField
@@ -2978,10 +2986,8 @@ object dm_form: Tdm_form
     StoreDefs = True
     AfterInsert = t_variabili_prgAfterInsert
     AfterEdit = t_variabili_prgAfterEdit
-    BeforePost = t_variabili_prgBeforePost
     AfterDelete = t_variabili_prgAfterDelete
     OnCalcFields = t_variabili_prgCalcFields
-    OnNewRecord = t_variabili_prgNewRecord
     Left = 792
     Top = 24
     object t_variabili_prgprg: TStringField
@@ -3041,6 +3047,7 @@ object dm_form: Tdm_form
     Top = 24
     object t_variabili_appalias: TStringField
       FieldName = 'alias'
+      OnSetText = t_variabili_appaliasSetText
       Size = 40
     end
     object t_variabili_apptipo: TStringField
@@ -3200,6 +3207,7 @@ object dm_form: Tdm_form
     Top = 24
     object t_modelliidmodello: TStringField
       FieldName = 'idmodello'
+      OnSetText = t_modelliidmodelloSetText
       Size = 30
     end
     object t_modellitipo_dato: TStringField
@@ -3268,6 +3276,7 @@ object dm_form: Tdm_form
     end
     object t_parametrinome: TStringField
       FieldName = 'nome'
+      OnSetText = t_parametrinomeSetText
       Size = 40
     end
     object t_parametrimodello: TStringField

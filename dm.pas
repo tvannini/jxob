@@ -620,14 +620,29 @@ type
     procedure t_tabelleIdSetText(Sender: TField; const Text: String);
     function datetoo2date(date: TDateTime): String;
     procedure t_parametriidSetText(Sender: TField; const Text: String);
-    procedure t_variabili_prgNewRecord(DataSet: TDataSet);
-    procedure t_variabili_prgBeforePost(DataSet: TDataSet);
     procedure t_variabili_prgCalcFields(DataSet: TDataSet);
     procedure t_variabili_actAfterDelete(DataSet: TDataSet);
     procedure t_variabili_actAfterEdit(DataSet: TDataSet);
     procedure t_variabili_actAfterInsert(DataSet: TDataSet);
     procedure tmp_callparamsAfterInsert(DataSet: TDataSet);
     procedure tmp_callparamsBeforePost(DataSet: TDataSet);
+    function formatName(logName: String): String;
+    procedure t_modelliidmodelloSetText(Sender: TField;
+      const Text: String);
+    procedure t_variabili_appaliasSetText(Sender: TField;
+      const Text: String);
+    procedure t_serversnomeserverSetText(Sender: TField;
+      const Text: String);
+    procedure t_databasesnomedbSetText(Sender: TField; const Text: String);
+    procedure t_tabelleNomeSetText(Sender: TField; const Text: String);
+    procedure t_tabelleNome_fisicoSetText(Sender: TField;
+      const Text: String);
+    procedure t_campinomecampoSetText(Sender: TField; const Text: String);
+    procedure t_campidbnameSetText(Sender: TField; const Text: String);
+    procedure t_indicitestanomekeySetText(Sender: TField;
+      const Text: String);
+    procedure t_parametrinomeSetText(Sender: TField; const Text: String);
+    procedure t_formnomeformSetText(Sender: TField; const Text: String);
 
 
   private
@@ -656,7 +671,6 @@ type
     program_modificato: boolean;
     in_importazione: boolean;
     nomeactionprev:String;
-    azione_x_init:String;
     { Public declarations }
   end;
 
@@ -809,36 +823,30 @@ end;
 
 procedure Tdm_form.t_taskBeforeDelete(DataSet: TDataSet);
 begin
-  //elimina select
+  // ________________________________________________________ Remove selects ___
   while (t_selectidtask.Value <> 0) do
   begin
     t_select.Delete;
     t_select.Next;
-    
   end;
-
-  //elimina risorse db
+  // _________________________________________________________ Remove tables ___
   while (t_usa_fileidtask.Value <> 0) do
   begin
     t_usa_file.Delete;
     t_usa_file.Next;
   end;
-
-  //elimina aggregati
-  while (t_aggregidtask.Value <> 0) do
-  begin
-    t_aggreg.Delete;
-    t_aggreg.Next;
-  end;
-
-
-  //elimina union
+  // _____________________________________________________ Remove links info ___
   while (t_unionidtask.Value <> 0) do
   begin
     t_union.Delete;
     t_union.Next;
   end;
-
+  // ___________________________________________________ Remove aggregations ___
+  while (t_aggregidtask.Value <> 0) do
+  begin
+    t_aggreg.Delete;
+    t_aggreg.Next;
+  end;
 end;
 
 procedure Tdm_form.t_azioniBeforeDelete(DataSet: TDataSet);
@@ -905,9 +913,10 @@ end;
 
 procedure Tdm_form.t_tasknomeSetText(Sender: TField; const Text: string);
 var
-  str_old, str_new, str_old2, str_new2: string;
+  newName, str_old, str_new, str_old2, str_new2: string;
 
 begin
+  newName := formatName(Text);
   //rintraccia dipendenze di nome task
 
   //espressioni
@@ -917,7 +926,7 @@ begin
   begin
     t_espressioni.Edit;
     str_old := 'o2val(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2val(' + chr(39) + Text + chr(39);
+    str_new := 'o2val(' + chr(39) + newName + chr(39);
 
     t_espressionireturn.Value :=
       StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
@@ -925,7 +934,7 @@ begin
       str_old, str_new, [rfReplaceAll]);
 
     str_old := 'o2pre(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2pre(' + chr(39) + Text + chr(39);
+    str_new := 'o2pre(' + chr(39) + newName + chr(39);
 
     t_espressionireturn.Value :=
       StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
@@ -933,7 +942,7 @@ begin
       str_old, str_new, [rfReplaceAll]);
 
     str_old := 'o2zero(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2zero(' + chr(39) + Text + chr(39);
+    str_new := 'o2zero(' + chr(39) + newName + chr(39);
 
     t_espressionireturn.Value :=
       StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
@@ -941,7 +950,7 @@ begin
       str_old, str_new, [rfReplaceAll]);
 
     str_old := 'o2view(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view(' + chr(39) + Text + chr(39);
+    str_new := 'o2view(' + chr(39) + newName + chr(39);
 
     t_espressionireturn.Value :=
       StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
@@ -949,7 +958,7 @@ begin
       str_old, str_new, [rfReplaceAll]);
 
     str_old := 'o2view_status(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view_status(' + chr(39) + Text + chr(39);
+    str_new := 'o2view_status(' + chr(39) + newName + chr(39);
 
     t_espressionireturn.Value :=
       StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
@@ -957,7 +966,7 @@ begin
       str_old, str_new, [rfReplaceAll]);
 
     str_old := 'o2view_reqrows(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view_reqrows(' + chr(39) + Text + chr(39);
+    str_new := 'o2view_reqrows(' + chr(39) + newName + chr(39);
 
     t_espressionireturn.Value :=
       StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
@@ -965,7 +974,7 @@ begin
       str_old, str_new, [rfReplaceAll]);
 
     str_old := 'o2view_mod(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view_mod(' + chr(39) + Text + chr(39);
+    str_new := 'o2view_mod(' + chr(39) + newName + chr(39);
 
     t_espressionireturn.Value :=
       StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
@@ -973,7 +982,7 @@ begin
       str_old, str_new, [rfReplaceAll]);
 
     str_old := 'o2view_start(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view_start(' + chr(39) + Text + chr(39);
+    str_new := 'o2view_start(' + chr(39) + newName + chr(39);
 
     t_espressionireturn.Value :=
       StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
@@ -981,7 +990,7 @@ begin
       str_old, str_new, [rfReplaceAll]);
 
     str_old := 'o2view_end(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view_end(' + chr(39) + Text + chr(39);
+    str_new := 'o2view_end(' + chr(39) + newName + chr(39);
 
     t_espressionireturn.Value :=
       StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
@@ -990,7 +999,7 @@ begin
 
 
     str_old := 'o2view_retrows(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view_retrows(' + chr(39) + Text + chr(39);
+    str_new := 'o2view_retrows(' + chr(39) + newName + chr(39);
 
     t_espressionireturn.Value :=
       StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
@@ -999,7 +1008,7 @@ begin
 
 
     str_old := 'o2view_total(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view_total(' + chr(39) + Text + chr(39);
+    str_new := 'o2view_total(' + chr(39) + newName + chr(39);
 
     t_espressionireturn.Value :=
       StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
@@ -1007,7 +1016,7 @@ begin
       str_old, str_new, [rfReplaceAll]);
 
     str_old := 'o2view_select(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view_select(' + chr(39) + Text + chr(39);
+    str_new := 'o2view_select(' + chr(39) + newName + chr(39);
 
     t_espressionireturn.Value :=
       StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
@@ -1018,9 +1027,9 @@ begin
 
   //controlli form
   str_old := chr(127) + Sender.AsString;
-  str_new := chr(127) + Text;
+  str_new := chr(127) + newName;
   str_old2 := '"' + Sender.AsString +'"';
-  str_new2 := '"' + Text +'"';
+  str_new2 := '"' + newName +'"';
   t_controlliform.MasterSource:=nil;
   t_controlliform.First;
   while not t_controlliform.EOF do
@@ -1041,7 +1050,7 @@ begin
 
   //operazioni
   str_old := chr(127) + Sender.AsString;
-  str_new := chr(127) + Text;
+  str_new := chr(127) + newName;
   t_operazioni.MasterSource := nil;
   t_operazioni.First;
   while not t_operazioni.EOF do
@@ -1060,11 +1069,11 @@ begin
 
    // aggiorna il treeview
    if f_work.supertree.Selected.Parent <> nil then
-   f_work.supertree.Selected.Parent.Text:=Text;
+   f_work.supertree.Selected.Parent.Text := newName;
 
   //SCRIVE LA MODIFICA
 
-  Sender.Value := Text;
+  Sender.Value := newName;
 end;
 
 procedure Tdm_form.t_usa_fileBeforeDelete(DataSet: TDataSet);
@@ -1079,17 +1088,18 @@ end;
 
 
 {*
- * Reacts when, in a view, selected field alias is chanaged
+ * Reacts when, in a view, selected field alias is changed
  *}
 procedure Tdm_form.t_selectcon_nomeSetText(Sender: TField; const Text: string);
 var
-  str_old, str_new: string;
+  newName, str_old, str_new: string;
   progr : integer;
   r : TRegExpr;
 begin
   // _______________________________________________ Changing existing alias ___
   if (Sender.AsString <> '') and (Sender.AsString <> Text) then
   try
+    newName := formatName(Text);
     t_operazioni.DisableControls;
     t_espressioni.DisableControls;
     t_controlliform.DisableControls;
@@ -1107,13 +1117,13 @@ begin
       if r.Exec(t_espressionireturn.Value) then
       begin
         t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
-                                               '$1' + Text + '$3',
+                                               '$1' + newName + '$3',
                                                true);
       end;
       if r.Exec(t_espressioniexpr.Value) then
       begin
         t_espressioniexpr.Value := r.Replace(t_espressioniexpr.Value,
-                                             '$1' + Text + '$3',
+                                             '$1' + newName + '$3',
                                              true);
       end;
       t_espressioni.Next
@@ -1123,7 +1133,7 @@ begin
     //operazioni
     str_old                   := #127 + t_tasknome.Value + #129 +
                                  Sender.AsString;
-    str_new                   := #127 + t_tasknome.Value + #129 + Text;
+    str_new                   := #127 + t_tasknome.Value + #129 + newName;
     t_operazioni.MasterSource := nil;
     t_operazioni.First;
     while not t_operazioni.EOF do
@@ -1159,11 +1169,11 @@ begin
       if PosEx('2_view2list("' + t_tasknome.Value +'"', t_controlliformscelte_possibili.Value) > 0 then
       begin
         str_old := '", "' + Sender.AsString +'")';
-        str_new := '", "' + Text +'")';
+        str_new := '", "' + newName +'")';
         t_controlliformscelte_possibili.Value:= StringReplace(t_controlliformscelte_possibili.Value, str_old, str_new, [rfReplaceAll]);
 
         str_old := '", "' + Sender.AsString +'", "';
-        str_new := '", "' + Text +'", "';
+        str_new := '", "' + newName +'", "';
         t_controlliformscelte_possibili.Value:= StringReplace(t_controlliformscelte_possibili.Value, str_old, str_new, [rfReplaceAll]);
       end;
 
@@ -1173,7 +1183,7 @@ begin
 
     //funzioni aggregazione
     str_old := Sender.AsString;
-    str_new := Text;
+    str_new := newName;
     t_aggreg.First;
     while not t_aggreg.EOF do
     begin
@@ -1186,7 +1196,7 @@ begin
 
       //protocols
     str_old := chr(127) + t_tasknome.Value + chr(129) + Sender.AsString;
-    str_new := chr(127) + t_tasknome.Value + chr(129) + Text;
+    str_new := chr(127) + t_tasknome.Value + chr(129) + newName;
     t_reportfield.MasterSource:=nil;
     t_reportfield.First;
     while not t_reportfield.EOF do
@@ -1206,166 +1216,24 @@ begin
     t_controlliform.EnableControls;
   end;
 
-  Sender.Value := Text;
+  Sender.Value := newName;
 end;
-
-
-{*
- * [COPY] Reacts when, in a view, selected field alias is chanaged
-
-procedure Tdm_form.t_selectcon_nomeSetText(Sender: TField; const Text: string);
-var
-  str_old, str_new: string;
-  progr : integer;
-begin
-  // _______________________________________________ Changing existing alias ___
-  if (Sender.AsString <> '') and (Sender.AsString <> Text) then
-  try
-    t_operazioni.DisableControls;
-    t_espressioni.DisableControls;
-    t_controlliform.DisableControls;
-
-    //espressioni
-    t_espressioni.First;
-    while not t_espressioni.EOF do
-    begin
-      t_espressioni.Edit;
-
-      str_old := 'o2val(' + chr(39) + t_tasknome.Value + chr(39) + ',' + chr(39) +
-      Sender.AsString + chr(39);
-      str_new := 'o2val(' + chr(39) + t_tasknome.Value + chr(39) + ',' + chr(39) + Text + chr(39);
-
-      t_espressionireturn.Value :=
-        StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-      t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-        str_old, str_new, [rfReplaceAll]);
-
-      str_old := 'o2pre(' + chr(39) + t_tasknome.Value + chr(39) + ',' + chr(39) +
-      Sender.AsString + chr(39);
-      str_new := 'o2pre(' + chr(39) + t_tasknome.Value + chr(39) + ',' + chr(39) + Text + chr(39);
-
-      t_espressionireturn.Value :=
-        StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-      t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-        str_old, str_new, [rfReplaceAll]);
-
-      str_old := 'o2zero(' + chr(39) + t_tasknome.Value + chr(39) + ',' + chr(39) +
-      Sender.AsString + chr(39);
-      str_new := 'o2zero(' + chr(39) + t_tasknome.Value + chr(39) + ',' + chr(39) + Text + chr(39);
-
-      t_espressionireturn.Value :=
-        StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-      t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-        str_old, str_new, [rfReplaceAll]);
-
-      t_espressioni.Next
-    end;
-
-    //sistema istruzioni
-    //operazioni
-    str_old := chr(127) + t_tasknome.Value + chr(129) + Sender.AsString;
-    str_new := chr(127) + t_tasknome.Value + chr(129) + Text;
-    t_operazioni.MasterSource := nil;
-    t_operazioni.First;
-    while not t_operazioni.EOF do
-    begin
-       t_operazioni.Edit;
-       t_operazionio2ref.Value     := StringReplace(t_operazionio2ref.Value,
-        str_old, str_new, [rfReplaceAll]);
-       t_operazionicallparam.Value :=
-        StringReplace(t_operazionicallparam.Value, str_old, str_new, [rfReplaceAll]);
-      t_operazioni.Next
-
-    end;
-    t_operazioni.MasterSource := ds_azioni;
-
-    //controlli form
-    t_controlliform.MasterSource:=nil;
-    t_controlliform.First;
-    while not t_controlliform.EOF do
-    begin
-    t_controlliform.Edit;
-      if t_controlliformriferimento.Value = str_old then
-      begin
-
-        t_controlliformriferimento.Value :=
-        StringReplace(t_controlliformriferimento.Value, str_old, str_new, [rfReplaceAll]);
-       t_controlliformcaption.Value     :=
-        StringReplace(t_controlliformcaption.Value, str_old, str_new, [rfReplaceAll]);
-      end;
-
-      if PosEx('2_view2list("' + t_tasknome.Value +'"', t_controlliformscelte_possibili.Value) > 0 then
-      begin
-        str_old := '", "' + Sender.AsString +'")';
-        str_new := '", "' + Text +'")';
-        t_controlliformscelte_possibili.Value:= StringReplace(t_controlliformscelte_possibili.Value, str_old, str_new, [rfReplaceAll]);
-
-        str_old := '", "' + Sender.AsString +'", "';
-        str_new := '", "' + Text +'", "';
-        t_controlliformscelte_possibili.Value:= StringReplace(t_controlliformscelte_possibili.Value, str_old, str_new, [rfReplaceAll]);
-      end;
-
-      t_controlliform.Next
-    end;
-    t_controlliform.MasterSource:=ds_form;
-
-    //funzioni aggregazione
-    str_old := Sender.AsString;
-    str_new := Text;
-    t_aggreg.First;
-    while not t_aggreg.EOF do
-    begin
-      t_aggreg.Edit;
-      t_aggregcampo_view.Value := StringReplace(t_aggregcampo_view.Value,
-        str_old, str_new, [rfReplaceAll]);
-
-      t_aggreg.Next
-    end;
-
-      //protocols
-    str_old := chr(127) + t_tasknome.Value + chr(129) + Sender.AsString;
-    str_new := chr(127) + t_tasknome.Value + chr(129) + Text;
-    t_reportfield.MasterSource:=nil;
-    t_reportfield.First;
-    while not t_reportfield.EOF do
-    begin
-      t_reportfield.Edit;
-      t_reportfieldcampo.Value := StringReplace(t_reportfieldcampo.Value,
-        str_old, str_new, [rfReplaceAll]);
-
-      t_reportfield.Next
-    end;
-    t_reportfield.MasterSource:=ds_report;
-
-
-  finally
-    t_operazioni.EnableControls;
-    t_espressioni.EnableControls;
-    t_controlliform.EnableControls;
-  end;
-
-  Sender.Value := Text;
-end;
-
- *}
 
 
 procedure Tdm_form.t_azioniazioneSetText(Sender: TField; const Text: string);
 var
-  str_old, str_new, str_old2, str_new2: string;
+  newName, str_old, str_new, str_old2, str_new2: string;
 
 begin
   if (Sender.AsString <> '') and (not(in_importazione)) then
   begin
+    newName := formatName(Text);
     t_operazioni.DisableControls;
 
-
     str_old := Sender.AsString;
-    str_new := Text;
-
+    str_new := newName;
 
     nomeactionprev:=str_old;
-
 
     t_variabili_prg.First;
     while (not(t_variabili_prg.EOF)) do
@@ -1412,7 +1280,7 @@ begin
     //sistema istruzioni
     //operazioni
     str_old2 := Sender.AsString + '::';
-    str_new2 := Text + '::';
+    str_new2 := newName + '::';
 
     t_operazioni.First;
     while not t_operazioni.EOF do
@@ -1423,7 +1291,6 @@ begin
       t_operazioniazione.Value:=str_new;
       t_operazioni.Post;
     end;
-
 
     t_operazioni.MasterSource := nil;
     t_operazioni.First;
@@ -1444,16 +1311,10 @@ begin
 
     t_operazioni.MasterSource := ds_azioni;
 
-
-
-
-
-
    end;  //fine blocco se valore iniziale <> ''
 
-
 //  t_azioni.Edit;
-  Sender.Value := Text;
+  Sender.Value := newName;
   t_operazioni.EnableControls;
 
 end;
@@ -1491,8 +1352,9 @@ end;
 
 procedure Tdm_form.t_variabili_prgaliasSetText(Sender: TField; const Text: string);
 var
-  str_old, str_new: string;
+  newName, str_old, str_new: string;
 begin
+  newName := formatName(Text);
   //espressioni
   //se c'e' variazione di valore preesistente
   if Sender.AsString <> '' then
@@ -1504,7 +1366,7 @@ begin
     begin
       t_espressioni.Edit;
       str_old := 'o2val(' + chr(39) + 'prg§_§var' + chr(39) + ',' + chr(39) + Sender.AsString + chr(39);
-      str_new := 'o2val(' + chr(39) + 'prg§_§var' + chr(39) + ',' + chr(39) + Text + chr(39);
+      str_new := 'o2val(' + chr(39) + 'prg§_§var' + chr(39) + ',' + chr(39) + newName + chr(39);
 
       t_espressionireturn.Value :=
         StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
@@ -1512,7 +1374,7 @@ begin
         str_old, str_new, [rfReplaceAll]);
 
       str_old := 'o2pre(' + chr(39) + 'prg§_§var' + chr(39) + ',' + chr(39) + Sender.AsString + chr(39);
-      str_new := 'o2pre(' + chr(39) + 'prg§_§var' + chr(39) + ',' + chr(39) + Text + chr(39);
+      str_new := 'o2pre(' + chr(39) + 'prg§_§var' + chr(39) + ',' + chr(39) + newName + chr(39);
 
       t_espressionireturn.Value :=
         StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
@@ -1520,7 +1382,7 @@ begin
         str_old, str_new, [rfReplaceAll]);
 
       str_old := 'o2zero(' + chr(39) + 'prg§_§var' + chr(39) + ',' + chr(39) + Sender.AsString + chr(39);
-      str_new := 'o2zero(' + chr(39) + 'prg§_§var' + chr(39) + ',' + chr(39) + Text + chr(39);
+      str_new := 'o2zero(' + chr(39) + 'prg§_§var' + chr(39) + ',' + chr(39) + newName + chr(39);
 
       t_espressionireturn.Value :=
         StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
@@ -1534,7 +1396,7 @@ begin
     //sistema istruzioni
     //operazioni
     str_old := 'prg§_§var' + chr(129) + Sender.AsString;
-    str_new := 'prg§_§var' + chr(129) + Text;
+    str_new := 'prg§_§var' + chr(129) + newName;
     t_operazioni.MasterSource := nil;
     t_operazioni.First;
     while not t_operazioni.EOF do
@@ -1553,7 +1415,7 @@ begin
     t_controlliform.MasterSource:=nil;
     t_controlliform.First;
     str_old := chr(127) + 'prg§_§var' + chr(129) + Sender.AsString;
-    str_new := chr(127) + 'prg§_§var' + chr(129) + Text;
+    str_new := chr(127) + 'prg§_§var' + chr(129) + newName;
 
     while not t_controlliform.EOF do
     begin
@@ -1575,7 +1437,7 @@ begin
 
       //funzioni aggregazione
     str_old := Sender.AsString;
-    str_new := Text;
+    str_new := newName;
     t_aggreg.First;
     while not t_aggreg.EOF do
     begin
@@ -1588,7 +1450,7 @@ begin
 
       //protocols
     str_old := 'prg§_§var' + chr(129) + Sender.AsString;
-    str_new := 'prg§_§var' + chr(129) + Text;
+    str_new := 'prg§_§var' + chr(129) + newName;
     t_reportfield.MasterSource:=nil;
     t_reportfield.First;
     while not t_reportfield.EOF do
@@ -1601,7 +1463,7 @@ begin
     end;
     t_reportfield.MasterSource:=ds_report;
   end; //fine condizione di valore preesistente
-  Sender.Value := Text;
+  Sender.Value := newName;
 
 end;
 
@@ -1915,7 +1777,7 @@ end;
 
 procedure Tdm_form.t_selectBeforePost(DataSet: TDataSet);
 begin
-if ds_select.State = dsInsert then
+  if ds_select.State = dsInsert then
   begin
     stato_recordset_select := 'I';
   end
@@ -2574,22 +2436,22 @@ program_modificato:=true;
 end;
 
 procedure Tdm_form.t_usa_filecon_nomeSetText(Sender: TField;
-  const Text: String);
+                                             const Text: String);
+var newName : String;
 begin
-
-      //sostituisce in select
-      t_select.First;
-      while not (t_select.Eof) do
-      begin
-        if  t_selecttabella.Value = t_usa_filecon_nome.Value then
-        begin
-         t_select.Edit;
-         t_selecttabella.Value :=  Text;
-        end;
-        t_select.Next;
-      end;
-
-      Sender.Value:=Text;
+  newName := formatName(Text);
+  // ________________________________________ Replace table alias in selects ___
+  t_select.First;
+  while not (t_select.Eof) do
+  begin
+    if  t_selecttabella.Value = t_usa_filecon_nome.Value then
+    begin
+      t_select.Edit;
+      t_selecttabella.Value := newName;
+    end;
+    t_select.Next;
+  end;
+  Sender.Value := newName;
 end;
 
 procedure Tdm_form.t_tabelleBeforeDelete(DataSet: TDataSet);
@@ -2851,27 +2713,6 @@ begin
 
 end;
 
-procedure Tdm_form.t_variabili_prgNewRecord(DataSet: TDataSet);
-begin
-     t_variabili_prgaction.Value := azione_x_init;
-end;
-
-
-
-
-
-procedure Tdm_form.t_variabili_prgBeforePost(DataSet: TDataSet);
-begin
-if not(in_importazione) then
- begin
-   if (azione_x_init <> '') and (PosEx('#_#', t_variabili_prgalias.value)=0) then
-   begin
-    //   ShowMessage('Sfrizzolo');
-       t_variabili_prgalias.Value:= azione_x_init+'#_#'+ t_variabili_prgalias.Text;
-
-   end;
- end;
-end;
 
 procedure Tdm_form.t_variabili_prgCalcFields(DataSet: TDataSet);
 begin
@@ -2936,6 +2777,89 @@ begin
       tmp_callparamsField.Value := '';
     end;
   end;
+end;
+
+
+{* *
+ * Used to format logical names in repositories.
+ * String is returned with spaces and not allowed chars replaced with "_".
+ *}
+function Tdm_form.formatName(logName: String): String;
+var r: TRegExpr;
+begin
+  r            := TRegExpr.Create;
+  r.Expression := '\W';
+  if r.Exec(logName) then
+  begin
+    logName := r.Replace(logName, '_', false);
+  end;
+  result:= logName;
+end;
+
+procedure Tdm_form.t_modelliidmodelloSetText(Sender: TField;
+                                             const Text: String);
+begin
+  Sender.Value := formatName(Text);
+end;
+
+procedure Tdm_form.t_variabili_appaliasSetText(Sender: TField;
+  const Text: String);
+begin
+  Sender.Value := formatName(Text);
+end;
+
+procedure Tdm_form.t_serversnomeserverSetText(Sender: TField;
+  const Text: String);
+begin
+  Sender.Value := formatName(Text);
+end;
+
+procedure Tdm_form.t_databasesnomedbSetText(Sender: TField;
+                                            const Text: String);
+begin
+  Sender.Value := formatName(Text);
+end;
+
+procedure Tdm_form.t_tabelleNomeSetText(Sender: TField;
+  const Text: String);
+begin
+  Sender.Value := formatName(Text);
+end;
+
+procedure Tdm_form.t_tabelleNome_fisicoSetText(Sender: TField;
+  const Text: String);
+begin
+  Sender.Value := formatName(Text);
+end;
+
+procedure Tdm_form.t_campinomecampoSetText(Sender: TField;
+  const Text: String);
+begin
+  Sender.Value := formatName(Text);
+end;
+
+procedure Tdm_form.t_campidbnameSetText(Sender: TField;
+  const Text: String);
+begin
+  Sender.Value := formatName(Text);
+end;
+
+procedure Tdm_form.t_indicitestanomekeySetText(Sender: TField;
+  const Text: String);
+begin
+  Sender.Value := formatName(Text);
+end;
+
+procedure Tdm_form.t_parametrinomeSetText(Sender: TField;
+  const Text: String);
+begin
+  Sender.Value := formatName(Text);
+end;
+
+procedure Tdm_form.t_formnomeformSetText(Sender: TField;
+  const Text: String);
+begin
+  Sender.Value := formatName(Text);
 end;
 
 end.
