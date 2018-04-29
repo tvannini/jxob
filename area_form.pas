@@ -547,7 +547,7 @@ begin
       begin
         Value := '[o2exp_' + f_caption.e_exp.Text + ']';
       end
-      // ______________________________________________ Cation set by string ___
+      // _____________________________________________ Caption set by string ___
       else
       begin
         Value := f_caption.e_caption.Text;
@@ -785,9 +785,9 @@ begin
       // __________________________________________ Column tooltip by string ___
       else
       begin
-        f_tabdef.e_tooltip.Text := Copy(f_tabdef.ed_cssfooter.Text,
+        f_tabdef.e_tooltip.Text := Copy(f_tabdef.e_tooltip.Text,
                                         2,
-                                        Length(f_tabdef.ed_cssfooter.Text) - 2);
+                                        Length(f_tabdef.e_tooltip.Text) - 2);
       end;
       // ________________________________________ Show parent-info interface ___
       f_tabdef.ShowModal;
