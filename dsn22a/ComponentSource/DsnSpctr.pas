@@ -548,6 +548,7 @@ begin
     end;
   end;
   EditingCtrl := '';
+  LastProp    := '';
 end;
 
 
