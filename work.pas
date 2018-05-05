@@ -5982,7 +5982,10 @@ begin
     ts_labelsExit(Self)
   end;
 
-  if dm_form.program_modificato then salva_prg.Execute;
+  if (dm_form.program_modificato and mycheck_local) then
+  begin
+    salva_prg.Execute;
+  end;
 
 end;
 
