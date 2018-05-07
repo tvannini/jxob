@@ -170,7 +170,6 @@ var
   xformarea                                    : TDsnStage;
   i, parent_top, parent_left                   : integer;
   parent_orizzontalAlign, parent_verticalAlign : string;
-  InspForm                                     : TForm;
 begin
   DsnSwitch1.DesignOff;
   DsnInspector1.Position.Left := f_work.settings.ReadInteger('Forms',
@@ -195,7 +194,6 @@ begin
   DsnInspector1.DockTo(f_areaform.InspectorDock);
   // ____________________________________________________________ Load forms ___
   dm_form.t_form.First;
-  i := 0;
   repeat
     begin
       xform                 := TJvCaptionPanel.Create(self);
@@ -929,8 +927,6 @@ procedure Tf_areaform.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   controllo:  TControl;
   componente: TComponent;
-  i: integer;
-
 begin
   // riabilita i tasti funzione SEMPRE
   f_work.create.Enabled := True;
@@ -3065,11 +3061,8 @@ begin
 end;
 
 procedure Tf_areaform.posizioni_in_tabellaExecute(Sender: TObject; tabella : To2table);
-var i,n,linea_corrente, linea_prec, ingombro_vert, prec_right, num_col : integer;
-lista : TStringList;
+var i,n,linea_corrente, linea_prec, ingombro_vert, prec_right : integer;
 incrementato: Boolean;
-controllo_tmp : TControl;
-parentinfo : string;
 begin
 
   // calcola parent options
@@ -3149,8 +3142,6 @@ begin
 
        prec_right:= dm_form.tmp_postableft.Value + dm_form.tmp_postabwidth.Value;
        linea_prec:= dm_form.tmp_postabline.Value;
-
-       num_col:= Max(num_col, n);
 
        dm_form.tmp_postab.Next
    end;
@@ -3316,7 +3307,6 @@ procedure Tf_areaform.LoadObjectsFromFile(Sender: TObject; TextData: string);
 var
   StrStream: TStringStream;
   BinStream: TMemoryStream;
-  Obj: TComponent;
 begin
   StrStream := TStringStream.Create(TextData);
   BinStream := TMemoryStream.Create;
