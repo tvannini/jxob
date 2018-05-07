@@ -372,7 +372,7 @@ begin
         do
         begin
           carica_controlliExecute(self);
-          sistema_multipage(xformarea);
+//          sistema_multipage(xformarea);
           {*
            * If parent control not found then t_controlliForm has been
            * relocated by carica_controlliExecute
@@ -382,6 +382,7 @@ begin
         dm_form.t_controlliForm.Next;
       end;
     end;
+    sistema_multipage(xformarea);
     dm_form.t_form.Next;
   until dm_form.t_form.EOF;
   // ____________________________________________________ Enable design mode ___
@@ -2937,6 +2938,8 @@ begin
     begin
       tmp_multipage := form_control.Controls[i] as To2multipage;
       attiva_figli_tabsheet(self, tmp_multipage, tmp_multipage.TabIndex);
+      // _______________________________________ Needed for nested multipage ___
+      sistema_multipage(tmp_multipage);
     end;
   end;
 end;
