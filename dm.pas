@@ -1096,10 +1096,10 @@ var
   progr : integer;
   r : TRegExpr;
 begin
+  newName := formatName(Text);
   // _______________________________________________ Changing existing alias ___
-  if (Sender.AsString <> '') and (Sender.AsString <> Text) then
+  if (Sender.AsString <> '') and (Sender.AsString <> newName) then
   try
-    newName := formatName(Text);
     t_operazioni.DisableControls;
     t_espressioni.DisableControls;
     t_controlliform.DisableControls;
@@ -1208,7 +1208,6 @@ begin
       t_reportfield.Next
     end;
     t_reportfield.MasterSource:=ds_report;
-
 
   finally
     t_operazioni.EnableControls;
