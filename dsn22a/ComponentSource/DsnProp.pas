@@ -93,6 +93,7 @@ type
     function GetOutProps:TStrings;
     property Designing:Boolean read FDesigning write SetDesigning;
     procedure BlurEditing; virtual; abstract;
+    procedure ResetLastProp; virtual; abstract;
   end;
 
   TContextProps = class
@@ -155,6 +156,11 @@ var
 begin
   if FList.IndexOf(Item) > -1 then
     Exit;
+  FInspector.BlurEditing();
+  if (FList.Count > 0) then
+  begin
+    FInspector.ResetLastProp();
+  end;
   FList.Add(Item);
   ObjInfo:= TObjInfo.Create(TObject(Item));
   //First Item Entry

@@ -153,9 +153,20 @@ var
   i, prop_intero:integer;
 begin
   if PropName = '' then
+  begin
     Exit;
+  end;
+  // ____________________ Unique properties: illegal in multi-select setting ___
+  if (Targets.Count > 1) and
+      ((PropName = 'Name') or
+       (PropName = 'Tab order') or
+       (PropName = 'Action') or
+       (PropName = 'Field')) then
+  begin
+    Exit;
+  end;
 
-  for i:= 0 to Targets.Count -1 do
+  for i:= 0 to Targets.Count - 1 do
   begin
     Component:= TComponent(Targets[i]);
     PropInfo:= GetPropInfo(Component.ClassInfo,PropName);

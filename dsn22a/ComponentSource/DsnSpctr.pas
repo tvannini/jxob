@@ -120,6 +120,7 @@ type
     property StringGrid: TStringGrid read FStringGrid;
     procedure DockTo(Container: TPanel);
     procedure BlurEditing; override;
+    procedure ResetLastProp; override;
   published
     property SelfProps;
     property BtnProps;
@@ -256,7 +257,7 @@ begin
   FStringGrid.Cells[1,0]        := Grid.PropCp;
   FStringGrid.Cells[2,0]        := Grid.ValueCp;
   FStringGrid.RowCount          := 1;
-  FInspectorFm.SpeedButton1.Glyph.Assign(BtnGlyph);
+//  FInspectorFm.SpeedButton1.Glyph.Assign(BtnGlyph);
   FInspectorFm.Panel3.Visible      := False; //ShowCombo;
   FInspectorFm.Panel1.Visible      := HelpButton.Visible;
   FInspectorFm.HelpBtn.HelpContext := HelpButton.HelpContext;
@@ -312,7 +313,9 @@ begin
     FInspectorFm.StringGrid1.Row:= n;
   end
   else
+  begin
     FInspectorFm.SetGrid(-1, False);
+  end;
 
   if not FInspectorFm.Showing then
     FInspectorFm.Show;
@@ -490,7 +493,7 @@ begin
         ComboBox2.Items.Add(P^);
         Inc(Integer(P), Length(P^) + 1);
       end;
-      ComboBox2.SetBounds(x+left, y+top+2, w+3, h+3);
+      ComboBox2.SetBounds(x + left, y + top, w + 1, h + 1);
       ComboBox2.Text    := Cells[2,RowNum];
       ComboBox2.Visible :=True;
       Edit1.SetBounds(1500, 500, 10, 10);
@@ -506,7 +509,7 @@ begin
     if Button then
     begin
       Edit1.Visible := True;
-      Panel2.SetBounds(x + left + w - 23, y + top + 2, 25, h);
+      Panel2.SetBounds(x + left + w - 18, y + top + 1, 20, h);
       Panel2.Visible    := True;
       ComboBox2.Visible := False;
       Edit1.Enabled     := True;
@@ -521,7 +524,7 @@ begin
         Edit1.SetFocus;
       end;
     end;
-    Edit1.SetBounds(x + left, y + top, w + 3, h + 3);
+    Edit1.SetBounds(x + left, y + top, w + 2, h + 2);
     Edit1.Text := Cells[2, RowNum];
     Edit1.Hint := Edit1.Text;
     Edit1.SelectAll;
@@ -548,7 +551,6 @@ begin
     end;
   end;
   EditingCtrl := '';
-  LastProp    := '';
 end;
 
 
@@ -661,6 +663,11 @@ end;
 procedure TDsnInspector.BlurEditing();
 begin
   FInspectorFm.Edit1Exit(FInspectorFm);
+end;
+
+procedure TDsnInspector.ResetLastProp();
+begin
+  FInspectorFm.LastProp := '';
 end;
 
 procedure TInspectorFm.FormClose(Sender: TObject;
