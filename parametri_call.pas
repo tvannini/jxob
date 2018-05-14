@@ -44,6 +44,7 @@ type
     procedure Delete1Click(Sender: TObject);
     procedure Cancel1Click(Sender: TObject);
     procedure ParamsGridKeyPress(Sender: TObject; var Key: Char);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     ParsNullExp: integer;
@@ -494,6 +495,15 @@ begin
   if ParamsGrid.SelectedField.FieldName = 'Field' then
   begin
     Key := #0;
+  end;
+end;
+
+procedure Tf_parametri.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  if ParamsGrid.EditorMode then
+  begin
+    ParamsGrid.EditorMode := false;
   end;
 end;
 
