@@ -32,14 +32,12 @@ type
     DBNavigator1: TDBNavigator;
     Alignleft1: TMenuItem;
     Rightalign1: TMenuItem;
-    opalign1: TMenuItem;
+    Topalign1: TMenuItem;
     Bottomalign1: TMenuItem;
     MaxWidth1: TMenuItem;
     Minwidth1: TMenuItem;
     Maxheight1: TMenuItem;
     Minheight1: TMenuItem;
-    pop_form: TPopupMenu;
-    Exit1: TMenuItem;
     o2file1: To2file;
     o2multipage1: To2multipage;
     Nextpage1: TMenuItem;
@@ -59,15 +57,14 @@ type
     Cut1: TMenuItem;
     o2ListBox1: To2ListBox;
     o2dbnavigator1: To2dbnavigator;
-    Verticalequalspacing1: TMenuItem;
-    Orizzontalequalspacing1: TMenuItem;
+    vertSpace1: TMenuItem;
+    horiSpace1: TMenuItem;
     posizioni_in_tabella: TAction;
     o2table1: To2table;
-    Vaiadx1: TMenuItem;
-    Scrollontheleft1: TMenuItem;
+    scrollRight1: TMenuItem;
+    scrollLeft1: TMenuItem;
     DesignOFF1: TMenuItem;
     DesignON1: TMenuItem;
-    DesignON2: TMenuItem;
     Splitter1: TSplitter;
     ContentDock: TPanel;
     InspectorDock: TPanel;
@@ -75,6 +72,14 @@ type
     Splitter2: TSplitter;
     sepmenu1: TMenuItem;
     SaveToFile: TMenuItem;
+    sepmenuTab: TMenuItem;
+    sepmenuMultipage: TMenuItem;
+    sepmenuAlign: TMenuItem;
+    sepmenuSize: TMenuItem;
+    sepmenuSpace: TMenuItem;
+    sepmenuSend: TMenuItem;
+    Exit1: TMenuItem;
+    sepmenuExit: TMenuItem;
 
     procedure FormShow(Sender: TObject);
     procedure DsnInspector1BtnClick(Sender: TObject; Targets: TSelectedComponents;
@@ -84,7 +89,7 @@ type
     procedure backClick(Sender: TObject);
     procedure Alignleft1Click(Sender: TObject);
     procedure Rightalign1Click(Sender: TObject);
-    procedure opalign1Click(Sender: TObject);
+    procedure Topalign1Click(Sender: TObject);
     procedure Bottomalign1Click(Sender: TObject);
     procedure MaxWidth1Click(Sender: TObject);
     procedure Minwidth1Click(Sender: TObject);
@@ -108,12 +113,12 @@ type
     procedure Cut1Click(Sender: TObject);
     procedure centra_orizzClick(Sender: TObject);
     procedure centra_vertClick(Sender: TObject);
-    procedure Verticalequalspacing1Click(Sender: TObject);
-    procedure Orizzontalequalspacing1Click(Sender: TObject);
+    procedure vertSpace1Click(Sender: TObject);
+    procedure horiSpace1Click(Sender: TObject);
     procedure posizioni_in_tabellaExecute(Sender: TObject; tabella : To2table);
     function calcola_parent_info(controllo: TControl ; parentinfo : string): String;
-    procedure Vaiadx1Click(Sender: TObject);
-    procedure Scrollontheleft1Click(Sender: TObject);
+    procedure scrollRight1Click(Sender: TObject);
+    procedure scrollLeft1Click(Sender: TObject);
     procedure DesignOFF1Click(Sender: TObject);
     procedure DesignON1Click(Sender: TObject);
     function CercaElementoTree(st: String; Nodo: TTreeNode): Integer;
@@ -122,6 +127,7 @@ type
     procedure LoadObjectsFromFile(Sender: TObject; TextData: string);
     function ExpandAsString(const Value: TCtrlExpand): String;
     function StringAsExpand(Value: string): TCtrlExpand;
+    procedure PopupMenu1Popup(Sender: TObject);
 
   private
     tmp_edit: To2edit;
@@ -1032,7 +1038,7 @@ begin
 
 end;
 
-procedure Tf_areaform.opalign1Click(Sender: TObject);
+procedure Tf_areaform.Topalign1Click(Sender: TObject);
 var
   i, minore: integer;
 begin
@@ -3013,7 +3019,7 @@ end;
 
 
 
-procedure Tf_areaform.Verticalequalspacing1Click(Sender: TObject);
+procedure Tf_areaform.vertSpace1Click(Sender: TObject);
 var gap, i: integer;
 begin
 
@@ -3036,7 +3042,7 @@ begin
   end;
 end;
 
-procedure Tf_areaform.Orizzontalequalspacing1Click(Sender: TObject);
+procedure Tf_areaform.horiSpace1Click(Sender: TObject);
 var gap, i: integer;
 begin
 
@@ -3199,7 +3205,7 @@ end;
 
 
 
-procedure Tf_areaform.Vaiadx1Click(Sender: TObject);
+procedure Tf_areaform.scrollRight1Click(Sender: TObject);
 begin
 
     if Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2table' then
@@ -3212,7 +3218,7 @@ end;
 
 
 
-procedure Tf_areaform.Scrollontheleft1Click(Sender: TObject);
+procedure Tf_areaform.scrollLeft1Click(Sender: TObject);
 begin
     if Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2table' then
     begin
@@ -3223,12 +3229,12 @@ end;
 
 procedure Tf_areaform.DesignOFF1Click(Sender: TObject);
 begin
-      DsnSwitch1.DesignOff;
+  DsnSwitch1.DesignOff;
 end;
 
 procedure Tf_areaform.DesignON1Click(Sender: TObject);
 begin
-    DsnSwitch1.DesignOn;
+  DsnSwitch1.DesignOn;
 end;
 
 function Tf_areaform.CercaElementoTree(st: String;
@@ -3357,6 +3363,161 @@ begin
   begin
     Result := '';
   end
+end;
+
+
+{*
+ * Define context menu depending on selected controls
+ *}
+procedure Tf_areaform.PopupMenu1Popup(Sender: TObject);
+begin
+  // _____________________________________________________________ Design ON ___
+  if DsnSwitch1.Down then
+  begin
+    Copy1.Visible     := True;
+    Cut1.Visible      := True;
+    Paste1.Visible    := True;
+    DesignON1.Visible := False;
+    // ____________________________________ At least one control is selected ___
+    if Dsn8Register1.DsnStage.TargetsCount > 0 then
+    begin
+      sepmenuSend.Visible := True;
+      back.Visible        := True;
+      front.Visible       := True;
+      // _________________________________________________________ Multipage ___
+      if Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2multipage' then
+      begin
+        sepmenuMultipage.Visible := True;
+        Nextpage1.Visible        := True;
+        Previouspage1.Visible    := True;
+      end
+      else
+      begin
+        sepmenuMultipage.Visible := False;
+        Nextpage1.Visible        := False;
+        Previouspage1.Visible    := False;
+      end;
+      // ______________________________________________________________ Grid ___
+      if Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2table' then
+      begin
+        sepmenuTab.Visible   := True;
+        if To2table(Dsn8Register1.DsnStage.Targets[0]).HorzScrollBar.IsScrollBarVisible then
+        begin
+          scrollLeft1.Visible  := True;
+          scrollRight1.Visible := True;
+          DesignOFF1.Visible   := True;
+        end;
+      end
+      else
+      begin
+        sepmenuTab.Visible   := False;
+        scrollLeft1.Visible  := False;
+        scrollRight1.Visible := False;
+        DesignOFF1.Visible   := False;
+      end;
+      // __________________________________________ Items for multiselection ___
+      if Dsn8Register1.DsnStage.TargetsCount > 1 then
+      begin
+        sepmenuAlign.Visible := True;
+        Alignleft1.Visible   := True;
+        Rightalign1.Visible  := True;
+        Topalign1.Visible    := True;
+        Bottomalign1.Visible := True;
+        sepmenuSize.Visible  := True;
+        MaxWidth1.Visible    := True;
+        Minwidth1.Visible    := True;
+        Maxheight1.Visible   := True;
+        Minheight1.Visible   := True;
+        // _________________________________________ Items for equal spacing ___
+        {
+        if Dsn8Register1.DsnStage.TargetsCount > 2 then
+        begin
+          sepmenuSpace.Visible := True;
+          vertSpace1.Visible   := True;
+          horiSpace1.Visible   := True;
+        end
+        else
+        begin
+          sepmenuSpace.Visible := False;
+          vertSpace1.Visible   := False;
+          horiSpace1.Visible   := False;
+        end;
+        }
+      end
+      else
+      begin
+        sepmenuAlign.Visible := False;
+        Alignleft1.Visible   := False;
+        Rightalign1.Visible  := False;
+        Topalign1.Visible    := False;
+        Bottomalign1.Visible := False;
+        sepmenuSize.Visible  := False;
+        MaxWidth1.Visible    := False;
+        Minwidth1.Visible    := False;
+        Maxheight1.Visible   := False;
+        Minheight1.Visible   := False;
+        sepmenuSpace.Visible := False;
+        vertSpace1.Visible   := False;
+        horiSpace1.Visible   := False;
+      end;
+    end
+    else
+    begin
+      sepmenuSend.Visible      := False;
+      back.Visible             := False;
+      front.Visible            := False;
+      sepmenuMultipage.Visible := False;
+      Nextpage1.Visible        := False;
+      Previouspage1.Visible    := False;
+      sepmenuTab.Visible       := False;
+      scrollLeft1.Visible      := False;
+      scrollRight1.Visible     := False;
+      sepmenuAlign.Visible     := False;
+      Alignleft1.Visible       := False;
+      Rightalign1.Visible      := False;
+      Topalign1.Visible        := False;
+      Bottomalign1.Visible     := False;
+      sepmenuSize.Visible      := False;
+      MaxWidth1.Visible        := False;
+      Minwidth1.Visible        := False;
+      Maxheight1.Visible       := False;
+      Minheight1.Visible       := False;
+      sepmenuSpace.Visible     := False;
+      vertSpace1.Visible       := False;
+      horiSpace1.Visible       := False;
+    end
+  end
+  // ____________________________________ Design OFF - Return to design mode ___
+  else
+  begin
+    Copy1.Visible            := False;
+    Cut1.Visible             := False;
+    Paste1.Visible           := False;
+    sepmenuSend.Visible      := False;
+    back.Visible             := False;
+    front.Visible            := False;
+    sepmenuMultipage.Visible := False;
+    Nextpage1.Visible        := False;
+    Previouspage1.Visible    := False;
+    sepmenuTab.Visible       := False;
+    scrollLeft1.Visible      := False;
+    scrollRight1.Visible     := False;
+    sepmenuAlign.Visible     := False;
+    Alignleft1.Visible       := False;
+    Rightalign1.Visible      := False;
+    Topalign1.Visible        := False;
+    Bottomalign1.Visible     := False;
+    sepmenuSize.Visible      := False;
+    MaxWidth1.Visible        := False;
+    Minwidth1.Visible        := False;
+    Maxheight1.Visible       := False;
+    Minheight1.Visible       := False;
+    sepmenuSpace.Visible     := False;
+    vertSpace1.Visible       := False;
+    horiSpace1.Visible       := False;
+    DesignON1.Visible        := True;
+    DesignOFF1.Visible       := False;
+  end;
 end;
 
 end.

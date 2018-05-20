@@ -12,7 +12,7 @@ object f_areaform: Tf_areaform
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
-  PopupMenu = pop_form
+  PopupMenu = PopupMenu1
   Position = poDesktopCenter
   ScreenSnap = True
   OnClose = FormClose
@@ -572,109 +572,140 @@ object f_areaform: Tf_areaform
     Top = 80
   end
   object PopupMenu1: TPopupMenu
+    OnPopup = PopupMenu1Popup
     Left = 344
     Top = 304
     object Copy1: TMenuItem
       Caption = 'Copy'
+      ShortCut = 16451
       OnClick = Copy1Click
     end
     object Cut1: TMenuItem
       Caption = 'Cut'
+      ShortCut = 16472
       OnClick = Cut1Click
     end
     object Paste1: TMenuItem
       Caption = 'Paste'
+      ShortCut = 16470
       OnClick = Paste1Click
     end
-    object TMenuItem
+    object sepmenuSend: TMenuItem
+      Caption = '-'
+      Visible = False
     end
     object back: TMenuItem
       Caption = 'Send to back'
+      Visible = False
       OnClick = backClick
     end
     object front: TMenuItem
       Caption = 'Bring to front'
+      Visible = False
       OnClick = frontClick
     end
-    object TMenuItem
+    object sepmenuAlign: TMenuItem
+      Caption = '-'
+      Visible = False
     end
     object Alignleft1: TMenuItem
       Caption = 'Left align'
+      Visible = False
       OnClick = Alignleft1Click
     end
     object Rightalign1: TMenuItem
       Caption = 'Right align'
+      Visible = False
       OnClick = Rightalign1Click
     end
-    object opalign1: TMenuItem
+    object Topalign1: TMenuItem
       Caption = 'Top align'
-      OnClick = opalign1Click
+      Visible = False
+      OnClick = Topalign1Click
     end
     object Bottomalign1: TMenuItem
       Caption = 'Bottom align'
+      Visible = False
       OnClick = Bottomalign1Click
     end
-    object TMenuItem
+    object sepmenuSize: TMenuItem
+      Caption = '-'
+      Visible = False
     end
     object MaxWidth1: TMenuItem
       Caption = 'Max width'
+      Visible = False
       OnClick = MaxWidth1Click
     end
     object Minwidth1: TMenuItem
       Caption = 'Min width'
+      Visible = False
       OnClick = Minwidth1Click
     end
     object Maxheight1: TMenuItem
       Caption = 'Max height'
+      Visible = False
       OnClick = Maxheight1Click
     end
     object Minheight1: TMenuItem
       Caption = 'Min height'
+      Visible = False
       OnClick = Minheight1Click
     end
-    object TMenuItem
+    object sepmenuSpace: TMenuItem
+      Caption = '-'
+      Visible = False
     end
-    object Verticalequalspacing1: TMenuItem
+    object vertSpace1: TMenuItem
       Caption = 'Vertical equal spacing'
-      OnClick = Verticalequalspacing1Click
+      Visible = False
+      OnClick = vertSpace1Click
     end
-    object Orizzontalequalspacing1: TMenuItem
-      Caption = 'Orizzontal equal spacing'
-      OnClick = Orizzontalequalspacing1Click
+    object horiSpace1: TMenuItem
+      Caption = 'Horizontal equal spacing'
+      Visible = False
+      OnClick = horiSpace1Click
     end
-    object TMenuItem
+    object sepmenuMultipage: TMenuItem
+      Caption = '-'
+      Visible = False
     end
     object Nextpage1: TMenuItem
       Caption = 'Next page'
+      Visible = False
       OnClick = Nextpage1Click
     end
     object Previouspage1: TMenuItem
       Caption = 'Previous page'
+      Visible = False
       OnClick = Previouspage1Click
     end
-    object TMenuItem
+    object sepmenuTab: TMenuItem
+      Caption = '-'
+      Visible = False
     end
-    object Vaiadx1: TMenuItem
+    object scrollRight1: TMenuItem
       Caption = 'Scroll on the right'
-      ShortCut = 16466
-      OnClick = Vaiadx1Click
+      Visible = False
+      OnClick = scrollRight1Click
     end
-    object Scrollontheleft1: TMenuItem
+    object scrollLeft1: TMenuItem
       Caption = 'Scroll on the left'
-      ShortCut = 16460
-      OnClick = Scrollontheleft1Click
+      Visible = False
+      OnClick = scrollLeft1Click
     end
     object DesignOFF1: TMenuItem
-      Caption = 'Design OFF'
+      Caption = 'Enter in scroll mode'
       Visible = False
       OnClick = DesignOFF1Click
     end
     object DesignON1: TMenuItem
-      Caption = 'Design ON'
+      Caption = 'Return to design mode'
       Visible = False
       OnClick = DesignON1Click
     end
     object sepmenu1: TMenuItem
+      Caption = '-'
       Visible = False
     end
     object SaveToFile: TMenuItem
@@ -682,18 +713,12 @@ object f_areaform: Tf_areaform
       Visible = False
       OnClick = SaveObjectsToFile
     end
-  end
-  object pop_form: TPopupMenu
-    Left = 344
-    Top = 264
+    object sepmenuExit: TMenuItem
+      Caption = '-'
+    end
     object Exit1: TMenuItem
       Caption = 'Exit'
-      ShortCut = 121
       OnClick = Exit1Click
-    end
-    object DesignON2: TMenuItem
-      Caption = 'Design ON'
-      OnClick = DesignON1Click
     end
   end
   object ActionList1: TActionList
