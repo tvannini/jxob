@@ -1761,13 +1761,8 @@ begin
       until t_form.EOF;
 
 
-
       // AZIONI
-
       t_azioni.First;
-
-
-
       repeat
         if t_azioniazione.Value <> '' then
         begin
@@ -1808,10 +1803,8 @@ begin
               buffer := chr(9) + '// ' + 'o2act::' + istruzione + '(' +
                 '"' + t_operazioniid.AsString + '"' + ', ' +
                 exp1 + ')/*' + dm_form.t_operazioniexp2.AsString + '*/; ';
-
-            end;
-
-            if t_operazionioperazione.Value = 'Block end' then
+            end
+            else if t_operazionioperazione.Value = 'Block end' then
             begin
               istruzione := 'block_end';
               buffer     := chr(9) + '// ' + 'o2act::' + istruzione + '(' +
@@ -1821,10 +1814,8 @@ begin
               Memo3.Add(buffer);
               buffer := '}'
 
-            end;
-
-
-            if t_operazionioperazione.Value = 'Remark' then
+            end
+            else if t_operazionioperazione.Value = 'Remark' then
             begin
               istruzione := 'remark';
               exp1 := t_operazionio2ref.Value;
@@ -1833,10 +1824,8 @@ begin
                 'o2act::' + istruzione + '("' +
                 exp1 + '") ' +
                 fineact;
-            end;
-
-
-            if t_operazionioperazione.Value = 'Debugger' then
+            end
+            else if t_operazionioperazione.Value = 'Debugger' then
             begin
               istruzione := 'debug';
               exp1   := copy(t_operazionio2ref.Value, 2, pos(
@@ -1847,10 +1836,8 @@ begin
                 'o2act::' + istruzione + '() ' +
 
                 fineact;
-            end;
-
-
-            if t_operazionioperazione.Value = 'Execute action' then
+            end
+            else if t_operazionioperazione.Value = 'Execute action' then
             begin
               istruzione := 'exe';
               posiz1 := PosEx('::', dm_form.t_operazionio2ref.Value, 1);
@@ -1878,9 +1865,8 @@ begin
     {            '"' + exp4 + '"' + ') ' +}
 
                 fineact;
-            end;
-
-            if t_operazionioperazione.Value = 'Update' then
+            end
+            else if t_operazionioperazione.Value = 'Update' then
             begin
               istruzione := 'set';
               exp1   := copy(t_operazionio2ref.Value, 2, pos(
@@ -1894,9 +1880,8 @@ begin
                 '"' + exp2 + '"' + ', ' +
                 nomeprg + '_exp_' + t_operazioniexp1.AsString + '()' + ') ' +
                 fineact;
-            end;
-
-            if t_operazionioperazione.Value = 'Confirm' then
+            end
+            else if t_operazionioperazione.Value = 'Confirm' then
             begin
               istruzione := 'confirm';
               exp1   := copy(t_operazionio2ref.Value, 2, pos(
@@ -1910,9 +1895,8 @@ begin
                 '"' + exp2 + '"' + ', ' +
                 nomeprg + '_exp_' + t_operazioniexp1.AsString + '()' + ') ' +
                 fineact;
-            end;
-
-            if t_operazionioperazione.Value = 'Return parameter' then
+            end
+            else if t_operazionioperazione.Value = 'Return parameter' then
             begin
               istruzione := 'ret';
               exp1 := t_operazionio2ref.Value;
@@ -1922,10 +1906,8 @@ begin
                 exp1 + ', ' +
                 nomeprg + '_exp_' + t_operazioniexp1.AsString + '()' + ') ' +
                 fineact;
-            end;
-
-
-            if t_operazionioperazione.Value = 'Print' then
+            end
+            else if t_operazionioperazione.Value = 'Print' then
             begin
               istruzione := 'report';
               //template
@@ -1946,8 +1928,6 @@ begin
                     dm_form.t_operazionicallparam.Value, '§') do
                 begin
                   temp := ExtractWord(i, dm_form.t_operazionicallparam.Value, ['§']);
-
-
                   id     := trim(ExtractWord(1, temp, ['|']));
                   id_padre := trim(ExtractWord(2, temp, ['|']));
                   nome_prg := trim(ExtractWord(3, temp, ['|']));
@@ -1985,20 +1965,16 @@ begin
                 exp4 + ', ' +
                 exp5 + ') ' +
                 fineact;
-            end;
-
-            if t_operazionioperazione.Value = 'Set menu' then
+            end
+            else if t_operazionioperazione.Value = 'Set menu' then
             begin
               istruzione := 'menu';
               exp1   := '"' + t_operazionio2ref.Value + '"';
               buffer := inizioact + 'o2act::' + istruzione + '(' +
                 exp1 + ') ' +
                 fineact;
-            end;
-
-
-
-            if t_operazionioperazione.Value = 'Message' then
+            end
+            else if t_operazionioperazione.Value = 'Message' then
             begin
               istruzione := 'alert';
               if t_operazionio2ref.Value = 'Box' then
@@ -2012,15 +1988,12 @@ begin
               end
               else exp1 := '2';
 
-
               buffer := inizioact + 'o2act::' + istruzione + '(' +
                 nomeprg + '_exp_' + t_operazioniexp1.AsString + '()' + ', ' +
                 exp1 + ') ' +
                 fineact;
-            end;
-
-
-            if t_operazionioperazione.Value = 'Execute script' then
+            end
+            else if t_operazionioperazione.Value = 'Execute script' then
             begin
               istruzione := 'script';
               if t_operazionio2ref.Value = 'Box' then
@@ -2033,10 +2006,8 @@ begin
               buffer := inizioact + 'o2act::' + istruzione + '(' +
                 nomeprg + '_exp_' + t_operazioniexp1.AsString + '()' + ') ' +
                 fineact;
-            end;
-
-
-            if t_operazionioperazione.Value = 'I/O' then
+            end
+            else if t_operazionioperazione.Value = 'I/O' then
             begin
               istruzione := 'io';
               exp1 := copy(t_operazionio2ref.Value, 2, pos(
@@ -2056,12 +2027,10 @@ begin
                 '"' + exp2 + '", ' +
                 exp3 + ') ' +
                 fineact;
-            end;
-
-
+            end
             //go to program
-            if (t_operazionioperazione.Value = 'Go to') and
-              (t_operazionitipologia.Value = 'program') then
+            else if (t_operazionioperazione.Value = 'Go to') and
+                    (t_operazionitipologia.Value = 'program') then
             begin
               istruzione := 'gotoprg';
               exp1 := prepara_expression(t_operazionio2ref.Value, nomeprg);
@@ -2094,28 +2063,27 @@ begin
                   exp2 := stringreplace(exp2, chr(129), '§§', [rfReplaceAll]);
                   exp2 := stringreplace(exp2, chr(127), '', [rfReplaceAll]);
                   exp2 := '"' + trim(exp2) + '"';
-                  if strleft(trim(exp2), 7) = '"[o2exp' then
+                  // _____________________________________ Parameter to NULL ___
+                  if exp2 = '"null"' then
                   begin
-
+                    exp2 := 'null';
+                  end
+                  // _______________________________ Parameter by expression ___
+                  else if strleft(trim(exp2), 7) = '"[o2exp' then
+                  begin
                     exp2 := copy(trim(exp2), 3, length(trim(exp2)) - 4);
                     exp2 := nomeprg + '_exp_' + trim(copy(trim(exp2), 7, 5) + '()');
                   end;
                   parametri := trim(parametri) + ', ' + exp2;
                 end;
               end;
-
-
               buffer := inizioact + 'o2act::' + istruzione + '(' +
-                exp1 + ', ' +
-                exp3 +
-                parametri + ') ' +
-                fineact;
-
-            end;
-
+                        exp1 + ', ' + exp3 + parametri + ') ' +
+                        fineact;
+            end
             //goto url
-            if (t_operazionioperazione.Value = 'Go to') and
-              (t_operazionitipologia.Value = 'url') then
+            else if (t_operazionioperazione.Value = 'Go to') and
+                    (t_operazionitipologia.Value = 'url') then
             begin
               istruzione := 'gotourl';
               exp1 := nomeprg + '_exp_' + t_operazioniexp1.AsString + '()';
@@ -2124,14 +2092,10 @@ begin
                 exp1 + ') ' +
                 fineact;
 
-            end;
-
-
-
-            if t_operazionioperazione.Value = 'Call program' then
+            end
+            else if t_operazionioperazione.Value = 'Call program' then
             begin
               istruzione := 'call';
-
               exp1 := prepara_expression(t_operazionio2ref.Value, nomeprg);
 
               if (t_operazioniservice.Value = 'Cached') then exp3:= 'True' else exp3:='False';
@@ -2151,31 +2115,28 @@ begin
                   exp2 := '"' + trim(exp2) + '"';
                   if strleft(trim(exp2), 7) = '"[o2exp' then
                   begin
-
                     exp2 := copy(trim(exp2), 3, length(trim(exp2)) - 4);
                     exp2 := nomeprg + '_exp_' + trim(copy(trim(exp2), 7, 5) + '()');
+                  end
+                  else if exp2 = '"null"' then
+                  begin
+                    exp2 := 'null'
                   end;
                   parametri := trim(parametri) + ', ' + exp2;
                 end;
               end;
 
-
-
               buffer := inizioact + 'o2act::' + istruzione + '(' +
-                exp1 + ', '+
-                exp3 + 
-                parametri + ') ' +
-                fineact;
-            end;
-
-            if t_operazionioperazione.Value = 'Close program' then
+                        exp1 + ', '+ exp3 + parametri + ') ' +
+                        fineact;
+            end
+            else if t_operazionioperazione.Value = 'Close program' then
             begin
               istruzione := 'close';
               buffer     := inizioact + 'o2act::' + istruzione + '()' +
                 fineact;
-            end;
-
-            if t_operazionioperazione.Value = 'Recordset' then
+            end
+            else if t_operazionioperazione.Value = 'Recordset' then
             begin
               istruzione := 'view';
               exp1 := copy(t_operazionio2ref.Value, 2, pos(
@@ -2270,14 +2231,10 @@ begin
                 fineact;
             end;
 
-
-
             if buffer <> '' then
             begin
               Memo3.Add(buffer)
             end;
-
-
 
             t_operazioni.Next;
           until t_operazioni.EOF;

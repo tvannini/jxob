@@ -66,8 +66,7 @@ uses
   shortcut in 'shortcut.pas' {f_shortcut},
   scelta_da_list in 'scelta_da_list.pas' {f_scelta_da_list},
   debug in 'debug.pas' {f_debug},
-  cvsinfo in 'cvsinfo.pas' {f_CVSInfo},
-  missingpars in 'missingpars.pas' {f_missing_params};
+  cvsinfo in 'cvsinfo.pas' {f_CVSInfo};
 
 {$R *.res}
 
@@ -92,7 +91,6 @@ begin
   Application.CreateForm(Tf_scelta_da_list, f_scelta_da_list);
   Application.CreateForm(Tf_debug, f_debug);
   Application.CreateForm(Tf_CVSInfo, f_CVSInfo);
-  Application.CreateForm(Tf_missing_params, f_missing_params);
   f_login := Tf_login.Create(Application);
       f_login.ShowModal;
       f_login.Update;

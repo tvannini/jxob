@@ -1989,6 +1989,11 @@ begin
                             trim(copy(trim(par8), length(nomeprg) + 6, 10)) +
                             ']';
                   end
+                  // __________________________________________________ Null ___
+                  else if (par8 = 'null') or (par8 = 'Null') then
+                  begin
+                    par8 := 'null';
+                  end
                   // _________________________________________________ Empty ___
                   else
                   begin
@@ -2035,14 +2040,8 @@ begin
                 //programma
                 par3 := extractword(1, selezione3, [',']);
                 par3 := decodifica_exp_stringa(par3, nomeprg);
-
-
-
                 par4 := trim(extractword(2, selezione3, [',']));
 
-          {     if StrLoCase(par4)='false' then num2:=0 else
-               num2:=strtoint(decodifica_exp(par4,nomeprg));
-           }
                 if StrLoCase(par4) = 'false' then
                 begin
                   par12 := ''
@@ -2051,33 +2050,33 @@ begin
                   par12 := StringReplace(par4, '"', '', [rfReplaceAll])
                 end;
 
-
                 //parametri
                 i := 0;
                 repeat
                   par8 := trim(extractword(3 + i, selezione3, [',']));
-
-                  if pos('_exp_', par8) = 0 then
+                  if (par8 = 'null') or (par8 = 'Null') then
                   begin
-                    par8 := copy(trim(par8), 2, length(trim(par8)) - 2)
-                  end;
-                  // in caso di expression togli parentesi
-                  if pos('_exp_', par8) > 0 then
+                    par8 := 'null';
+                  end
+                  // ________________________________ Parameter by reference ___
+                  else if pos('_exp_', par8) = 0 then
                   begin
+                    par8 := copy(trim(par8), 2, length(trim(par8)) - 2);
+                    if pos('§§', par8) > 0 then
+                    begin
+                        if (crossref_oggetto = 'Application variable') and (crossref_ricerca = extractword(2, par8, ['§'])) and (Pos('_o2SESSION', par8) > 0) then
+                         f_crossref.Memo1.Lines.Append('Program: [' + nomeprg + ']' +chr(9)+ 'Action: [' + t_azioniazione.Value + ']'
+                         +chr(9) + 'Line: [' + par1 +']');
+                      par8 := chr(127) + Stringreplace(par8, '§§', chr(129), [rfReplaceAll])
+                    end;
+                  end
+                  // _______________________________ Parameter by expression ___
+                  else
+                  begin
+                    // in caso di expression togli parentesi
                     par8 := copy(par8, 1, length(trim(par8)) - 2);
                     par8 := '[o2exp_' + trim(copy(trim(par8), length(nomeprg) + 6, 10)) + ']';
                   end;
-                  if pos('§§', par8) > 0 then
-                  begin
-
-                      if (crossref_oggetto = 'Application variable') and (crossref_ricerca = extractword(2, par8, ['§'])) and (Pos('_o2SESSION', par8) > 0) then
-                       f_crossref.Memo1.Lines.Append('Program: [' + nomeprg + ']' +chr(9)+ 'Action: [' + t_azioniazione.Value + ']'
-                       +chr(9) + 'Line: [' + par1 +']');
-
-
-                    par8 := chr(127) + Stringreplace(par8, '§§', chr(129), [rfReplaceAll])
-                  end;
-
 
                   if par8 <> '' then
                   begin

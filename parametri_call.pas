@@ -47,8 +47,6 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
-    ParsNullExp: integer;
-    procedure FixMissingPars(FillExp: integer);
   public
     { Public declarations }
     prg_da_chiamare: string;
@@ -84,7 +82,6 @@ begin
      ParamsGrid.Columns[4].Visible := False;
   end;
   memo_noteprg.Clear;
-  ParsNullExp := 0;
   ResParsText.Clear;
   // ____________________________________ Set result values to actual values ___
   ResParsText.Text      := f_work.db_parametri.Lines.Text;
@@ -110,11 +107,20 @@ begin
         EParModel := r.Match[3];
         ParStr    := f_work.db_parametri.Lines[i];
         if ParStr = '' then
+        // _________________________________________________ Empty parameter ___
         begin
           ParType  := '';
           ParField := '';
           ParExp   := 0;
         end
+        // __________________________________________________ Parameter NULL ___
+        else if ParStr = 'null' then
+        begin
+          ParType  := '';
+          ParField := '';
+          ParExp   := 0;
+        end
+        // _________________________________________ Parameter by expression ___
         else if StrLeft(ParStr, 7) = '[o2exp_' then
         begin
           ParType  := 'Exp';
@@ -122,6 +128,7 @@ begin
           ParField := '';
         end
         else
+        // __________________________________________ Parameter by reference ___
         begin
           ParType  := 'Ref';
           ParView  := ExtractWord(1, Copy(ParStr, 2, MaxInt), [chr(129)]);
@@ -230,7 +237,6 @@ var
   ParField, ParView: String;
 begin
   ParamsGrid.DataSource := nil;
-  EndSet                := false;
   ResParsCount          := 0;
   ResParsText.Clear;
   with dm_form do
@@ -238,107 +244,36 @@ begin
     // __________________________________________ Loop on defined parameters ___
     tmp_callparams.First;
     repeat
-      // _________________________________________ If parameter has been set ___
-      if ((tmp_callparamsType.Value = 'Exp') and
-          (tmp_callparamsExp.Value > 0)) or
-         ((tmp_callparamsType.Value = 'Ref') and
-          (tmp_callparamsField.Value <> '')) then
+      // _________________________________________ Parameter by expression ___
+      if tmp_callparamsType.Value = 'Exp' then
       begin
-        // ___________________________________ Missing parameter in sequence ___
-        if EndSet then
-        begin
-          f_missing_params.ShowModal;
-          // _____________________________ Fill missing params with null exp ___
-          if f_missing_params.ModalResult = mrOk then
-          begin
-            FixMissingPars(StrToInt(f_missing_params.FillExp.Text));
-            ActOKExecute(Sender);
-            Exit;
-          end
-          // ____________________________________________ Cancel SAVE action ___
-          else
-          begin
-            ParamsGrid.DataSource := dm_form.ds_tmp_callparams;
-            dm_form.tmp_callparams.First;
-            ParamsGridCellSelect;
-            Exit;
-          end;
-        end
-        else
-        begin
-          // _______________________________________ Parameter by expression ___
-          if tmp_callparamsType.Value = 'Exp' then
-          begin
-            ResParsText.Add('[o2exp_' + tmp_callparamsExp.AsString + ']');
-          end
-          // ________________________________________ Parameter by reference ___
-          else
-          begin
-            ParView  := Trim(ExtractWord(1, tmp_callparamsField.Value, [':']));
-            ParField := Trim(ExtractWord(2, tmp_callparamsField.Value, [':']));
-            if ParView = '(Local)' then
-            begin
-              ParView := 'prg§_§var';
-            end
-            else if ParView = '(Session)' then
-            begin
-              ParView := '_o2SESSION';
-            end;
-            ResParsText.Add(#127 + ParView + #129 + ParField);
-          end;
-          Inc(ResParsCount);
-        end;
+        ResParsText.Add('[o2exp_' + tmp_callparamsExp.AsString + ']');
       end
+      // __________________________________________ Parameter by reference ___
+      else if tmp_callparamsType.Value = 'Ref' then
+      begin
+        ParView  := Trim(ExtractWord(1, tmp_callparamsField.Value, [':']));
+        ParField := Trim(ExtractWord(2, tmp_callparamsField.Value, [':']));
+        if ParView = '(Local)' then
+        begin
+          ParView := 'prg§_§var';
+        end
+        else if ParView = '(Session)' then
+        begin
+          ParView := '_o2SESSION';
+        end;
+        ResParsText.Add(#127 + ParView + #129 + ParField);
+      end
+      // _______________________________________ Missing parameter (to NULL) ___
       else
       begin
-        EndSet := true;
+        ResParsText.SetText('null');
       end;
-    tmp_callparams.Next;
+      Inc(ResParsCount);
+      tmp_callparams.Next;
     until tmp_callparams.Eof;
   end;
   ModalResult := mrOk;
-end;
-
-
-procedure Tf_parametri.FixMissingPars(FillExp: integer);
-var
- i, LastSetID: integer;
-begin
-  with dm_form do
-  begin
-    // _________________________ First loop to get last set ID to fill up to ___
-    tmp_callparams.First;
-    i := 0;
-    repeat
-      if ((tmp_callparamsType.Value = 'Exp') and
-          (tmp_callparamsExp.Value > 0)) or
-         ((tmp_callparamsType.Value = 'Ref') and
-          (tmp_callparamsField.Value <> '')) then
-      begin
-        LastSetID := i;
-      end;
-      tmp_callparams.Next;
-      Inc(i);
-    until tmp_callparams.Eof;
-    // _______________________________ Second loop to fix missing parameters ___
-    tmp_callparams.First;
-    i := 0;
-    repeat
-      if (not (((tmp_callparamsType.Value = 'Exp') and
-                (tmp_callparamsExp.Value > 0)) or
-               ((tmp_callparamsType.Value = 'Ref') and
-                (tmp_callparamsField.Value <> '')))) and
-          (i < LastSetID) then
-      begin
-        tmp_callparams.Edit;
-        tmp_callparamsType.Value := 'Exp';
-        tmp_callparamsExp.Value  := FillExp;
-        tmp_callparams.Post;
-      end;
-      tmp_callparams.Next;
-      Inc(i);
-    until tmp_callparams.Eof;
-  end;
 end;
 
 
