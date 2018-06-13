@@ -1,8 +1,8 @@
 object f_tabdef: Tf_tabdef
-  Left = 426
-  Top = 157
-  Width = 268
-  Height = 461
+  Left = 651
+  Top = 181
+  Width = 382
+  Height = 354
   Caption = 'Column options'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -16,100 +16,150 @@ object f_tabdef: Tf_tabdef
   TextHeight = 13
   object Label1: TLabel
     Left = 16
-    Top = 8
-    Width = 20
+    Top = 20
+    Width = 38
     Height = 13
-    Caption = 'Line'
+    Caption = 'Column:'
   end
   object Label2: TLabel
-    Left = 88
-    Top = 8
-    Width = 60
+    Left = 152
+    Top = 20
+    Width = 5
     Height = 13
-    Caption = 'From column'
+    Caption = ')'
   end
   object Label3: TLabel
-    Left = 160
-    Top = 8
-    Width = 50
+    Left = 248
+    Top = 20
+    Width = 9
     Height = 13
-    Caption = 'To column'
+    Caption = '-'
   end
   object Label4: TLabel
     Left = 16
     Top = 56
-    Width = 54
+    Width = 100
     Height = 13
-    Caption = 'Column title'
+    Caption = 'Title:'
   end
   object Label5: TLabel
     Left = 16
-    Top = 200
-    Width = 36
+    Top = 152
+    Width = 74
     Height = 13
-    Caption = 'Css line'
+    Caption = 'Line CSS class:'
   end
   object Label6: TLabel
     Left = 16
-    Top = 248
-    Width = 53
+    Top = 176
+    Width = 100
     Height = 13
-    Caption = 'Css header'
+    Caption = 'Header CSS class:'
   end
   object Label7: TLabel
     Left = 16
-    Top = 152
-    Width = 65
+    Top = 128
+    Width = 100
     Height = 13
-    Caption = 'Column footer'
+    Caption = 'Footer:'
   end
   object Label8: TLabel
     Left = 16
-    Top = 296
-    Width = 47
+    Top = 200
+    Width = 100
     Height = 13
-    Caption = 'Css footer'
+    Caption = 'Footer CSS class:'
   end
   object Label9: TLabel
     Left = 16
     Top = 104
-    Width = 146
+    Width = 100
     Height = 13
-    Caption = 'Column description (tooltip text)'
+    Caption = 'Description (tooltip):'
+  end
+  object JvDivider1: TJvDivider
+    Left = 16
+    Top = 40
+    Width = 337
+    Height = 9
+    Vertical = False
+  end
+  object JvDivider2: TJvDivider
+    Left = 16
+    Top = 256
+    Width = 337
+    Height = 9
+    Vertical = False
+  end
+  object Label10: TLabel
+    Left = 128
+    Top = 20
+    Width = 3
+    Height = 13
+    Caption = '('
+  end
+  object Label11: TLabel
+    Left = 16
+    Top = 224
+    Width = 100
+    Height = 13
+    Caption = 'Hide sort button:'
+  end
+  object Label12: TLabel
+    Left = 16
+    Top = 80
+    Width = 100
+    Height = 13
+    Caption = 'Header action:'
   end
   object e_line: TEdit
-    Left = 16
-    Top = 24
-    Width = 50
-    Height = 21
+    Left = 136
+    Top = 20
+    Width = 15
+    Height = 20
+    BevelEdges = []
+    BevelInner = bvNone
+    BevelOuter = bvNone
+    BorderStyle = bsNone
+    Color = clBtnFace
     Ctl3D = False
     Enabled = False
     ParentCtl3D = False
     TabOrder = 9
   end
   object e_dacol: TEdit
-    Left = 88
-    Top = 24
-    Width = 50
-    Height = 21
+    Left = 216
+    Top = 20
+    Width = 30
+    Height = 20
+    BevelEdges = []
+    BevelInner = bvNone
+    BevelOuter = bvNone
+    BorderStyle = bsNone
+    Color = clBtnFace
     Ctl3D = False
     Enabled = False
     ParentCtl3D = False
     TabOrder = 10
   end
   object e_acol: TEdit
-    Left = 160
-    Top = 24
-    Width = 50
-    Height = 21
+    Left = 264
+    Top = 20
+    Width = 30
+    Height = 20
+    BevelEdges = []
+    BevelInner = bvNone
+    BevelOuter = bvNone
+    BorderStyle = bsNone
+    Color = clBtnFace
     Ctl3D = False
     Enabled = False
     ParentCtl3D = False
     TabOrder = 11
   end
   object BitBtn1: TBitBtn
-    Left = 102
-    Top = 400
+    Left = 158
+    Top = 288
     Width = 75
     Height = 25
     Caption = '&Ok'
@@ -117,91 +167,90 @@ object f_tabdef: Tf_tabdef
     OnClick = BitBtn1Click
   end
   object e_label: TEdit
-    Left = 16
-    Top = 72
+    Left = 128
+    Top = 56
     Width = 225
-    Height = 21
+    Height = 20
     Ctl3D = False
     ParentCtl3D = False
     PopupMenu = PopupMenu1
     TabOrder = 0
   end
   object CheckBox1: TCheckBox
-    Left = 16
-    Top = 344
-    Width = 113
+    Left = 128
+    Top = 224
+    Width = 25
     Height = 20
-    Caption = 'Hide sort button'
-    Ctl3D = False
-    ParentCtl3D = False
-    TabOrder = 6
-  end
-  object e_css: TEdit
-    Left = 16
-    Top = 216
-    Width = 225
-    Height = 21
-    Ctl3D = False
-    ParentCtl3D = False
-    PopupMenu = PopupMenu1
-    TabOrder = 3
-    OnDblClick = Zoom1Click
-  end
-  object CheckBox2: TCheckBox
-    Left = 16
-    Top = 368
-    Width = 146
-    Height = 20
-    Caption = 'Hide repeated values'
     Ctl3D = False
     ParentCtl3D = False
     TabOrder = 7
   end
-  object e_cssheader: TEdit
-    Left = 16
-    Top = 264
+  object e_css: TEdit
+    Left = 128
+    Top = 152
     Width = 225
-    Height = 21
+    Height = 20
     Ctl3D = False
     ParentCtl3D = False
     PopupMenu = PopupMenu1
     TabOrder = 4
     OnDblClick = Zoom1Click
   end
-  object e_footer: TEdit
-    Left = 16
-    Top = 168
+  object e_cssheader: TEdit
+    Left = 128
+    Top = 176
     Width = 225
-    Height = 21
-    Ctl3D = False
-    ParentCtl3D = False
-    PopupMenu = PopupMenu1
-    TabOrder = 2
-  end
-  object ed_cssfooter: TEdit
-    Left = 16
-    Top = 312
-    Width = 225
-    Height = 21
+    Height = 20
     Ctl3D = False
     ParentCtl3D = False
     PopupMenu = PopupMenu1
     TabOrder = 5
     OnDblClick = Zoom1Click
   end
-  object e_tooltip: TEdit
-    Left = 16
-    Top = 120
+  object e_footer: TEdit
+    Left = 128
+    Top = 128
     Width = 225
-    Height = 21
+    Height = 20
+    Ctl3D = False
+    ParentCtl3D = False
+    PopupMenu = PopupMenu1
+    TabOrder = 3
+  end
+  object ed_cssfooter: TEdit
+    Left = 128
+    Top = 200
+    Width = 225
+    Height = 20
+    Ctl3D = False
+    ParentCtl3D = False
+    PopupMenu = PopupMenu1
+    TabOrder = 6
+    OnDblClick = Zoom1Click
+  end
+  object e_tooltip: TEdit
+    Left = 128
+    Top = 104
+    Width = 225
+    Height = 20
+    Ctl3D = False
+    ParentCtl3D = False
+    PopupMenu = PopupMenu1
+    TabOrder = 2
+  end
+  object e_action: TEdit
+    Left = 128
+    Top = 80
+    Width = 225
+    Height = 19
     Ctl3D = False
     ParentCtl3D = False
     PopupMenu = PopupMenu1
     TabOrder = 1
   end
   object PopupMenu1: TPopupMenu
-    Left = 216
-    Top = 16
+    Left = 325
+    Top = 224
     object Zoom1: TMenuItem
       Caption = 'Zoom'
       ShortCut = 116

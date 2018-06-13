@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Buttons, Menus;
+  Dialogs, StdCtrls, Buttons, Menus, JvComponent, JvScrollPanel;
 
 type
   Tf_tabdef = class(TForm)
@@ -20,7 +20,6 @@ type
     CheckBox1: TCheckBox;
     Label5: TLabel;
     e_css: TEdit;
-    CheckBox2: TCheckBox;
     PopupMenu1: TPopupMenu;
     Zoom1: TMenuItem;
     Label6: TLabel;
@@ -32,6 +31,12 @@ type
     Return1: TMenuItem;
     Label9: TLabel;
     e_tooltip: TEdit;
+    JvDivider1: TJvDivider;
+    JvDivider2: TJvDivider;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    e_action: TEdit;
     procedure BitBtn1Click(Sender: TObject);
     procedure Zoom1Click(Sender: TObject);
     procedure Return1Click(Sender: TObject);
@@ -53,7 +58,8 @@ uses StrUtils, dm, import, jbStr, scelta_css, sceltaespressioni, work;
 
 procedure Tf_tabdef.BitBtn1Click(Sender: TObject);
 var
-  templabel, tempfooter,tempcssfooter, tempcss, tempcssheader, temptooltip: string;
+  templabel, tempfooter, tempcssfooter, tempcss, tempcssheader,
+  temptooltip, tempaction: string;
 begin
 
   if LeftStr(e_label.Text, 7) = '[o2exp_' then
@@ -118,25 +124,27 @@ begin
   else begin
     tempcssfooter := '"' + ed_cssfooter.Text + '"'
   end;
-  scelta := '"' + LeftPadCh(e_line.Text, chr(48), 2) + '"§"' +
-                  LeftPadCh(e_dacol.Text, chr(48), 2) + '"§"' +
-                  LeftPadCh(e_acol.Text, chr(48), 2) + '"§' +
-                  templabel + '§' +
-                  BoolToStr(CheckBox1.Checked, True) + '§' +
-                  tempcss + '§' +
-                  BoolToStr(CheckBox2.Checked, True) + '§' +
-                  tempcssheader + '§' +
-                  tempfooter + '§' +
-                  tempcssfooter + '§' +
-                  temptooltip;
+  tempaction := '"' + e_action.Text + '"';
+  scelta     := '"' + LeftPadCh(e_line.Text, chr(48), 2) + '"§"' +
+                      LeftPadCh(e_dacol.Text, chr(48), 2) + '"§"' +
+                      LeftPadCh(e_acol.Text, chr(48), 2) + '"§' +
+                      templabel + '§' +
+                      BoolToStr(CheckBox1.Checked, True) + '§' +
+                      tempcss + '§' +
+                      BoolToStr(False) + '§' +
+                      tempcssheader + '§' +
+                      tempfooter + '§' +
+                      tempcssfooter + '§' +
+                      temptooltip + '§' +
+                      tempaction;
 
   ModalResult := mrOk;
 end;
 
 
 procedure Tf_tabdef.Zoom1Click(Sender: TObject);
-var exp_local:integer;
-str_local:string;
+var exp_local: integer;
+    action_local, str_local: string;
 begin
   if e_label.Focused then
   begin
@@ -145,6 +153,14 @@ begin
      begin
        e_label.Text := '[o2exp_' + IntToStr(exp_local) + ']';
      end;
+  end
+  else if e_action.Focused then
+  begin
+    action_local := f_work.call_scelta_azione(e_action.Text);
+    if action_local <> '' then
+    begin
+      e_action.Text := action_local;
+    end;
   end
   else if e_tooltip.Focused then
   begin

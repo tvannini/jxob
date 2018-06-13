@@ -689,7 +689,12 @@ begin
                                             '',
                                             [rfReplaceAll]);
       // ______________________________________________________ Column title ___
-      f_tabdef.e_label.Text := trim(ExtractWord(4, Value, ['§']));
+      f_tabdef.e_label.Text  := trim(ExtractWord(4, Value, ['§']));
+      // ______________________________________________ Column header action ___
+      f_tabdef.e_action.Text := trim(ExtractWord(12, Value, ['§']));
+      f_tabdef.e_action.Text := Copy(f_tabdef.e_action.Text,
+                                     2,
+                                     Length(f_tabdef.e_action.Text) - 2);
       // _______________________________________________ Title by expression ___
       if Pos(dm_form.t_programminome.Value + '_exp_',
              f_tabdef.e_label.Text) <> 0 then
@@ -724,8 +729,8 @@ begin
       end;
       // __________________________________________________ Hide sort button ___
       f_tabdef.CheckBox1.Checked := Trim(ExtractWord(5, Value, ['§'])) = 'True';
-      // ______________________________________________ Hide repeated values ___
-      f_tabdef.CheckBox2.Checked := Trim(ExtractWord(7, Value, ['§'])) = 'True';
+      // ____________________________________ Hide repeated values: NOT USED ___
+//    f_tabdef.CheckBox2.Checked := Trim(ExtractWord(7, Value, ['§'])) = 'True';
       // ___________________________________________________________ CSS row ___
       f_tabdef.e_css.Text := Trim(ExtractWord(6, Value, ['§']));
       // _____________________________________________ CSS row by expression ___
