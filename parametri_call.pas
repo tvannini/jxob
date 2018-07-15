@@ -106,15 +106,8 @@ begin
         EParName  := r.Match[2];
         EParModel := r.Match[3];
         ParStr    := f_work.db_parametri.Lines[i];
-        if ParStr = '' then
-        // _________________________________________________ Empty parameter ___
-        begin
-          ParType  := '';
-          ParField := '';
-          ParExp   := 0;
-        end
-        // __________________________________________________ Parameter NULL ___
-        else if ParStr = 'null' then
+        if ((ParStr = '') or (LowerCase(ParStr) = 'null')) then
+        // ________________________________________ Empty and NULL parameter ___
         begin
           ParType  := '';
           ParField := '';
@@ -247,7 +240,14 @@ begin
       // _________________________________________ Parameter by expression ___
       if tmp_callparamsType.Value = 'Exp' then
       begin
-        ResParsText.Add('[o2exp_' + tmp_callparamsExp.AsString + ']');
+        if (tmp_callparamsExp.AsInteger = 0) then
+        begin
+          ResParsText.SetText('null');
+        end
+        else
+        begin
+          ResParsText.Add('[o2exp_' + tmp_callparamsExp.AsString + ']');
+        end;
       end
       // __________________________________________ Parameter by reference ___
       else if tmp_callparamsType.Value = 'Ref' then

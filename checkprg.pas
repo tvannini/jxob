@@ -1732,7 +1732,6 @@ begin
           end;
         end;
 
-
          // operatore UPDATE (Controllo il campo e l'expression)
         if t_operazionioperazione.Value = 'Update' then
         begin
@@ -1749,7 +1748,6 @@ begin
             Memo2.Lines.Append('Action: ' + nome_azione + ' Line: ' + t_operazioniid.AsString +
             '. Expression "'+ t_operazioniexp1.AsString +'" not found')
           end;
-
 
         end;
 
@@ -1770,89 +1768,97 @@ begin
             '. Expression "'+ t_operazioniexp1.AsString +'" not found')
           end;
 
-
         end;
 
-         // operatore CALLPROGRAM (Controllo esistenza programma chiamato)
+        // operatore CALLPROGRAM (Controllo esistenza programma chiamato)
         if t_operazionioperazione.Value = 'Call program' then
         begin
-
-           if errprgname(t_operazionio2ref.Value) then
-            begin
-               Memo2.Lines.Append('Action: ' + nome_azione + ' Line: ' + t_operazioniid.AsString +
-                '. Program "'+ t_operazionio2ref.AsString +'" not found')
-            end;
-
-            // controllo i parametri (variabili e espressioni)
-        for i := 0 to f_work.db_parametri.Lines.Count - 1 do
-        begin
-          if StrLeft(f_work.db_parametri.Lines[i], 7) = '[o2exp_' then
+          if errprgname(t_operazionio2ref.Value) then
           begin
-
-              if errexp(f_import.decodifica_exp(f_work.db_parametri.Lines[i],t_programminome.Value), true) then
-                 Memo2.Lines.Append('Action: ' + nome_azione + ' Line: ' + t_operazioniid.AsString +
-                '. Expression '+ f_import.decodifica_exp(f_work.db_parametri.Lines[i],t_programminome.Value) + ' not found in Call program parameters');
-          end
-          else
-          begin
-              if not(check_field(f_work.db_parametri.Lines[i])) then
-              begin
-                 Memo2.Lines.Append('Action: ' + nome_azione + ' Line: ' + t_operazioniid.AsString +
-                '. Variable '+ f_work.db_parametri.Lines[i] + ' not found in Call program parameters');
-              end;
-
+            Memo2.Lines.Append('Action: ' + nome_azione +
+                               ' Line: ' + t_operazioniid.AsString +
+                               '. Program "'+ t_operazionio2ref.AsString +
+                               '" not found')
           end;
-        end;
+          // controllo i parametri (variabili e espressioni)
+          for i := 0 to f_work.db_parametri.Lines.Count - 1 do
+          begin
+            if StrLeft(f_work.db_parametri.Lines[i], 7) = '[o2exp_' then
+            begin
+              if errexp(f_import.decodifica_exp(f_work.db_parametri.Lines[i],
+                                                t_programminome.Value),
+                        true) then
+                Memo2.Lines.Append('Action: ' + nome_azione +
+                                   ' Line: ' + t_operazioniid.AsString +
+                                   '. Expression '+
+                                   f_import.decodifica_exp(f_work.db_parametri.Lines[i],
+                                                           t_programminome.Value) +
+                                   ' not found in Call program parameters');
+            end
+            else
+            begin
+              if ((LowerCase(f_work.db_parametri.Lines[i]) <> 'null') and
+                  (not(check_field(f_work.db_parametri.Lines[i])))) then
+              begin
+                Memo2.Lines.Append('Action: ' + nome_azione +
+                                   ' Line: ' + t_operazioniid.AsString +
+                                   '. Variable '+ f_work.db_parametri.Lines[i] +
+                                   ' not found in Call program parameters');
+              end;
+            end;
+          end;
 
+        end; // _______________________________________________ End CALL-PRG ___
 
-
-
-        end;
-
-         // operatore GOTOPROGRAM (Controllo esistenza programma chiamato)
+        // operatore GOTOPROGRAM (Controllo esistenza programma chiamato)
         if t_operazionioperazione.Value = 'Go to' then
         begin
-            // esistenza prg chiamato
-
           // program
           if t_operazionitipologia.Value = 'program' then
           begin
-           if errprgname(t_operazionio2ref.Value) then
+            if errprgname(t_operazionio2ref.Value) then
             begin
-               Memo2.Lines.Append('Action: ' + nome_azione + ' Line: ' + t_operazioniid.AsString +
-                '. Program "'+ t_operazionio2ref.AsString +'" not found')
+              Memo2.Lines.Append('Action: ' + nome_azione +
+                                 ' Line: ' + t_operazioniid.AsString +
+                                 '. Program "' + t_operazionio2ref.AsString +
+                                 '" not found')
             end;
           end;
 
           // url
           if t_operazionitipologia.Value = 'url' then
           begin
-             if errexp(t_operazioniexp1.AsString, true) then
-                 Memo2.Lines.Append('Action: ' + nome_azione + ' Line: ' + t_operazioniid.AsString +
-                '. Url expression "'+ t_operazioniexp1.AsString +'" not found')
-
+            if errexp(t_operazioniexp1.AsString, true) then
+            begin
+              Memo2.Lines.Append('Action: ' + nome_azione +
+                                 ' Line: ' + t_operazioniid.AsString +
+                                 '. Url expression "' + t_operazioniexp1.AsString +
+                                 '" not found')
+            end;
           end;
 
-                     // controllo i parametri (variabili e espressioni)
-        for i := 0 to f_work.db_parametri.Lines.Count - 1 do
-        begin
-          if StrLeft(f_work.db_parametri.Lines[i], 7) = '[o2exp_' then
+          // controllo i parametri (variabili e espressioni)
+          for i := 0 to f_work.db_parametri.Lines.Count - 1 do
           begin
-
+            if StrLeft(f_work.db_parametri.Lines[i], 7) = '[o2exp_' then
+            begin
               if errexp(f_import.decodifica_exp(f_work.db_parametri.Lines[i],t_programminome.Value), true) then
-                 Memo2.Lines.Append('Action: ' + nome_azione + ' Line: ' + t_operazioniid.AsString +
-                '. Expression '+ f_import.decodifica_exp(f_work.db_parametri.Lines[i],t_programminome.Value) + ' not found in Go to parameters');
-          end
-          else
-          begin
-
-              if not(check_field(f_work.db_parametri.Lines[i])) then
+                Memo2.Lines.Append('Action: ' + nome_azione +
+                                   ' Line: ' + t_operazioniid.AsString +
+                                   '. Expression '+
+                                   f_import.decodifica_exp(f_work.db_parametri.Lines[i],t_programminome.Value) +
+                                   ' not found in Go to parameters');
+            end
+            else
+            begin
+              if ((LowerCase(f_work.db_parametri.Lines[i]) <> 'null') and
+                  (not(check_field(f_work.db_parametri.Lines[i])))) then
                  Memo2.Lines.Append('Action: ' + nome_azione + ' Line: ' + t_operazioniid.AsString +
                 '. Variable '+ f_work.db_parametri.Lines[i] + ' not found in Go to parameters');
 
 
+            end;
           end;
-        end;
 
         end;
 
