@@ -3,7 +3,7 @@ unit o2button;
 interface
 
 uses
-  SysUtils, Classes, Controls, StdCtrls, o2label;
+  Windows, SysUtils, Classes, Controls, StdCtrls, o2label;
 
 type
   To2buttonStyle = (Standard, Href);
@@ -77,7 +77,8 @@ implementation
 constructor To2button.Create(AOwner: TComponent);
 begin
   inherited;
-  fctrltype := 'Button';
+  fctrltype  := 'Button';
+  self.Color := RGB(128, 128, 128)
 end;
 
 

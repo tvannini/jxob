@@ -490,13 +490,8 @@ begin
         dm_form.t_report.InsertRecord([nomeprg, par1, par2]);
       end;
 
-
-
     until not r.ExecNext
   end;  //fine report
-
-
-
 
   /// definizioni form    o2def::form('main', 202, 89, 912, 448, 'Marche e Modelli', 'True' );
 
@@ -510,7 +505,6 @@ begin
       programma.SelLength := r.MatchLen[0];
       selezione := programma.SelText;
       inc(i);
-
 
       r2.Expression := '\(.*\)';
 
@@ -539,7 +533,6 @@ begin
           par4:=decodifica_exp(par4,nomeprg);
           if par4 <> '' then num1:=StrToInt(par4) else num1:=0;
         end;
-
 
          //espressione di url
         par5 := trim(extractword(5, selezione2, [',']));
@@ -593,7 +586,6 @@ begin
     end;
   end;
 
-
   if nomeprg = '_o2viewmodels' then
   begin
 
@@ -612,7 +604,6 @@ begin
       StringReplace(programma.Lines.Text, '$_o2viewalias.', '', [rfReplaceAll]);
 
   end;
-
 
      call_log('Inizio variabili del prg');
 
@@ -1060,23 +1051,18 @@ begin
       t_report.Next;
     until t_report.EOF;  //fine DEI REPORTS
 
-     call_log('Inizio form');
 
-    // INIZIO DEI FORM [form]
-    //           ShowMessage('Start Form');
+    // =============================================================== FORMS ===
+    call_log('Inizio form');
     t_form.First;
-
     while not t_form.EOF do
     begin
-    call_log('Inizio form '+t_formnomeform.Value);
-
-      // SISTEMA PROPRIETA DEL FORM
+      call_log('Inizio form '+ t_formnomeform.Value);
       t_form.Edit;
-
       tmp1 := '';
-      tmp1 := form_val_prop('titolo', t_formnomeform.Value,
-        selezione3, r3, programma, False);
-      //se titolo scritto a diritto toglie apici
+      tmp1 := form_val_prop('titolo', t_formnomeform.Value, selezione3, r3,
+                            programma, False);
+      // _______________________________________________ Remove title quotes ___
       if (LeftStr(tmp1, 1) = '"') or (LeftStr(tmp1, 1) = chr(39)) then
       begin
         t_formdicitura.Value := copy(tmp1, 2, length(tmp1) - 2)
@@ -1085,14 +1071,30 @@ begin
         t_formdicitura.Value     := 'by expression';
         t_formdicitura_exp.Value := StrToInt(decodifica_exp(tmp1, nomeprg));
       end;
-      t_formleft.Value    :=
-        StrToInt(form_val_prop('x', t_formnomeform.Value, selezione3, r3, programma, False));
-      t_formtop.Value     :=
-        StrToInt(form_val_prop('y', t_formnomeform.Value, selezione3, r3, programma, False));
-      t_formlarghezza.Value :=
-        StrToInt(form_val_prop('larghezza', t_formnomeform.Value, selezione3, r3, programma, False));
-      t_formaltezza.Value :=
-        StrToInt(form_val_prop('altezza', t_formnomeform.Value, selezione3, r3, programma, False));
+      t_formleft.Value      := StrToInt(form_val_prop('x',
+                                                      t_formnomeform.Value,
+                                                      selezione3,
+                                                      r3,
+                                                      programma,
+                                                      False));
+      t_formtop.Value       := StrToInt(form_val_prop('y',
+                                                      t_formnomeform.Value,
+                                                      selezione3,
+                                                      r3,
+                                                      programma,
+                                                      False));
+      t_formlarghezza.Value := StrToInt(form_val_prop('larghezza',
+                                                      t_formnomeform.Value,
+                                                      selezione3,
+                                                      r3,
+                                                      programma,
+                                                      False));
+      t_formaltezza.Value   := StrToInt(form_val_prop('altezza',
+                                                      t_formnomeform.Value,
+                                                      selezione3,
+                                                      r3,
+                                                      programma,
+                                                      False));
 
       // ----- posizioni della form by expression ----------
       tmp1 := '';
@@ -1195,18 +1197,6 @@ begin
         t_formtimer_refresh.Value := StrToInt(decodifica_exp(tmp1, nomeprg))
       end;
 
-    {  tmp1 := '';
-      tmp1 := form_val_prop('url', t_formnomeform.Value, selezione3, r3,
-        programma, False);
-      if (tmp1 = '') then
-      begin
-        t_formurl.Value := 0
-      end
-      else begin
-        t_formurl.Value := StrToInt(decodifica_exp(tmp1, nomeprg))
-      end;
-     }
-
       // barra del titolo e di stato -------------
       tmp1 := '';
       tmp1 := form_val_prop('frm_title', t_formnomeform.Value,
@@ -1245,7 +1235,6 @@ begin
       end;
 
       // ============================ IMPORT CONTROLS ==========================
-      //             ShowMessage('inizio_controlli');
       call_log('Inizio controlli form '+ t_formnomeform.Value);
 
       i := 0; // azzera il contatore controllo
@@ -1350,24 +1339,28 @@ begin
             if tipo = 'line' then
             begin
               tipo := 'separator'
-            end;
-            if tipo = 'listcombo' then
+            end
+            else if tipo = 'listcombo' then
             begin
               tipo := 'listbox'
-            end;
-            if tipo = 'check' then
+            end
+            else if tipo = 'check' then
             begin
               tipo := 'checkbox'
-            end;
-            if tipo = 'text' then
+            end
+            else if tipo = 'text' then
             begin
               tipo := 'textarea'
-            end;
-            if tipo = 'tab' then
+            end
+            else if tipo = 'tab' then
             begin
               tipo := 'table'
-            end;
-            if tipo = 'img' then
+            end
+            else if tipo = 'tree' then
+            begin
+              tipo := 'treeview'
+            end
+            else if tipo = 'img' then
             begin
               tipo := 'image'
             end;
@@ -1385,9 +1378,9 @@ begin
 
             if (crossref_oggetto = 'Application variable') and (crossref_ricerca = par8) and (par2 ='_o2SESSION')
             then
-              f_crossref.Memo1.Lines.Append('Program: [' + nomeprg + ']' +chr(9) +
+              f_crossref.Memo1.Lines.Append('Program: [' + nomeprg + ']' + chr(9) +
                                             'Form: [' + t_formnomeform.Value + ']' + chr(9) +
-                                            'Control: [' + nomecontrollo +']');
+                                            'Control: [' + nomecontrollo + ']');
 
             //riferimento(task+campo)
             if (par2 <> '') then
@@ -1512,11 +1505,19 @@ begin
               //                 ShowMessage('Htmlarea');
               //HTML
               par12 := decodifica_exp(ctrl_prop('html'), nomeprg);
-              // wide
-              par13 := ctrl_prop('wide', true);
               // VOCE CSS
               par5 := decodifica_css(ctrl_prop('css'));
             end; //fine htmlarea
+
+            // _________________________________________ controllo TREE-VIEW ___
+            if tipo = 'treeview' then
+            begin
+              // _____________________________________________________ NODES ___
+              par12 := decodifica_exp(ctrl_prop('nodes'), nomeprg);
+              // VOCE CSS
+              par4 := ctrl_prop('activation');
+              par5 := decodifica_css(ctrl_prop('css'));
+            end; //fine treeview
 
             // controllo document
             if tipo = 'document' then

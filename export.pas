@@ -824,26 +824,30 @@ begin
               if tipo = 'separator' then
               begin
                 tipo := 'line';
-              end;
-              if tipo = 'listbox' then
+              end
+              else if tipo = 'listbox' then
               begin
                 tipo := 'listcombo';
-              end;
-              if tipo = 'checkbox' then
+              end
+              else if tipo = 'checkbox' then
               begin
                 tipo := 'check';
-              end;
-              if tipo = 'textarea' then
+              end
+              else if tipo = 'textarea' then
               begin
                 tipo := 'text';
-              end;
-              if tipo = 'table' then
+              end
+              else if tipo = 'table' then
               begin
                 tipo := 'tab';
-              end;
-              if tipo = 'image' then
+              end
+              else if tipo = 'image' then
               begin
                 tipo := 'img';
+              end
+              else if tipo = 'treeview' then
+              begin
+                tipo := 'tree';
               end;
               // ____________________________________________ Init variables ___
               azione     := '';
@@ -936,8 +940,8 @@ begin
                   (t_controlliformtipo.Value = 'navigator')) then
               begin
                 task := copy(t_controlliformriferimento.Value, 2, 200);
-              end;
-              if (t_controlliformriferimento.Value <> '') and
+              end
+              else if (t_controlliformriferimento.Value <> '') and
                  (t_controlliformtipo.Value <> 'table') and
                  (t_controlliformtipo.Value <> 'navigator') then
               begin
@@ -1057,11 +1061,28 @@ begin
                             t_controlliformextra1.Value + '());';
                   Memo3.Add(buffer);
                 end;
-                if (t_controlliformextra2.Value <> '') and
-                   (t_controlliformextra2.Value <> '0') then
+                if css <> '' then
                 begin
                   buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
-                            '->wide("' + t_controlliformextra2.Value + '");';
+                            '->css(' + css + ');';
+                  Memo3.Add(buffer);
+                end;
+              end
+              // _________________________________________ TREE-VIEW control ___
+              else if t_controlliformtipo.Value = 'treeview' then
+              begin
+                // ______________________________________________ Activation ___
+                buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
+                            '->activation(' +
+                            t_controlliformscelte_possibili.Value + ');';
+                Memo3.Add(buffer);
+                // ________________________________________ Nodes expression ___
+                if (t_controlliformextra1.Value <> '') and
+                   (t_controlliformextra1.Value <> '0') then
+                begin
+                  buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
+                            '->nodes(' + nomeprg + '_exp_' +
+                            t_controlliformextra1.Value + '());';
                   Memo3.Add(buffer);
                 end;
                 if css <> '' then
@@ -1338,7 +1359,6 @@ begin
                   Memo3.Add(buffer);
                 end;
 
-
                 //tutta la serie di css
                 if t_controlliformcss1.Value <> '' then
                 begin
@@ -1404,12 +1424,7 @@ begin
                   Memo3.Add(buffer);
                 end;
 
-
-
-
               end;
-
-
 
               //checkbox
               if t_controlliformtipo.Value = 'checkbox' then
@@ -1577,7 +1592,7 @@ begin
                   t_controlliformSelectVisible.Value, nomeprg)  + ');';
                   Memo3.Add(buffer);
                 end;
-               
+
                 // ENABLE
                 if t_controlliformInsertEnable.Value <> 0 then
                 begin
@@ -1707,8 +1722,6 @@ begin
                   Memo3.Add(buffer);
                 end;
 
-
-
               end;
 
               //separatore
@@ -1731,7 +1744,7 @@ begin
                   Memo3.Add(buffer);
                 end;
 
-                                //zoom action
+                //zoom action
                 if t_controlliformZoomAction.Value <> '' then
                 begin
                   buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo + '->act_zoom(' +

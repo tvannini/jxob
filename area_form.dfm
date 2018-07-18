@@ -20,7 +20,7 @@ object f_areaform: Tf_areaform
   PixelsPerInch = 96
   TextHeight = 13
   object DsnSwitch1: TDsnSwitch
-    Left = 344
+    Left = 280
     Top = 48
     Width = 23
     Height = 22
@@ -44,10 +44,10 @@ object f_areaform: Tf_areaform
     OnMoved = Splitter1Moved
   end
   object o2groupbox1: To2groupbox
-    Left = 380
+    Left = 356
     Top = 8
-    Width = 521
-    Height = 409
+    Width = 600
+    Height = 450
     Caption = 'o2groupbox1'
     Color = 14541542
     ParentColor = False
@@ -65,6 +65,8 @@ object f_areaform: Tf_areaform
       Caption = 'o2label1'
       Abilitato = 0
       Visibile = 0
+      TooltipExp = 0
+      Expand = NoExpand
     end
     object o2Map1: To2Map
       Left = 96
@@ -75,19 +77,21 @@ object f_areaform: Tf_areaform
       Style = bsRaised
       Abilitato = 0
       Visibile = 0
+      Expand = NoExpand
     end
     object o2separator1: To2separator
-      Left = 392
-      Top = 256
+      Left = 112
+      Top = 96
       Width = 33
       Height = 73
       Visibile = 0
+      Expand = NoExpand
     end
     object o2document1: To2document
       Left = 392
       Top = 144
       Width = 113
-      Height = 97
+      Height = 65
       Picture.Data = {
         055449636F6E0000010002001010100001000400280100002600000020201000
         01000400E80200004E0100002800000010000000200000000100040000000000
@@ -126,6 +130,7 @@ object f_areaform: Tf_areaform
       Stretch = True
       Visibile = 0
       Path = 0
+      Expand = NoExpand
     end
     object o2htmlarea1: To2htmlarea
       Left = 392
@@ -135,12 +140,14 @@ object f_areaform: Tf_areaform
       Brush.Style = bsBDiagonal
       Visibile = 0
       Html = 0
+      TabOrder = 0
+      Expand = NoExpand
     end
     object o2agente1: To2agente
-      Left = 432
-      Top = 272
+      Left = 512
+      Top = 408
       Width = 73
-      Height = 41
+      Height = 33
       Caption = 'o2agente1'
       FullRepaint = False
       TabOrder = 2
@@ -161,6 +168,7 @@ object f_areaform: Tf_areaform
       File_name_rollover = 0
       Submitonchange = 0
       ImageDir = 'c:\'
+      Expand = NoExpand
     end
     object o2edit1: To2edit
       Left = 16
@@ -176,6 +184,8 @@ object f_areaform: Tf_areaform
       Visibile = 0
       Submitonchange = 0
       Password = False
+      TooltipExp = 0
+      Expand = NoExpand
     end
     object o2textarea1: To2textarea
       Left = 16
@@ -189,6 +199,8 @@ object f_areaform: Tf_areaform
       Visibile = 0
       Submitonchange = 0
       Htmlarea = False
+      TooltipExp = 0
+      Expand = NoExpand
     end
     object o2checkbox1: To2checkbox
       Left = 16
@@ -200,6 +212,8 @@ object f_areaform: Tf_areaform
       Abilitato = 0
       Visibile = 0
       Submitonchange = 0
+      TooltipExp = 0
+      Expand = NoExpand
     end
     object DBNavigator1: TDBNavigator
       Left = 152
@@ -218,6 +232,7 @@ object f_areaform: Tf_areaform
       Visibile = 0
       Submitonchange = 0
       Save_as = 0
+      Expand = NoExpand
     end
     object o2multipage1: To2multipage
       Left = 152
@@ -235,6 +250,7 @@ object f_areaform: Tf_areaform
       LeftExpr = 0
       HeightExpr = 0
       WidthExpr = 0
+      Expand = NoExpand
     end
     object o2button1: To2button
       Left = 16
@@ -242,11 +258,19 @@ object f_areaform: Tf_areaform
       Width = 75
       Height = 25
       Caption = 'o2button1'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 0
       Visible = False
       Abilitato = 0
       Visibile = 0
       Shortcut = None
+      TooltipExp = 0
+      Expand = NoExpand
     end
     object o2ListBox1: To2ListBox
       Left = 16
@@ -259,6 +283,8 @@ object f_areaform: Tf_areaform
       Visibile = 0
       Rows = 0
       Submitonchange = 0
+      TooltipExp = 0
+      Expand = NoExpand
     end
     object o2dbnavigator1: To2dbnavigator
       Left = 152
@@ -283,6 +309,7 @@ object f_areaform: Tf_areaform
       SelectEnable = 0
       DetailVisible = 0
       DetailEnable = 0
+      Expand = NoExpand
     end
     object o2table1: To2table
       Left = 152
@@ -292,10 +319,24 @@ object f_areaform: Tf_areaform
       HorzScrollBar.Range = 220
       VertScrollBar.Range = 36
       AutoScroll = False
+      Color = 15792890
+      ParentColor = False
       TabOrder = 11
       Abilitato = 0
       Visibile = 0
       HideIndicator = 0
+      Expand = NoExpand
+    end
+    object o2tree1: To2tree
+      Left = 392
+      Top = 232
+      Width = 100
+      Height = 150
+      Caption = 'o2tree1'
+      Color = 15528176
+      TabOrder = 0
+      Visibile = 0
+      Expand = NoExpand
     end
   end
   object ContentDock: TPanel
@@ -352,6 +393,8 @@ object f_areaform: Tf_areaform
       'o2Label|Caption'
       'View'
       'Field'
+      'Nodes|Tree nodes'
+      'Activation|Selection'
       'Visibile|Visible'
       'Abilitato|Enabled'
       'HideIndicator|Hide row marker'
@@ -438,6 +481,7 @@ object f_areaform: Tf_areaform
     BtnProps.Strings = (
       'o2Label'
       'Text'
+      'Nodes'
       'Visibile'
       'Abilitato'
       'Picture'
@@ -563,17 +607,17 @@ object f_areaform: Tf_areaform
     Grid.ValueCp = 'Value'
     Grid.PropWid = 140
     Grid.ValueWid = 100
-    Left = 344
+    Left = 280
     Top = 160
   end
   object DsnSelect1: TDsnSelect
     DsnRegister = Dsn8Register1
-    Left = 344
+    Left = 280
     Top = 80
   end
   object PopupMenu1: TPopupMenu
     OnPopup = PopupMenu1Popup
-    Left = 344
+    Left = 280
     Top = 304
     object Copy1: TMenuItem
       Caption = 'Copy'
@@ -722,7 +766,7 @@ object f_areaform: Tf_areaform
     end
   end
   object ActionList1: TActionList
-    Left = 344
+    Left = 280
     Top = 232
     object carica_controlli: TAction
       Caption = 'carica_controlli'
@@ -741,14 +785,14 @@ object f_areaform: Tf_areaform
     end
   end
   object OpenPictureDialog1: TOpenPictureDialog
-    Left = 344
+    Left = 280
     Top = 192
   end
   object Dsn8Register1: TDsn8Register
     DsnPanel = f_oggettiform.DsnPanel1
     DsnInspector = DsnInspector1
     ArrowButton = f_oggettiform.ArrowButton1
-    Left = 344
+    Left = 280
     Top = 120
   end
 end

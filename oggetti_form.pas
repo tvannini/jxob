@@ -11,8 +11,8 @@ uses
   o2button, DBCtrls, o2dbnavigator, ComCtrls, ImgList, ActnList,
   XPStyleActnCtrls, ActnMan, o2table,
   o2multipage, o2file, JvScrollPanel, JvCaptionPanel,
-  JvComponent, o2htmlarea, o2document, o2Map, JvPanel, JvTransparentPanel,
-  inifiles, CommCtrl;
+  JvComponent, o2htmlarea, o2tree, o2document, o2Map, JvPanel,
+  JvTransparentPanel, inifiles, CommCtrl;
 
 type
   Tf_oggettiform = class(TForm)
@@ -62,6 +62,9 @@ type
     DsnButton12: TDsnButton;
     Spacer: TPanel;
     TreeImgs: TImageList;
+    DsnButton10: TDsnButton;
+    DsnButton16: TDsnButton;
+    Dpst_To2tree: To2tree;
     procedure ComboBox1Change(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure aggiorna_lista_campiExecute(Sender: TObject);
@@ -331,6 +334,11 @@ begin
       CtrlType := 'HTML-area';
       ImgIdx   := 6;
     end
+    else if Controllo.ClassName = 'To2tree' then
+    begin
+      CtrlType := 'Treeview';
+      ImgIdx   := 15;
+    end
     else if Controllo.ClassName = 'To2document' then
     begin
       CtrlType := 'Embedded document';
@@ -422,6 +430,7 @@ var
   o2check     : To2checkbox;
   o2multipage : To2multipage;
   o2table     : To2table;
+  o2tree      : To2tree;
   o2nav       : To2dbnavigator;
 begin
   if (Controllo.Name <> '') then
@@ -487,6 +496,14 @@ begin
     begin
       CtrlType := 'HTML-area';
       ImgIdx   := 6;
+    end
+    else if Controllo.ClassName = 'To2tree' then
+    begin
+      CtrlType    := 'Treeview';
+      ImgIdx      := 15;
+      o2tree      := Controllo as To2tree;
+      FieldName   := o2tree.Field;
+      ViewName    := o2tree.View;
     end
     else if Controllo.ClassName = 'To2document' then
     begin

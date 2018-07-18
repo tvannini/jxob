@@ -6,7 +6,6 @@ uses
   SysUtils, Classes, Controls, ExtCtrls, Graphics, o2label;
 
 type
-  To2htmlareawide = (None, Horizontal, Vertical, Both);
 
   To2htmlarea = class(TShape)
   private
@@ -16,7 +15,6 @@ type
     fcss: string;
     fparentinfo: string;
     fparentname: string;
-    Fwide: To2htmlareawide;
     ftaborder: TTabOrder;
     fexpand: TCtrlExpand;
 
@@ -25,7 +23,6 @@ type
     procedure sparentinfo(const Value: string);
     procedure sparentname(const Value: string);
     procedure svisibile(const Value: integer);
-    procedure Setwide(const Value: To2htmlareawide);
     procedure staborder(const Value: TTabOrder);
     procedure sexpand(const Value: TCtrlExpand);
 
@@ -42,7 +39,6 @@ type
     property Parentname: string Read fparentname Write sparentname;
     property Parentinfo: string Read fparentinfo Write sparentinfo;
     property Html: integer Read fhtml Write shtml;
-    property Wide: To2htmlareawide read Fwide write Setwide default None;
     property TabOrder: TTabOrder Read ftaborder Write staborder;
     property Expand: TCtrlExpand Read fexpand Write sexpand;
 
@@ -71,11 +67,6 @@ end;
 procedure To2htmlarea.scss(const Value: string);
 begin
   fcss := Value;
-end;
-
-procedure To2htmlarea.Setwide(const Value: To2htmlareawide);
-begin
-  Fwide := Value;
 end;
 
 procedure To2htmlarea.shtml(const Value: integer);

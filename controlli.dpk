@@ -1,6 +1,7 @@
 package controlli;
 
 {$R *.res}
+{$R 'dsn22a\ComponentSource\DsnUnit.dcr'}
 {$ALIGN 8}
 {$ASSERTIONS ON}
 {$BOOLEVAL OFF}
@@ -70,6 +71,8 @@ contains
   o2htmlarea in 'o2htmlarea.pas',
   o2document in 'o2document.pas',
   o2Map in 'o2Map.pas',
-  o2dbnavigator in 'o2dbnavigator.pas';
+  o2dbnavigator in 'o2dbnavigator.pas',
+  o2tree in 'o2tree.pas',
+  DsnUnit in 'dsn22a\ComponentSource\DsnUnit.pas';
 
 end.

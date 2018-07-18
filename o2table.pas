@@ -3,7 +3,7 @@ unit o2table;
 interface
 
 uses
-  SysUtils, Classes, Controls, ExtCtrls, Graphics, Forms, o2label,
+  Windows, SysUtils, Classes, Controls, ExtCtrls, Graphics, Forms, o2label,
   Dialogs;
 
 type
@@ -107,7 +107,7 @@ constructor To2table.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   fctrltype  := 'Grid';
-  self.Color := clWhite;
+  self.Color := RGB(250, 250, 240);
 end;
 
 procedure To2table.sabilitato(const Value: integer);

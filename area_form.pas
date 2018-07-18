@@ -10,8 +10,8 @@ uses
   o2groupbox, o2checkbox, o2button, o2agente, o2textarea, Menus,
   o2table, DBCtrls, Math, ActnList, XPStyleActnCtrls, ActnMan,
   o2ListBox, ComCtrls, o2multipage,
-  o2file, jclstrings, o2htmlarea, o2document, jpeg, jvgif, ExtDlgs, o2Map,
-  DsnSub8, o2dbnavigator, o2navigator,DBClient,DB;
+  o2file, jclstrings, o2htmlarea, o2tree, o2document, jpeg, jvgif, ExtDlgs,
+  o2Map, DsnSub8, o2dbnavigator, o2navigator,DBClient,DB;
 
 type
   Tf_areaform = class(TForm)
@@ -80,6 +80,7 @@ type
     sepmenuSend: TMenuItem;
     Exit1: TMenuItem;
     sepmenuExit: TMenuItem;
+    o2tree1: To2tree;
 
     procedure FormShow(Sender: TObject);
     procedure DsnInspector1BtnClick(Sender: TObject; Targets: TSelectedComponents;
@@ -145,6 +146,7 @@ type
     tmp_file: To2file;
     tmp_multipage: To2multipage;
     tmp_htmlarea: To2htmlarea;
+    tmp_tree: To2tree;
     tmp_document: To2document;
     tmp_map: To2Map;
     larghezza_form, altezza_form: integer;
@@ -476,6 +478,12 @@ begin
                          as To2multipage;
         tmp_multipage.View := view;
       end;
+      if Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2tree' then
+      begin // ____________________________________________________ TREEVIEW ___
+        tmp_tree := findcomponent(Dsn8Register1.DsnStage.Targets[0].Name)
+                    as To2tree;
+        tmp_tree.View := view;
+      end;
       if Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2file' then
       begin // _________________________________________________ FILE-UPLOAD ___
         tmp_file      := findcomponent(Dsn8Register1.DsnStage.Targets[0].Name)
@@ -492,6 +500,7 @@ begin
      (PropName = 'File_name_rollover') or
      (PropName = 'Submitonchange') or
      (PropName = 'Html') or
+     (PropName = 'Nodes') or
      (PropName = 'Path') or
      (PropName = 'Save_as') or
      (PropName = 'TooltipExp') or
@@ -1601,6 +1610,23 @@ begin
 
   end;
 
+
+  if Component.ClassType.ClassName = 'To2tree' then
+  begin
+    tmp_tree := findcomponent(Component.Name) as To2tree;
+    tmp_tree.Parentname := tmp_tree.Parent.Name;
+    if controllo.Height = 0 then
+    begin
+      controllo.Height := 200
+    end;
+    if controllo.Width = 0 then
+    begin
+      controllo.Width := 100
+    end;
+
+  end;
+
+
   if Component.ClassType.ClassName = 'To2document' then
   begin
     tmp_document := findcomponent(Component.Name) as To2document;
@@ -1648,26 +1674,34 @@ var
   control_file: To2file;
   control_multipage: To2multipage;
   control_htmlarea: To2htmlarea;
+  control_tree: To2tree;
   control_document: To2document;
   control_map: To2Map;
   controllo_corrente: TControl;
 
   nomecontrollo, tipocontrollo, Caption, riferimento, view, field, azione,
-  vocecss, scelte, maschera, parentname, parentinfo, extra1, extra2, extra3, filename: string;
-  top, left, altezza, larghezza, visibile, abilitato, taborder, submit, tooltipexp: integer;
+  vocecss, scelte, maschera, parentname, parentinfo, extra1, extra2, extra3,
+  filename: string;
+  top, left, altezza, larghezza, visibile, abilitato, taborder, submit,
+  tooltipexp: integer;
   boolean1: boolean;
-  css1, css2, css3, css4, css5, css6, css7, css8, css9, css10, css11, css12, css13, css14, css15, Expand: string;
-  insert_vis, post_vis, del_vis, undo_vis, detail_vis, select_vis, insert_enable, post_enable, del_enable, undo_enable, detail_enable, select_enable, navigatorblock_vis, exp1, exp2: integer;
-  insert_action, post_action, del_action, undo_action, detail_action, select_action, insert_msg, post_msg, del_msg, undo_msg, detail_msg, select_msg, norecordmsg, zoomaction : string;
+  css1, css2, css3, css4, css5, css6, css7, css8, css9, css10, css11, css12,
+  css13, css14, css15, Expand: string;
+  insert_vis, post_vis, del_vis, undo_vis, detail_vis, select_vis,
+  insert_enable, post_enable, del_enable, undo_enable, detail_enable,
+  select_enable, navigatorblock_vis, exp1, exp2: integer;
+  insert_action, post_action, del_action, undo_action, detail_action,
+  select_action, insert_msg, post_msg, del_msg, undo_msg, detail_msg,
+  select_msg, norecordmsg, zoomaction : string;
 
 begin
 
-  //controlli figli ricrea
+  // _______________________________________ Loop on form/container children ___
   for i := 0 to controllo.ControlCount - 1 do
   begin
     controllo_corrente := controllo.Controls[i];
 
-    //patchone alex il leone
+    // ____________________________________________ Reset grids horiz scroll ___
     if controllo.Controls[i].ClassName = 'To2table' then
     begin
         control_table := controllo.Controls[i] as To2table;
@@ -1676,146 +1710,161 @@ begin
 
     if controllo_corrente.Name <> '' then
     begin
-      top     := controllo.Controls[i].Top;
-      left    := controllo.Controls[i].Left;
-      altezza := controllo.Controls[i].Height;
-      larghezza := controllo.Controls[i].Width;
+      top           := controllo.Controls[i].Top;
+      left          := controllo.Controls[i].Left;
+      altezza       := controllo.Controls[i].Height;
+      larghezza     := controllo.Controls[i].Width;
       nomecontrollo := controllo.Controls[i].Name;
-      parentname:= controllo.Controls[i].Parent.Name;
+      parentname    := controllo.Controls[i].Parent.Name;
 
-      Caption   := '';
-      riferimento := '';
+      Caption       := '';
+      riferimento   := '';
       tipocontrollo := '';
-      scelte    := '';
-      azione    := '';
-      maschera  := '';
+      scelte        := '';
+      azione        := '';
+      maschera      := '';
 
-      parentinfo := '';
-      extra1    := '';
-      extra2    := '';
-      extra3    := '';
-      taborder  := 0;
-      vocecss   := '';
-      css1      := '';
-      css2      := '';
-      css3      := '';
-      css4      := '';
-      css5      := '';
-      css6      := '';
-      css7      := '';
-      css8      := '';
-      css9      := '';
-      css10     := '';
-      css11     := '';
-      css12     := '';
-      css13     := '';
-      css14     := '';
-      css15     := '';
-      Expand    := '';
+      parentinfo    := '';
+      extra1        := '';
+      extra2        := '';
+      extra3        := '';
+      taborder      := 0;
+      vocecss       := '';
+      css1          := '';
+      css2          := '';
+      css3          := '';
+      css4          := '';
+      css5          := '';
+      css6          := '';
+      css7          := '';
+      css8          := '';
+      css9          := '';
+      css10         := '';
+      css11         := '';
+      css12         := '';
+      css13         := '';
+      css14         := '';
+      css15         := '';
+      Expand        := '';
 
-      submit     := 0;
-      visibile   := 0;
-      abilitato  := 0;
-      tooltipexp := 0;
-      exp1       := 0;
-      exp2       := 0;
+      submit        := 0;
+      visibile      := 0;
+      abilitato     := 0;
+      tooltipexp    := 0;
+      exp1          := 0;
+      exp2          := 0;
 
-      insert_vis:=0;
-      insert_enable:=0;
-      insert_action:='';
-      insert_msg := '';
+      insert_vis    := 0;
+      insert_enable := 0;
+      insert_action := '';
+      insert_msg    := '';
 
-      del_vis:=0;
-      del_enable:=0;
-      del_action:='';
-      del_msg := '';
+      del_vis       := 0;
+      del_enable    := 0;
+      del_action    := '';
+      del_msg       := '';
 
-      undo_vis:=0;
-      undo_enable:=0;
-      undo_action:='';
-      undo_msg := '';
+      undo_vis      := 0;
+      undo_enable   := 0;
+      undo_action   := '';
+      undo_msg      := '';
 
-      post_vis:=0;
-      post_enable:=0;
-      post_action:='';
-      post_msg := '';
+      post_vis      := 0;
+      post_enable   := 0;
+      post_action   := '';
+      post_msg      := '';
 
-      detail_vis:=0;
-      detail_enable:=0;
-      detail_action:='';
-      detail_msg := '';
+      detail_vis    := 0;
+      detail_enable := 0;
+      detail_action := '';
+      detail_msg    := '';
 
-      select_vis:=0;
-      select_enable:=0;
-      select_action:='';
-      select_msg := '';
+      select_vis    := 0;
+      select_enable := 0;
+      select_action := '';
+      select_msg    := '';
 
-      norecordmsg:='';
-      navigatorblock_vis:=0;
+      norecordmsg   := '';
+      navigatorblock_vis := 0;
 
-      boolean1 := False;
-
+      boolean1      := False;
+      // _____________________________________________________________ LABEL ___
       if controllo.Controls[i].ClassName = 'To2label' then
       begin
         control_label := controllo.Controls[i] as To2label;
         tipocontrollo := 'label';
-        Caption    := control_label.o2Label;
-        visibile   := control_label.Visibile;
-        vocecss    := control_label.Vocecss;
-        parentinfo := control_label.Parentinfo;
-        tooltipexp := control_label.TooltipExp;
-        Expand     := ExpandAsString(control_label.Expand);
-        taborder   := i - 10000;
-        if control_label.Parent.ClassName = 'To2table' then parentinfo := calcola_parent_info(control_label, parentinfo);
+        Caption       := control_label.o2Label;
+        visibile      := control_label.Visibile;
+        vocecss       := control_label.Vocecss;
+        tooltipexp    := control_label.TooltipExp;
+        Expand        := ExpandAsString(control_label.Expand);
+        taborder      := i - 10000;
+        parentinfo    := control_label.Parentinfo;
+        if control_label.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_label, parentinfo);
+        end;
       end
+      // ______________________________________________________________ EDIT ___
       else if controllo.Controls[i].ClassName = 'To2edit' then
       begin
-        control_edit := controllo.Controls[i] as To2Edit;
+        control_edit  := controllo.Controls[i] as To2Edit;
         tipocontrollo := 'edit';
-        riferimento := chr(127) + control_edit.View + chr(129) + control_edit.Field;
-        visibile   := control_edit.Visibile;
-        abilitato  := control_edit.Abilitato;
-        vocecss    := control_edit.Vocecss;
-        azione     := control_edit.Azione;
-        zoomaction := control_edit.ZoomAction;
-        maschera   := control_edit.Mask;
-        taborder   := control_edit.TabOrder;
-        parentinfo := control_edit.Parentinfo;
-        if control_edit.Parent.ClassName = 'To2table' then parentinfo := calcola_parent_info(control_edit, parentinfo);
-        submit     := control_edit.Submitonchange;
-        boolean1   := control_edit.Password;
-        tooltipexp := control_edit.TooltipExp;
-        Expand     := ExpandAsString(control_edit.Expand);
+        riferimento   := chr(127) + control_edit.View +
+                         chr(129) + control_edit.Field;
+        visibile      := control_edit.Visibile;
+        abilitato     := control_edit.Abilitato;
+        vocecss       := control_edit.Vocecss;
+        azione        := control_edit.Azione;
+        zoomaction    := control_edit.ZoomAction;
+        maschera      := control_edit.Mask;
+        taborder      := control_edit.TabOrder;
+        submit        := control_edit.Submitonchange;
+        boolean1      := control_edit.Password;
+        tooltipexp    := control_edit.TooltipExp;
+        Expand        := ExpandAsString(control_edit.Expand);
+        parentinfo    := control_edit.Parentinfo;
+        if control_edit.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_edit, parentinfo);
+        end;
       end
+      // _______________________________________________________ FILE UPLOAD ___
       else if controllo.Controls[i].ClassName = 'To2file' then
       begin
-        control_file := controllo.Controls[i] as To2file;
+        control_file  := controllo.Controls[i] as To2file;
         tipocontrollo := 'file';
-        riferimento := chr(127) + control_file.View + chr(129) + control_file.Field;
-        visibile   := control_file.Visibile;
-        abilitato  := control_file.Abilitato;
-        vocecss    := control_file.Vocecss;
-        taborder   := control_file.TabOrder;
- //       parentname := control_file.Parentname;
-        parentinfo := control_file.Parentinfo;
-        if control_file.Parent.ClassName = 'To2table' then parentinfo := calcola_parent_info(control_file, parentinfo);
-        submit     := control_file.Submitonchange;
-        extra1     := IntToStr(control_file.Save_as);
-        Expand     := ExpandAsString(control_file.Expand);
+        riferimento   := chr(127) + control_file.View +
+                         chr(129) + control_file.Field;
+        visibile      := control_file.Visibile;
+        abilitato     := control_file.Abilitato;
+        vocecss       := control_file.Vocecss;
+        taborder      := control_file.TabOrder;
+        submit        := control_file.Submitonchange;
+        extra1        := IntToStr(control_file.Save_as);
+        Expand        := ExpandAsString(control_file.Expand);
+        parentinfo    := control_file.Parentinfo;
+        if control_file.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_file, parentinfo);
+        end;
       end
+      // _________________________________________________________ MULTIPAGE ___
       else if controllo.Controls[i].ClassName = 'To2multipage' then
       begin
         control_multipage := controllo.Controls[i] as To2multipage;
-        tipocontrollo := 'multipage';
-        riferimento :=
-          chr(127) + control_multipage.View + chr(129) + control_multipage.Field;
-        visibile := GetPropValue(controllo_corrente, 'Visibile', True);
-        abilitato := GetPropValue(controllo_corrente, 'Abilitato', True);
-        taborder := control_multipage.TabOrder;
-  //      parentname := control_multipage.Parentname;
-        Expand     := ExpandAsString(control_multipage.Expand);
-        parentinfo := control_multipage.Parentinfo;
-        if control_multipage.Parent.ClassName = 'To2table' then parentinfo := calcola_parent_info(control_multipage, parentinfo);
+        tipocontrollo     := 'multipage';
+        riferimento       := chr(127) + control_multipage.View +
+                             chr(129) + control_multipage.Field;
+        visibile          := GetPropValue(controllo_corrente, 'Visibile', True);
+        abilitato         := GetPropValue(controllo_corrente, 'Abilitato',True);
+        taborder          := control_multipage.TabOrder;
+        Expand            := ExpandAsString(control_multipage.Expand);
+        parentinfo        := control_multipage.Parentinfo;
+        if control_multipage.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_multipage, parentinfo);
+        end;
 
         extra1 := control_multipage.Tabs.Text;
         extra2 := IntToStr(control_multipage.TabIndex);
@@ -1823,333 +1872,455 @@ begin
         css2   := control_multipage.CssBody;
         css3   := control_multipage.CssLabelOn;
         css4   := control_multipage.CssLabelOff;
-        scelte := 'T';
         if control_multipage.TabPosition = tpLeft then
         begin
-          scelte := 'L'
-        end;
-        if control_multipage.TabPosition = tpRight then
+          scelte := 'L';
+        end
+        else if control_multipage.TabPosition = tpRight then
         begin
-          scelte := 'R'
-        end;
-        if control_multipage.TabPosition = tpBottom then
+          scelte := 'R';
+        end
+        else if control_multipage.TabPosition = tpBottom then
         begin
-          scelte := 'B'
+          scelte := 'B';
+        end
+        else
+        begin
+          scelte := 'T';
         end;
         salva_controlliExecute(self, control_multipage);
       end
+      // ____________________________________________________________ BUTTON ___
       else if controllo.Controls[i].ClassName = 'To2button' then
       begin
         control_button := controllo.Controls[i] as To2button;
-        tipocontrollo := 'button';
-        Caption    := control_button.o2Label;
-        visibile   := control_button.Visibile;
-        abilitato  := control_button.Abilitato;
-        vocecss    := control_button.Vocecss;
-        azione     := control_button.Azione;
-        scelte     := control_button.Messaggio;
-        taborder   := control_button.TabOrder;
-  //      parentname := control_button.Parentname;
-        parentinfo := control_button.Parentinfo;
-        if control_button.Parent.ClassName = 'To2table' then parentinfo := calcola_parent_info(control_button, parentinfo);
+        tipocontrollo  := 'button';
+        Caption        := control_button.o2Label;
+        visibile       := control_button.Visibile;
+        abilitato      := control_button.Abilitato;
+        vocecss        := control_button.Vocecss;
+        azione         := control_button.Azione;
+        scelte         := control_button.Messaggio;
+        taborder       := control_button.TabOrder;
+        Expand         := ExpandAsString(control_button.Expand);
+        parentinfo     := control_button.Parentinfo;
+        if control_button.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_button, parentinfo);
+        end;
 
-        extra1:=control_button.StyleAsString(control_button.Format);
-        extra2:=control_button.ShortcutAsString(control_button.Shortcut);
+        extra1     := control_button.StyleAsString(control_button.Format);
+        extra2     := control_button.ShortcutAsString(control_button.Shortcut);
         tooltipexp := control_button.TooltipExp;
-        Expand     := ExpandAsString(control_button.Expand);
       end
+      // _________________________________________________________ IMAGE MAP ___
       else  if controllo.Controls[i].ClassName = 'To2Map' then
       begin
-        control_map := controllo.Controls[i] as To2Map;
+        control_map   := controllo.Controls[i] as To2Map;
         tipocontrollo := 'map';
-        visibile   := control_map.Visibile;
-        abilitato  := control_map.Abilitato;
-        vocecss    := control_map.Vocecss;
-        azione     := control_map.Azione;
-        scelte     := control_map.Messaggio;
-        parentname := control_map.Parentname;
-        parentinfo := control_map.Parentinfo;
-        taborder   := i - 10000;
-        Expand     := ExpandAsString(control_map.Expand);
-        if control_map.Parent.ClassName = 'To2table' then parentinfo := calcola_parent_info(control_map, parentinfo);
+        visibile      := control_map.Visibile;
+        abilitato     := control_map.Abilitato;
+        vocecss       := control_map.Vocecss;
+        azione        := control_map.Azione;
+        scelte        := control_map.Messaggio;
+        parentname    := control_map.Parentname;
+        parentinfo    := control_map.Parentinfo;
+        taborder      := i - 10000;
+        Expand        := ExpandAsString(control_map.Expand);
+        if control_map.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_map, parentinfo);
+        end;
       end
+      // ____________________________________________________ LIST/COMBO-BOX ___
       else if controllo.Controls[i].ClassName = 'To2ListBox' then
       begin
         control_listbox := controllo.Controls[i] as To2ListBox;
-        tipocontrollo := 'listbox';
-        riferimento :=
-          chr(127) + control_listbox.View + chr(129) + control_listbox.Field;
-        visibile   := control_listbox.Visibile;
-        abilitato  := control_listbox.Abilitato;
-        vocecss    := control_listbox.Vocecss;
-        azione     := control_listbox.Azione;
-        scelte     := control_listbox.Scelte;
-        taborder   := control_listbox.TabOrder;
-        zoomaction := control_listbox.ZoomAction;
- //       parentname := control_listbox.Parentname;
-        parentinfo := control_listbox.Parentinfo;
-        if control_listbox.Parent.ClassName = 'To2table' then parentinfo := calcola_parent_info(control_listbox, parentinfo);
+        tipocontrollo   := 'listbox';
+        riferimento     := chr(127) + control_listbox.View +
+                           chr(129) + control_listbox.Field;
+        visibile        := control_listbox.Visibile;
+        abilitato       := control_listbox.Abilitato;
+        vocecss         := control_listbox.Vocecss;
+        azione          := control_listbox.Azione;
+        scelte          := control_listbox.Scelte;
+        taborder        := control_listbox.TabOrder;
+        zoomaction      := control_listbox.ZoomAction;
+        Expand          := ExpandAsString(control_listbox.Expand);
+        parentinfo      := control_listbox.Parentinfo;
+        if control_listbox.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_listbox, parentinfo);
+        end;
 
         extra1     := IntToStr(control_listbox.Rows);
         submit     := control_listbox.Submitonchange;
         tooltipexp := control_listbox.TooltipExp;
-        Expand     := ExpandAsString(control_listbox.Expand);
       end
+      // _________________________________________________________ CHECK-BOX ___
       else if controllo.Controls[i].ClassName = 'To2checkbox' then
       begin
         control_checkbox := controllo.Controls[i] as To2checkbox;
-        tipocontrollo := 'checkbox';
-        riferimento :=
-          chr(127) + control_checkbox.View + chr(129) + control_checkbox.Field;
-        visibile   := control_checkbox.Visibile;
-        abilitato  := control_checkbox.Abilitato;
-        vocecss    := control_checkbox.Vocecss;
-        azione     := control_checkbox.Azione;
-        taborder   := control_checkbox.TabOrder;
-   //     parentname := control_checkbox.Parentname;
-        parentinfo := control_checkbox.Parentinfo;
-        if control_checkbox.Parent.ClassName = 'To2table' then parentinfo := calcola_parent_info(control_checkbox, parentinfo);
+        tipocontrollo    := 'checkbox';
+        riferimento      := chr(127) + control_checkbox.View +
+                            chr(129) + control_checkbox.Field;
+        visibile         := control_checkbox.Visibile;
+        abilitato        := control_checkbox.Abilitato;
+        vocecss          := control_checkbox.Vocecss;
+        azione           := control_checkbox.Azione;
+        taborder         := control_checkbox.TabOrder;
+        Expand           := ExpandAsString(control_checkbox.Expand);
+        parentinfo       := control_checkbox.Parentinfo;
+        if control_checkbox.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_checkbox, parentinfo);
+        end;
 
         submit     := control_checkbox.Submitonchange;
         tooltipexp := control_checkbox.TooltipExp;
-        Expand     := ExpandAsString(control_checkbox.Expand);
       end
+      // _________________________________________________________ SEPARATOR ___
       else if controllo.Controls[i].ClassName = 'To2separator' then
       begin
         control_line  := controllo.Controls[i] as To2separator;
         tipocontrollo := 'separator';
-        visibile := control_line.Visibile;
-        vocecss    := control_line.Vocecss;
-   //     parentname := control_line.Parentname;
-        parentinfo := control_line.Parentinfo;
-        taborder   := i - 10000;
-        Expand     := ExpandAsString(control_line.Expand);
-        if control_line.Parent.ClassName = 'To2table' then parentinfo := calcola_parent_info(control_line, parentinfo);
+        visibile      := control_line.Visibile;
+        vocecss       := control_line.Vocecss;
+        taborder      := i - 10000;
+        Expand        := ExpandAsString(control_line.Expand);
+        parentinfo    := control_line.Parentinfo;
+        if control_line.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_line, parentinfo);
+        end;
       end
+      // __________________________________________________________ TEXTAREA ___
       else if controllo.Controls[i].ClassName = 'To2textarea' then
       begin
-        control_memo := controllo.Controls[i] as To2textarea;
+        control_memo  := controllo.Controls[i] as To2textarea;
         tipocontrollo := 'textarea';
-        riferimento := chr(127) + control_memo.View + chr(129) + control_memo.Field;
-        visibile   := control_memo.Visibile;
-        abilitato  := control_memo.Abilitato;
-        vocecss    := control_memo.Vocecss;
-        azione     := control_memo.Azione;
-        zoomaction := control_memo.ZoomAction;
-        maschera   := control_memo.Mask;
-        taborder   := control_memo.TabOrder;
-   //     parentname := control_memo.Parentname;
-        parentinfo := control_memo.Parentinfo;
-        if control_memo.Parent.ClassName = 'To2table' then parentinfo := calcola_parent_info(control_memo, parentinfo);
+        riferimento   := chr(127) + control_memo.View +
+                         chr(129) + control_memo.Field;
+        visibile      := control_memo.Visibile;
+        abilitato     := control_memo.Abilitato;
+        vocecss       := control_memo.Vocecss;
+        azione        := control_memo.Azione;
+        zoomaction    := control_memo.ZoomAction;
+        maschera      := control_memo.Mask;
+        taborder      := control_memo.TabOrder;
+        Expand        := ExpandAsString(control_memo.Expand);
+        parentinfo    := control_memo.Parentinfo;
+        if control_memo.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_memo, parentinfo);
+        end;
 
         submit     := control_memo.Submitonchange;
         boolean1   := control_memo.Htmlarea;
         tooltipexp := control_memo.TooltipExp;
-        Expand     := ExpandAsString(control_memo.Expand);
       end
+      // _________________________________________________ AGENTE (NOT USED) ___
       else if controllo.Controls[i].ClassName = 'To2agente' then
       begin
         control_agente := controllo.Controls[i] as To2agente;
-        tipocontrollo := 'agente';
-        Caption     := control_agente.Caption;
-        visibile    := control_agente.Visibile;
-        abilitato   := control_agente.Abilitato;
-        riferimento := control_agente.Rifagente;
-        taborder    := control_agente.TabOrder;
+        tipocontrollo  := 'agente';
+        Caption        := control_agente.Caption;
+        visibile       := control_agente.Visibile;
+        abilitato      := control_agente.Abilitato;
+        riferimento    := control_agente.Rifagente;
+        taborder       := control_agente.TabOrder;
         salva_controlliExecute(self, control_agente);
-   //     parentname := control_agente.Parentname;
         parentinfo := control_agente.Parentinfo;
-        if control_agente.Parent.ClassName = 'To2table' then parentinfo := calcola_parent_info(control_agente, parentinfo);
+        if control_agente.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_agente, parentinfo);
+        end;
       end
+      // ______________________________________________________ GRID (TABLE) ___
       else if controllo.Controls[i].ClassName = 'To2table' then
       begin
         control_table := controllo.Controls[i] as To2table;
 
         // aggiorna parentinfo dei figli in base alle posizioni
+        // ________________________________________ Set children parent-info ___
         posizioni_in_tabellaExecute(self, control_table);
 
         tipocontrollo := 'table';
-//        Caption     := control_table.Caption;
-        visibile    := control_table.Visibile;
-        abilitato   := control_table.Abilitato;
-        riferimento := chr(127) + control_table.View;
-        taborder    := control_table.TabOrder;
-        exp1        := control_table.HideIndicator;;
-        Expand      := ExpandAsString(control_table.Expand);
+        visibile      := control_table.Visibile;
+        abilitato     := control_table.Abilitato;
+        riferimento   := chr(127) + control_table.View;
+        taborder      := control_table.TabOrder;
+        exp1          := control_table.HideIndicator;;
+        Expand        := ExpandAsString(control_table.Expand);
 
         salva_controlliExecute(self, control_table);
 
-  //      parentname := control_table.Parentname;
         parentinfo := control_table.Parentinfo;
         if control_table.Parent.ClassName = 'To2table' then
         begin
          parentinfo := calcola_parent_info(control_table, parentinfo);
         end;
-//        azione := control_table.Azione;
-//        submit := control_table.Submitonchange;
-        css1 := control_table.CssDiv;
-        css2 := control_table.CssTab;
-        css3 := control_table.CssHead;
-        css4 := control_table.CssBody;
-        css5 := control_table.CssLine;
-        css6 := control_table.CssAlternate;
-        css7 := control_table.CssMouseOverLine;
-        css8 := control_table.CssCurrentLine;
-        css9 := control_table.CssFooter;
 
-        norecordmsg:=control_table.NoRecordMessage;
-
+        css1        := control_table.CssDiv;
+        css2        := control_table.CssTab;
+        css3        := control_table.CssHead;
+        css4        := control_table.CssBody;
+        css5        := control_table.CssLine;
+        css6        := control_table.CssAlternate;
+        css7        := control_table.CssMouseOverLine;
+        css8        := control_table.CssCurrentLine;
+        css9        := control_table.CssFooter;
+        norecordmsg := control_table.NoRecordMessage;
       end
+      // _____________________________________________________________ IMAGE ___
       else if controllo.Controls[i].ClassName = 'To2image' then
       begin
         control_immagine := controllo.Controls[i] as To2image;
-        tipocontrollo := 'image';
-        //                    riferimento:=control_immagine.Text;
-        visibile   := control_immagine.Visibile;
-        abilitato  := control_immagine.Abilitato;
-        vocecss    := control_immagine.Vocecss;
-        azione     := control_immagine.Azione;
-   //     parentname := control_immagine.Parentname;
-        parentinfo := control_immagine.Parentinfo;
-        taborder   := control_immagine.TabOrder;
-        if control_immagine.Parent.ClassName = 'To2table' then parentinfo := calcola_parent_info(control_immagine, parentinfo);
+        tipocontrollo    := 'image';
+        visibile         := control_immagine.Visibile;
+        abilitato        := control_immagine.Abilitato;
+        vocecss          := control_immagine.Vocecss;
+        azione           := control_immagine.Azione;
+        taborder         := control_immagine.TabOrder;
+        Expand           := ExpandAsString(control_immagine.Expand);
+        parentinfo       := control_immagine.Parentinfo;
+        if control_immagine.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_immagine, parentinfo);
+        end;
 
-        extra1     := IntToStr(control_immagine.File_name);
-        extra3     := IntToStr(control_immagine.File_name_rollover);
-        submit     := control_immagine.Submitonchange;
-        Caption    := control_immagine.o2Label;
-        extra2     := control_immagine.Messaggio;
-        scelte     := control_immagine.ImageFile;
-        Expand      := ExpandAsString(control_immagine.Expand);
-
+        extra1  := IntToStr(control_immagine.File_name);
+        extra3  := IntToStr(control_immagine.File_name_rollover);
+        submit  := control_immagine.Submitonchange;
+        Caption := control_immagine.o2Label;
+        extra2  := control_immagine.Messaggio;
+        scelte  := control_immagine.ImageFile;
+        // _________________________________ MAPs controls are inside images ___
         salva_controlliExecute(self, control_immagine);
       end
+      // _______________________________________________ GROUPBOX (NOT USED) ___
       else if controllo.Controls[i].ClassName = 'To2groupbox' then
       begin
         control_groupbox := controllo.Controls[i] as To2groupbox;
-        tipocontrollo := 'groupbox';
-        Caption   := control_groupbox.Caption;
-        visibile  := control_groupbox.Visibile;
-        abilitato := control_groupbox.Abilitato;
-        taborder  := control_groupbox.TabOrder;
+        tipocontrollo    := 'groupbox';
+        Caption          := control_groupbox.Caption;
+        visibile         := control_groupbox.Visibile;
+        abilitato        := control_groupbox.Abilitato;
+        taborder         := control_groupbox.TabOrder;
+        //Expand         := ExpandAsString(control_groupbox.Expand);
+        parentinfo       := control_groupbox.Parentinfo;
+        if control_groupbox.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_groupbox, parentinfo);
+        end;
         salva_controlliExecute(self, control_groupbox);
-    //    parentname := control_groupbox.Parentname;
-        parentinfo := control_groupbox.Parentinfo;
-        if control_groupbox.Parent.ClassName = 'To2table' then parentinfo := calcola_parent_info(control_groupbox, parentinfo);
 
       end
+      // _________________________________________________________ NAVIGATOR ___
       else if controllo.Controls[i].ClassName = 'To2dbnavigator' then
       begin
         control_navigator := controllo.Controls[i] as To2dbnavigator;
-        tipocontrollo := 'navigator';
-        visibile := control_navigator.Visibile;
-        riferimento := chr(127) + control_navigator.View;
-        taborder := control_navigator.TabOrder;
-//        parentname := control_navigator.Parentname;
+        tipocontrollo     := 'navigator';
+        visibile          := control_navigator.Visibile;
+        riferimento       := chr(127) + control_navigator.View;
+        taborder          := control_navigator.TabOrder;
+        Expand            := ExpandAsString(control_navigator.Expand);
         if control_navigator.Parent.ClassName = 'To2table' then
-          parentinfo := calcola_parent_info(control_navigator, parentinfo)
-          else
+        begin
+          parentinfo := calcola_parent_info(control_navigator, parentinfo);
+        end
+        else
+        begin
           parentinfo := control_navigator.Parentinfo;
+        end;
+        if control_navigator.Kind = sbVertical then
+        begin
+          extra1 := 'vertical';
+        end
+        else
+        begin
+          extra1 := '';
+        end;
 
-        if control_navigator.Kind = sbVertical then extra1:='vertical'
-        else extra1:= '';
+        css1  := control_navigator.CssSlide;
+        css2  := control_navigator.CssNavBar;
+        css3  := control_navigator.CssFirst;
+        css4  := control_navigator.CssPrevPage;
+        css5  := control_navigator.CssPrev;
+        css6  := control_navigator.CssNext;
+        css7  := control_navigator.CssNextPage;
+        css8  := control_navigator.CssLast;
+        css9  := control_navigator.CssSpace;
+        css10 := control_navigator.CssInsert;
+        css11 := control_navigator.CssPost;
+        css12 := control_navigator.CssDelete;
+        css13 := control_navigator.CssUndo;
+        css14 := control_navigator.CssDetail;
+        css15 := control_navigator.CssSelect;
 
-        Expand := ExpandAsString(control_navigator.Expand);
+        insert_vis    := control_navigator.InsertVisible;
+        insert_enable := control_navigator.InsertEnable;
+        insert_action := control_navigator.InsertAction;
+        insert_msg    := control_navigator.InsertConfirmMessage;
 
-        css1 := control_navigator.CssSlide;
-        css2 := control_navigator.CssNavBar;
-        css3 := control_navigator.CssFirst;
-        css4 := control_navigator.CssPrevPage;
-        css5 := control_navigator.CssPrev;
-        css6 := control_navigator.CssNext;
-        css7 := control_navigator.CssNextPage;
-        css8 := control_navigator.CssLast;
-        css9 := control_navigator.CssSpace;
-        css10:=control_navigator.CssInsert;
-        css11:=control_navigator.CssPost;
-        css12:=control_navigator.CssDelete;
-        css13:=control_navigator.CssUndo;
-        css14:=control_navigator.CssDetail;
-        css15:=control_navigator.CssSelect;
+        post_vis      := control_navigator.PostVisible;
+        post_enable   := control_navigator.PostEnable;
+        post_action   := control_navigator.PostAction;
+        post_msg      := control_navigator.PostConfirmMessage;
 
-        insert_vis:=control_navigator.InsertVisible;
-        insert_enable:=control_navigator.InsertEnable;
-        insert_action:=control_navigator.InsertAction;
-        insert_msg:=control_navigator.InsertConfirmMessage;
+        del_vis       := control_navigator.DeleteVisible;
+        del_enable    := control_navigator.DeleteEnable;
+        del_action    := control_navigator.DeleteAction;
+        del_msg       := control_navigator.DeleteConfirmMessage;
 
-        post_vis:=control_navigator.PostVisible;
-        post_enable:=control_navigator.PostEnable;
-        post_action:=control_navigator.PostAction;
-        post_msg:=control_navigator.PostConfirmMessage;
+        undo_vis      := control_navigator.UndoVisible;
+        undo_enable   := control_navigator.UndoEnable;
+        undo_action   := control_navigator.UndoAction;
+        undo_msg      := control_navigator.UndoConfirmMessage;
 
-        del_vis:=control_navigator.DeleteVisible;
-        del_enable:=control_navigator.DeleteEnable;
-        del_action:=control_navigator.DeleteAction;
-        del_msg:=control_navigator.DeleteConfirmMessage;
+        detail_vis    := control_navigator.DetailVisible;
+        detail_enable := control_navigator.DetailEnable;
+        detail_action := control_navigator.DetailAction;
+        detail_msg    := control_navigator.DetailConfirmMessage;
 
-        undo_vis:=control_navigator.UndoVisible;
-        undo_enable:=control_navigator.UndoEnable;
-        undo_action:=control_navigator.UndoAction;
-        undo_msg:=control_navigator.UndoConfirmMessage;
+        select_vis    := control_navigator.SelectVisible;
+        select_enable := control_navigator.SelectEnable;
+        select_action := control_navigator.SelectAction;
+        select_msg    := control_navigator.SelectConfirmMessage;
 
-        detail_vis:=control_navigator.DetailVisible;
-        detail_enable:=control_navigator.DetailEnable;
-        detail_action:=control_navigator.DetailAction;
-        detail_msg:=control_navigator.DetailConfirmMessage;
-
-        select_vis:=control_navigator.SelectVisible;
-        select_enable:=control_navigator.SelectEnable;
-        select_action:=control_navigator.SelectAction;
-        select_msg:=control_navigator.SelectConfirmMessage;
-
-        navigatorblock_vis:=control_navigator.NavigationBlockVisible;
+        navigatorblock_vis := control_navigator.NavigationBlockVisible;
       end
+      // _________________________________________________________ HTML-AREA ___
       else if controllo.Controls[i].ClassName = 'To2htmlarea' then
       begin
         control_htmlarea := controllo.Controls[i] as To2htmlarea;
-        tipocontrollo := 'htmlarea';
-        visibile   := control_htmlarea.Visibile;
-        vocecss    := control_htmlarea.Vocecss;
-   //     parentname := control_htmlarea.Parentname;
-        parentinfo := control_htmlarea.Parentinfo;
-        taborder   := control_htmlarea.TabOrder;
-        if control_htmlarea.Parent.ClassName = 'To2table' then parentinfo := calcola_parent_info(control_htmlarea, parentinfo);
+        tipocontrollo    := 'htmlarea';
+        visibile         := control_htmlarea.Visibile;
+        vocecss          := control_htmlarea.Vocecss;
+        taborder         := control_htmlarea.TabOrder;
+        Expand           := ExpandAsString(control_htmlarea.Expand);
+        parentinfo       := control_htmlarea.Parentinfo;
+        if control_htmlarea.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_htmlarea, parentinfo);
+        end;
 
-        extra1     := IntToStr(control_htmlarea.Html);
-        Expand     := ExpandAsString(control_htmlarea.Expand);
-
+        extra1 := IntToStr(control_htmlarea.Html);
       end
+      // _________________________________________________________ TREE-VIEW ___
+      else if controllo.Controls[i].ClassName = 'To2tree' then
+      begin
+        control_tree  := controllo.Controls[i] as To2tree;
+        tipocontrollo := 'treeview';
+        riferimento   := chr(127) + control_tree.View +
+                         chr(129) + control_tree.Field;
+        visibile      := control_tree.Visibile;
+        vocecss       := control_tree.Vocecss;
+        azione        := control_tree.Azione;
+        taborder      := control_tree.TabOrder;
+        Expand        := ExpandAsString(control_tree.Expand);
+        parentinfo    := control_tree.Parentinfo;
+        if control_tree.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_tree, parentinfo);
+        end;
+
+        extra1 := IntToStr(control_tree.Nodes);
+        scelte := control_tree.TreeActAsString(control_tree.Activation);
+      end
+      // __________________________________________________________ DOCUMENT ___
       else if controllo.Controls[i].ClassName = 'To2document' then
       begin
         control_document := controllo.Controls[i] as To2document;
-        tipocontrollo := 'document';
-        visibile   := control_document.Visibile;
-        vocecss    := control_document.Vocecss;
-  //      parentname := control_document.Parentname;
-        parentinfo := control_document.Parentinfo;
-        taborder   := i - 10000;
-        if control_document.Parent.ClassName = 'To2table' then parentinfo := calcola_parent_info(control_document, parentinfo);
+        tipocontrollo    := 'document';
+        visibile         := control_document.Visibile;
+        vocecss          := control_document.Vocecss;
+        Expand           := ExpandAsString(control_document.Expand);
+        parentinfo       := control_document.Parentinfo;
+        if control_document.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_document, parentinfo);
+        end;
 
-        extra1     := IntToStr(control_document.Path);
-        Expand     := ExpandAsString(control_document.Expand);
+        extra1 := IntToStr(control_document.Path);
       end;
 
       // in caso di controllo senza parent azzera parentinfo
-      if controllo_corrente.Parent.ClassName = 'TDsnStage' then parentinfo := '';
+      if controllo_corrente.Parent.ClassName = 'TDsnStage' then
+      begin
+        parentinfo := '';
+      end;
 
-      dm_form.t_controlliform.InsertRecord([
-        dm_form.t_formprg.Value,
-        dm_form.t_formnomeform.Value, nomecontrollo,
-        tipocontrollo, top, left, altezza, larghezza, visibile, abilitato,
-        Caption, riferimento, azione, scelte, vocecss, maschera,
-        taborder, parentname, parentinfo, extra1, extra2, submit, boolean1,
-        css1, css2, css3, css4, css5, css6, css7, css8, css9, css10, extra3, css11,css12, css13, css14, css15,
-        navigatorblock_vis, insert_vis, insert_enable, insert_action, insert_msg,
-        post_vis,post_enable,post_action,post_msg,
-        del_vis,del_enable,del_action,del_msg,
-        undo_vis, undo_enable, undo_action, undo_msg, norecordmsg, detail_vis,detail_enable,detail_action,detail_msg,
-        select_vis,select_enable,select_action,select_msg, exp1, exp2,zoomaction, tooltipexp, Expand
-        ]);
+      dm_form.t_controlliform.InsertRecord([dm_form.t_formprg.Value,
+                                            dm_form.t_formnomeform.Value,
+                                            nomecontrollo,
+                                            tipocontrollo,
+                                            top,
+                                            left,
+                                            altezza,
+                                            larghezza,
+                                            visibile,
+                                            abilitato,
+                                            Caption,
+                                            riferimento,
+                                            azione,
+                                            scelte,
+                                            vocecss,
+                                            maschera,
+                                            taborder,
+                                            parentname,
+                                            parentinfo,
+                                            extra1,
+                                            extra2,
+                                            submit,
+                                            boolean1,
+                                            css1,
+                                            css2,
+                                            css3,
+                                            css4,
+                                            css5,
+                                            css6,
+                                            css7,
+                                            css8,
+                                            css9,
+                                            css10,
+                                            extra3,
+                                            css11,
+                                            css12,
+                                            css13,
+                                            css14,
+                                            css15,
+                                            navigatorblock_vis,
+                                            insert_vis,
+                                            insert_enable,
+                                            insert_action,
+                                            insert_msg,
+                                            post_vis,
+                                            post_enable,
+                                            post_action,
+                                            post_msg,
+                                            del_vis,
+                                            del_enable,
+                                            del_action,
+                                            del_msg,
+                                            undo_vis,
+                                            undo_enable,
+                                            undo_action,
+                                            undo_msg,
+                                            norecordmsg,
+                                            detail_vis,
+                                            detail_enable,
+                                            detail_action,
+                                            detail_msg,
+                                            select_vis,
+                                            select_enable,
+                                            select_action,
+                                            select_msg,
+                                            exp1,
+                                            exp2,
+                                            zoomaction,
+                                            tooltipexp,
+                                            Expand]);
 
     end;
   end;
@@ -2176,6 +2347,7 @@ var
   control_file      : To2file;
   control_multipage : To2multipage;
   control_htmlarea  : To2htmlarea;
+  control_tree      : To2tree;
   control_document  : To2document;
   control_map       : To2Map;
 begin
@@ -2216,8 +2388,8 @@ begin
       control_edit.Abilitato     := dm_form.t_controlliformabilitato.Value;
       control_edit.Visibile      := dm_form.t_controlliformvisibile.Value;
       control_edit.Tag           := 99;
-      control_edit.Azione        := dm_form.t_controlliformazione.Value;
       control_edit.ZoomAction    := dm_form.t_controlliformZoomAction.Value;
+      control_edit.Azione        := dm_form.t_controlliformazione.Value;
       control_edit.View          := StringReplace(ExtractWord(1,
                                        dm_form.t_controlliformriferimento.Value,
                                                               [chr(129)]),
@@ -2743,11 +2915,38 @@ begin
       control_htmlarea.TabOrder   := dm_form.t_controlliformtaborder.Value;
       control_htmlarea.Expand     :=
                             StringAsExpand(dm_form.t_controlliformExpand.Value);
-      // _____________________________________ Property WIDE (to be removed) ___
-      if dm_form.t_controlliformextra2.Value <> '' then
-      begin
-        control_htmlarea.Wide := dm_form.t_controlliformextra2.AsVariant;
-      end;
+    end
+    // ____________________________________________________ Control TREEVIEW ___
+    else if dm_form.t_controlliformtipo.Value = 'treeview' then
+    begin
+      control_tree            := To2tree.Create(self);
+      control_tree.Parent     :=
+                              FindComponent(dm_form.t_controlliformparent.Value)
+                                     as TWinControl;
+      control_tree.Name       := dm_form.t_controlliformnomecontrollo.Value;
+      control_tree.Top        := dm_form.t_controlliformtop.Value;
+      control_tree.Left       := dm_form.t_controlliformleft.Value;
+      control_tree.Width      := dm_form.t_controlliformlarghezza.Value;
+      control_tree.Height     := dm_form.t_controlliformaltezza.Value;
+      control_tree.Visibile   := dm_form.t_controlliformvisibile.Value;
+      control_tree.Vocecss    := dm_form.t_controlliformvocecss.Value;
+      control_tree.Nodes      := dm_form.t_controlliformextra1.AsInteger;
+      control_tree.Azione     := dm_form.t_controlliformazione.Value;
+      control_tree.View       := StringReplace(ExtractWord(1,
+                                       dm_form.t_controlliformriferimento.Value,
+                                                           [chr(129)]),
+                                                chr(127),
+                                                '',
+                                                [rfReplaceAll]);
+      control_tree.Field      := ExtractWord(2,
+                                       dm_form.t_controlliformriferimento.Value,
+                                             [chr(129)]);
+      control_tree.Activation := control_tree.StringAsTreeAct(dm_form.
+                                         t_controlliformscelte_possibili.Value);
+      control_tree.Parentinfo := dm_form.t_controlliformparent_info.Value;
+      control_tree.TabOrder   := dm_form.t_controlliformtaborder.Value;
+      control_tree.Expand     :=
+                            StringAsExpand(dm_form.t_controlliformExpand.Value);
     end
     // ____________________________________________________ Control DOCUMENT ___
     else if dm_form.t_controlliformtipo.Value = 'document' then
@@ -2799,79 +2998,118 @@ begin
     repeat
       if dm_form.t_formtmpselez.Value then
       begin
-
         xform      := f_areaform.findcomponent(dm_form.t_formnomeform.Value) as
-          TJvCustomPanel;
+                      TJvCustomPanel;
         xform_area := f_areaform.findcomponent('_stage_' +
-          dm_form.t_formnomeform.Value) as TDsnStage;
-
-        parent_top:=0;
-        parent_left:=0;
-        altezza_form_parent:=0;
-        larghezza_form_parent:=0;
+                                               dm_form.t_formnomeform.Value) as
+                      TDsnStage;
+        parent_top            := 0;
+        parent_left           := 0;
+        altezza_form_parent   := 0;
+        larghezza_form_parent := 0;
         if dm_form.t_formparentform.Value <> '' then
         begin
-            parent_top:=dm_form.t_form.Lookup('nomeform', dm_form.t_formparentform.AsString, 'top');
-            parent_left:=dm_form.t_form.Lookup('nomeform', dm_form.t_formparentform.AsString, 'left');
-            parent_orizzontalalign:= dm_form.t_form.Lookup('nomeform', dm_form.t_formparentform.AsString, 'orizzalign');
-            parent_verticalalign:= dm_form.t_form.Lookup('nomeform', dm_form.t_formparentform.AsString, 'vertalign');
-
-            if parent_orizzontalalign='Centered' then parent_left:= ((larghezza_form + SidePanelWidth) div 2) - parent_left;
-            if parent_orizzontalalign='Right' then parent_left:= larghezza_form  - parent_left - SidePanelWidth;
-
-            if parent_verticalalign='Middle' then parent_top:= (altezza_form div 2) - parent_top;
-            if parent_verticalalign='Bottom' then parent_top:= altezza_form  - parent_top;
-
-            altezza_form_parent:= dm_form.t_form.Lookup('nomeform', dm_form.t_formparentform.AsString, 'altezza');
-            larghezza_form_parent:= dm_form.t_form.Lookup('nomeform', dm_form.t_formparentform.AsString, 'larghezza');
+          parent_top             := dm_form.t_form.Lookup('nomeform',
+                                              dm_form.t_formparentform.AsString,
+                                                          'top');
+          parent_left            := dm_form.t_form.Lookup('nomeform',
+                                              dm_form.t_formparentform.AsString,
+                                                          'left');
+          parent_orizzontalalign := dm_form.t_form.Lookup('nomeform',
+                                              dm_form.t_formparentform.AsString,
+                                                          'orizzalign');
+          parent_verticalalign   := dm_form.t_form.Lookup('nomeform',
+                                              dm_form.t_formparentform.AsString,
+                                                          'vertalign');
+          if parent_orizzontalalign = 'Centered' then
+          begin
+            parent_left := ((larghezza_form + SidePanelWidth) div 2) -
+                           parent_left;
+          end
+          else if parent_orizzontalalign = 'Right' then
+          begin
+            parent_left:= larghezza_form - parent_left - SidePanelWidth;
+          end;
+          if parent_verticalalign = 'Middle' then
+          begin
+            parent_top := (altezza_form div 2) - parent_top;
+          end
+          else if parent_verticalalign = 'Bottom' then
+          begin
+            parent_top := altezza_form - parent_top;
+          end;
+          altezza_form_parent   := dm_form.t_form.Lookup('nomeform',
+                                              dm_form.t_formparentform.AsString,
+                                                         'altezza');
+          larghezza_form_parent := dm_form.t_form.Lookup('nomeform',
+                                              dm_form.t_formparentform.AsString,
+                                                         'larghezza');
         end;
-
         dm_form.t_form.Edit;
         if dm_form.t_formvertalign.Value = 'Top' then
         begin
            dm_form.t_formtop.Value := xform.Top - parent_top;
-        end;
-
-        if dm_form.t_formvertalign.Value = 'Bottom' then
+        end
+        else if dm_form.t_formvertalign.Value = 'Bottom' then
         begin
           if altezza_form_parent <> 0 then
-            dm_form.t_formtop.Value := altezza_form_parent - (xform.Top + xform.Height)
-           else
-            dm_form.t_formtop.Value := altezza_form - (xform.Top + xform.Height);
-        end;
-        if dm_form.t_formvertalign.Value = 'Middle' then
-        begin
-          if altezza_form_parent <> 0 then
-            dm_form.t_formtop.Value := (altezza_form_parent div 2) - xform.Top
+          begin
+            dm_form.t_formtop.Value := altezza_form_parent -
+                                       (xform.Top + xform.Height);
+          end
           else
+          begin
+            dm_form.t_formtop.Value := altezza_form -
+                                       (xform.Top + xform.Height);
+          end;
+        end
+        else if dm_form.t_formvertalign.Value = 'Middle' then
+        begin
+          if altezza_form_parent <> 0 then
+          begin
+            dm_form.t_formtop.Value := (altezza_form_parent div 2) - xform.Top;
+          end
+          else
+          begin
             dm_form.t_formtop.Value := (altezza_form div 2) - xform.Top;
+          end;
         end;
 
-        dm_form.t_formtop.Value:= max(0,dm_form.t_formtop.Value);
+        dm_form.t_formtop.Value:= max(0, dm_form.t_formtop.Value);
 
         if dm_form.t_formorizzalign.Value = 'Left' then
         begin
-          dm_form.t_formleft.Value := xform.Left  - parent_left - SidePanelWidth;
-        end;
-        if dm_form.t_formorizzalign.Value = 'Right' then
+          dm_form.t_formleft.Value := xform.Left - parent_left - SidePanelWidth;
+        end
+        else if dm_form.t_formorizzalign.Value = 'Right' then
         begin
-            If larghezza_form_parent <> 0 then
-              dm_form.t_formleft.Value := larghezza_form_parent - (xform.Left + xform.Width)
-            else
-              dm_form.t_formleft.Value := larghezza_form - (xform.Left + xform.Width);
-        end;
-        if dm_form.t_formorizzalign.Value = 'Center' then
-        begin
-        If larghezza_form_parent <> 0 then
-          dm_form.t_formleft.Value := ((larghezza_form_parent + SidePanelWidth) div 2) - xform.Left
+          if larghezza_form_parent <> 0 then
+          begin
+            dm_form.t_formleft.Value := larghezza_form_parent -
+                                        (xform.Left + xform.Width);
+          end
           else
-          dm_form.t_formleft.Value := ((larghezza_form + SidePanelWidth) div 2) - xform.Left;
+          begin
+            dm_form.t_formleft.Value := larghezza_form -
+                                        (xform.Left + xform.Width);
+          end;
+        end
+        else if dm_form.t_formorizzalign.Value = 'Center' then
+        begin
+          if larghezza_form_parent <> 0 then
+          begin
+            dm_form.t_formleft.Value := ((larghezza_form_parent +
+                                          SidePanelWidth) div 2) - xform.Left;
+          end
+          else
+          begin
+            dm_form.t_formleft.Value := ((larghezza_form +
+                                          SidePanelWidth) div 2) - xform.Left;
+          end;
         end;
-
 
         dm_form.t_formaltezza.Value   := xform.Height;
         dm_form.t_formlarghezza.Value := xform.Width;
-
 
         //controlli figli azzera
         dm_form.t_controlliform.First;
@@ -2881,8 +3119,6 @@ begin
         end;
         salva_controlliExecute(self, xform_area);
       end;
-
-
       dm_form.t_form.Next;
     until dm_form.t_form.EOF;
 
