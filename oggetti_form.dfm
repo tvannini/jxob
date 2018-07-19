@@ -218,8 +218,24 @@ object f_oggettiform: Tf_oggettiform
       Width = 49
       Height = 49
       Caption = 'Dpst_To2tree'
+      Color = 15527152
       TabOrder = 0
       Visibile = 0
+      Nodes = 0
+      Expand = NoExpand
+    end
+    object Dpst_To2imglist: To2imglist
+      Left = 32
+      Top = 0
+      Width = 49
+      Height = 49
+      BevelInner = bvLowered
+      BevelOuter = bvNone
+      Caption = 'Dpst_To2imglist'
+      Color = 15528176
+      TabOrder = 0
+      Visibile = 0
+      Items = 0
       Expand = NoExpand
     end
   end
@@ -2728,8 +2744,7 @@ object f_oggettiform: Tf_oggettiform
           Layout = blGlyphTop
           ParentShowHint = False
           ShowHint = True
-          Visible = False
-          GeneName = 'Dpst_To2separator'
+          GeneName = 'Dpst_To2imglist'
         end
       end
     end

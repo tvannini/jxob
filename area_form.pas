@@ -10,8 +10,8 @@ uses
   o2groupbox, o2checkbox, o2button, o2agente, o2textarea, Menus,
   o2table, DBCtrls, Math, ActnList, XPStyleActnCtrls, ActnMan,
   o2ListBox, ComCtrls, o2multipage,
-  o2file, jclstrings, o2htmlarea, o2tree, o2document, jpeg, jvgif, ExtDlgs,
-  o2Map, DsnSub8, o2dbnavigator, o2navigator,DBClient,DB;
+  o2file, jclstrings, o2htmlarea, o2tree, o2imglist, o2document, jpeg, jvgif,
+  ExtDlgs, o2Map, DsnSub8, o2dbnavigator, o2navigator,DBClient,DB;
 
 type
   Tf_areaform = class(TForm)
@@ -81,6 +81,7 @@ type
     Exit1: TMenuItem;
     sepmenuExit: TMenuItem;
     o2tree1: To2tree;
+    o2imglist1: To2imglist;
 
     procedure FormShow(Sender: TObject);
     procedure DsnInspector1BtnClick(Sender: TObject; Targets: TSelectedComponents;
@@ -147,6 +148,7 @@ type
     tmp_multipage: To2multipage;
     tmp_htmlarea: To2htmlarea;
     tmp_tree: To2tree;
+    tmp_imglist: To2imglist;
     tmp_document: To2document;
     tmp_map: To2Map;
     larghezza_form, altezza_form: integer;
@@ -501,6 +503,7 @@ begin
      (PropName = 'Submitonchange') or
      (PropName = 'Html') or
      (PropName = 'Nodes') or
+     (PropName = 'Items') or
      (PropName = 'Path') or
      (PropName = 'Save_as') or
      (PropName = 'TooltipExp') or
@@ -935,7 +938,9 @@ begin
     end;
   end;
   // ____________________________________ Submit on change and other actions ___
-  if (PropName = 'Azione') or (Pos('Action', PropName) > 0) then
+  if (PropName = 'Azione') or
+     (Pos('Action', PropName) > 0) or
+     (PropName = 'Delete') then
   begin
     Value:= f_work.call_scelta_azione(Value);
   end;
@@ -1627,6 +1632,21 @@ begin
   end;
 
 
+  if Component.ClassType.ClassName = 'To2imglist' then
+  begin
+    tmp_imglist            := findcomponent(Component.Name) as To2imglist;
+    tmp_imglist.Parentname := tmp_imglist.Parent.Name;
+    if controllo.Height = 0 then
+    begin
+      controllo.Height := 150
+    end;
+    if controllo.Width = 0 then
+    begin
+      controllo.Width := 150
+    end;
+  end;
+
+
   if Component.ClassType.ClassName = 'To2document' then
   begin
     tmp_document := findcomponent(Component.Name) as To2document;
@@ -1675,6 +1695,7 @@ var
   control_multipage: To2multipage;
   control_htmlarea: To2htmlarea;
   control_tree: To2tree;
+  control_imglist: To2imglist;
   control_document: To2document;
   control_map: To2Map;
   controllo_corrente: TControl;
@@ -2228,6 +2249,28 @@ begin
         extra1 := IntToStr(control_tree.Nodes);
         scelte := control_tree.TreeActAsString(control_tree.Activation);
       end
+      // _____________________________________________________ IMAGES-LISTER ___
+      else if controllo.Controls[i].ClassName = 'To2imglist' then
+      begin
+        control_imglist := controllo.Controls[i] as To2imglist;
+        tipocontrollo   := 'imglist';
+        visibile        := control_imglist.Visibile;
+        vocecss         := control_imglist.Vocecss;
+        azione          := control_imglist.Azione;
+        taborder        := control_imglist.TabOrder;
+        Expand          := ExpandAsString(control_imglist.Expand);
+        parentinfo      := control_imglist.Parentinfo;
+        if control_imglist.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_imglist, parentinfo);
+        end;
+
+        extra1 := IntToStr(control_imglist.Items);
+        extra2 := control_imglist.Delete;
+        exp1   := control_imglist.ItemWidth;
+        exp2   := control_imglist.ItemHeight;
+
+      end
       // __________________________________________________________ DOCUMENT ___
       else if controllo.Controls[i].ClassName = 'To2document' then
       begin
@@ -2348,6 +2391,7 @@ var
   control_multipage : To2multipage;
   control_htmlarea  : To2htmlarea;
   control_tree      : To2tree;
+  control_imglist   : To2imglist;
   control_document  : To2document;
   control_map       : To2Map;
 begin
@@ -2946,6 +2990,30 @@ begin
       control_tree.Parentinfo := dm_form.t_controlliformparent_info.Value;
       control_tree.TabOrder   := dm_form.t_controlliformtaborder.Value;
       control_tree.Expand     :=
+                            StringAsExpand(dm_form.t_controlliformExpand.Value);
+    end
+    // _______________________________________________ Control IMAGES-LISTER ___
+    else if dm_form.t_controlliformtipo.Value = 'imglist' then
+    begin
+      control_imglist         := To2imglist.Create(self);
+      control_imglist.Parent  :=
+                              FindComponent(dm_form.t_controlliformparent.Value)
+                                 as TWinControl;
+      control_imglist.Name       := dm_form.t_controlliformnomecontrollo.Value;
+      control_imglist.Top        := dm_form.t_controlliformtop.Value;
+      control_imglist.Left       := dm_form.t_controlliformleft.Value;
+      control_imglist.Width      := dm_form.t_controlliformlarghezza.Value;
+      control_imglist.Height     := dm_form.t_controlliformaltezza.Value;
+      control_imglist.Visibile   := dm_form.t_controlliformvisibile.Value;
+      control_imglist.Vocecss    := dm_form.t_controlliformvocecss.Value;
+      control_imglist.Items      := dm_form.t_controlliformextra1.AsInteger;
+      control_imglist.Azione     := dm_form.t_controlliformazione.Value;
+      control_imglist.Delete     := dm_form.t_controlliformextra2.Value;
+      control_imglist.ItemWidth  := dm_form.t_controlliformexp1.AsInteger;
+      control_imglist.ItemHeight := dm_form.t_controlliformexp2.AsInteger;
+      control_imglist.Parentinfo := dm_form.t_controlliformparent_info.Value;
+      control_imglist.TabOrder   := dm_form.t_controlliformtaborder.Value;
+      control_imglist.Expand     :=
                             StringAsExpand(dm_form.t_controlliformExpand.Value);
     end
     // ____________________________________________________ Control DOCUMENT ___

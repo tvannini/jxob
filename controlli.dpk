@@ -73,6 +73,7 @@ contains
   o2Map in 'o2Map.pas',
   o2dbnavigator in 'o2dbnavigator.pas',
   o2tree in 'o2tree.pas',
-  DsnUnit in 'dsn22a\ComponentSource\DsnUnit.pas';
+  DsnUnit in 'dsn22a\ComponentSource\DsnUnit.pas',
+  o2imglist in 'o2imglist.pas';
 
 end.

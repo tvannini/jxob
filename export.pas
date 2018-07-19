@@ -1092,6 +1092,46 @@ begin
                   Memo3.Add(buffer);
                 end;
               end
+              // _____________________________________ IMAGES-LISTER control ___
+              else if t_controlliformtipo.Value = 'imglist' then
+              begin
+                // ___________________________________________ Delete action ___
+                buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
+                            '->delete("' +
+                            t_controlliformextra2.Value + '");';
+                Memo3.Add(buffer);
+                // ________________________________________ Items expression ___
+                if (t_controlliformextra1.Value <> '') and
+                   (t_controlliformextra1.Value <> '0') then
+                begin
+                  buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
+                            '->items(' + nomeprg + '_exp_' +
+                            t_controlliformextra1.Value + '());';
+                  Memo3.Add(buffer);
+                end;
+                // _____________________________________________ Items width ___
+                if (t_controlliformexp1.Value <> 0) then
+                begin
+                  buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
+                            '->items_w(' + IntToStr(t_controlliformexp1.Value) +
+                            ');';
+                  Memo3.Add(buffer);
+                end;
+                // ____________________________________________ Items height ___
+                if (t_controlliformexp2.Value <> 0) then
+                begin
+                  buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
+                            '->items_h(' + IntToStr(t_controlliformexp2.Value) +
+                            ');';
+                  Memo3.Add(buffer);
+                end;
+                if css <> '' then
+                begin
+                  buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
+                            '->css(' + css + ');';
+                  Memo3.Add(buffer);
+                end;
+              end
               // __________________________________________ Document control ___
               else if t_controlliformtipo.Value = 'document' then
               begin

@@ -1509,13 +1509,25 @@ begin
               par5 := decodifica_css(ctrl_prop('css'));
             end; //fine htmlarea
 
-            // _________________________________________ controllo TREE-VIEW ___
+            // ___________________________________________ control TREE-VIEW ___
             if tipo = 'treeview' then
             begin
               // _____________________________________________________ NODES ___
               par12 := decodifica_exp(ctrl_prop('nodes'), nomeprg);
-              // VOCE CSS
               par4 := ctrl_prop('activation');
+              // VOCE CSS
+              par5 := decodifica_css(ctrl_prop('css'));
+            end; //fine treeview
+
+            // _______________________________________ control IMAGES-LISTER ___
+            if tipo = 'imglist' then
+            begin
+              // _____________________________________________________ NODES ___
+              par12 := decodifica_exp(ctrl_prop('items'), nomeprg);
+              par13 := ctrl_prop('delete');
+              exp1  := StrToInt(ctrl_prop('items_w'));
+              exp2  := StrToInt(ctrl_prop('items_h'));
+              // VOCE CSS
               par5 := decodifica_css(ctrl_prop('css'));
             end; //fine treeview
 
@@ -1742,16 +1754,76 @@ begin
               par10 := '_stage_' + t_formnomeform.Value
             end;
 
-            dm_form.t_controlliform.InsertRecord(
-              [nomeprg, t_formnomeform.Value, nomecontrollo, tipo, num1,
-              num2, num3, num4, num5, num6, par1, par2, par3, par4, par5, par9, i, par10, par11,
-              par12, par13, submit, boolean1, css1, css2, css3, css4, css5, css6, css7, css8, css9, css10, par14, css11, css12, css13, css14, css15,
-              navigatorblock_vis, insert_vis, insert_enable, insert_action, insert_msg,
-              post_vis,post_enable,post_action,post_msg,
-              del_vis,del_enable,del_action,del_msg,
-              undo_vis, undo_enable, undo_action, undo_msg, norecordmsg, detail_vis, detail_enable, detail_action, detail_msg,
-              select_vis, select_enable, select_action, select_msg, exp1, exp2, zoom_action, tooltipexp, Expand
-              ]);
+            dm_form.t_controlliform.InsertRecord([nomeprg,
+                                                  t_formnomeform.Value,
+                                                  nomecontrollo,
+                                                  tipo,
+                                                  num1,
+                                                  num2,
+                                                  num3,
+                                                  num4,
+                                                  num5,
+                                                  num6,
+                                                  par1,
+                                                  par2,
+                                                  par3,
+                                                  par4,
+                                                  par5,
+                                                  par9,
+                                                  i,
+                                                  par10,
+                                                  par11,
+                                                  par12,
+                                                  par13,
+                                                  submit,
+                                                  boolean1,
+                                                  css1,
+                                                  css2,
+                                                  css3,
+                                                  css4,
+                                                  css5,
+                                                  css6,
+                                                  css7,
+                                                  css8,
+                                                  css9,
+                                                  css10,
+                                                  par14,
+                                                  css11,
+                                                  css12,
+                                                  css13,
+                                                  css14,
+                                                  css15,
+                                                  navigatorblock_vis,
+                                                  insert_vis,
+                                                  insert_enable,
+                                                  insert_action,
+                                                  insert_msg,
+                                                  post_vis,
+                                                  post_enable,
+                                                  post_action,
+                                                  post_msg,
+                                                  del_vis,
+                                                  del_enable,
+                                                  del_action,
+                                                  del_msg,
+                                                  undo_vis,
+                                                  undo_enable,
+                                                  undo_action,
+                                                  undo_msg,
+                                                  norecordmsg,
+                                                  detail_vis,
+                                                  detail_enable,
+                                                  detail_action,
+                                                  detail_msg,
+                                                  select_vis,
+                                                  select_enable,
+                                                  select_action,
+                                                  select_msg,
+                                                  exp1,
+                                                  exp2,
+                                                  zoom_action,
+                                                  tooltipexp,
+                                                  Expand]);
 
             Inc(i);  // i è il taborder
 

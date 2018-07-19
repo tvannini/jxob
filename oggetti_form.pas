@@ -12,7 +12,7 @@ uses
   XPStyleActnCtrls, ActnMan, o2table,
   o2multipage, o2file, JvScrollPanel, JvCaptionPanel,
   JvComponent, o2htmlarea, o2tree, o2document, o2Map, JvPanel,
-  JvTransparentPanel, inifiles, CommCtrl;
+  JvTransparentPanel, inifiles, CommCtrl, o2imglist;
 
 type
   Tf_oggettiform = class(TForm)
@@ -65,6 +65,7 @@ type
     DsnButton10: TDsnButton;
     DsnButton16: TDsnButton;
     Dpst_To2tree: To2tree;
+    Dpst_To2imglist: To2imglist;
     procedure ComboBox1Change(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure aggiorna_lista_campiExecute(Sender: TObject);

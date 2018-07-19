@@ -80,7 +80,7 @@ object f_areaform: Tf_areaform
       Expand = NoExpand
     end
     object o2separator1: To2separator
-      Left = 112
+      Left = 104
       Top = 96
       Width = 33
       Height = 73
@@ -88,7 +88,7 @@ object f_areaform: Tf_areaform
       Expand = NoExpand
     end
     object o2document1: To2document
-      Left = 392
+      Left = 376
       Top = 144
       Width = 113
       Height = 65
@@ -133,7 +133,7 @@ object f_areaform: Tf_areaform
       Expand = NoExpand
     end
     object o2htmlarea1: To2htmlarea
-      Left = 392
+      Left = 376
       Top = 24
       Width = 113
       Height = 113
@@ -216,7 +216,7 @@ object f_areaform: Tf_areaform
       Expand = NoExpand
     end
     object DBNavigator1: TDBNavigator
-      Left = 152
+      Left = 144
       Top = 200
       Width = 220
       Height = 25
@@ -235,7 +235,7 @@ object f_areaform: Tf_areaform
       Expand = NoExpand
     end
     object o2multipage1: To2multipage
-      Left = 152
+      Left = 144
       Top = 232
       Width = 225
       Height = 145
@@ -287,7 +287,7 @@ object f_areaform: Tf_areaform
       Expand = NoExpand
     end
     object o2dbnavigator1: To2dbnavigator
-      Left = 152
+      Left = 144
       Top = 176
       Width = 225
       Height = 17
@@ -312,7 +312,7 @@ object f_areaform: Tf_areaform
       Expand = NoExpand
     end
     object o2table1: To2table
-      Left = 152
+      Left = 144
       Top = 24
       Width = 225
       Height = 145
@@ -328,14 +328,29 @@ object f_areaform: Tf_areaform
       Expand = NoExpand
     end
     object o2tree1: To2tree
-      Left = 392
-      Top = 232
+      Left = 496
+      Top = 24
       Width = 100
       Height = 150
       Caption = 'o2tree1'
       Color = 15528176
       TabOrder = 0
       Visibile = 0
+      Nodes = 0
+      Expand = NoExpand
+    end
+    object o2imglist1: To2imglist
+      Left = 376
+      Top = 224
+      Width = 120
+      Height = 120
+      BevelInner = bvLowered
+      BevelOuter = bvNone
+      Caption = 'o2imglist1'
+      Color = 15527152
+      TabOrder = 0
+      Visibile = 0
+      Items = 0
       Expand = NoExpand
     end
   end
@@ -394,6 +409,9 @@ object f_areaform: Tf_areaform
       'View'
       'Field'
       'Nodes|Tree nodes'
+      'Items|Items'
+      'ItemWidth|Item width'
+      'ItemHeight|Item height'
       'Activation|Selection'
       'Visibile|Visible'
       'Abilitato|Enabled'
@@ -403,6 +421,7 @@ object f_areaform: Tf_areaform
       'ImageFile|Image file'
       'Scelte|Items'
       'Azione|Action'
+      'Delete|Delete action'
       'Submitonchange|Submit on change'
       'Rifagente|Operator ref'
       'Messaggio|Confirm message'
@@ -482,10 +501,12 @@ object f_areaform: Tf_areaform
       'o2Label'
       'Text'
       'Nodes'
+      'Items'
       'Visibile'
       'Abilitato'
       'Picture'
       'Azione'
+      'Delete'
       'Scelte'
       'Rifagente'
       'Riftask'

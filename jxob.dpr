@@ -66,7 +66,8 @@ uses
   shortcut in 'shortcut.pas' {f_shortcut},
   scelta_da_list in 'scelta_da_list.pas' {f_scelta_da_list},
   debug in 'debug.pas' {f_debug},
-  cvsinfo in 'cvsinfo.pas' {f_CVSInfo};
+  cvsinfo in 'cvsinfo.pas' {f_CVSInfo},
+  o2imglist in 'o2imglist.pas';
 
 {$R *.res}
 
