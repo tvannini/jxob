@@ -486,6 +486,12 @@ begin
                     as To2tree;
         tmp_tree.View := view;
       end;
+      if Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2imglist' then
+      begin // _____________________________________________________ IMGLIST ___
+        tmp_imglist := findcomponent(Dsn8Register1.DsnStage.Targets[0].Name)
+                       as To2imglist;
+        tmp_imglist.View := view;
+      end;
       if Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2file' then
       begin // _________________________________________________ FILE-UPLOAD ___
         tmp_file      := findcomponent(Dsn8Register1.DsnStage.Targets[0].Name)
@@ -2254,6 +2260,8 @@ begin
       begin
         control_imglist := controllo.Controls[i] as To2imglist;
         tipocontrollo   := 'imglist';
+        riferimento     := chr(127) + control_imglist.View +
+                           chr(129) + control_imglist.Field;
         visibile        := control_imglist.Visibile;
         vocecss         := control_imglist.Vocecss;
         azione          := control_imglist.Azione;
@@ -3011,6 +3019,15 @@ begin
       control_imglist.Delete     := dm_form.t_controlliformextra2.Value;
       control_imglist.ItemWidth  := dm_form.t_controlliformexp1.AsInteger;
       control_imglist.ItemHeight := dm_form.t_controlliformexp2.AsInteger;
+      control_imglist.View       := StringReplace(ExtractWord(1,
+                                       dm_form.t_controlliformriferimento.Value,
+                                                              [chr(129)]),
+                                                  chr(127),
+                                                  '',
+                                                  [rfReplaceAll]);
+      control_imglist.Field      := ExtractWord(2,
+                                       dm_form.t_controlliformriferimento.Value,
+                                                [chr(129)]);
       control_imglist.Parentinfo := dm_form.t_controlliformparent_info.Value;
       control_imglist.TabOrder   := dm_form.t_controlliformtaborder.Value;
       control_imglist.Expand     :=

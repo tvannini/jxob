@@ -7153,86 +7153,72 @@ begin
       end;
 end;
 
+
 function Tf_work.azionediprimolivello(azione: string): Boolean;
 begin
-{ per essere di primo livello deve essere richiamata da:
- controllo form
- initial action del program
- action sulle view
- close action form
- }
+  try
+    Result:=false;
 
- try
- Result:=false;
-
- with dm_form do
- begin
- if (t_programmiref.Value = azione) then
- begin
-
-     Result:=true;
-     Exit;
- end;
-
- // check sulle view
-
- t_task.Filter:='recordprefix = '+chr(39) + azione + chr(39) + ' or recordsufix = ' +chr(39) + azione + chr(39);
- t_task.Filtered:=true;
- if (t_task.RecordCount > 0) then
- begin
-
-     t_task.Filtered:=false;
-     Result:=true;
-     Exit;
- end;
-
-
-  // check sulle form
- t_form.DisableControls;
- t_form.Filter:='closeclick_action = ' + chr(39) + azione + chr(39);
- t_form.Filtered:=true;
-
- if not(t_form.IsEmpty) then
- begin
-      t_form.Filtered:=false;
-      t_form.EnableControls;
-      Result:=true;
-      Exit;
-
- end;
- t_form.Filtered:=false;
- // check sui controlli
- t_controlliform.MasterSource:=nil;
-
- t_controlliform.Filter:='azione = ' +chr(39) + azione + chr(39) +
-                          ' or SelectAction = ' +chr(39) + azione + chr(39) +
-                          ' or DeleteAction = ' +chr(39) + azione + chr(39) +
-                          ' or PostAction = ' +chr(39) + azione + chr(39) +
-                          ' or UndoAction = ' +chr(39) + azione + chr(39) +
-                          ' or DetailAction = ' +chr(39) + azione + chr(39) +
-                          ' or InsertAction = ' +chr(39) + azione + chr(39) ;
- t_controlliform.Filtered:=true;
- if (t_controlliform.RecordCount > 0) then
- begin
-     t_controlliform.Filtered:=false;
-     t_controlliform.MasterSource:=ds_form;
-
-     Result:=true;
-     Exit;
- end;
-
-
- end;
- finally
- dm_form.t_task.Filtered:=false;
- dm_form.t_form.Filtered:=false;
- dm_form.t_form.EnableControls;
- dm_form.t_controlliform.Filtered:=false;
- dm_form.t_controlliform.MasterSource:=dm_form.ds_form;
-
-
- end;
+    with dm_form do
+    begin
+      if (t_programmiref.Value = azione) then
+      begin
+        Result:=true;
+        Exit;
+      end;
+      // _____________________________________ View prefix or suffix actions ___
+      t_task.Filter   := 'recordprefix=' + #39 + azione + #39 +
+                         ' or recordsufix=' + #39 + azione + #39;
+      t_task.Filtered := true;
+      if (t_task.RecordCount > 0) then
+      begin
+        t_task.Filtered := false;
+        Result          := true;
+        Exit;
+      end;
+      t_task.Filtered := false;
+      // _____________________________________ Form close or refresh actions ___
+      t_form.DisableControls;
+      t_form.Filter   := 'closeclick_action=' + #39 + azione + #39 +
+                         ' or refresh_action=' + #39 + azione + #39);
+      t_form.Filtered := true;
+      if not(t_form.IsEmpty) then
+      begin
+        t_form.Filtered := false;
+        Result          := true;
+        t_form.EnableControls;
+        Exit;
+      end;
+      t_form.Filtered := false;
+      // _________________________________ Controls submit and other actions ___
+      t_controlliform.MasterSource := nil;
+      t_controlliform.Filter := 'azione=' + #39 + azione + #39 +
+                                ' or SelectAction=' + #39 + azione + #39 +
+                                ' or DeleteAction=' + #39 + azione + #39 +
+                                ' or PostAction=' + #39 + azione + #39 +
+                                ' or UndoAction=' + #39 + azione + #39 +
+                                ' or DetailAction=' + #39 + azione + #39 +
+                                ' or InsertAction=' + #39 + azione + #39 +
+                                ' or (Tipo=' + #39 + 'imglist' + #39 +
+                                ' and Extra2=' + #39 + azione + #39 + ')';
+      t_controlliform.Filtered := true;
+      if (t_controlliform.RecordCount > 0) then
+      begin
+        t_controlliform.Filtered     := false;
+        t_controlliform.MasterSource := ds_form;
+        Result                       := true;
+        Exit;
+      end;
+    end;
+  finally
+    dm_form.t_controlliform.MasterSource := dm_form.ds_form;
+    dm_form.t_controlliform.Filtered     := false;
+    dm_form.t_task.Filtered              := false;
+    dm_form.t_form.Filtered              := false;
+    dm_form.t_form.EnableControls;
+  end;
 end;
+
 
 procedure Tf_work.dbgrid_apphandlersEnter(Sender: TObject);
 begin

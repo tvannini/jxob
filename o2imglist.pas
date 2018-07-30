@@ -20,6 +20,8 @@ type
     fparentinfo: string;
     fparentname: string;
     ftaborder: TTabOrder;
+    ffield: string;
+    fview: string;
     fexpand: TCtrlExpand;
 
     procedure sitems(const Value: integer);
@@ -32,6 +34,8 @@ type
     procedure sparentname(const Value: string);
     procedure svisibile(const Value: integer);
     procedure staborder(const Value: TTabOrder);
+    procedure sfield(const Value: string);
+    procedure sview(const Value: string);
     procedure sexpand(const Value: TCtrlExpand);
 
     { Private declarations }
@@ -52,6 +56,8 @@ type
     property Parentname: string Read fparentname Write sparentname;
     property Parentinfo: string Read fparentinfo Write sparentinfo;
     property TabOrder: TTabOrder Read ftaborder Write staborder;
+    property View: string Read fview Write sview;
+    property Field: string Read ffield Write sfield;
     property Expand: TCtrlExpand Read fexpand Write sexpand;
 
     { Published declarations }
@@ -100,6 +106,16 @@ end;
 procedure To2imglist.staborder(const Value: TTabOrder);
 begin
   ftaborder := Value;
+end;
+
+procedure To2imglist.sview(const Value: string);
+begin
+  fview := Value;
+end;
+
+procedure To2imglist.sfield(const Value: string);
+begin
+  ffield := Value;
 end;
 
 procedure To2imglist.sitems(const Value: integer);

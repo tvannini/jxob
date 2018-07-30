@@ -66,6 +66,7 @@ type
     DsnButton16: TDsnButton;
     Dpst_To2tree: To2tree;
     Dpst_To2imglist: To2imglist;
+    DsnButton17: TDsnButton;
     procedure ComboBox1Change(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure aggiorna_lista_campiExecute(Sender: TObject);

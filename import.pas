@@ -1524,9 +1524,28 @@ begin
             begin
               // _____________________________________________________ NODES ___
               par12 := decodifica_exp(ctrl_prop('items'), nomeprg);
-              par13 := ctrl_prop('delete');
-              exp1  := StrToInt(ctrl_prop('items_w'));
-              exp2  := StrToInt(ctrl_prop('items_h'));
+              // _____________________________________________ DELETE action ___
+              par13 := trim(ctrl_prop('delete'));
+              par13 := copy(par13, 2, length(par13) - 2);
+              // ____________________________________ Items width expression ___
+              par8 := ctrl_prop('items_w');
+              if (par8 = '0') or (par8 = '') then
+              begin
+                exp1 := 0
+              end
+              else begin
+                exp1 := StrToInt(par8);
+              end;
+              // ___________________________________ Items height expression ___
+              par8 := ctrl_prop('items_h');
+              if (par8 = '0') or (par8 = '') then
+              begin
+                exp2 := 0
+              end
+              else begin
+                exp2 := StrToInt(par8);
+              end;
+
               // VOCE CSS
               par5 := decodifica_css(ctrl_prop('css'));
             end; //fine treeview
