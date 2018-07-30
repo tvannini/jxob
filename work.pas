@@ -7180,7 +7180,7 @@ begin
       // _____________________________________ Form close or refresh actions ___
       t_form.DisableControls;
       t_form.Filter   := 'closeclick_action=' + #39 + azione + #39 +
-                         ' or refresh_action=' + #39 + azione + #39);
+                         ' or refresh_action=' + #39 + azione + #39;
       t_form.Filtered := true;
       if not(t_form.IsEmpty) then
       begin
@@ -7192,16 +7192,16 @@ begin
       t_form.Filtered := false;
       // _________________________________ Controls submit and other actions ___
       t_controlliform.MasterSource := nil;
-      t_controlliform.Filter := 'azione=' + #39 + azione + #39 +
-                                ' or SelectAction=' + #39 + azione + #39 +
-                                ' or DeleteAction=' + #39 + azione + #39 +
-                                ' or PostAction=' + #39 + azione + #39 +
-                                ' or UndoAction=' + #39 + azione + #39 +
-                                ' or DetailAction=' + #39 + azione + #39 +
-                                ' or InsertAction=' + #39 + azione + #39 +
-                                ' or (Tipo=' + #39 + 'imglist' + #39 +
-                                ' and Extra2=' + #39 + azione + #39 + ')';
-      t_controlliform.Filtered := true;
+      t_controlliform.Filter       := 'azione=' + #39 + azione + #39 +
+                                      ' or SelectAction=' + #39 + azione + #39 +
+                                      ' or DeleteAction=' + #39 + azione + #39 +
+                                      ' or PostAction=' + #39 + azione + #39 +
+                                      ' or UndoAction=' + #39 + azione + #39 +
+                                      ' or DetailAction=' + #39 + azione + #39 +
+                                      ' or InsertAction=' + #39 + azione + #39 +
+                                      ' or (Tipo=' + #39 + 'imglist' + #39 +
+                                      ' and Extra2=' + #39 + azione + #39 + ')';
+      t_controlliform.Filtered     := true;
       if (t_controlliform.RecordCount > 0) then
       begin
         t_controlliform.Filtered     := false;
