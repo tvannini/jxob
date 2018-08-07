@@ -996,7 +996,8 @@ begin
                           '->visibile(' + visibile + ');';
                 Memo3.Add(buffer);
               end;
-              if azione <> '' then
+              if (azione <> '') and
+                 (t_controlliformtipo.Value <> 'progress') then
               begin
                 buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
                           '->azione(' + azione + ');';
@@ -1095,11 +1096,14 @@ begin
               // _____________________________________ IMAGES-LISTER control ___
               else if t_controlliformtipo.Value = 'imglist' then
               begin
-                // ___________________________________________ Delete action ___
-                buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
+                if t_controlliformextra2.Value <> '' then
+                begin
+                  // _________________________________________ Delete action ___
+                  buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
                             '->delete("' +
                             t_controlliformextra2.Value + '");';
-                Memo3.Add(buffer);
+                  Memo3.Add(buffer);
+                end;
                 // ________________________________________ Items expression ___
                 if (t_controlliformextra1.Value <> '') and
                    (t_controlliformextra1.Value <> '0') then
@@ -1123,6 +1127,41 @@ begin
                   buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
                             '->items_h(' + IntToStr(t_controlliformexp2.Value) +
                             ');';
+                  Memo3.Add(buffer);
+                end;
+                if css <> '' then
+                begin
+                  buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
+                            '->css(' + css + ');';
+                  Memo3.Add(buffer);
+                end;
+              end
+              // ______________________________________ PROGRESS-BAR control ___
+              else if t_controlliformtipo.Value = 'progress' then
+              begin
+                // ________________________________________ Value expression ___
+                if (t_controlliformextra1.Value <> '') and
+                   (t_controlliformextra1.Value <> '0') then
+                begin
+                  buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
+                            '->value("' + nomeprg + '_exp_' +
+                            t_controlliformextra1.Value + '()");';
+                  Memo3.Add(buffer);
+                end;
+                // ____________________________________________ Start action ___
+                if t_controlliformazione.Value <> '' then
+                begin
+                  buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
+                            '->start_action("' + t_controlliformazione.Value +
+                            '");';
+                  Memo3.Add(buffer);
+                end;
+                // ______________________________________________ End action ___
+                if t_controlliformextra2.Value <> '' then
+                begin
+                  buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
+                            '->end_action("' + t_controlliformextra2.Value +
+                            '");';
                   Memo3.Add(buffer);
                 end;
                 if css <> '' then

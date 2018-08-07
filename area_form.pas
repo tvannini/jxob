@@ -4,14 +4,13 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Buttons, DsnUnit, DsnSubMl, DsnSubGr, DsnSubDp, DsnProp,
-  DsnSpctr, oggetti_form, StdCtrls, ExtCtrls, JvScrollPanel, JvComponent,
-  DsnSelect, JvCaptionPanel, o2label, o2edit, o2image, o2separator,
-  o2groupbox, o2checkbox, o2button, o2agente, o2textarea, Menus,
-  o2table, DBCtrls, Math, ActnList, XPStyleActnCtrls, ActnMan,
-  o2ListBox, ComCtrls, o2multipage,
-  o2file, jclstrings, o2htmlarea, o2tree, o2imglist, o2document, jpeg, jvgif,
-  ExtDlgs, o2Map, DsnSub8, o2dbnavigator, o2navigator,DBClient,DB;
+  Dialogs, Buttons, DsnUnit, DsnSubMl, DsnSubGr, DsnSubDp, DsnProp, DsnSpctr,
+  oggetti_form, StdCtrls, ExtCtrls, JvScrollPanel, JvComponent, DsnSelect,
+  JvCaptionPanel, o2label, o2edit, o2image, o2separator, o2groupbox, o2checkbox,
+  o2button, o2agente, o2textarea, Menus, o2table, DBCtrls, Math, ActnList,
+  XPStyleActnCtrls, ActnMan, o2ListBox, ComCtrls, o2multipage, o2file,
+  jclstrings, o2htmlarea, o2tree, o2imglist, o2progress, o2document, jpeg,
+  jvgif, ExtDlgs, o2Map, DsnSub8, o2dbnavigator, o2navigator, DBClient, DB;
 
 type
   Tf_areaform = class(TForm)
@@ -82,6 +81,7 @@ type
     sepmenuExit: TMenuItem;
     o2tree1: To2tree;
     o2imglist1: To2imglist;
+    o2progress1: To2progress;
 
     procedure FormShow(Sender: TObject);
     procedure DsnInspector1BtnClick(Sender: TObject; Targets: TSelectedComponents;
@@ -149,6 +149,7 @@ type
     tmp_htmlarea: To2htmlarea;
     tmp_tree: To2tree;
     tmp_imglist: To2imglist;
+    tmp_progress: To2progress;
     tmp_document: To2document;
     tmp_map: To2Map;
     larghezza_form, altezza_form: integer;
@@ -510,6 +511,7 @@ begin
      (PropName = 'Html') or
      (PropName = 'Nodes') or
      (PropName = 'Items') or
+     (PropName = 'Value') or
      (PropName = 'Path') or
      (PropName = 'Save_as') or
      (PropName = 'TooltipExp') or
@@ -946,7 +948,9 @@ begin
   // ____________________________________ Submit on change and other actions ___
   if (PropName = 'Azione') or
      (Pos('Action', PropName) > 0) or
-     (PropName = 'Delete') then
+     (PropName = 'Delete') or
+     (PropName = 'StartAct') or
+     (PropName = 'EndAct') then
   begin
     Value:= f_work.call_scelta_azione(Value);
   end;
@@ -1544,11 +1548,11 @@ begin
     end;
     if controllo.Height = 0 then
     begin
-      controllo.Height := 40
+      controllo.Height := 40;
     end;
     if controllo.Width = 0 then
     begin
-      controllo.Width := 40
+      controllo.Width := 40;
     end;
 
   end;
@@ -1573,11 +1577,11 @@ begin
     tmp_table.Parentname := tmp_table.Parent.Name;
     if controllo.Height <= 6 then
     begin
-      controllo.Height := 200
+      controllo.Height := 200;
     end;
     if controllo.Width <= 6 then
     begin
-      controllo.Width := 500
+      controllo.Width := 500;
     end;
     if tmp_table.View = '' then
     begin
@@ -1596,11 +1600,11 @@ begin
     tmp_file.Parentname := tmp_file.Parent.Name;
     if controllo.Height = 0 then
     begin
-      controllo.Height := 20
+      controllo.Height := 20;
     end;
     if controllo.Width = 0 then
     begin
-      controllo.Width := 100
+      controllo.Width := 100;
     end;
   end;
 
@@ -1612,11 +1616,11 @@ begin
     tmp_htmlarea.Parentname := tmp_htmlarea.Parent.Name;
     if controllo.Height = 0 then
     begin
-      controllo.Height := 100
+      controllo.Height := 100;
     end;
     if controllo.Width = 0 then
     begin
-      controllo.Width := 200
+      controllo.Width := 200;
     end;
 
   end;
@@ -1628,11 +1632,11 @@ begin
     tmp_tree.Parentname := tmp_tree.Parent.Name;
     if controllo.Height = 0 then
     begin
-      controllo.Height := 200
+      controllo.Height := 200;
     end;
     if controllo.Width = 0 then
     begin
-      controllo.Width := 100
+      controllo.Width := 100;
     end;
 
   end;
@@ -1644,11 +1648,26 @@ begin
     tmp_imglist.Parentname := tmp_imglist.Parent.Name;
     if controllo.Height = 0 then
     begin
-      controllo.Height := 150
+      controllo.Height := 150;
     end;
     if controllo.Width = 0 then
     begin
-      controllo.Width := 150
+      controllo.Width := 150;
+    end;
+  end;
+
+
+  if Component.ClassType.ClassName = 'To2progress' then
+  begin
+    tmp_progress            := findcomponent(Component.Name) as To2progress;
+    tmp_progress.Parentname := tmp_progress.Parent.Name;
+    if controllo.Height = 0 then
+    begin
+      controllo.Height := 20;
+    end;
+    if controllo.Width = 0 then
+    begin
+      controllo.Width := 150;
     end;
   end;
 
@@ -1702,6 +1721,7 @@ var
   control_htmlarea: To2htmlarea;
   control_tree: To2tree;
   control_imglist: To2imglist;
+  control_progress: To2progress;
   control_document: To2document;
   control_map: To2Map;
   controllo_corrente: TControl;
@@ -2279,6 +2299,25 @@ begin
         exp2   := control_imglist.ItemHeight;
 
       end
+      // ______________________________________________________ PROGRESS-BAR ___
+      else if controllo.Controls[i].ClassName = 'To2progress' then
+      begin
+        control_progress := controllo.Controls[i] as To2progress;
+        tipocontrollo   := 'progress';
+        visibile        := control_progress.Visibile;
+        vocecss         := control_progress.Vocecss;
+        azione          := control_progress.StartAct;
+        Expand          := ExpandAsString(control_progress.Expand);
+        parentinfo      := control_progress.Parentinfo;
+        if control_progress.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_progress, parentinfo);
+        end;
+
+        extra1 := IntToStr(control_progress.Value);
+        extra2 := control_progress.EndAct;
+
+      end
       // __________________________________________________________ DOCUMENT ___
       else if controllo.Controls[i].ClassName = 'To2document' then
       begin
@@ -2400,6 +2439,7 @@ var
   control_htmlarea  : To2htmlarea;
   control_tree      : To2tree;
   control_imglist   : To2imglist;
+  control_progress  : To2progress;
   control_document  : To2document;
   control_map       : To2Map;
 begin
@@ -3031,6 +3071,27 @@ begin
       control_imglist.Parentinfo := dm_form.t_controlliformparent_info.Value;
       control_imglist.TabOrder   := dm_form.t_controlliformtaborder.Value;
       control_imglist.Expand     :=
+                            StringAsExpand(dm_form.t_controlliformExpand.Value);
+    end
+    // ________________________________________________ Control PROGRESS-BAR ___
+    else if dm_form.t_controlliformtipo.Value = 'progress' then
+    begin
+      control_progress         := To2progress.Create(self);
+      control_progress.Parent  :=
+                              FindComponent(dm_form.t_controlliformparent.Value)
+                                 as TWinControl;
+      control_progress.Name       := dm_form.t_controlliformnomecontrollo.Value;
+      control_progress.Top        := dm_form.t_controlliformtop.Value;
+      control_progress.Left       := dm_form.t_controlliformleft.Value;
+      control_progress.Width      := dm_form.t_controlliformlarghezza.Value;
+      control_progress.Height     := dm_form.t_controlliformaltezza.Value;
+      control_progress.Visibile   := dm_form.t_controlliformvisibile.Value;
+      control_progress.Vocecss    := dm_form.t_controlliformvocecss.Value;
+      control_progress.Value      := dm_form.t_controlliformextra1.AsInteger;
+      control_progress.StartAct   := dm_form.t_controlliformazione.Value;
+      control_progress.EndAct     := dm_form.t_controlliformextra2.Value;
+      control_progress.Parentinfo := dm_form.t_controlliformparent_info.Value;
+      control_progress.Expand     :=
                             StringAsExpand(dm_form.t_controlliformExpand.Value);
     end
     // ____________________________________________________ Control DOCUMENT ___

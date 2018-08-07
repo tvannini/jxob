@@ -1352,6 +1352,7 @@ begin
           (t_controlliformtipo.Value <> 'htmlarea') and
           (t_controlliformtipo.Value <> 'treeview') and
           (t_controlliformtipo.Value <> 'imglist') and
+          (t_controlliformtipo.Value <> 'progress') and
           (t_controlliformtipo.Value <> 'checkbox') and
           (t_controlliformtipo.Value <> 'document') and
           (t_controlliformtipo.Value <> 'textarea') and

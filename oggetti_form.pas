@@ -4,15 +4,13 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, DsnPanel, Buttons, ExtCtrls, dm, DsnProp,
-  DsnSpctr, DsnUnit, DsnSubMl, DsnSubGr, DsnSubDp,
-  o2edit, o2label, o2separator, o2image, o2agente, o2groupbox,
-  o2textarea, o2checkbox, o2listbox,
-  o2button, DBCtrls, o2dbnavigator, ComCtrls, ImgList, ActnList,
-  XPStyleActnCtrls, ActnMan, o2table,
-  o2multipage, o2file, JvScrollPanel, JvCaptionPanel,
-  JvComponent, o2htmlarea, o2tree, o2document, o2Map, JvPanel,
-  JvTransparentPanel, inifiles, CommCtrl, o2imglist;
+  Dialogs, StdCtrls, DsnPanel, Buttons, ExtCtrls, dm, DsnProp, DsnSpctr,
+  DsnUnit, DsnSubMl, DsnSubGr, DsnSubDp, o2edit, o2label, o2separator, o2image,
+  o2agente, o2groupbox, o2textarea, o2checkbox, o2listbox, o2button, DBCtrls,
+  o2dbnavigator, ComCtrls, ImgList, ActnList, XPStyleActnCtrls, ActnMan,
+  o2table, o2multipage, o2file, JvScrollPanel, JvCaptionPanel, JvComponent,
+  o2htmlarea, o2tree, o2document, o2Map, JvPanel, JvTransparentPanel, inifiles,
+  CommCtrl, o2imglist, o2progress;
 
 type
   Tf_oggettiform = class(TForm)
@@ -67,6 +65,7 @@ type
     Dpst_To2tree: To2tree;
     Dpst_To2imglist: To2imglist;
     DsnButton17: TDsnButton;
+    Dpst_To2progress: To2progress;
     procedure ComboBox1Change(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure aggiorna_lista_campiExecute(Sender: TObject);
@@ -340,6 +339,11 @@ begin
     begin
       CtrlType := 'Treeview';
       ImgIdx   := 15;
+    end
+    else if Controllo.ClassName = 'To2imglist' then
+    begin
+      CtrlType := 'Images lister';
+      ImgIdx   := 16;
     end
     else if Controllo.ClassName = 'To2document' then
     begin

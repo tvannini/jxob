@@ -236,6 +236,25 @@ object f_oggettiform: Tf_oggettiform
       TabOrder = 0
       Visibile = 0
       Items = 0
+      ItemWidth = 0
+      ItemHeight = 0
+      Expand = NoExpand
+    end
+    object Dpst_To2progress: To2progress
+      Left = 0
+      Top = 8
+      Width = 150
+      Height = 20
+      BevelOuter = bvNone
+      BorderWidth = 1
+      BorderStyle = bsSingle
+      Caption = 'Dpst_To2progress'
+      Color = 14341583
+      Ctl3D = False
+      ParentCtl3D = False
+      TabOrder = 12
+      Visibile = 0
+      Value = 0
       Expand = NoExpand
     end
   end
@@ -2890,7 +2909,7 @@ object f_oggettiform: Tf_oggettiform
           Layout = blGlyphTop
           ParentShowHint = False
           ShowHint = True
-          GeneName = 'Dpst_To2imglist'
+          GeneName = 'Dpst_To2progress'
         end
       end
     end
@@ -3021,7 +3040,7 @@ object f_oggettiform: Tf_oggettiform
     Left = 224
     Top = 358
     Bitmap = {
-      494C010112001300040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010112001300040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3685,6 +3704,7 @@ object f_oggettiform: Tf_oggettiform
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
-      00000000000000000000000000000000}
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000}
   end
 end

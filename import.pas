@@ -455,12 +455,8 @@ begin
         dm_form.t_input_output.InsertRecord([nomeprg, par1, par4, par3, StrToInt(par2)]);
       end;
 
-
-
     until not r.ExecNext
   end;  //fine report
-
-
 
 
   //definizione report
@@ -471,7 +467,6 @@ begin
       programma.SelStart := r.MatchPos[0] - 1;
       programma.SelLength := r.MatchLen[0];
       selezione := programma.SelText;
-
 
       r2.Expression := '\(.*\)';
 
@@ -1545,10 +1540,26 @@ begin
               else begin
                 exp2 := StrToInt(par8);
               end;
-
               // VOCE CSS
               par5 := decodifica_css(ctrl_prop('css'));
-            end; //fine treeview
+            end; //fine imglist
+
+            // ________________________________________ control PROGRESS-BAR ___
+            if tipo = 'progress' then
+            begin
+              // _____________________________________________________ VALUE ___
+              par12 := trim(ctrl_prop('value'));
+              par12 := copy(par12, 2, length(par12) - 2);
+              par12 := decodifica_exp(par12, nomeprg);
+              // ______________________________________________ START action ___
+              par3  := trim(ctrl_prop('start_action'));
+              par3  := copy(par3, 2, length(par3) - 2);
+              // ________________________________________________ END action ___
+              par13 := trim(ctrl_prop('end_action'));
+              par13 := copy(par13, 2, length(par13) - 2);
+              // VOCE CSS
+              par5 := decodifica_css(ctrl_prop('css'));
+            end; //fine progressbar
 
             // controllo document
             if tipo = 'document' then

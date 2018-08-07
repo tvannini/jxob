@@ -7200,6 +7200,8 @@ begin
                                       ' or DetailAction=' + #39 + azione + #39 +
                                       ' or InsertAction=' + #39 + azione + #39 +
                                       ' or (Tipo=' + #39 + 'imglist' + #39 +
+                                      ' and Extra2=' + #39 + azione + #39 + ')'+
+                                      ' or (Tipo=' + #39 + 'progress' + #39 +
                                       ' and Extra2=' + #39 + azione + #39 + ')';
       t_controlliform.Filtered     := true;
       if (t_controlliform.RecordCount > 0) then

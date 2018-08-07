@@ -351,6 +351,25 @@ object f_areaform: Tf_areaform
       TabOrder = 0
       Visibile = 0
       Items = 0
+      ItemWidth = 0
+      ItemHeight = 0
+      Expand = NoExpand
+    end
+    object o2progress1: To2progress
+      Left = 376
+      Top = 357
+      Width = 150
+      Height = 20
+      BevelOuter = bvNone
+      BorderWidth = 1
+      BorderStyle = bsSingle
+      Caption = 'o2progress1'
+      Color = 14341583
+      Ctl3D = False
+      ParentCtl3D = False
+      TabOrder = 14
+      Visibile = 0
+      Value = 0
       Expand = NoExpand
     end
   end
@@ -413,6 +432,7 @@ object f_areaform: Tf_areaform
       'ItemWidth|Item width'
       'ItemHeight|Item height'
       'Activation|Selection'
+      'Value'
       'Visibile|Visible'
       'Abilitato|Enabled'
       'HideIndicator|Hide row marker'
@@ -422,6 +442,8 @@ object f_areaform: Tf_areaform
       'Scelte|Items'
       'Azione|Action'
       'Delete|Delete action'
+      'StartAct|Start action'
+      'EndAct|End action'
       'Submitonchange|Submit on change'
       'Rifagente|Operator ref'
       'Messaggio|Confirm message'
@@ -472,7 +494,7 @@ object f_areaform: Tf_areaform
       'CssBody|CSS body'
       'CssLine|CSS row'
       'CssAlternate|CSS alternate row'
-      'CssMouseOverLine||CSS mouse over row'
+      'CssMouseOverLine|CSS mouse over row'
       'CssCurrentLine|CSS current row'
       'CssSpace|CSS space'
       'CssSlide|CSS slide'
@@ -502,11 +524,14 @@ object f_areaform: Tf_areaform
       'Text'
       'Nodes'
       'Items'
+      'Value'
       'Visibile'
       'Abilitato'
       'Picture'
       'Azione'
       'Delete'
+      'StartAct'
+      'EndAct'
       'Scelte'
       'Rifagente'
       'Riftask'

@@ -77,7 +77,7 @@ end;
 constructor To2imglist.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  fctrltype := 'Imgs lister';
+  fctrltype := 'Images lister';
   Color     := RGB(240, 240, 236);
 end;
 
