@@ -95,7 +95,7 @@ var
   navigatorblock_vis: integer;
   insert_action, post_action, del_action, undo_action, detail_action,
   select_action, insert_msg, post_msg, del_msg, undo_msg, norecordmsg,
-  detail_msg, select_msg, zoom_action, Expand : string;
+  detail_msg, select_msg, zoom_action, Expand, grid_plus : string;
   vista_del_menga, tipologia, tipo_prg, data_prg, data_cds: string;
   puntatore, num1, num2, num3, num4, num5, num6, submit, tooltipexp,
   id_operazione, exp1, exp2, dataprg, datacds: integer;
@@ -1313,8 +1313,10 @@ begin
             post_action:='';
             post_msg := '';
 
-            norecordmsg:='';
             navigatorblock_vis:=0;
+
+            norecordmsg:='';
+            grid_plus := '';
 
             nomecontrollo := trim(extractword(1, selezione2, [',']));
             nomecontrollo := copy(trim(nomecontrollo), 2, length(trim(nomecontrollo)) - 2);
@@ -1725,6 +1727,19 @@ begin
               norecordmsg:= ctrl_prop('norec_msg', True);
               if (decodifica_exp(ctrl_prop('hide_indicator'), nomeprogramma)) <> '' then exp1 := StrToInt(decodifica_exp(ctrl_prop('hide_indicator'), nomeprogramma))
               else exp1:=0;
+
+              // ___________________________________ Grid options (GridPlus) ___
+
+              grid_plus := trim(ctrl_prop('grid_plus'));
+              if Copy(grid_plus, 0, 6) = 'array(' then
+              begin
+                grid_plus := Copy(grid_plus, 7, Length(grid_plus) - 7);
+              end
+              else
+              begin
+                grid_plus := 'Default';
+              end;
+
             end; //fine table
 
             // controllo navigator
@@ -1853,7 +1868,8 @@ begin
                                                   exp2,
                                                   zoom_action,
                                                   tooltipexp,
-                                                  Expand]);
+                                                  Expand,
+                                                  grid_plus]);
 
             Inc(i);  // i è il taborder
 

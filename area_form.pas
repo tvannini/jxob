@@ -170,7 +170,7 @@ implementation
 uses dm, sceltacampiprg, sceltamodello, sceltaespressioni, scelta_css,
   sceltaazione, sceltaview, sceltacampofile, TypInfo, itemslist,
   ValEdit, StrUtils, tabdef, jbstr, work, valori_tstrings,
-  scelta_tabsheet, import, Caption, dbnavprop;
+  scelta_tabsheet, import, Caption, dbnavprop, grid_options;
 
 {$R *.dfm}
 
@@ -942,6 +942,61 @@ begin
       else if f_listbox.e_exp.Text <> '' then
       begin
         Value := '[o2exp_' + f_listbox.e_exp.Text + ']';
+      end;
+    end;
+  end;
+  // _______________________________________________ Grid options (GridPlus) ___
+  if (PropName = 'Options') then
+  begin
+    with f_grid_options do
+    begin
+      if (Value = 'Default') or (Value = '') then
+      begin
+        f_grid_options.override_defaults.Checked := False;
+        f_grid_options.override_defaultsClick(f_grid_options.override_defaults);
+        cols_vis.Checked    := False;
+        cols_ord.Checked    := False;
+        cols_size.Checked   := False;
+        recs_filter.Checked := False;
+        recs_sort.Checked   := False;
+        rows_num.Checked    := False;
+        data_export.Checked := False;
+        recs_delete.Checked := False;
+      end
+      else
+      begin
+        override_defaults.Checked := True;
+        override_defaultsClick(f_grid_options.override_defaults);
+        temp := Value;
+        cols_vis.Checked    := (trim(ExtractWord(1, temp, [','])) = '1');
+        cols_ord.Checked    := (trim(ExtractWord(2, temp, [','])) = '1');
+        cols_size.Checked   := (trim(ExtractWord(3, temp, [','])) = '1');
+        recs_filter.Checked := (trim(ExtractWord(4, temp, [','])) = '1');
+        recs_sort.Checked   := (trim(ExtractWord(5, temp, [','])) = '1');
+        rows_num.Checked    := (trim(ExtractWord(6, temp, [','])) = '1');
+        data_export.Checked := (trim(ExtractWord(7, temp, [','])) = '1');
+        recs_delete.Checked := (trim(ExtractWord(8, temp, [','])) = '1');
+      end;
+    end;
+    if f_grid_options.ShowModal = mrOK then
+    begin
+      with f_grid_options do
+      begin
+        if override_defaults.Checked then
+        begin
+          Value := IfThen(cols_vis.Checked, '1', '0')    + ',' +
+                  IfThen(cols_ord.Checked, '1', '0')    + ',' +
+                  IfThen(cols_size.Checked, '1', '0')   + ',' +
+                  IfThen(recs_filter.Checked, '1', '0') + ',' +
+                  IfThen(recs_sort.Checked, '1', '0')   + ',' +
+                  IfThen(rows_num.Checked, '1', '0')    + ',' +
+                  IfThen(data_export.Checked, '1', '0') + ',' +
+                  IfThen(recs_delete.Checked, '1', '0');
+        end
+        else
+        begin
+          Value := 'Default';
+        end;
       end;
     end;
   end;
@@ -1739,7 +1794,7 @@ var
   select_enable, navigatorblock_vis, exp1, exp2: integer;
   insert_action, post_action, del_action, undo_action, detail_action,
   select_action, insert_msg, post_msg, del_msg, undo_msg, detail_msg,
-  select_msg, norecordmsg, zoomaction : string;
+  select_msg, norecordmsg, zoomaction, grid_options : string;
 
 begin
 
@@ -1747,14 +1802,12 @@ begin
   for i := 0 to controllo.ControlCount - 1 do
   begin
     controllo_corrente := controllo.Controls[i];
-
     // ____________________________________________ Reset grids horiz scroll ___
     if controllo.Controls[i].ClassName = 'To2table' then
     begin
         control_table := controllo.Controls[i] as To2table;
         control_table.HorzScrollBar.Position := 0;
     end;
-
     if controllo_corrente.Name <> '' then
     begin
       top           := controllo.Controls[i].Top;
@@ -1835,6 +1888,7 @@ begin
       navigatorblock_vis := 0;
 
       boolean1      := False;
+      grid_options  := '';
       // _____________________________________________________________ LABEL ___
       if controllo.Controls[i].ClassName = 'To2label' then
       begin
@@ -2087,8 +2141,6 @@ begin
       else if controllo.Controls[i].ClassName = 'To2table' then
       begin
         control_table := controllo.Controls[i] as To2table;
-
-        // aggiorna parentinfo dei figli in base alle posizioni
         // ________________________________________ Set children parent-info ___
         posizioni_in_tabellaExecute(self, control_table);
 
@@ -2099,6 +2151,7 @@ begin
         taborder      := control_table.TabOrder;
         exp1          := control_table.HideIndicator;;
         Expand        := ExpandAsString(control_table.Expand);
+        grid_options  := control_table.Options;
 
         salva_controlliExecute(self, control_table);
 
@@ -2410,7 +2463,8 @@ begin
                                             exp2,
                                             zoomaction,
                                             tooltipexp,
-                                            Expand]);
+                                            Expand,
+                                            grid_options]);
 
     end;
   end;
@@ -2780,6 +2834,7 @@ begin
                                    dm_form.t_controlliformNorecordmessage.Value;
       control_table.Expand           :=
                             StringAsExpand(dm_form.t_controlliformExpand.Value);
+      control_table.Options         := dm_form.t_controlliformGridOptions.Value;                            
     end
     // ___________________________________________________ Control TEXT-AREA ___
     else if dm_form.t_controlliformtipo.Value = 'textarea' then

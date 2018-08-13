@@ -1588,6 +1588,11 @@ object dm_form: Tdm_form
         Name = 'Expand'
         DataType = ftString
         Size = 1
+      end
+      item
+        Name = 'GridOptions'
+        DataType = ftString
+        Size = 20
       end>
     IndexDefs = <
       item
@@ -1890,6 +1895,10 @@ object dm_form: Tdm_form
     object t_controlliformExpand: TStringField
       FieldName = 'Expand'
       Size = 1
+    end
+    object t_controlliformGridOptions: TStringField
+      FieldName = 'GridOptions'
+      Size = 50
     end
   end
   object ds_controlliform: TDataSource

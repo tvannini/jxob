@@ -1503,6 +1503,16 @@ begin
                   Memo3.Add(buffer);
                 end;
 
+                // _________________________________ Grid options (GridPlus) ___
+                if (t_controlliformGridOptions.Value <> '') and
+                   (t_controlliformGridOptions.Value <> 'Default') then
+                begin
+                   buffer := #9 + #9 + '$ctrl_' + nomecontrollo +
+                             '->grid_plus(array(' +
+                             t_controlliformGridOptions.Value + '));';
+                   Memo3.Add(buffer);
+                end;
+
               end;
 
               //checkbox

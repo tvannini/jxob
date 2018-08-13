@@ -27,6 +27,7 @@ type
     findicator: integer;
     fcss_footer: string;
     fexpand: TCtrlExpand;
+    foptions: string;
 
     procedure scss_alternate(const Value: string);
     procedure scss_body(const Value: string);
@@ -45,6 +46,7 @@ type
     procedure sindicator(const Value: integer);
     procedure scss_footer(const Value: string);
     procedure sexpand(const Value: TCtrlExpand);
+    procedure soptions(const Value: string);
 
   private
     fvisibile: integer;
@@ -89,6 +91,7 @@ type
     property NoRecordMessage: string Read fNorecordmessage Write sNorecordmessage;
     property HideIndicator: integer Read findicator Write sindicator;
     property Expand: TCtrlExpand Read fexpand Write sexpand;
+    property Options: string Read foptions Write soptions;
 
   end;
 
@@ -230,5 +233,10 @@ begin
   fexpand := Value;
 end;
 
+
+procedure To2table.soptions(const Value: string);
+begin
+  foptions := Value;
+end;
 
 end.
