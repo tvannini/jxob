@@ -1593,6 +1593,10 @@ object dm_form: Tdm_form
         Name = 'GridOptions'
         DataType = ftString
         Size = 20
+      end
+      item
+        Name = 'PinCols'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -1899,6 +1903,9 @@ object dm_form: Tdm_form
     object t_controlliformGridOptions: TStringField
       FieldName = 'GridOptions'
       Size = 50
+    end
+    object t_controlliformPinCols: TSmallintField
+      FieldName = 'PinCols'
     end
   end
   object ds_controlliform: TDataSource

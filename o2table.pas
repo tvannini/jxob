@@ -28,6 +28,7 @@ type
     fcss_footer: string;
     fexpand: TCtrlExpand;
     foptions: string;
+    fpin_cols: integer;
 
     procedure scss_alternate(const Value: string);
     procedure scss_body(const Value: string);
@@ -47,6 +48,7 @@ type
     procedure scss_footer(const Value: string);
     procedure sexpand(const Value: TCtrlExpand);
     procedure soptions(const Value: string);
+    procedure spin_cols(const Value: integer);
 
   private
     fvisibile: integer;
@@ -92,6 +94,7 @@ type
     property HideIndicator: integer Read findicator Write sindicator;
     property Expand: TCtrlExpand Read fexpand Write sexpand;
     property Options: string Read foptions Write soptions;
+    property PinCols: integer Read fpin_cols Write spin_cols;
 
   end;
 
@@ -204,9 +207,6 @@ begin
 end;
 
 
-
-
-
 procedure To2table.stopexpr(const Value: integer);
 begin
   ftopexpr := Value;
@@ -237,6 +237,12 @@ end;
 procedure To2table.soptions(const Value: string);
 begin
   foptions := Value;
+end;
+
+
+procedure To2table.spin_cols(const Value: integer);
+begin
+  fpin_cols := Value;
 end;
 
 end.

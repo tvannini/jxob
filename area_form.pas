@@ -1791,7 +1791,7 @@ var
   css13, css14, css15, Expand: string;
   insert_vis, post_vis, del_vis, undo_vis, detail_vis, select_vis,
   insert_enable, post_enable, del_enable, undo_enable, detail_enable,
-  select_enable, navigatorblock_vis, exp1, exp2: integer;
+  select_enable, navigatorblock_vis, exp1, exp2, pin_cols: integer;
   insert_action, post_action, del_action, undo_action, detail_action,
   select_action, insert_msg, post_msg, del_msg, undo_msg, detail_msg,
   select_msg, norecordmsg, zoomaction, grid_options : string;
@@ -1889,6 +1889,8 @@ begin
 
       boolean1      := False;
       grid_options  := '';
+      pin_cols      := 0;
+
       // _____________________________________________________________ LABEL ___
       if controllo.Controls[i].ClassName = 'To2label' then
       begin
@@ -2152,6 +2154,7 @@ begin
         exp1          := control_table.HideIndicator;;
         Expand        := ExpandAsString(control_table.Expand);
         grid_options  := control_table.Options;
+        pin_cols      := control_table.PinCols;
 
         salva_controlliExecute(self, control_table);
 
@@ -2464,7 +2467,8 @@ begin
                                             zoomaction,
                                             tooltipexp,
                                             Expand,
-                                            grid_options]);
+                                            grid_options,
+                                            pin_cols]);
 
     end;
   end;
@@ -2834,7 +2838,8 @@ begin
                                    dm_form.t_controlliformNorecordmessage.Value;
       control_table.Expand           :=
                             StringAsExpand(dm_form.t_controlliformExpand.Value);
-      control_table.Options         := dm_form.t_controlliformGridOptions.Value;                            
+      control_table.Options         := dm_form.t_controlliformGridOptions.Value;
+      control_table.PinCols         := dm_form.t_controlliformPinCols.Value;                            
     end
     // ___________________________________________________ Control TEXT-AREA ___
     else if dm_form.t_controlliformtipo.Value = 'textarea' then

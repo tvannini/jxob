@@ -437,6 +437,7 @@ object f_areaform: Tf_areaform
       'Abilitato|Enabled'
       'HideIndicator|Hide row marker'
       'Options'
+      'PinCols|Pinned columns'
       'File_name|File expr'
       'File_name_rollover|File rollover expr'
       'ImageFile|Image file'

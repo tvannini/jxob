@@ -479,6 +479,7 @@ type
     tmp_callparamsModel: TStringField;
     t_controlliformExpand: TStringField;
     t_controlliformGridOptions: TStringField;
+    t_controlliformPinCols: TSmallintField;
     procedure t_tabelleBeforeInsert(DataSet: TDataSet);
     procedure t_tabelleSaveRecord(DataSet: TDataSet; var Accept: boolean);
     procedure t_indici_savNewRecord(DataSet: TDataSet);

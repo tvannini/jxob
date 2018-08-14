@@ -98,7 +98,7 @@ var
   detail_msg, select_msg, zoom_action, Expand, grid_plus : string;
   vista_del_menga, tipologia, tipo_prg, data_prg, data_cds: string;
   puntatore, num1, num2, num3, num4, num5, num6, submit, tooltipexp,
-  id_operazione, exp1, exp2, dataprg, datacds: integer;
+  id_operazione, exp1, exp2, dataprg, datacds, pin_cols: integer;
   i: smallint;
   boolean1, boolean2: boolean;
 begin
@@ -1317,6 +1317,7 @@ begin
 
             norecordmsg:='';
             grid_plus := '';
+            pin_cols  := 0;
 
             nomecontrollo := trim(extractword(1, selezione2, [',']));
             nomecontrollo := copy(trim(nomecontrollo), 2, length(trim(nomecontrollo)) - 2);
@@ -1729,7 +1730,6 @@ begin
               else exp1:=0;
 
               // ___________________________________ Grid options (GridPlus) ___
-
               grid_plus := trim(ctrl_prop('grid_plus'));
               if Copy(grid_plus, 0, 6) = 'array(' then
               begin
@@ -1738,6 +1738,13 @@ begin
               else
               begin
                 grid_plus := 'Default';
+              end;
+
+              // ____________________________________________ Pinned columns ___
+              tmp1 := ctrl_prop('pinned_cols');
+              if tmp1 <> '' then
+              begin
+                pin_cols := StrToInt(tmp1);
               end;
 
             end; //fine table
@@ -1869,7 +1876,8 @@ begin
                                                   zoom_action,
                                                   tooltipexp,
                                                   Expand,
-                                                  grid_plus]);
+                                                  grid_plus,
+                                                  pin_cols]);
 
             Inc(i);  // i è il taborder
 

@@ -1513,6 +1513,15 @@ begin
                    Memo3.Add(buffer);
                 end;
 
+                // __________________________________________ Pinned columns ___
+                if (t_controlliformPinCols.Value > 0) then
+                begin
+                   buffer := #9 + #9 + '$ctrl_' + nomecontrollo +
+                             '->pinned_cols(' +
+                             IntToStr(t_controlliformPinCols.Value) + ');';
+                   Memo3.Add(buffer);
+                end;
+
               end;
 
               //checkbox
