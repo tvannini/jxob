@@ -11,11 +11,11 @@ type
   private
     fctrltype: string;
     fvisibile: integer;
-    fitems: integer;
+    fimg_items: integer;
     fazione: string;
     fazione_del: string;
-    fitem_width: Integer;
-    fitem_height: Integer;
+    fimg_item_width: Integer;
+    fimg_item_height: Integer;
     fcss: string;
     fparentinfo: string;
     fparentname: string;
@@ -24,11 +24,11 @@ type
     fview: string;
     fexpand: TCtrlExpand;
 
-    procedure sitems(const Value: integer);
+    procedure simg_items(const Value: integer);
     procedure sazione(const Value: string);
     procedure sazione_del(const Value: string);
-    procedure sitem_width(const Value: Integer);
-    procedure sitem_height(const Value: Integer);
+    procedure simg_item_width(const Value: Integer);
+    procedure simg_item_height(const Value: Integer);
     procedure scss(const Value: string);
     procedure sparentinfo(const Value: string);
     procedure sparentname(const Value: string);
@@ -47,11 +47,11 @@ type
   published
     property CtrlType: string Read fctrltype;
     property Visibile: integer Read fvisibile Write svisibile;
-    property Items: integer Read fitems Write sitems;
+    property ImgItems: integer Read fimg_items Write simg_items;
     property Azione: string Read fazione Write sazione;
     property Delete: string Read fazione_del Write sazione_del;
-    property ItemWidth: Integer Read fitem_width Write sitem_width;
-    property ItemHeight: Integer Read fitem_height Write sitem_height;
+    property ImgItemWidth: Integer Read fimg_item_width Write simg_item_width;
+    property ImgItemHeight: Integer Read fimg_item_height Write simg_item_height;
     property Vocecss: string Read fcss Write scss;
     property Parentname: string Read fparentname Write sparentname;
     property Parentinfo: string Read fparentinfo Write sparentinfo;
@@ -118,9 +118,9 @@ begin
   ffield := Value;
 end;
 
-procedure To2imglist.sitems(const Value: integer);
+procedure To2imglist.simg_items(const Value: integer);
 begin
-  fitems := Value;
+  fimg_items := Value;
 end;
 
 procedure To2imglist.sazione(const Value: string);
@@ -133,14 +133,14 @@ begin
   fazione_del := Value;
 end;
 
-procedure To2imglist.sitem_width(const Value: Integer);
+procedure To2imglist.simg_item_width(const Value: Integer);
 begin
-  fitem_width := Value;
+  fimg_item_width := Value;
 end;
 
-procedure To2imglist.sitem_height(const Value: Integer);
+procedure To2imglist.simg_item_height(const Value: Integer);
 begin
-  fitem_height := Value;
+  fimg_item_height := Value;
 end;
 
 procedure To2imglist.sexpand(const Value: TCtrlExpand);

@@ -80,8 +80,8 @@ type
     Exit1: TMenuItem;
     sepmenuExit: TMenuItem;
     o2tree1: To2tree;
-    o2imglist1: To2imglist;
     o2progress1: To2progress;
+    o2imglist2: To2imglist;
 
     procedure FormShow(Sender: TObject);
     procedure DsnInspector1BtnClick(Sender: TObject; Targets: TSelectedComponents;
@@ -510,7 +510,7 @@ begin
      (PropName = 'Submitonchange') or
      (PropName = 'Html') or
      (PropName = 'Nodes') or
-     (PropName = 'Items') or
+     (PropName = 'ImgItems') or
      (PropName = 'Value') or
      (PropName = 'Path') or
      (PropName = 'Save_as') or
@@ -2349,10 +2349,10 @@ begin
           parentinfo := calcola_parent_info(control_imglist, parentinfo);
         end;
 
-        extra1 := IntToStr(control_imglist.Items);
+        extra1 := IntToStr(control_imglist.ImgItems);
         extra2 := control_imglist.Delete;
-        exp1   := control_imglist.ItemWidth;
-        exp2   := control_imglist.ItemHeight;
+        exp1   := control_imglist.ImgItemWidth;
+        exp2   := control_imglist.ImgItemHeight;
 
       end
       // ______________________________________________________ PROGRESS-BAR ___
@@ -3114,11 +3114,11 @@ begin
       control_imglist.Height     := dm_form.t_controlliformaltezza.Value;
       control_imglist.Visibile   := dm_form.t_controlliformvisibile.Value;
       control_imglist.Vocecss    := dm_form.t_controlliformvocecss.Value;
-      control_imglist.Items      := dm_form.t_controlliformextra1.AsInteger;
+      control_imglist.ImgItems   := dm_form.t_controlliformextra1.AsInteger;
       control_imglist.Azione     := dm_form.t_controlliformazione.Value;
       control_imglist.Delete     := dm_form.t_controlliformextra2.Value;
-      control_imglist.ItemWidth  := dm_form.t_controlliformexp1.AsInteger;
-      control_imglist.ItemHeight := dm_form.t_controlliformexp2.AsInteger;
+      control_imglist.ImgItemWidth  := dm_form.t_controlliformexp1.AsInteger;
+      control_imglist.ImgItemHeight := dm_form.t_controlliformexp2.AsInteger;
       control_imglist.View       := StringReplace(ExtractWord(1,
                                        dm_form.t_controlliformriferimento.Value,
                                                               [chr(129)]),

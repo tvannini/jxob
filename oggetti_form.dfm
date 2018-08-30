@@ -211,6 +211,7 @@ object f_oggettiform: Tf_oggettiform
       Visibile = 0
       HideIndicator = 0
       Expand = NoExpand
+      PinCols = 0
     end
     object Dpst_To2tree: To2tree
       Left = 40
@@ -222,22 +223,6 @@ object f_oggettiform: Tf_oggettiform
       TabOrder = 0
       Visibile = 0
       Nodes = 0
-      Expand = NoExpand
-    end
-    object Dpst_To2imglist: To2imglist
-      Left = 32
-      Top = 0
-      Width = 49
-      Height = 49
-      BevelInner = bvLowered
-      BevelOuter = bvNone
-      Caption = 'Dpst_To2imglist'
-      Color = 15528176
-      TabOrder = 0
-      Visibile = 0
-      Items = 0
-      ItemWidth = 0
-      ItemHeight = 0
       Expand = NoExpand
     end
     object Dpst_To2progress: To2progress
@@ -252,9 +237,25 @@ object f_oggettiform: Tf_oggettiform
       Color = 14341583
       Ctl3D = False
       ParentCtl3D = False
-      TabOrder = 12
+      TabOrder = 11
       Visibile = 0
       Value = 0
+      Expand = NoExpand
+    end
+    object Dpst_To2imglist: To2imglist
+      Left = 32
+      Top = 0
+      Width = 49
+      Height = 49
+      BevelInner = bvLowered
+      BevelOuter = bvNone
+      Caption = 'Dpst_To2imglist'
+      Color = 15528176
+      TabOrder = 12
+      Visibile = 0
+      ImgItems = 0
+      ImgItemWidth = 0
+      ImgItemHeight = 0
       Expand = NoExpand
     end
   end

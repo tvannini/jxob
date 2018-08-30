@@ -326,6 +326,7 @@ object f_areaform: Tf_areaform
       Visibile = 0
       HideIndicator = 0
       Expand = NoExpand
+      PinCols = 0
     end
     object o2tree1: To2tree
       Left = 496
@@ -337,22 +338,6 @@ object f_areaform: Tf_areaform
       TabOrder = 0
       Visibile = 0
       Nodes = 0
-      Expand = NoExpand
-    end
-    object o2imglist1: To2imglist
-      Left = 376
-      Top = 224
-      Width = 120
-      Height = 120
-      BevelInner = bvLowered
-      BevelOuter = bvNone
-      Caption = 'o2imglist1'
-      Color = 15527152
-      TabOrder = 0
-      Visibile = 0
-      Items = 0
-      ItemWidth = 0
-      ItemHeight = 0
       Expand = NoExpand
     end
     object o2progress1: To2progress
@@ -367,9 +352,25 @@ object f_areaform: Tf_areaform
       Color = 14341583
       Ctl3D = False
       ParentCtl3D = False
-      TabOrder = 14
+      TabOrder = 13
       Visibile = 0
       Value = 0
+      Expand = NoExpand
+    end
+    object o2imglist2: To2imglist
+      Left = 376
+      Top = 224
+      Width = 120
+      Height = 120
+      BevelInner = bvLowered
+      BevelOuter = bvNone
+      Caption = 'o2imglist1'
+      Color = 15527152
+      TabOrder = 0
+      Visibile = 0
+      ImgItems = 0
+      ImgItemWidth = 0
+      ImgItemHeight = 0
       Expand = NoExpand
     end
   end
@@ -428,9 +429,9 @@ object f_areaform: Tf_areaform
       'View'
       'Field'
       'Nodes|Tree nodes'
-      'Items|Items'
-      'ItemWidth|Item width'
-      'ItemHeight|Item height'
+      'ImgItems|Items'
+      'ImgItemWidth|Item width'
+      'ImgItemHeight|Item height'
       'Activation|Selection'
       'Value'
       'Visibile|Visible'
@@ -526,6 +527,7 @@ object f_areaform: Tf_areaform
       'Text'
       'Nodes'
       'Items'
+      'ImgItems'
       'Value'
       'Visibile'
       'Abilitato'
