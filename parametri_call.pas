@@ -228,6 +228,7 @@ procedure Tf_parametri.ActOKExecute(Sender: TObject);
 var
   EndSet: Boolean;
   ParField, ParView: String;
+  I: Integer;
 begin
   ParamsGrid.DataSource := nil;
   ResParsCount          := 0;
@@ -237,19 +238,20 @@ begin
     // __________________________________________ Loop on defined parameters ___
     tmp_callparams.First;
     repeat
-      // _________________________________________ Parameter by expression ___
+      // ___________________________________________ Parameter by expression ___
       if tmp_callparamsType.Value = 'Exp' then
       begin
         if (tmp_callparamsExp.AsInteger = 0) then
         begin
-          ResParsText.SetText('null');
+          ResParsText.Add('null');
         end
         else
         begin
           ResParsText.Add('[o2exp_' + tmp_callparamsExp.AsString + ']');
+          Inc(ResParsCount);
         end;
       end
-      // __________________________________________ Parameter by reference ___
+      // ____________________________________________ Parameter by reference ___
       else if tmp_callparamsType.Value = 'Ref' then
       begin
         ParView  := Trim(ExtractWord(1, tmp_callparamsField.Value, [':']));
@@ -263,15 +265,27 @@ begin
           ParView := '_o2SESSION';
         end;
         ResParsText.Add(#127 + ParView + #129 + ParField);
+        Inc(ResParsCount);
       end
       // _______________________________________ Missing parameter (to NULL) ___
       else
       begin
-        ResParsText.SetText('null');
+        ResParsText.Add('null');
       end;
-      Inc(ResParsCount);
       tmp_callparams.Next;
     until tmp_callparams.Eof;
+  end;
+  // _________________________________________________ Remove trailing NULLs ___
+  for I := ResParsText.Count - 1 downto 0 do
+  begin
+    if ResParsText[I] = 'null' then
+    begin
+      ResParsText.Delete(I);
+    end
+    else
+    begin
+      Break;
+    end;
   end;
   ModalResult := mrOk;
 end;
