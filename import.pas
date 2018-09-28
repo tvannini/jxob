@@ -2654,7 +2654,8 @@ begin
 
     estrazione_controllo := trim(programma.SelText);
 
-    r4.Expression := '\$ctrl_' + nomecontrollo + '\-\>(.*?);';
+    r4.Expression := '\$ctrl_' + nomecontrollo + '\-\>(.*?)\)\s*;\s*$';
+    r4.ModifierM := true;
     if r4.exec(estrazione_controllo) then
     begin
       repeat
@@ -2668,6 +2669,7 @@ begin
         dm_form.t_value_list.InsertRecord([chiave, valore]);
       until not r4.ExecNext
     end;
+    r4.ModifierM := false;
   end;
 end;
 
