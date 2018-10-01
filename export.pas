@@ -58,13 +58,13 @@ uses dm, work, import;
 
 procedure Tf_export.prg_exportExecute(Sender: TObject; newnomeprg: string);
 var
-  buffer, inizioact, fineact, condizione, nomeprg, nometask, nometab, tipousa, nomeform, temp, temp2,
-  task, Caption, campo, visibile, abilitato, x, y, larghezza,
-  altezza, css, css1, css2, css3, css4, css5, css6, css7, css8,
-  css9, css10, css11, css12, css13, css14, css15, valori, indice, azione, maschera, boolean1,
-  parentname, parentinfo, exp1, exp2, exp3, exp4, exp5, exp6, exp7,
-  prefisso_per_view1, prefisso_per_view2, id, id_padre, nome_prg,
-  nome_risorsa, master, index, dircds, Expand: string;
+  buffer, inizioact, fineact, condizione, nomeprg, nometask, nometab, tipousa,
+  nomeform, temp, temp2, task, Caption, campo, visibile, abilitato, x, y,
+  larghezza, altezza, css, css1, css2, css3, css4, css5, css6, css7, css8, css9,
+  css10, css11, css12, css13, css14, css15, valori, indice, azione, maschera,
+  boolean1, parentname, parentinfo, exp1, exp2, exp3, exp4, exp5, exp6, exp7,
+  prefisso_per_view1, prefisso_per_view2, id, id_padre, nome_prg, nome_risorsa,
+  master, index, dircds, Expand: string;
   tokenlist: TStrings;
   istruzione, rif_oggetto, parametri, nomecontrollo, tipo: string;
   i, posiz1, posiz2, posiz3, posiz4, submit, tooltipexp: integer;
@@ -102,24 +102,16 @@ begin
     begin
       nomeprg := newnomeprg
     end;
-
-    buffer := 'o2def::prg(' + '"' + nomeprg + '"' + ', ' + '"' + t_programmiref.Value +
-      '"' + ', ' + '""' +
-      ', __FILE__);';
-
+    buffer := 'o2def::prg(' + '"' + nomeprg + '"' + ', "' +
+                          t_programmiref.Value + '", "", __FILE__);';
     Memo2.Add(buffer);
     Memo2.Add('');
-
-    // definizione dei task
-
-    //task delle virtual se almeno una
-    t_variabili_prg.Filtered:=false;
+    // _________ Program variables view, if at least one variable is defined ___
+    t_variabili_prg.Filtered := false;
     if t_variabili_prg.RecordCount > 0 then
     begin
-      buffer := 'o2def::view(''prg§_§var'');';
-      Memo2.Add(buffer);
+      Memo2.Add('o2def::view(''prg§_§var'');');
     end;
-
     // ________________________________________________________ Export views ___
     t_task.First;
     // _______________________________________________________ Loop on views ___
@@ -127,106 +119,95 @@ begin
       nometask := t_tasknome.Value;
       if nometask <> '' then
       begin
-        buffer := 'o2def::view("' + nometask + '", False, "' +
+        Memo2.Add('o2def::view("' + nometask + '", False, "' +
                   t_taskrecordprefix.Value + '", "' +
                   t_taskrecordsufix.Value + '", ' +
-                  IfThen(t_taskautoaggregate.Value, '1', '0') + ');';
-        Memo2.Add(buffer);
+                  IfThen(t_taskautoaggregate.Value, '1', '0') + ');');
       end;
       t_task.Next
     until (t_task.EOF); // _______________________________ End loop on views ___
-
-
-    // definizioni azioni
+    // ______________________________________________________ Export actions ___
     t_azioni.First;
-
     repeat
       if t_azioniazione.Value <> '' then
       begin
-        buffer := 'o2def::act(' +
-         '"' +  t_azioniazione.Value + '", ' +
-         '"' +  t_azioniservice.Value + '"' +
-          ');';
-        Memo2.Add(buffer);
+        Memo2.Add('o2def::act("' +  t_azioniazione.Value +
+                  '", "' +  t_azioniservice.Value + '");');
       end;
       t_azioni.Next
-    until (t_azioni.EOF);
-
-    //definizioni form
+    until (t_azioni.EOF); // ___________________________ End loop on actions ___
+    // ________________________________________________________ Export forms ___
     t_form.First;
-
     repeat
       if t_formnomeform.Value <> '' then
       begin
-
-        nomeform:= t_formnomeform.Value;
-
-       // sostituisce nome prg in caso di copia prg
-        if newnomeprg <> '' then nomeform:=StringReplace(nomeform, trim(dm_form.t_programminome.Value) +'_', trim(newnomeprg) + '_', [rfReplaceAll]);
-
-        if t_formvisibile.Value > 0 then temp:=prepara_expression_num(t_formvisibile.Value, nomeprg)
-        else temp:='true';
-
-        if t_formurl.Value > 0 then temp2:= '"' + prepara_expression_num(t_formurl.Value, nomeprg) + '"'
-        else temp2:='false';
-
-
-        buffer := 'o2def::form(' + '"' + nomeform + '"' + ', ' +
-                        '"' + t_formparentform.Value + '", ' +
-                        BooleanToStr(t_formmenu.Value) + ', ' + '"' + temp + '", '+
-                        temp2 + ');';
-
-        Memo2.Add(buffer);
+        nomeform := t_formnomeform.Value;
+        // _________________________________ Replace prg name, while copying ___
+        if newnomeprg <> '' then
+        begin
+          nomeform := StringReplace(nomeform,
+                                    trim(dm_form.t_programminome.Value) + '_',
+                                    trim(newnomeprg) + '_',
+                                    [rfReplaceAll]);
+        end;
+        if t_formvisibile.Value > 0 then
+        begin
+          temp := prepara_expression_num(t_formvisibile.Value, nomeprg);
+        end
+        else
+        begin
+          temp := 'true';
+        end;
+        if t_formurl.Value > 0 then
+        begin
+          temp2 := '"' + prepara_expression_num(t_formurl.Value, nomeprg) + '"';
+        end
+        else
+        begin
+          temp2 := 'false';
+        end;
+        Memo2.Add('o2def::form("' + nomeform +
+                  '", "' + t_formparentform.Value +
+                  '", ' + BooleanToStr(t_formmenu.Value) +
+                  ', "' + temp +
+                  '", '+ temp2 + ');');
       end;
       t_form.Next
     until (t_form.EOF);
-
-    //definizioni io
+    // __________________________________________________________ Export IOs ___
     t_input_output.First;
-
     repeat
       if t_input_outputnome.Value <> '' then
       begin
-        buffer := 'o2def::io(' + '"' + t_input_outputnome.Value + '"' + ', ' +
-          '"' + StrLeft(t_input_outputtipo.Value, 1) + '"' + ', ' +
-          nomeprg + '_exp_' + t_input_outputoutputfile.AsString + '(), ' +
-          '"' + StrLeft(t_input_outputdirection.Value, 1) + '"' + ');';
-
-        Memo2.Add(buffer);
+        Memo2.Add('o2def::io("' + t_input_outputnome.Value +
+                  '", "' + StrLeft(t_input_outputtipo.Value, 1) +
+                  '", ' + nomeprg + '_exp_' + t_input_outputoutputfile.AsString +
+                  '(), "' + StrLeft(t_input_outputdirection.Value, 1) + '");');
       end;
       t_input_output.Next
     until (t_input_output.EOF);
-
-    //definizioni report
+    // ______________________________________________________ Export reports ___
     t_report.First;
-
     repeat
       if t_reportalias.Value <> '' then
       begin
-        buffer := 'o2def::protocol(' + '"' + t_reportalias.Value + '"' + ', ' +
-          '"' + t_reporttipo.Value + '"' + ');';
-
-        Memo2.Add(buffer);
+        Memo2.Add('o2def::protocol("' + t_reportalias.Value +
+                  '", "' + t_reporttipo.Value + '");');
       end;
       t_report.Next
     until (t_report.EOF);
-
-    // definizioni parametri
+    // ___________________________________________________ Export parameters ___
     t_parametri.First;
-
     repeat
       if t_parametriid.Value <> 0 then
       begin
-        buffer := 'o2def::par(' + t_parametriid.AsString + ', ' +
-          '"' + t_parametrinome.Value + '"' + ',' +
-          '"' + t_parametrimodello.Value + '"' + ');';
-        Memo2.Add(buffer);
+        Memo2.Add('o2def::par(' + t_parametriid.AsString +
+                  ', "' + t_parametrinome.Value +
+                  '", "' + t_parametrimodello.Value + '");');
       end;
       t_parametri.Next
     until (t_parametri.EOF);
-
     // ======================================================= FILE .PRG END ===
-
     // ===================================================== FILE .PRF START ===
     if nomeprg <> '_o2viewmodels' then
     begin
@@ -2856,47 +2837,57 @@ end;
 procedure Tf_export.prgsavcdsExecute(Sender: TObject; nomeprg: string);
 var dircds : string;
 begin
-
-  dircds:='';
-  if (FileExists(f_work.prgdir + nomeprg + '.prg')) then dircds:=f_work.prgdir +'__source__\'+ nomeprg +'\';
-  if (FileExists(f_work.userdir + nomeprg + '.prg')) then dircds:=f_work.userdir +'__source__\'+ nomeprg +'\';
-
-  If not(DirectoryExists(f_work.prgdir +'__source__\')) then CreateDir(f_work.prgdir +'__source__\');
-  If not(DirectoryExists(f_work.userdir +'__source__\')) then CreateDir(f_work.userdir +'__source__\');
-  If not(DirectoryExists(dircds)) then CreateDir(dircds);
-
-     with dm_form do
-      begin
-//      t_programmi.MergeChangeLog;
-
-      t_programmi.SaveToFile(dircds + 'program.cds', dfBinary);
-      t_task.SaveToFile(dircds + 'view.cds', dfBinary);
-      t_select.SaveToFile(dircds + 'select.cds', dfBinary);
-      t_usa_file.SaveToFile(dircds + 'tab.cds', dfBinary);
-      t_union.SaveToFile(dircds + 'link.cds', dfBinary);
-      t_azioni.SaveToFile(dircds + 'action.cds', dfBinary);
-//      t_azionifigli.SaveToFile(dircds + 'subaction.cds', dfBinary);
-      t_operazioni.SaveToFile(dircds + 'operation.cds', dfBinary);
-      t_espressioni.SaveToFile(dircds + 'expression.cds', dfBinary);
-      t_aggreg.SaveToFile(dircds + 'aggregation.cds', dfBinary);
-      t_variabili_prg.SaveToFile(dircds + 'prgvar.cds', dfBinary);
-
-      t_parametri.SaveToFile(dircds + 'parameter.cds', dfBinary);
-      t_form.SaveToFile(dircds + 'form.cds', dfBinary);
-      t_controlliform.SaveToFile(dircds + 'control.cds', dfBinary);
-      t_input_output.SaveToFile(dircds + 'io.cds', dfBinary);
-      t_report.SaveToFile(dircds + 'report.cds', dfBinary);
-      t_reportfield.SaveToFile(dircds + 'reportfield.cds', dfBinary);
-      end;
-
-
-
+  // _________________________________________ Set target directory for CDSs ___
+  dircds := '';
+  if (FileExists(f_work.userdir + nomeprg + '.prg')) then
+  begin
+    dircds := f_work.userdir + '__source__\' + nomeprg + '\';
+  end
+  else
+  begin
+    dircds := f_work.prgdir + '__source__\' + nomeprg + '\';
+  end;
+  // ____________________________________ Create CDSs directories if missing ___
+  If not(DirectoryExists(f_work.prgdir + '__source__\')) then
+  begin
+     CreateDir(f_work.prgdir + '__source__\');
+  end;
+  If not(DirectoryExists(f_work.userdir + '__source__\')) then
+  begin
+    CreateDir(f_work.userdir + '__source__\');
+  end;
+  If not(DirectoryExists(dircds)) then
+  begin
+    CreateDir(dircds);
+  end;
+  // _______________________________________________________ Save CDSs files ___
+  with dm_form do
+  begin
+//  t_programmi.MergeChangeLog;
+    t_programmi.SaveToFile(dircds + 'program.cds', dfBinary);
+    t_task.SaveToFile(dircds + 'view.cds', dfBinary);
+    t_select.SaveToFile(dircds + 'select.cds', dfBinary);
+    t_usa_file.SaveToFile(dircds + 'tab.cds', dfBinary);
+    t_union.SaveToFile(dircds + 'link.cds', dfBinary);
+    t_azioni.SaveToFile(dircds + 'action.cds', dfBinary);
+//  t_azionifigli.SaveToFile(dircds + 'subaction.cds', dfBinary);
+    t_operazioni.SaveToFile(dircds + 'operation.cds', dfBinary);
+    t_espressioni.SaveToFile(dircds + 'expression.cds', dfBinary);
+    t_aggreg.SaveToFile(dircds + 'aggregation.cds', dfBinary);
+    t_variabili_prg.SaveToFile(dircds + 'prgvar.cds', dfBinary);
+    t_parametri.SaveToFile(dircds + 'parameter.cds', dfBinary);
+    t_form.SaveToFile(dircds + 'form.cds', dfBinary);
+    t_controlliform.SaveToFile(dircds + 'control.cds', dfBinary);
+    t_input_output.SaveToFile(dircds + 'io.cds', dfBinary);
+    t_report.SaveToFile(dircds + 'report.cds', dfBinary);
+    t_reportfield.SaveToFile(dircds + 'reportfield.cds', dfBinary);
+    end;
 end;
-
+
 procedure Tf_export.FormCreate(Sender: TObject);
 begin
-  Memo2:=TStringList.Create;
-  Memo3:=TStringList.Create;
+  Memo2 := TStringList.Create;
+  Memo3 := TStringList.Create;
 end;
 
 end.

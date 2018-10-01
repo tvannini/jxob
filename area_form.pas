@@ -1029,7 +1029,6 @@ begin
     salva_form.Execute;
   end;
 
-
   //chiude tutto ed esce
   DsnSwitch1.DesignOff;
   dm_form.t_form.First;
