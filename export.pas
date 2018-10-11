@@ -771,7 +771,7 @@ begin
                       '");';
             Memo3.Add(buffer);
           end;
-          // ================================================= Form controls ===
+          // _________________________________________________ Form controls ___
           t_controlliform.First;
           // _________________________________________ Loop on form controls ___
           repeat
@@ -864,15 +864,6 @@ begin
               // _______________________________________________ Parent info ___
               if t_controlliformparent_info.Value <> '' then
               begin
-                // _____ Waring in case of parent-info=array(0) in multipage ___
-                if (t_controlliformparent_info.Value = '0') and
-                   (t_controlliformparent.Value <> '') then
-                begin
-                   ShowMessage('Missing page reference for control ' +
-                               t_controlliformnomecontrollo.Value +
-                               ' in control ' + t_controlliformparent.Value +
-                               ': check form definition!');
-                end;
                 parentinfo := 'array(' +
                               stringreplace(t_controlliformparent_info.Value,
                                             '§',
