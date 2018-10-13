@@ -48,6 +48,12 @@ object f_import: Tf_import
       #9'o2def::field("last_date", "last_date", "_o2date");'
       #9'o2def::field("last_time", "last_time", "_o2time");'
       #9'o2def::field("login_type", "login_type", "o2sys_login_type");'
+      #9'o2def::field("last_pwd_date", "last_pwd_date", "_o2date");'
+      
+        #9'o2def::field("force_pwd_change", "force_pwd_change", "_o2logica' +
+        'l");'
+      #9'o2def::field("pwds_history", "pwds_history", "o2sys_long_str");'
+      #9'o2def::field("no_pwd_change", "no_pwd_change", "_o2logical");'
       ''
       #9'o2def::index("o2user", "o2user","A");'
       #9'o2def::index("asp_area", "area","A", "o2user","A");')
