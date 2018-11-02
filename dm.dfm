@@ -1345,7 +1345,7 @@ object dm_form: Tdm_form
       item
         Name = 'parent'
         DataType = ftString
-        Size = 40
+        Size = 150
       end
       item
         Name = 'parent_info'
