@@ -212,8 +212,8 @@ end;
 
 procedure Tf_tabdef.e_tooltipKeyPress(Sender: TObject; var Key: Char);
 begin
-  // ____ Don't allow "," in string (used for splitting parameters in array) ___
-  if Key = ',' then
+  //  Don't allow , and " in string (used for splitting parameters in array) ___
+  if (Key = ',') or (Key = '"') then
   begin
     Key := #0;
   end;
@@ -221,8 +221,8 @@ end;
 
 procedure Tf_tabdef.e_labelKeyPress(Sender: TObject; var Key: Char);
 begin
-  // ____ Don't allow "," in string (used for splitting parameters in array) ___
-  if Key = ',' then
+  //  Don't allow , and " in string (used for splitting parameters in array) ___
+  if (Key = ',') or (Key = '"') then
   begin
     Key := #0;
   end;
@@ -230,8 +230,8 @@ end;
 
 procedure Tf_tabdef.e_footerKeyPress(Sender: TObject; var Key: Char);
 begin
-  // ____ Don't allow "," in string (used for splitting parameters in array) ___
-  if Key = ',' then
+  //  Don't allow , and " in string (used for splitting parameters in array) ___
+  if (Key = ',') or (Key = '"') then
   begin
     Key := #0;
   end;
