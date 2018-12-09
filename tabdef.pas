@@ -40,6 +40,9 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure Zoom1Click(Sender: TObject);
     procedure Return1Click(Sender: TObject);
+    procedure e_tooltipKeyPress(Sender: TObject; var Key: Char);
+    procedure e_labelKeyPress(Sender: TObject; var Key: Char);
+    procedure e_footerKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
   public
@@ -204,6 +207,34 @@ end;
 procedure Tf_tabdef.Return1Click(Sender: TObject);
 begin
   BitBtn1.Click;
+end;
+
+
+procedure Tf_tabdef.e_tooltipKeyPress(Sender: TObject; var Key: Char);
+begin
+  // ____ Don't allow "," in string (used for splitting parameters in array) ___
+  if Key = ',' then
+  begin
+    Key := #0;
+  end;
+end;
+
+procedure Tf_tabdef.e_labelKeyPress(Sender: TObject; var Key: Char);
+begin
+  // ____ Don't allow "," in string (used for splitting parameters in array) ___
+  if Key = ',' then
+  begin
+    Key := #0;
+  end;
+end;
+
+procedure Tf_tabdef.e_footerKeyPress(Sender: TObject; var Key: Char);
+begin
+  // ____ Don't allow "," in string (used for splitting parameters in array) ___
+  if Key = ',' then
+  begin
+    Key := #0;
+  end;
 end;
 
 end.

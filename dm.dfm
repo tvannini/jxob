@@ -1350,7 +1350,7 @@ object dm_form: Tdm_form
       item
         Name = 'parent_info'
         DataType = ftString
-        Size = 200
+        Size = 250
       end
       item
         Name = 'extra1'
@@ -1698,7 +1698,7 @@ object dm_form: Tdm_form
     object t_controlliformparent_info: TStringField
       DisplayWidth = 240
       FieldName = 'parent_info'
-      Size = 200
+      Size = 250
     end
     object t_controlliformextra1: TStringField
       DisplayWidth = 600
@@ -3636,7 +3636,7 @@ object dm_form: Tdm_form
       item
         Name = 'valore'
         DataType = ftString
-        Size = 200
+        Size = 250
       end>
     IndexDefs = <
       item
@@ -3654,7 +3654,7 @@ object dm_form: Tdm_form
     end
     object t_value_listvalore: TStringField
       FieldName = 'valore'
-      Size = 200
+      Size = 250
     end
   end
   object ds_value_list: TDataSource

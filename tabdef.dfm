@@ -24,21 +24,21 @@ object f_tabdef: Tf_tabdef
   object Label2: TLabel
     Left = 152
     Top = 20
-    Width = 5
+    Width = 3
     Height = 13
     Caption = ')'
   end
   object Label3: TLabel
     Left = 248
     Top = 20
-    Width = 9
+    Width = 3
     Height = 13
     Caption = '-'
   end
   object Label4: TLabel
     Left = 16
     Top = 56
-    Width = 100
+    Width = 23
     Height = 13
     Caption = 'Title:'
   end
@@ -52,28 +52,28 @@ object f_tabdef: Tf_tabdef
   object Label6: TLabel
     Left = 16
     Top = 176
-    Width = 100
+    Width = 89
     Height = 13
     Caption = 'Header CSS class:'
   end
   object Label7: TLabel
     Left = 16
     Top = 128
-    Width = 100
+    Width = 33
     Height = 13
     Caption = 'Footer:'
   end
   object Label8: TLabel
     Left = 16
     Top = 200
-    Width = 100
+    Width = 84
     Height = 13
     Caption = 'Footer CSS class:'
   end
   object Label9: TLabel
     Left = 16
     Top = 104
-    Width = 100
+    Width = 93
     Height = 13
     Caption = 'Description (tooltip):'
   end
@@ -101,14 +101,14 @@ object f_tabdef: Tf_tabdef
   object Label11: TLabel
     Left = 16
     Top = 224
-    Width = 100
+    Width = 78
     Height = 13
     Caption = 'Hide sort button:'
   end
   object Label12: TLabel
     Left = 16
     Top = 80
-    Width = 100
+    Width = 70
     Height = 13
     Caption = 'Header action:'
   end
@@ -170,11 +170,13 @@ object f_tabdef: Tf_tabdef
     Left = 128
     Top = 56
     Width = 225
-    Height = 20
+    Height = 19
     Ctl3D = False
+    MaxLength = 100
     ParentCtl3D = False
     PopupMenu = PopupMenu1
     TabOrder = 0
+    OnKeyPress = e_labelKeyPress
   end
   object CheckBox1: TCheckBox
     Left = 128
@@ -189,7 +191,7 @@ object f_tabdef: Tf_tabdef
     Left = 128
     Top = 152
     Width = 225
-    Height = 20
+    Height = 19
     Ctl3D = False
     ParentCtl3D = False
     PopupMenu = PopupMenu1
@@ -200,7 +202,7 @@ object f_tabdef: Tf_tabdef
     Left = 128
     Top = 176
     Width = 225
-    Height = 20
+    Height = 19
     Ctl3D = False
     ParentCtl3D = False
     PopupMenu = PopupMenu1
@@ -211,17 +213,19 @@ object f_tabdef: Tf_tabdef
     Left = 128
     Top = 128
     Width = 225
-    Height = 20
+    Height = 19
     Ctl3D = False
+    MaxLength = 100
     ParentCtl3D = False
     PopupMenu = PopupMenu1
     TabOrder = 3
+    OnKeyPress = e_footerKeyPress
   end
   object ed_cssfooter: TEdit
     Left = 128
     Top = 200
     Width = 225
-    Height = 20
+    Height = 19
     Ctl3D = False
     ParentCtl3D = False
     PopupMenu = PopupMenu1
@@ -232,11 +236,13 @@ object f_tabdef: Tf_tabdef
     Left = 128
     Top = 104
     Width = 225
-    Height = 20
+    Height = 19
     Ctl3D = False
+    MaxLength = 100
     ParentCtl3D = False
     PopupMenu = PopupMenu1
     TabOrder = 2
+    OnKeyPress = e_tooltipKeyPress
   end
   object e_action: TEdit
     Left = 128
