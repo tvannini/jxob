@@ -1357,6 +1357,47 @@ begin
                           t_controlliformscelte_possibili.Value + '");';
                 Memo3.Add(buffer);
               end;
+              // ___________________________________________ Flowbox control ___
+              if t_controlliformtipo.Value = 'flowbox' then
+              begin
+                temp  := '';
+                temp2 := StringReplace(t_controlliformextra1.Value,
+                                       chr(10),
+                                       '',
+                                       [rfReplaceAll]);
+                // _______________________________________ Split pages names ___
+                for i := 1 to StrCharCount(temp2, chr(13)) + 1 do
+                begin
+                  if ExtractWord(i, temp2, [chr(13)]) <> '' then
+                  begin
+                    temp := trim(temp) + '"' +
+                            ExtractWord(i, temp2, [chr(13)]) + '", ';
+                  end
+                end;
+                temp := copy(trim(temp), 1, length(trim(temp)) - 1);
+                if temp <> '' then
+                begin
+                  buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
+                            '->label(' + 'array(' + temp + '));';
+                  Memo3.Add(buffer);
+                end;
+                if css <> '' then
+                begin
+                  buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
+                            '->css(' + css + ');';
+                  Memo3.Add(buffer);
+                end;
+              end;
+              // ___________________________________________ Flowbox control ___
+              if t_controlliformtipo.Value = 'frame' then
+              begin
+                if css <> '' then
+                begin
+                  buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
+                            '->css(' + css + ');';
+                  Memo3.Add(buffer);
+                end;
+              end;
               // __________________________________________ Combobox control ___
               if (t_controlliformtipo.Value = 'combobox') or
                  (t_controlliformtipo.Value = 'listbox') then

@@ -67,7 +67,8 @@ uses
   scelta_da_list in 'scelta_da_list.pas' {f_scelta_da_list},
   debug in 'debug.pas' {f_debug},
   cvsinfo in 'cvsinfo.pas' {f_CVSInfo},
-  grid_options in 'grid_options.pas' {f_grid_options};
+  grid_options in 'grid_options.pas' {f_grid_options},
+  o2frame in 'o2frame.pas';
 
 {$R *.res}
 

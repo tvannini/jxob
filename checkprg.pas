@@ -1342,13 +1342,13 @@ begin
             + t_controlliformnomecontrollo.Value)
         end;
 
-
-
         //tipo
         if (t_controlliformtipo.Value <> 'edit') and
           (t_controlliformtipo.Value <> 'label') and
           (t_controlliformtipo.Value <> 'separator') and
           (t_controlliformtipo.Value <> 'multipage') and
+          (t_controlliformtipo.Value <> 'flowbox') and
+          (t_controlliformtipo.Value <> 'frame') and
           (t_controlliformtipo.Value <> 'htmlarea') and
           (t_controlliformtipo.Value <> 'treeview') and
           (t_controlliformtipo.Value <> 'imglist') and
@@ -1475,8 +1475,8 @@ begin
         end;
 
 
-        // parent info su oggetti figli di tabella e multipage
-        // per ora lasciamo perdere...
+        // parent info su oggetti figli di tabella, multipage e flownbox
+        // per ora lasciamo perdere... ???
 
         // expression in html area, document e image
         if ((t_controlliformtipo.Value = 'image') or
@@ -1489,12 +1489,13 @@ begin
         end;
 
 
-        // pages in multipage
-        if (t_controlliformtipo.Value = 'multipage') and
+        // pages in multipage and flowbox
+        if ((t_controlliformtipo.Value = 'multipage') or
+            (t_controlliformtipo.Value = 'flowbox')) and
           (t_controlliformextra1.Value = '') then
         begin
           Memo2.Lines.Append('Form:' + nome_form + ' Control: ' + t_controlliformnomecontrollo.Value +
-            '. Multipage without page')
+            '. ' + t_controlliformtipo.Value + ' without page')
         end;
 
         // solo in caso di controllo navigatore

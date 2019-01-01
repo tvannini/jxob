@@ -116,7 +116,6 @@ type
     procedure Moved(DeltaX,DeltaY: Integer);virtual;
     procedure Selected(Control:TControl;var Message: TMessage);virtual;
     procedure SelectByInspect(Control:TControl);
-    procedure SetSubClass(AParent: TWinControl);
     procedure CreateContextMenu;virtual;
     procedure MenuMethod(Sender:TObject);virtual;
     procedure CheckName(Reader:TReader; Component:TComponent; var Name:String);
@@ -139,6 +138,9 @@ type
     //Someday, DsnInspector property will be abolished  when TCustomInspector become a subclass of TDsnPartner.
     property ArrowButton: TArrowButton read FArrowButton write SetArrowButton;
     //Someday, ArrowButton property will be abolished when DsnInspector property is abolished.
+
+    // Moved here from "protected" to allow creation of controls by code
+    procedure SetSubClass(AParent: TWinControl);
   end;
 
   TRubberband = class(TPersistent)

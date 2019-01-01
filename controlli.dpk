@@ -75,6 +75,8 @@ contains
   o2tree in 'o2tree.pas',
   DsnUnit in 'dsn22a\ComponentSource\DsnUnit.pas',
   o2progress in 'o2progress.pas',
-  o2imglist in 'o2imglist.pas';
+  o2imglist in 'o2imglist.pas',
+  o2flowbox in 'o2flowbox.pas',
+  o2frame in 'o2frame.pas';
 
 end.

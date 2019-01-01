@@ -1678,6 +1678,26 @@ begin
               css4 := decodifica_css(ctrl_prop('css_label_off'));
             end; //fine multipage
 
+            // controllo flowbox
+            if tipo = 'flowbox' then
+            begin
+              //label delle pagine
+              par12 := ctrl_prop('label');
+              par12 := copy(trim(par12), 7, length(trim(par12)) - 7);
+              par12 := stringreplace(par12, '"', '', [rfReplaceAll]);
+              par12 := stringreplace(par12, ',', chr(13) + chr(10), [rfReplaceAll]);
+              par13 := '0';
+              // VOCE CSS
+              css1 := decodifica_css(ctrl_prop('css'));
+            end; //fine flowbox
+
+            // controllo frame
+            if tipo = 'frame' then
+            begin
+              // VOCE CSS
+              css1 := decodifica_css(ctrl_prop('css'));
+            end; //fine frame
+
             // controllo BUTTON
             if tipo = 'button' then
             begin

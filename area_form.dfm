@@ -69,8 +69,8 @@ object f_areaform: Tf_areaform
       Expand = NoExpand
     end
     object o2Map1: To2Map
-      Left = 96
-      Top = 280
+      Left = 80
+      Top = 384
       Width = 41
       Height = 41
       Shape = bsFrame
@@ -144,8 +144,8 @@ object f_areaform: Tf_areaform
       Expand = NoExpand
     end
     object o2agente1: To2agente
-      Left = 512
-      Top = 408
+      Left = 504
+      Top = 176
       Width = 73
       Height = 33
       Caption = 'o2agente1'
@@ -156,7 +156,7 @@ object f_areaform: Tf_areaform
     end
     object o2image1: To2image
       Left = 16
-      Top = 280
+      Top = 384
       Width = 57
       Height = 57
       BevelOuter = bvLowered
@@ -223,9 +223,9 @@ object f_areaform: Tf_areaform
       TabOrder = 4
     end
     object o2file1: To2file
-      Left = 16
-      Top = 352
-      Width = 121
+      Left = 144
+      Top = 408
+      Width = 153
       Height = 25
       TabOrder = 5
       Abilitato = 0
@@ -236,7 +236,7 @@ object f_areaform: Tf_areaform
     end
     object o2multipage1: To2multipage
       Left = 144
-      Top = 232
+      Top = 230
       Width = 225
       Height = 145
       TabOrder = 6
@@ -341,8 +341,8 @@ object f_areaform: Tf_areaform
       Expand = NoExpand
     end
     object o2progress1: To2progress
-      Left = 376
-      Top = 357
+      Left = 144
+      Top = 381
       Width = 150
       Height = 20
       BevelOuter = bvNone
@@ -357,11 +357,11 @@ object f_areaform: Tf_areaform
       Value = 0
       Expand = NoExpand
     end
-    object o2imglist2: To2imglist
-      Left = 376
-      Top = 224
+    object o2imglist1: To2imglist
+      Left = 16
+      Top = 272
       Width = 120
-      Height = 120
+      Height = 104
       BevelInner = bvLowered
       BevelOuter = bvNone
       Caption = 'o2imglist1'
@@ -371,6 +371,36 @@ object f_areaform: Tf_areaform
       ImgItems = 0
       ImgItemWidth = 0
       ImgItemHeight = 0
+      Expand = NoExpand
+    end
+    object o2flowbox1: To2flowbox
+      Left = 384
+      Top = 230
+      Width = 200
+      Height = 200
+      TabOrder = 15
+      Tabs.Strings = (
+        'Panel1'
+        'Panel2')
+      TabIndex = 0
+      Visibile = 0
+      TopExpr = 0
+      LeftExpr = 0
+      HeightExpr = 0
+      WidthExpr = 0
+      Expand = NoExpand
+    end
+    object o2frame1: To2frame
+      Left = 392
+      Top = 256
+      Width = 113
+      Height = 81
+      BevelInner = bvSpace
+      BevelOuter = bvLowered
+      Caption = 'o2frame1'
+      Color = 15590880
+      TabOrder = 0
+      Visibile = 0
       Expand = NoExpand
     end
   end

@@ -8,9 +8,10 @@ uses
   oggetti_form, StdCtrls, ExtCtrls, JvScrollPanel, JvComponent, DsnSelect,
   JvCaptionPanel, o2label, o2edit, o2image, o2separator, o2groupbox, o2checkbox,
   o2button, o2agente, o2textarea, Menus, o2table, DBCtrls, Math, ActnList,
-  XPStyleActnCtrls, ActnMan, o2ListBox, ComCtrls, o2multipage, o2file,
-  jclstrings, o2htmlarea, o2tree, o2imglist, o2progress, o2document, jpeg,
-  jvgif, ExtDlgs, o2Map, DsnSub8, o2dbnavigator, o2navigator, DBClient, DB;
+  XPStyleActnCtrls, ActnMan, o2ListBox, ComCtrls, o2multipage, o2flowbox,
+  o2frame, o2file, jclstrings, o2htmlarea, o2tree, o2imglist, o2progress,
+  o2document, jpeg, jvgif, ExtDlgs, o2Map, DsnSub8, o2dbnavigator, o2navigator,
+  DBClient, DB;
 
 type
   Tf_areaform = class(TForm)
@@ -81,7 +82,9 @@ type
     sepmenuExit: TMenuItem;
     o2tree1: To2tree;
     o2progress1: To2progress;
-    o2imglist2: To2imglist;
+    o2imglist1: To2imglist;
+    o2flowbox1: To2flowbox;
+    o2frame1: To2frame;
 
     procedure FormShow(Sender: TObject);
     procedure DsnInspector1BtnClick(Sender: TObject; Targets: TSelectedComponents;
@@ -103,11 +106,12 @@ type
     procedure salva_controlliExecute(Sender: TObject; controllo: TWinControl);
     procedure carica_controlliExecute(Sender: TObject);
     procedure salva_formExecute(Sender: TObject);
-    procedure Nextpage1Click(Sender: TObject);
     procedure attiva_figli_tabsheet(Sender: TObject; controllo: TWinControl;
-      tab_attivo: integer);
+                                    tab_attivo: integer);
+    procedure flowbox_panels(flowbox: To2flowbox);
+    procedure Nextpage1Click(Sender: TObject);
     procedure Previouspage1Click(Sender: TObject);
-    procedure sistema_multipage(form_control: TWinControl);
+    procedure arrange_tabctrl(form_control: TWinControl);
     procedure Copy1Click(Sender: TObject);
     procedure Paste1Click(Sender: TObject);
     procedure unlink_parentExecute(Sender: TObject);
@@ -146,6 +150,8 @@ type
     tmp_listbox: To2ListBox;
     tmp_file: To2file;
     tmp_multipage: To2multipage;
+    tmp_flowbox: To2flowbox;
+    tmp_tabctrl: TTabControl; { _______ For Multipage and Flowbox controls ___ }
     tmp_htmlarea: To2htmlarea;
     tmp_tree: To2tree;
     tmp_imglist: To2imglist;
@@ -381,7 +387,7 @@ begin
         do
         begin
           carica_controlliExecute(self);
-//          sistema_multipage(xformarea);
+//          arrange_tabctrl(xformarea);
           {*
            * If parent control not found then t_controlliForm has been
            * relocated by carica_controlliExecute
@@ -391,7 +397,7 @@ begin
         dm_form.t_controlliForm.Next;
       end;
     end;
-    sistema_multipage(xformarea);
+    arrange_tabctrl(xformarea);
     dm_form.t_form.Next;
   until dm_form.t_form.EOF;
   // ____________________________________________________ Enable design mode ___
@@ -652,26 +658,31 @@ begin
       end;
     end;
   end;
-  // ________________________________________________ Multipage pages (tabs) ___
+  // ____________________________________ Multipage and Flowbox pages (tabs) ___
   if (Propname = 'Tabs') then
   begin
-    tmp_multipage := findcomponent(Dsn8Register1.DsnStage.Targets[0].Name)
-                     as To2multipage;
-    f_tstrings.Memo1.Lines := tmp_multipage.Tabs;
+    tmp_tabctrl := findcomponent(Dsn8Register1.DsnStage.Targets[0].Name)
+                   as TTabControl;
+    f_tstrings.Memo1.Lines := tmp_tabctrl.Tabs;
     f_tstrings.Caption     := 'List of values';
     f_tstrings.ShowModal;
     if f_tstrings.ModalResult = mrOk then
     begin
-      tmp_multipage.Tabs := f_tstrings.Memo1.Lines;
-      attiva_figli_tabsheet(self, tmp_multipage, 0);
+      tmp_tabctrl.Tabs := f_tstrings.Memo1.Lines;
+      // _______________________ Flowbox: verify each page has its own panel ___
+      if Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2flowbox' then
+      begin
+        flowbox_panels(tmp_tabctrl as To2flowbox);
+      end;
+      attiva_figli_tabsheet(self, tmp_tabctrl, 0);
     end;
   end;
-  // _________________________________________________ Multipage active page ___
+  // _____________________________________ Multipage and Flowbox active page ___
   if (Propname = 'TabIndex') then
   begin
-    tmp_multipage := findcomponent(Dsn8Register1.DsnStage.Targets[0].Name)
-                     as To2multipage;
-    f_scelta_tabsheet.ListBox1.Items := tmp_multipage.Tabs;
+    tmp_tabctrl := findcomponent(Dsn8Register1.DsnStage.Targets[0].Name)
+                   as TTabControl;
+    f_scelta_tabsheet.ListBox1.Items := tmp_tabctrl.Tabs;
     if Value = '' then
     begin
       Value := '0';
@@ -681,7 +692,7 @@ begin
     if f_scelta_tabsheet.ModalResult = mrOk then
     begin
       Value := IntToStr(f_scelta_tabsheet.ListBox1.ItemIndex);
-      attiva_figli_tabsheet(self, tmp_multipage, StrToInt(Value));
+      attiva_figli_tabsheet(self, tmp_tabctrl, StrToInt(Value));
     end;
   end;
   // __________________________________ Container informations (parent-info) ___
@@ -826,13 +837,14 @@ begin
         Value := f_tabdef.scelta;
       end;
     end;
-    // ____________________________________ If control is inside a multipage ___
-    if Dsn8Register1.DsnStage.Targets[0].Parent.ClassName = 'To2multipage' then
+    // _______________________ If control is inside a multipage or a flowbox ___
+    if (Dsn8Register1.DsnStage.Targets[0].Parent.ClassName = 'To2multipage') or
+       (Dsn8Register1.DsnStage.Targets[0].Parent.ClassName = 'To2flowbox') then
     begin
-      tmp_multipage := findcomponent(
+      tmp_tabctrl := findcomponent(
                                   Dsn8Register1.DsnStage.Targets[0].Parent.Name)
-                       as To2multipage;
-      f_scelta_tabsheet.ListBox1.Items := tmp_multipage.Tabs;
+                     as To2flowbox;
+      f_scelta_tabsheet.ListBox1.Items := tmp_tabctrl.Tabs;
       if Value = '' then
       begin
         Value := '0';
@@ -1243,6 +1255,7 @@ var
   parent_info, nome_bottone: string;
   i: Integer;
   campo_in_selezione :TListItem;
+  panel: To2frame;
 
 begin
   controllo := findcomponent(Component.Name) as TControl;
@@ -1250,11 +1263,27 @@ begin
   //disabilita lo skin
   controllo.Tag := 99;
 
-  if (controllo.Parent.ClassName = 'To2multipage') then
+  if (controllo.Parent.ClassName = 'To2multipage') or
+     (controllo.Parent.ClassName = 'To2flowbox') then
   begin
-    tmp_multipage := findcomponent(controllo.Parent.Name) as To2multipage;
-    parent_info   := IntToStr(tmp_multipage.TabIndex);
+    tmp_tabctrl := findcomponent(controllo.Parent.Name) as TTabControl;
+    parent_info := IntToStr(tmp_tabctrl.TabIndex);
     SetPropValue(controllo, 'Parentinfo', parent_info);
+    if (controllo.Parent.ClassName = 'To2flowbox') and
+       (controllo.ClassName <> 'To2frame') then
+    begin
+      controllo.Parent := nil;
+      panel            := To2frame(tmp_tabctrl.Controls[0]);
+      controllo.Parent := panel;
+      if controllo.Top > panel.Height then
+      begin
+        controllo.Top := panel.Height - 20;
+      end;
+      if controllo.Left > panel.Width - 20 then
+      begin
+        controllo.Left := panel.Width - 20;
+      end;
+    end;
   end ;
 
   if Component.ClassType.ClassName = 'To2multipage' then
@@ -1274,7 +1303,26 @@ begin
       tmp_multipage.Tabs.Add('Page1')
     end;
     tmp_multipage.MultiSelect := True;
+  end;
 
+  if Component.ClassType.ClassName = 'To2flowbox' then
+  begin
+    tmp_flowbox := findcomponent(Component.Name) as To2flowbox;
+    tmp_flowbox.Parentname := tmp_flowbox.Parent.Name;
+    if controllo.Height = 0 then
+    begin
+      controllo.Height := 200
+    end;
+    if controllo.Width = 0 then
+    begin
+      controllo.Width := 200
+    end;
+    if tmp_flowbox.Tabs.Count = 0 then
+    begin
+      tmp_flowbox.Tabs.Add('Panel1')
+    end;
+    tmp_flowbox.MultiSelect := True;
+    flowbox_panels(tmp_flowbox);
   end;
 
   if Component.ClassType.ClassName = 'To2edit' then
@@ -1643,7 +1691,7 @@ begin
       if f_sceltaview.ModalResult = mrOk then
       begin
         tmp_table.View := f_sceltaview.scelta;
-     
+
       end;
     end;
   end;
@@ -1772,6 +1820,8 @@ var
   control_table: To2table;
   control_file: To2file;
   control_multipage: To2multipage;
+  control_flowbox: To2flowbox;
+  control_frame: To2frame;
   control_htmlarea: To2htmlarea;
   control_tree: To2tree;
   control_imglist: To2imglist;
@@ -1991,6 +2041,38 @@ begin
           scelte := 'T';
         end;
         salva_controlliExecute(self, control_multipage);
+      end
+      // ___________________________________________________________ FLOWBOX ___
+      else if controllo.Controls[i].ClassName = 'To2flowbox' then
+      begin
+        control_flowbox := controllo.Controls[i] as To2flowbox;
+        tipocontrollo   := 'flowbox';
+        visibile        := GetPropValue(controllo_corrente, 'Visibile', True);
+        taborder        := control_flowbox.TabOrder;
+        Expand          := ExpandAsString(control_flowbox.Expand);
+        parentinfo      := control_flowbox.Parentinfo;
+        if control_flowbox.Parent.ClassName = 'To2table' then
+        begin
+          parentinfo := calcola_parent_info(control_flowbox, parentinfo);
+        end;
+
+        extra1  := control_flowbox.Tabs.Text;
+        extra2  := IntToStr(control_flowbox.TabIndex);
+        vocecss := control_flowbox.Css;
+        salva_controlliExecute(self, control_flowbox);
+      end
+      // _____________________________________________________________ FRAME ___
+      else if controllo.Controls[i].ClassName = 'To2frame' then
+      begin
+        control_frame   := controllo.Controls[i] as To2frame;
+        tipocontrollo   := 'frame';
+        visibile        := control_frame.Visibile;
+        abilitato       := control_frame.Abilitato;
+        taborder        := control_frame.TabOrder;
+        Expand          := ExpandAsString(control_frame.Expand);
+        parentinfo      := control_frame.Parentinfo;
+        vocecss         := control_frame.Css;
+        salva_controlliExecute(self, control_frame);
       end
       // ____________________________________________________________ BUTTON ___
       else if controllo.Controls[i].ClassName = 'To2button' then
@@ -2493,6 +2575,8 @@ var
   control_table     : To2table;
   control_file      : To2file;
   control_multipage : To2multipage;
+  control_flowbox   : To2flowbox;
+  control_frame     : To2frame;
   control_htmlarea  : To2htmlarea;
   control_tree      : To2tree;
   control_imglist   : To2imglist;
@@ -2651,6 +2735,51 @@ begin
       begin
         control_multipage.TabPosition := tpTop;
       end
+    end
+    // _____________________________________________________ Control FLOWBOX ___
+    else if dm_form.t_controlliformtipo.Value = 'flowbox' then
+    begin
+      control_flowbox             := To2flowbox.Create(self);
+      control_flowbox.Parent      :=
+                              FindComponent(dm_form.t_controlliformparent.Value)
+                              as TWinControl;
+      control_flowbox.Name        := dm_form.t_controlliformnomecontrollo.Value;
+      control_flowbox.Top         := dm_form.t_controlliformtop.Value;
+      control_flowbox.Left        := dm_form.t_controlliformleft.Value;
+      control_flowbox.Width       := dm_form.t_controlliformlarghezza.Value;
+      control_flowbox.Height      := dm_form.t_controlliformaltezza.Value;
+      control_flowbox.Visibile    := dm_form.t_controlliformvisibile.Value;
+      control_flowbox.Tag         := 99;
+      control_flowbox.TabOrder    := dm_form.t_controlliformtaborder.Value;
+      control_flowbox.Parentinfo  := dm_form.t_controlliformparent_info.Value;
+      control_flowbox.Tabs.Text   := dm_form.t_controlliformextra1.Value;
+      control_flowbox.TabIndex    := dm_form.t_controlliformextra2.AsInteger;
+      control_flowbox.Css         := dm_form.t_controlliformvocecss.Value;
+      control_flowbox.Expand      :=
+                            StringAsExpand(dm_form.t_controlliformExpand.Value);
+    end
+    // _______________________________________________________ Control FRAME ___
+    else if dm_form.t_controlliformtipo.Value = 'frame' then
+    begin
+      control_frame            := To2frame.Create(self);
+      control_frame.Parent     :=
+                              FindComponent(dm_form.t_controlliformparent.Value)
+                              as TWinControl;
+      control_frame.Name       := dm_form.t_controlliformnomecontrollo.Value;
+      control_frame.Caption    := '';
+//      control_frame.Top      := dm_form.t_controlliformtop.Value;
+//      control_frame.Left     := dm_form.t_controlliformleft.Value;
+      control_frame.Top        := 22;
+      control_frame.Left       := 2;
+      control_frame.Width      := dm_form.t_controlliformlarghezza.Value;
+      control_frame.Height     := dm_form.t_controlliformaltezza.Value;
+      control_frame.Visibile   := dm_form.t_controlliformvisibile.Value;
+      control_frame.Tag        := 99;
+      control_frame.TabOrder   := dm_form.t_controlliformtaborder.Value;
+      control_frame.Parentinfo := dm_form.t_controlliformparent_info.Value;
+      control_frame.Css        := dm_form.t_controlliformvocecss.Value;
+      control_frame.Expand     :=
+                            StringAsExpand(dm_form.t_controlliformExpand.Value);
     end
     // ______________________________________________________ Control BUTTON ___
     else if dm_form.t_controlliformtipo.Value = 'button' then
@@ -2838,7 +2967,7 @@ begin
       control_table.Expand           :=
                             StringAsExpand(dm_form.t_controlliformExpand.Value);
       control_table.Options         := dm_form.t_controlliformGridOptions.Value;
-      control_table.PinCols         := dm_form.t_controlliformPinCols.Value;                            
+      control_table.PinCols         := dm_form.t_controlliformPinCols.Value;
     end
     // ___________________________________________________ Control TEXT-AREA ___
     else if dm_form.t_controlliformtipo.Value = 'textarea' then
@@ -3334,11 +3463,12 @@ end;
 
 procedure Tf_areaform.Nextpage1Click(Sender: TObject);
 begin
-  if Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2multipage' then
+  if (Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2multipage') or
+     (Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2flowbox') then
   begin
-    tmp_multipage := Dsn8Register1.DsnStage.Targets[0] as To2multipage;
-    tmp_multipage.TabIndex := tmp_multipage.TabIndex + 1;
-    attiva_figli_tabsheet(self, tmp_multipage, tmp_multipage.TabIndex);
+    tmp_tabctrl := Dsn8Register1.DsnStage.Targets[0] as TTabControl;
+    tmp_tabctrl.TabIndex := tmp_tabctrl.TabIndex + 1;
+    attiva_figli_tabsheet(self, tmp_tabctrl, tmp_tabctrl.TabIndex);
   end;
 end;
 
@@ -3364,30 +3494,73 @@ begin
 end;
 
 
-procedure Tf_areaform.Previouspage1Click(Sender: TObject);
+procedure Tf_areaform.flowbox_panels(flowbox: To2flowbox);
+var
+  i, t, ts: integer;
+  new_panel: To2frame;
+  found: Boolean;
 begin
-  if Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2multipage' then
+  ts := flowbox.Tabs.Count;
+  for t := 0 to ts - 1 do
   begin
-
-    tmp_multipage := Dsn8Register1.DsnStage.Targets[0] as To2multipage;
-    tmp_multipage.TabIndex := tmp_multipage.TabIndex - 1;
-    attiva_figli_tabsheet(self, tmp_multipage, tmp_multipage.TabIndex);
+    found := False;
+    for i := 0 to flowbox.ControlCount - 1 do
+    begin
+      if StrToInt(GetPropValue(flowbox.Controls[i], 'Parentinfo', True)) = t
+      then
+      begin
+        if flowbox.Controls[i].ClassName = 'To2frame' then
+        begin
+          found := True;
+          Break;
+        end;
+      end;
+    end;
+    // ________________________________________________ Add panel if missing ___
+    if not found then
+    begin
+      new_panel            := To2frame.Create(Self);
+      new_panel.Tag        := 99; // _____________________ Disable skins ??? ___
+      new_panel.Name       := flowbox.Name + '_Panel' + IntToStr(t);
+      new_panel.Caption    := '';
+      new_panel.Top        := 22;
+      new_panel.Left       := 2;
+      new_panel.Height     := Min(Trunc((flowbox.Height - 24) / 10) * 10, 100);
+      new_panel.Width      := Min(Trunc((flowbox.Width - 4) / 10) * 10, 200);
+      new_panel.Parent     := flowbox as TWinControl;
+      new_panel.Parentname := flowbox.Name;
+      SetPropValue(new_panel, 'Parentinfo', IntToStr(t));
+      Dsn8Register1.SetSubClass(TWinControl(new_panel));
+    end;
   end;
 end;
 
 
-procedure Tf_areaform.sistema_multipage(form_control: TWinControl);
+procedure Tf_areaform.Previouspage1Click(Sender: TObject);
+begin
+  if (Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2multipage') or
+     (Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2flowbox') then
+  begin
+    tmp_tabctrl := Dsn8Register1.DsnStage.Targets[0] as TTabControl;
+    tmp_tabctrl.TabIndex := tmp_tabctrl.TabIndex - 1;
+    attiva_figli_tabsheet(self, tmp_tabctrl, tmp_tabctrl.TabIndex);
+  end;
+end;
+
+
+procedure Tf_areaform.arrange_tabctrl(form_control: TWinControl);
 var
   i: integer;
 begin
   for i := 0 to form_control.ControlCount - 1 do
   begin
-    if form_control.Controls[i].ClassName = 'To2multipage' then
+    if (form_control.Controls[i].ClassName = 'To2multipage') or
+       (form_control.Controls[i].ClassName = 'To2flowbox') then
     begin
-      tmp_multipage := form_control.Controls[i] as To2multipage;
-      attiva_figli_tabsheet(self, tmp_multipage, tmp_multipage.TabIndex);
-      // _______________________________________ Needed for nested multipage ___
-      sistema_multipage(tmp_multipage);
+      tmp_tabctrl := form_control.Controls[i] as TTabControl;
+      attiva_figli_tabsheet(self, tmp_tabctrl, tmp_tabctrl.TabIndex);
+      // ___________________________ Needed for nested multipage and flowbox ___
+      arrange_tabctrl(tmp_tabctrl);
     end;
   end;
 end;
@@ -3830,8 +4003,9 @@ begin
       sepmenuSend.Visible := True;
       back.Visible        := True;
       front.Visible       := True;
-      // _________________________________________________________ Multipage ___
-      if Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2multipage' then
+      // _____________________________________________ Multipage and Flowbox ___
+      if (Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2multipage') or
+         (Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2flowbox') then
       begin
         sepmenuMultipage.Visible := True;
         Nextpage1.Visible        := True;

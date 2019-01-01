@@ -8,9 +8,9 @@ uses
   DsnUnit, DsnSubMl, DsnSubGr, DsnSubDp, o2edit, o2label, o2separator, o2image,
   o2agente, o2groupbox, o2textarea, o2checkbox, o2listbox, o2button, DBCtrls,
   o2dbnavigator, ComCtrls, ImgList, ActnList, XPStyleActnCtrls, ActnMan,
-  o2table, o2multipage, o2file, JvScrollPanel, JvCaptionPanel, JvComponent,
-  o2htmlarea, o2tree, o2document, o2Map, JvPanel, JvTransparentPanel, inifiles,
-  CommCtrl, o2imglist, o2progress;
+  o2table, o2multipage, o2flowbox, o2file, JvScrollPanel, JvCaptionPanel,
+  JvComponent, o2htmlarea, o2tree, o2document, o2Map, JvPanel,
+  JvTransparentPanel, inifiles, CommCtrl, o2imglist, o2progress, o2frame;
 
 type
   Tf_oggettiform = class(TForm)
@@ -66,6 +66,9 @@ type
     DsnButton17: TDsnButton;
     Dpst_To2progress: To2progress;
     Dpst_To2imglist: To2imglist;
+    DsnButton18: TDsnButton;
+    Dpst_To2flowbox: To2flowbox;
+    Dpst_To2frame: To2frame;
     procedure ComboBox1Change(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure aggiorna_lista_campiExecute(Sender: TObject);
@@ -330,6 +333,18 @@ begin
       ImgIdx   := 9;
       CtrlCont := Controllo as TWinControl;
     end
+    else if Controllo.ClassName = 'To2flowbox' then
+    begin
+      CtrlType := 'Flowbox';
+      ImgIdx   := 18;
+      CtrlCont := Controllo as TWinControl;
+    end
+    else if Controllo.ClassName = 'To2frame' then
+    begin
+      CtrlType := 'Frame';
+      ImgIdx   := 19;
+      CtrlCont := Controllo as TWinControl;
+    end
     else if Controllo.ClassName = 'To2htmlarea' then
     begin
       CtrlType := 'HTML-area';
@@ -435,6 +450,7 @@ var
   o2combo     : To2ListBox;
   o2check     : To2checkbox;
   o2multipage : To2multipage;
+  o2flowbox   : To2flowbox;
   o2table     : To2table;
   o2tree      : To2tree;
   o2nav       : To2dbnavigator;
