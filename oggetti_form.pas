@@ -345,6 +345,11 @@ begin
       ImgIdx   := 19;
       CtrlCont := Controllo as TWinControl;
     end
+    else if Controllo.ClassName = 'To2progress' then
+    begin
+      CtrlType := 'Progress bar';
+      ImgIdx   := 17;
+    end
     else if Controllo.ClassName = 'To2htmlarea' then
     begin
       CtrlType := 'HTML-area';
