@@ -715,6 +715,12 @@ object f_areaform: Tf_areaform
       ShortCut = 16470
       OnClick = Paste1Click
     end
+    object Selectchildren1: TMenuItem
+      Caption = 'Select children'
+      ShortCut = 16449
+      Visible = False
+      OnClick = Selectchildren1Click
+    end
     object sepmenuSend: TMenuItem
       Caption = '-'
       Visible = False

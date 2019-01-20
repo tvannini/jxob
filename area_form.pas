@@ -85,6 +85,7 @@ type
     o2imglist1: To2imglist;
     o2flowbox1: To2flowbox;
     o2frame1: To2frame;
+    Selectchildren1: TMenuItem;
 
     procedure FormShow(Sender: TObject);
     procedure DsnInspector1BtnClick(Sender: TObject; Targets: TSelectedComponents;
@@ -134,6 +135,7 @@ type
     function ExpandAsString(const Value: TCtrlExpand): String;
     function StringAsExpand(Value: string): TCtrlExpand;
     procedure PopupMenu1Popup(Sender: TObject);
+    procedure Selectchildren1Click(Sender: TObject);
 
   private
     tmp_edit: To2edit;
@@ -4010,17 +4012,25 @@ begin
         sepmenuMultipage.Visible := True;
         Nextpage1.Visible        := True;
         Previouspage1.Visible    := True;
+        Selectchildren1.Visible  := True;
       end
       else
       begin
         sepmenuMultipage.Visible := False;
         Nextpage1.Visible        := False;
         Previouspage1.Visible    := False;
+        Selectchildren1.Visible  := False;
+      end;
+      // _____________________________________________________________ Frame ___
+      if Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2frame' then
+      begin
+        Selectchildren1.Visible := True;
       end;
       // ______________________________________________________________ Grid ___
       if Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2table' then
       begin
-        sepmenuTab.Visible   := True;
+        Selectchildren1.Visible := True;
+        sepmenuTab.Visible      := True;
         if To2table(Dsn8Register1.DsnStage.Targets[0]).HorzScrollBar.IsScrollBarVisible then
         begin
           scrollLeft1.Visible  := True;
@@ -4038,16 +4048,17 @@ begin
       // __________________________________________ Items for multiselection ___
       if Dsn8Register1.DsnStage.TargetsCount > 1 then
       begin
-        sepmenuAlign.Visible := True;
-        Alignleft1.Visible   := True;
-        Rightalign1.Visible  := True;
-        Topalign1.Visible    := True;
-        Bottomalign1.Visible := True;
-        sepmenuSize.Visible  := True;
-        MaxWidth1.Visible    := True;
-        Minwidth1.Visible    := True;
-        Maxheight1.Visible   := True;
-        Minheight1.Visible   := True;
+        sepmenuAlign.Visible    := True;
+        Alignleft1.Visible      := True;
+        Rightalign1.Visible     := True;
+        Topalign1.Visible       := True;
+        Bottomalign1.Visible    := True;
+        sepmenuSize.Visible     := True;
+        MaxWidth1.Visible       := True;
+        Minwidth1.Visible       := True;
+        Maxheight1.Visible      := True;
+        Minheight1.Visible      := True;
+        Selectchildren1.Visible := False;
         // _________________________________________ Items for equal spacing ___
         {
         if Dsn8Register1.DsnStage.TargetsCount > 2 then
@@ -4105,6 +4116,7 @@ begin
       sepmenuSpace.Visible     := False;
       vertSpace1.Visible       := False;
       horiSpace1.Visible       := False;
+      Selectchildren1.Visible  := False;
     end
   end
   // ____________________________________ Design OFF - Return to design mode ___
@@ -4138,6 +4150,58 @@ begin
     DesignON1.Visible        := True;
     DesignOFF1.Visible       := False;
   end;
+end;
+
+procedure Tf_areaform.Selectchildren1Click(Sender: TObject);
+var
+  i: Integer;
+  ctrlObj: TControl;
+  ctrlCont: TWinControl;
+  Paged: Boolean;
+  List: TList;
+begin
+  ctrlCont := Dsn8Register1.DsnStage.Targets[0] as TWinControl;
+  List     := TList.Create;
+  if ctrlCont.ClassName = 'To2multipage' then
+  begin
+    for i := 0 to ctrlCont.ControlCount - 1 do
+    begin
+      // ____________________ Multipage: select controls on active page only ___
+      if GetPropValue(ctrlCont.Controls[i], 'Parentinfo', True) =
+         (ctrlCont as TTabControl).TabIndex then
+      begin
+        ctrlObj := ctrlCont.Controls[i];
+        List.Add(ctrlObj);
+      end;
+    end;
+    DsnSelect1.MultipleSelect(List);
+  end
+  else if ctrlCont.ClassName = 'To2flowbox' then
+  begin
+    for i := 0 to ctrlCont.ControlCount - 1 do
+    begin
+      // ______________________ Flowbox: select controls inside active frame ___
+      if GetPropValue(ctrlCont.Controls[i], 'Parentinfo', True) =
+         (ctrlCont as TTabControl).TabIndex then
+      begin
+        ctrlObj := ctrlCont.Controls[i];
+        Break;
+      end;
+    end;
+    Dsn8Register1.DsnInspector.ChangeTarget(ctrlObj);
+    Selectchildren1Click(Self);
+  end
+  else
+  begin
+    for i := 0 to ctrlCont.ControlCount - 1 do
+    begin
+      // ______________________ Grid and Frame: select all children controls ___
+      ctrlObj := ctrlCont.Controls[i];
+      List.Add(ctrlObj);
+    end;
+    DsnSelect1.MultipleSelect(List);
+  end
+
 end;
 
 end.
