@@ -136,6 +136,8 @@ type
     function StringAsExpand(Value: string): TCtrlExpand;
     procedure PopupMenu1Popup(Sender: TObject);
     procedure Selectchildren1Click(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
 
   private
     tmp_edit: To2edit;
@@ -4116,7 +4118,7 @@ begin
       sepmenuSpace.Visible     := False;
       vertSpace1.Visible       := False;
       horiSpace1.Visible       := False;
-      Selectchildren1.Visible  := False;
+      Selectchildren1.Visible  := True;
     end
   end
   // ____________________________________ Design OFF - Return to design mode ___
@@ -4160,48 +4162,73 @@ var
   Paged: Boolean;
   List: TList;
 begin
-  ctrlCont := Dsn8Register1.DsnStage.Targets[0] as TWinControl;
-  List     := TList.Create;
-  if ctrlCont.ClassName = 'To2multipage' then
+  if Dsn8Register1.DsnStage.TargetsCount > 0 then
   begin
-    for i := 0 to ctrlCont.ControlCount - 1 do
+    ctrlCont := Dsn8Register1.DsnStage.Targets[0] as TWinControl;
+    List     := TList.Create;
+    // ______________________ Multipage: select controls on active page only ___
+    if ctrlCont.ClassName = 'To2multipage' then
     begin
-      // ____________________ Multipage: select controls on active page only ___
-      if GetPropValue(ctrlCont.Controls[i], 'Parentinfo', True) =
-         (ctrlCont as TTabControl).TabIndex then
+      for i := 0 to ctrlCont.ControlCount - 1 do
+      begin
+        if GetPropValue(ctrlCont.Controls[i], 'Parentinfo', True) =
+           (ctrlCont as TTabControl).TabIndex then
+        begin
+          ctrlObj := ctrlCont.Controls[i];
+          List.Add(ctrlObj);
+        end;
+      end;
+      DsnSelect1.MultipleSelect(List);
+    end
+    // ________________________ Flowbox: select controls inside active frame ___
+    else if ctrlCont.ClassName = 'To2flowbox' then
+    begin
+      for i := 0 to ctrlCont.ControlCount - 1 do
+      begin
+        if GetPropValue(ctrlCont.Controls[i], 'Parentinfo', True) =
+           (ctrlCont as TTabControl).TabIndex then
+        begin
+          ctrlObj := ctrlCont.Controls[i];
+          Break;
+        end;
+      end;
+      Dsn8Register1.DsnInspector.ChangeTarget(ctrlObj);
+      Selectchildren1Click(Self);
+    end
+    // ________________________ Grid and Frame: select all children controls ___
+    else
+    begin
+      for i := 0 to ctrlCont.ControlCount - 1 do
       begin
         ctrlObj := ctrlCont.Controls[i];
         List.Add(ctrlObj);
       end;
+      DsnSelect1.MultipleSelect(List);
     end;
-    DsnSelect1.MultipleSelect(List);
   end
-  else if ctrlCont.ClassName = 'To2flowbox' then
-  begin
-    for i := 0 to ctrlCont.ControlCount - 1 do
-    begin
-      // ______________________ Flowbox: select controls inside active frame ___
-      if GetPropValue(ctrlCont.Controls[i], 'Parentinfo', True) =
-         (ctrlCont as TTabControl).TabIndex then
-      begin
-        ctrlObj := ctrlCont.Controls[i];
-        Break;
-      end;
-    end;
-    Dsn8Register1.DsnInspector.ChangeTarget(ctrlObj);
-    Selectchildren1Click(Self);
-  end
+  // ____________________________ Window: select all controls in active form ___
   else
   begin
+    ctrlCont := Dsn8Register1.DsnStage as TWinControl;
+    List     := TList.Create;
     for i := 0 to ctrlCont.ControlCount - 1 do
     begin
-      // ______________________ Grid and Frame: select all children controls ___
       ctrlObj := ctrlCont.Controls[i];
       List.Add(ctrlObj);
     end;
     DsnSelect1.MultipleSelect(List);
-  end
+  end;
 
+end;
+
+procedure Tf_areaform.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  // ___________________________________ CTRL + A to select control children ___ 
+  if (ssCtrl in Shift) and (Key = 65) then
+  begin
+    Selectchildren1Click(Self);
+  end;
 end;
 
 end.

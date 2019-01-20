@@ -11,11 +11,13 @@ object f_areaform: Tf_areaform
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   PopupMenu = PopupMenu1
   Position = poDesktopCenter
   ScreenSnap = True
   OnClose = FormClose
+  OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
