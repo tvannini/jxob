@@ -4227,7 +4227,15 @@ begin
   // ___________________________________ CTRL + A to select control children ___ 
   if (ssCtrl in Shift) and (Key = 65) then
   begin
-    Selectchildren1Click(Self);
+    // _____________________________________ If fired on a container or form ___
+    if ((Dsn8Register1.DsnStage.TargetsCount < 1) or
+        (Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2multipage') or
+        (Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2flowbox') or
+        (Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2table') or
+        (Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2frame')) then
+    begin
+      Selectchildren1Click(Self);
+    end;
   end;
 end;
 
