@@ -126,6 +126,7 @@ begin
     // ____________________________________________________ Add node to tree ___
     curItem := ResTree.Items.AddChild(RootNode, NodeText);
     // ______________________________________________________ Set item image ___
+    ImgIdx := -1;
     if NodeType = 'table'          then ImgIdx := 16
     else if NodeType = 'prg'       then ImgIdx := 14
     else if NodeType = 'view'      then ImgIdx := 0

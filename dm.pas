@@ -913,170 +913,151 @@ begin
   t_unionidcampo.Value := t_union.RecordCount + 1;
 end;
 
+
+{*
+ * Fired on view name changed: seek and fix references to view name.
+ *}
 procedure Tdm_form.t_tasknomeSetText(Sender: TField; const Text: string);
 var
   newName, str_old, str_new, str_old2, str_new2: string;
-
+  r: TRegExpr;
 begin
+  // _______________________________ Format new name with only allowed chars ___
   newName := formatName(Text);
-  //rintraccia dipendenze di nome task
-
-  //espressioni
-
+  // ________________________________________ Chack view name in expressions ___
   t_espressioni.First;
+  r := TRegExpr.Create;
   while not t_espressioni.EOF do
   begin
     t_espressioni.Edit;
-    str_old := 'o2val(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2val(' + chr(39) + newName + chr(39);
-
-    t_espressionireturn.Value :=
-      StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-    t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-      str_old, str_new, [rfReplaceAll]);
-
-    str_old := 'o2pre(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2pre(' + chr(39) + newName + chr(39);
-
-    t_espressionireturn.Value :=
-      StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-    t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-      str_old, str_new, [rfReplaceAll]);
-
-    str_old := 'o2zero(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2zero(' + chr(39) + newName + chr(39);
-
-    t_espressionireturn.Value :=
-      StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-    t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-      str_old, str_new, [rfReplaceAll]);
-
-    str_old := 'o2view(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view(' + chr(39) + newName + chr(39);
-
-    t_espressionireturn.Value :=
-      StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-    t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-      str_old, str_new, [rfReplaceAll]);
-
-    str_old := 'o2view_status(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view_status(' + chr(39) + newName + chr(39);
-
-    t_espressionireturn.Value :=
-      StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-    t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-      str_old, str_new, [rfReplaceAll]);
-
-    str_old := 'o2view_reqrows(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view_reqrows(' + chr(39) + newName + chr(39);
-
-    t_espressionireturn.Value :=
-      StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-    t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-      str_old, str_new, [rfReplaceAll]);
-
-    str_old := 'o2view_mod(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view_mod(' + chr(39) + newName + chr(39);
-
-    t_espressionireturn.Value :=
-      StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-    t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-      str_old, str_new, [rfReplaceAll]);
-
-    str_old := 'o2view_start(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view_start(' + chr(39) + newName + chr(39);
-
-    t_espressionireturn.Value :=
-      StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-    t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-      str_old, str_new, [rfReplaceAll]);
-
-    str_old := 'o2view_end(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view_end(' + chr(39) + newName + chr(39);
-
-    t_espressionireturn.Value :=
-      StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-    t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-      str_old, str_new, [rfReplaceAll]);
-
-
-    str_old := 'o2view_retrows(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view_retrows(' + chr(39) + newName + chr(39);
-
-    t_espressionireturn.Value :=
-      StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-    t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-      str_old, str_new, [rfReplaceAll]);
-
-
-    str_old := 'o2view_total(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view_total(' + chr(39) + newName + chr(39);
-
-    t_espressionireturn.Value :=
-      StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-    t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-      str_old, str_new, [rfReplaceAll]);
-
-    str_old := 'o2view_select(' + chr(39) + Sender.AsString + chr(39);
-    str_new := 'o2view_select(' + chr(39) + newName + chr(39);
-
-    t_espressionireturn.Value :=
-      StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-    t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-      str_old, str_new, [rfReplaceAll]);
+    // ________________________________________ Check and replace in o2val() ___
+    r.Expression              := 'o2val\s*\(["' + #39 + ']' + Sender.AsString +
+                                 '["' + #39 + ']\s*,';
+    str_new                   := 'o2val(' + #39 + newName + #39 + ',';
+    t_espressionireturn.Value := r.Replace(t_espressionireturn.Value, str_new);
+    t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value, str_new);
+    // ________________________________________ Check and replace in o2pre() ___
+    r.Expression              := 'o2pre\s*\(["' + #39 + ']' + Sender.AsString +
+                                 '["' + #39 + ']\s*,';
+    str_new                   := 'o2pre(' + #39 + newName + #39 + ',';
+    t_espressionireturn.Value := r.Replace(t_espressionireturn.Value, str_new);
+    t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value, str_new);
+    // _______________________________________ Check and replace in o2zero() ___
+    r.Expression              := 'o2zero\s*\(["' + #39 + ']' + Sender.AsString +
+                                 '["' + #39 + ']\s*,';
+    str_new                   := 'o2zero(' + #39 + newName + #39 + ',';
+    t_espressionireturn.Value := r.Replace(t_espressionireturn.Value, str_new);
+    t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value, str_new);
+    // _____________________________________ Check and replace in o2isnull() ___
+    r.Expression              := 'o2isnull\s*\(["' + #39 + ']' +
+                                 Sender.AsString + '["' + #39 + ']\s*,';
+    str_new                   := 'o2isnull(' + #39 + newName + #39 + ',';
+    t_espressionireturn.Value := r.Replace(t_espressionireturn.Value, str_new);
+    t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value, str_new);
+    // ____________________________________ Check and replace in o2nullify() ___
+    r.Expression              := 'o2nullify\s*\(["' + #39 + ']' +
+                                 Sender.AsString + '["' + #39 + ']\s*,';
+    str_new                   := 'o2nullify(' + #39 + newName + #39 + ',';
+    t_espressionireturn.Value := r.Replace(t_espressionireturn.Value, str_new);
+    t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value, str_new);
+    // _________________________________ Check and replace in o2record_log() ___
+    r.Expression              := 'o2record_log\s*\(["' + #39 + ']' +
+                                 Sender.AsString + '["' + #39 + ']\s*,';
+    str_new                   := 'o2record_log(' + #39 + newName + #39 + ',';
+    t_espressionireturn.Value := r.Replace(t_espressionireturn.Value, str_new);
+    t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value, str_new);
+    // ______________________________________ Check and replace in o2view*() ___
+    r.Expression              := 'o2view(\w+)\s*\(["' + #39 + ']' +
+                                  Sender.AsString + '["' + #39 + ']';
+    str_new                   := 'o2view$1(' + #39 + newName + #39;
+    t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
+                                           str_new,
+                                           True);
+    t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value,
+                                           str_new,
+                                           True);
+    // ___________________________________ Check and replace in o2viewtab*() ___
+    r.Expression              := 'o2viewtab(\w+)\s*\(["' + #39 + ']' +
+                                  Sender.AsString + '["' + #39 + ']';
+    str_new                   := 'o2view$1(' + #39 + newName + #39;
+    t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
+                                           str_new,
+                                           True);
+    t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value,
+                                           str_new,
+                                           True);
     t_espressioni.Next
   end;
-
-  //controlli form
-  str_old := chr(127) + Sender.AsString;
-  str_new := chr(127) + newName;
-  str_old2 := '"' + Sender.AsString +'"';
-  str_new2 := '"' + newName +'"';
-  t_controlliform.MasterSource:=nil;
+  // _________________________________________ Replace view name in controls ___
+  str_old                      := #127 + Sender.AsString;
+  str_new                      := #127 + newName;
+  str_old2                     := 'o2_view2list("' + Sender.AsString + '"';
+  str_new2                     := 'o2_view2list("' + newName + '"';
+  t_controlliform.MasterSource := nil;
   t_controlliform.First;
   while not t_controlliform.EOF do
   begin
     t_controlliform.Edit;
-    t_controlliformriferimento.Value :=
-      StringReplace(t_controlliformriferimento.Value, str_old, str_new, [rfReplaceAll]);
-    t_controlliformcaption.Value     :=
-      StringReplace(t_controlliformcaption.Value, str_old, str_new, [rfReplaceAll]);
-
-    t_controlliformscelte_possibili.Value     :=
-      StringReplace(t_controlliformscelte_possibili.Value, str_old2, str_new2, [rfReplaceAll]);
-
+    // ______________________________________ Replace reference to view only ___
+    if t_controlliformriferimento.Value = str_old then
+    begin
+      t_controlliformriferimento.Value := str_new;
+    end
+    else
+    begin
+      // _______________________________ Replace reference to view and field ___
+      t_controlliformriferimento.Value :=
+                                 StringReplace(t_controlliformriferimento.Value,
+                                               str_old + #129,
+                                               str_new + #129,
+                                               [rfReplaceAll]);
+    end;
+    // ___________________________ Replace in o2viewlist() in combo/list-box ___
+    t_controlliformscelte_possibili.Value := StringReplace(
+                                          t_controlliformscelte_possibili.Value,
+                                          str_old2,
+                                          str_new2,
+                                          [rfReplaceAll]);
     t_controlliform.Next
   end;
   t_controlliform.MasterSource:=ds_form;
-
-
-  //operazioni
-  str_old := chr(127) + Sender.AsString;
-  str_new := chr(127) + newName;
+  // __________________________________________ Replace view name in actions ___
+  str_old  := #127 + Sender.AsString + #129;
+  str_new  := #127 + newName + #129;
+  str_old2 := #127 + Sender.AsString + '::';
+  str_new2 := #127 + newName + '::';
   t_operazioni.MasterSource := nil;
   t_operazioni.First;
   while not t_operazioni.EOF do
   begin
     t_operazioni.Edit;
-    t_operazionio2ref.Value     := StringReplace(t_operazionio2ref.Value,
-      str_old, str_new, [rfReplaceAll]);
-    t_operazionicallparam.Value :=
-      StringReplace(t_operazionicallparam.Value, str_old, str_new, [rfReplaceAll]);
-
-
+    // ________________________________________ View name in field reference ___
+    t_operazionio2ref.Value := StringReplace(t_operazionio2ref.Value,
+                                             str_old,
+                                             str_new,
+                                             [rfReplaceAll]);
+    // _______________________ View name in view-actions (Insert, Post, ...) ___
+    t_operazionio2ref.Value := StringReplace(t_operazionio2ref.Value,
+                                             str_old2,
+                                             str_new2,
+                                             [rfReplaceAll]);
+    // ______________________ View name in field passed as parameter in call ___
+    t_operazionicallparam.Value := StringReplace(t_operazionicallparam.Value,
+                                                 str_old,
+                                                 str_new,
+                                                 [rfReplaceAll]);
     t_operazioni.Next
   end;
   t_operazioni.MasterSource := ds_azioni;
-
-
-   // aggiorna il treeview
-   if f_work.supertree.Selected.Parent <> nil then
-   f_work.supertree.Selected.Parent.Text := newName;
-
-  //SCRIVE LA MODIFICA
-
+  // __________________________________________________ Update main treeview ___
+  if f_work.supertree.Selected.Parent <> nil then
+  begin
+    f_work.supertree.Selected.Parent.Text := newName;
+  end;
+  // _____________________________________ Update source field with new name ___
   Sender.Value := newName;
 end;
+
 
 procedure Tdm_form.t_usa_fileBeforeDelete(DataSet: TDataSet);
 begin
@@ -2781,7 +2762,7 @@ begin
 end;
 
 
-{* *
+{*
  * Used to format logical names in repositories.
  * String is returned with spaces and not allowed chars replaced with "_".
  *}
