@@ -479,6 +479,8 @@ type
     t_controlliformExpand: TStringField;
     t_controlliformGridOptions: TStringField;
     t_controlliformPinCols: TSmallintField;
+    t_reportfieldshown_field: TStringField;
+    t_input_outputdecode_exp: TStringField;
     procedure t_tabelleBeforeInsert(DataSet: TDataSet);
     procedure t_tabelleSaveRecord(DataSet: TDataSet; var Accept: boolean);
     procedure t_indici_savNewRecord(DataSet: TDataSet);
@@ -643,6 +645,8 @@ type
       const Text: String);
     procedure t_parametrinomeSetText(Sender: TField; const Text: String);
     procedure t_formnomeformSetText(Sender: TField; const Text: String);
+    procedure t_reportfieldCalcFields(DataSet: TDataSet);
+    procedure t_input_outputCalcFields(DataSet: TDataSet);
 
 
   private
@@ -2817,6 +2821,54 @@ procedure Tdm_form.t_formnomeformSetText(Sender: TField;
   const Text: String);
 begin
   Sender.Value := formatName(Text);
+end;
+
+procedure Tdm_form.t_reportfieldCalcFields(DataSet: TDataSet);
+var
+  f_name, v_name: string;
+begin
+  if t_reportfieldcampo.Value <> '' then
+  begin
+    v_name := StringReplace(ExtractWord(1, t_reportfieldcampo.Value, [#129]),
+                            #127,
+                            '',
+                            [rfReplaceAll]);
+    f_name := ExtractWord(2, t_reportfieldcampo.Value, [#129]);
+    if v_name = 'prg§_§var' then
+    begin
+      v_name := '(LOCAL)';
+    end
+    else if v_name = '_o2SESSION' then
+    begin
+      v_name := '(SESSION)';
+    end;
+    // _____________________________________________ Set description in grid ___
+    t_reportfieldshown_field.Value := v_name + ' :: ' + f_name;
+  end
+  else
+  begin
+    t_reportfieldshown_field.Value := '';
+  end;
+end;
+
+procedure Tdm_form.t_input_outputCalcFields(DataSet: TDataSet);
+begin
+  if t_input_outputoutputfile.Value <> 0 then
+  begin
+    t_espressioni.Locate('idexp', t_input_outputoutputfile.Value, []);
+    if Length(t_espressionireturn.Value) <= 100 then
+    begin
+      t_input_outputdecode_exp.Value := t_espressionireturn.Value;
+    end
+    else
+    begin
+      t_input_outputdecode_exp.Value := Copy(t_espressionireturn.Value, 0, 70) + ' [...]';
+    end;
+  end
+  else
+  begin
+    t_input_outputdecode_exp.Value := '';
+  end;
 end;
 
 end.

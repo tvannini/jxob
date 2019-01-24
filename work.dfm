@@ -757,7 +757,7 @@ object f_work: Tf_work
         Top = 0
         Width = 862
         Height = 607
-        ActivePage = ts_taskprop
+        ActivePage = ts_azioni
         Align = alClient
         Style = tsButtons
         TabOrder = 1
@@ -774,15 +774,15 @@ object f_work: Tf_work
           object Label27: TLabel
             Left = 18
             Top = 60
-            Width = 200
-            Height = 20
+            Width = 147
+            Height = 13
             Caption = 'Prefix action (on row selection):'
           end
           object Label28: TLabel
             Left = 18
             Top = 90
-            Width = 200
-            Height = 20
+            Width = 181
+            Height = 13
             Caption = 'Suffix action (on leaving modified row):'
           end
           object Label63: TLabel
@@ -1371,122 +1371,6 @@ object f_work: Tf_work
         object ts_azioni: TTabSheet
           Caption = 'Actions'
           ImageIndex = 2
-          object PageControl3: TPageControl
-            Left = 0
-            Top = 33
-            Width = 854
-            Height = 543
-            ActivePage = ts_operazioninew
-            Align = alClient
-            TabOrder = 0
-            TabStop = False
-            object ts_operazioninew: TTabSheet
-              Caption = 'Operations'
-              ImageIndex = 1
-              OnEnter = ts_operazioninewEnter
-              object Panel_expression: TPanel
-                Left = 0
-                Top = 418
-                Width = 846
-                Height = 97
-                Align = alBottom
-                BevelOuter = bvNone
-                Ctl3D = False
-                ParentCtl3D = False
-                TabOrder = 0
-                object Label7: TLabel
-                  Left = 0
-                  Top = 4
-                  Width = 51
-                  Height = 13
-                  Caption = 'Expression'
-                end
-                object DB_espress: TDBMemo
-                  Left = 56
-                  Top = 8
-                  Width = 705
-                  Height = 81
-                  Ctl3D = False
-                  DataField = 'estesa'
-                  DataSource = dm_form.ds_espressioni
-                  ParentCtl3D = False
-                  ReadOnly = True
-                  ScrollBars = ssVertical
-                  TabOrder = 0
-                end
-              end
-              object dbgrid_operazioni: TVolgaDBGrid
-                Left = 0
-                Top = 0
-                Width = 846
-                Height = 418
-                Align = alClient
-                Ctl3D = False
-                DataSource = dm_form.ds_operazioni
-                HighlightColor = clSilver
-                ParentCtl3D = False
-                PopupMenu = pop_dbgridoperazioni
-                TabOrder = 1
-                TitleFont.Charset = DEFAULT_CHARSET
-                TitleFont.Color = clWindowText
-                TitleFont.Height = -11
-                TitleFont.Name = 'MS Sans Serif'
-                TitleFont.Style = []
-                OnCellClick = dbgrid_operazioniCellClick
-                OnColEnter = dbgrid_operazioniColEnter
-                OnColExit = dbgrid_operazioni_savColExit
-                OnDrawCellAttr = dbgrid_operazioniDrawCellAttr
-                OnDblClick = Zoom20Click
-                OnEnter = dbgrid_operazioniEnter
-                OnKeyPress = dbgrid_operazioniKeyPress
-                OnKeyUp = dbgrid_operazioni_savKeyUp
-                TitleHeight = 20
-                Columns = <
-                  item
-                    Color = clScrollBar
-                    FieldName = 'id'
-                    ReadOnly = True
-                    Title.Caption = '#'
-                    Visible = True
-                    Width = 30
-                  end
-                  item
-                    AutoDropDown = True
-                    ButtonStyle = cbsLookup
-                    DropDownRows = 14
-                    FieldName = 'operazione'
-                    LookupDropDownFields = 'operazione'
-                    LookupKeyField = 'operazione'
-                    LookupLinkField = 'operazione'
-                    LookupDataSet = dm_form.tab_ope
-                    Title.Alignment = taLeftJustify
-                    Title.Caption = 'Statement'
-                    Visible = True
-                    Width = 120
-                    WrapText = True
-                  end
-                  item
-                    FieldName = 'o2ref_wide'
-                    Title.Alignment = taLeftJustify
-                    Title.Caption = 'Object'
-                    Visible = True
-                    Width = 350
-                  end
-                  item
-                    FieldName = 'exp1'
-                    Title.Caption = 'Parameters'
-                    Visible = True
-                    Width = 70
-                  end
-                  item
-                    FieldName = 'exp2'
-                    Title.Caption = 'Condition'
-                    Visible = True
-                    Width = 70
-                  end>
-              end
-            end
-          end
           object Panel5: TPanel
             Left = 0
             Top = 0
@@ -1496,7 +1380,7 @@ object f_work: Tf_work
             BevelOuter = bvNone
             Ctl3D = True
             ParentCtl3D = False
-            TabOrder = 1
+            TabOrder = 0
             DesignSize = (
               854
               33)
@@ -1521,7 +1405,7 @@ object f_work: Tf_work
             end
             object bt_copyact: TButton
               Left = 764
-              Top = 5
+              Top = 1
               Width = 90
               Height = 25
               Anchors = [akTop, akRight]
@@ -1541,6 +1425,107 @@ object f_work: Tf_work
               TabOrder = 2
               Visible = False
               WordWrap = False
+            end
+          end
+          object dbgrid_operazioni: TVolgaDBGrid
+            Left = 0
+            Top = 33
+            Width = 854
+            Height = 446
+            Align = alClient
+            Ctl3D = False
+            DataSource = dm_form.ds_operazioni
+            HighlightColor = clSilver
+            ParentCtl3D = False
+            PopupMenu = pop_dbgridoperazioni
+            TabOrder = 1
+            TitleFont.Charset = DEFAULT_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -11
+            TitleFont.Name = 'MS Sans Serif'
+            TitleFont.Style = []
+            OnCellClick = dbgrid_operazioniCellClick
+            OnColEnter = dbgrid_operazioniColEnter
+            OnColExit = dbgrid_operazioni_savColExit
+            OnDrawCellAttr = dbgrid_operazioniDrawCellAttr
+            OnDblClick = Zoom20Click
+            OnEnter = dbgrid_operazioniEnter
+            OnKeyPress = dbgrid_operazioniKeyPress
+            OnKeyUp = dbgrid_operazioni_savKeyUp
+            TitleHeight = 20
+            Columns = <
+              item
+                Color = clScrollBar
+                FieldName = 'id'
+                ReadOnly = True
+                Title.Caption = '#'
+                Visible = True
+                Width = 30
+              end
+              item
+                AutoDropDown = True
+                ButtonStyle = cbsLookup
+                DropDownRows = 14
+                FieldName = 'operazione'
+                LookupDropDownFields = 'operazione'
+                LookupKeyField = 'operazione'
+                LookupLinkField = 'operazione'
+                LookupDataSet = dm_form.tab_ope
+                Title.Alignment = taLeftJustify
+                Title.Caption = 'Statement'
+                Visible = True
+                Width = 120
+                WrapText = True
+              end
+              item
+                FieldName = 'o2ref_wide'
+                Title.Alignment = taLeftJustify
+                Title.Caption = 'Object'
+                Visible = True
+                Width = 350
+              end
+              item
+                FieldName = 'exp1'
+                Title.Caption = 'Parameters'
+                Visible = True
+                Width = 70
+              end
+              item
+                FieldName = 'exp2'
+                Title.Caption = 'Condition'
+                Visible = True
+                Width = 70
+              end>
+          end
+          object Panel_expression: TPanel
+            Left = 0
+            Top = 479
+            Width = 854
+            Height = 97
+            Align = alBottom
+            BevelOuter = bvNone
+            Ctl3D = False
+            ParentCtl3D = False
+            TabOrder = 2
+            object Label7: TLabel
+              Left = 0
+              Top = 8
+              Width = 54
+              Height = 13
+              Caption = 'Expression:'
+            end
+            object DB_espress: TDBMemo
+              Left = 70
+              Top = 8
+              Width = 784
+              Height = 89
+              Ctl3D = False
+              DataField = 'estesa'
+              DataSource = dm_form.ds_espressioni
+              ParentCtl3D = False
+              ReadOnly = True
+              ScrollBars = ssVertical
+              TabOrder = 0
             end
           end
         end
@@ -2617,7 +2602,7 @@ object f_work: Tf_work
               end
               item
                 Expanded = False
-                FieldName = 'campo'
+                FieldName = 'shown_field'
                 Title.Caption = 'Field name'
                 Width = 303
                 Visible = True
@@ -2661,7 +2646,8 @@ object f_work: Tf_work
               item
                 Expanded = False
                 FieldName = 'nome'
-                Title.Caption = 'I/O Name'
+                Title.Caption = 'Resource'
+                Width = 200
                 Visible = True
               end
               item
@@ -2672,8 +2658,8 @@ object f_work: Tf_work
                   'Spool')
                 ReadOnly = True
                 Title.Caption = 'Media'
-                Width = 64
-                Visible = True
+                Width = -1
+                Visible = False
               end
               item
                 Expanded = False
@@ -2683,13 +2669,23 @@ object f_work: Tf_work
                   'Output')
                 ReadOnly = True
                 Title.Caption = 'Access'
-                Width = 64
-                Visible = True
+                Width = -1
+                Visible = False
               end
               item
                 Expanded = False
                 FieldName = 'outputfile'
-                Title.Caption = 'Exp/Var'
+                Title.Caption = 'Target file'
+                Width = 100
+                Visible = True
+              end
+              item
+                Color = clBtnFace
+                Expanded = False
+                FieldName = 'decode_exp'
+                ReadOnly = True
+                Title.Caption = ' '
+                Width = 400
                 Visible = True
               end>
           end

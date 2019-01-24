@@ -79,7 +79,6 @@ type
     zoom_db: TMenuItem;
     pop_defkey: TPopupMenu;
     zoom_defkey: TMenuItem;
-    DB_espress: TDBMemo;
     pop_azioni: TPopupMenu;
     Zoom5: TMenuItem;
     Label40: TLabel;
@@ -239,8 +238,6 @@ type
     cerca_sottoversioni: TJvSearchFiles;
     pop_gridform: TPopupMenu;
     Zoom16: TMenuItem;
-    PageControl3: TPageControl;
-    ts_operazioninew: TTabSheet;
     Label29: TLabel;
     db_css_doc: TDBEdit;
     Label30: TLabel;
@@ -291,7 +288,6 @@ type
     new_viewmodel: TAction;
     pop_dbgridoperazioni: TPopupMenu;
     Zoom20: TMenuItem;
-    Label7: TLabel;
     operazioni_open: TAction;
     Splitter5: TSplitter;
     Label18: TLabel;
@@ -348,8 +344,6 @@ type
     Label71: TLabel;
     start_webserver: TAction;
     stop_webserver: TAction;
-    Panel_expression: TPanel;
-    dbgrid_operazioni: TVolgaDBGrid;
     Label74: TLabel;
     Preferences1: TMenuItem;
     DBGrid_dbfile: TVolgaDBGrid;
@@ -483,6 +477,10 @@ type
     list_recent: TListView;
     LogPanel: TPanel;
     LoadingLog: TLabel;
+    dbgrid_operazioni: TVolgaDBGrid;
+    Panel_expression: TPanel;
+    Label7: TLabel;
+    DB_espress: TDBMemo;
     procedure dbgrid_tabelle_savEnter(Sender: TObject);
     procedure DBGrid_campiEnter(Sender: TObject);
     procedure dbgrid_indiciEnter(Sender: TObject);
@@ -2802,7 +2800,7 @@ end;
 
 procedure Tf_work.dbgrid_reportfieldsEnter(Sender: TObject);
 begin
-  dbnav.DataSource := dm_form.ds_reportfield
+  dbnav.DataSource := dm_form.ds_reportfield;
 end;
 
 procedure Tf_work.dbgrid_reportsEnter(Sender: TObject);
@@ -2836,7 +2834,7 @@ begin
   end;
 
   //campo
-  if dbgrid_reportfields.SelectedField.DisplayName = 'campo' then
+  if dbgrid_reportfields.SelectedField.DisplayName = 'shown_field' then
   begin
 
     if (call_scelta_campoprg(dm_form.t_reportfieldcampo.Value, false, false, True, true)) <> '' then

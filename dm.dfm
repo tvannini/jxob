@@ -3364,7 +3364,7 @@ object dm_form: Tdm_form
       item
         Name = 'prg'
         DataType = ftString
-        Size = 100
+        Size = 50
       end
       item
         Name = 'nomereport'
@@ -3403,6 +3403,7 @@ object dm_form: Tdm_form
     AfterInsert = t_reportfieldAfterInsert
     AfterEdit = t_reportfieldAfterEdit
     AfterDelete = t_reportfieldAfterDelete
+    OnCalcFields = t_reportfieldCalcFields
     OnNewRecord = t_reportfieldNewRecord
     Left = 792
     Top = 656
@@ -3430,6 +3431,12 @@ object dm_form: Tdm_form
       FieldName = 'alias'
       Size = 50
     end
+    object t_reportfieldshown_field: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'shown_field'
+      Size = 100
+      Calculated = True
+    end
   end
   object ds_reportfield: TDataSource
     DataSet = t_reportfield
@@ -3443,7 +3450,7 @@ object dm_form: Tdm_form
       item
         Name = 'prg'
         DataType = ftString
-        Size = 100
+        Size = 50
       end
       item
         Name = 'nome'
@@ -3477,6 +3484,7 @@ object dm_form: Tdm_form
     AfterInsert = t_input_outputAfterInsert
     AfterEdit = t_input_outputAfterEdit
     AfterDelete = t_input_outputAfterDelete
+    OnCalcFields = t_input_outputCalcFields
     Left = 872
     Top = 656
     object t_input_outputprg: TStringField
@@ -3497,6 +3505,12 @@ object dm_form: Tdm_form
     end
     object t_input_outputoutputfile: TIntegerField
       FieldName = 'outputfile'
+    end
+    object t_input_outputdecode_exp: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'decode_exp'
+      Size = 100
+      Calculated = True
     end
   end
   object ds_input_output: TDataSource
