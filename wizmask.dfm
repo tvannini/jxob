@@ -29,13 +29,14 @@ object f_wizmask: Tf_wizmask
     Font.Style = []
     Lines.Strings = (
       '==========================================================='
-      ' Alpha         (C|A|N|U|L)n)*'
+      ' Alpha         (C|A|N|U|L)n)*[R]'
       '==========================================================='
       '   C = Any character'
       '   A = Any not numerical character'
       '   N = Any numerical character (0..9)'
       '   U = Any character converted to uppercase'
       '   L = Any character converted to lowercase'
+      '   R = Right align'
       '-----------------------------------------------------------'
       '   Examples'
       '-----------------------------------------------------------'
@@ -66,7 +67,7 @@ object f_wizmask: Tf_wizmask
     Font.Style = []
     Lines.Strings = (
       '==========================================================='
-      ' Number        [p]i[.|,][d][N][T][Z]'
+      ' Number        [p]i[.|,][d][N][T][Z][L]'
       '==========================================================='
       '   p = Any character used as a prefix'
       '   i = Number of integer digits'
@@ -75,6 +76,7 @@ object f_wizmask: Tf_wizmask
       '   N = If present mask accepts negative numbers'
       '   T = If present mask shows thousands separator'
       '   Z = If present mask shows blank for zero value'
+      '   L = Left align'
       '   '
       '   NOTE: Characters to use as decimals and thousands'
       '         separator settable in o2.ini'
@@ -114,7 +116,7 @@ object f_wizmask: Tf_wizmask
     Font.Style = []
     Lines.Strings = (
       '==========================================================='
-      ' Date          s[D][M][Y][2][Z]'
+      ' Date          s[D][M][Y][2][Z][R]'
       '==========================================================='
       '   s = Any character used as separator'
       '   D = Placeholder for days'
@@ -122,6 +124,7 @@ object f_wizmask: Tf_wizmask
       '   Y = Placeholder for years'
       '   2 = If present years are displayed in 2-digits format'
       '   Z = If present mask shows blank for zero value'
+      '   R = Right align'
       '-----------------------------------------------------------'
       '   Examples'
       '-----------------------------------------------------------'#9
@@ -152,13 +155,14 @@ object f_wizmask: Tf_wizmask
     Font.Style = []
     Lines.Strings = (
       '==========================================================='
-      ' Time          s[H][M][S][Z]'
+      ' Time          s[H][M][S][Z][R]'
       '==========================================================='
       '   s = Any character used as separator'
       '   H = Placeholder for hours'
       '   M = Placeholder for minutes'
       '   S = Placeholder for seconds'
       '   Z = If present mask shows blank for zero value'
+      '   R = Right align'
       '-----------------------------------------------------------'
       '   Examples'
       '-----------------------------------------------------------'#9
@@ -187,8 +191,14 @@ object f_wizmask: Tf_wizmask
     Font.Name = 'Courier New'
     Font.Style = []
     Lines.Strings = (
-      'Logical'
-      '   [No mask options]')
+      '==========================================================='
+      ' Logical          [FALSE-value|TRUE-value][L]'
+      '==========================================================='
+      '   FALSE-value = Label shown for FALSE value'
+      '   TRUE-value  = Label shown for TRUE value'
+      '   L           = Left align'
+      '-----------------------------------------------------------'
+      '')
     ParentFont = False
     ReadOnly = True
     TabOrder = 4

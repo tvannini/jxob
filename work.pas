@@ -2440,40 +2440,34 @@ end;
 
 procedure Tf_work.Zoom9Click(Sender: TObject);
 begin
-
+  // __________________________________________ Modify only when checked-out ___
   if (mycheck('mod_repository.inc')) then
   begin
-
-  if dbgrid_modelsDBTableView1tipo_dato.Focused then
-  begin
-    f_selecttype.ShowModal;
-    if f_selecttype.ModalResult = mrOk then
+    // _________________________________________________ Zoom from data type ___
+    if dbgrid_modelsDBTableView1tipo_dato.Focused then
     begin
-      dm_form.t_modelli.Edit;
-      dm_form.t_modellitipo_dato.Value := f_selecttype.scelta;
+      f_selecttype.ShowModal;
+      if f_selecttype.ModalResult = mrOk then
+      begin
+        dm_form.t_modelli.Edit;
+        dm_form.t_modellitipo_dato.Value := f_selecttype.scelta;
+      end;
     end;
-
-  end;
-
-
-  if dbgrid_modelsDBTableView1prgselect.Focused then
-  begin
-    f_sceltaprogramma.ShowModal;
-    if f_sceltaprogramma.ModalResult = mrOk then
+    // ______________________________________________ Zoom from zoom program ___
+    if dbgrid_modelsDBTableView1prgselect.Focused then
     begin
-      dm_form.t_modelli.Edit;
-      dm_form.t_modellinomeprgscelta.Value := f_sceltaprogramma.scelta;
+      f_sceltaprogramma.ShowModal;
+      if f_sceltaprogramma.ModalResult = mrOk then
+      begin
+        dm_form.t_modelli.Edit;
+        dm_form.t_modellinomeprgscelta.Value := f_sceltaprogramma.scelta;
+      end;
     end;
-
-  end;
-
-
-
-  if dbgrid_modelsDBTableView1maschera.Focused then
-  begin
-    call_mask_def(dm_form.t_modellitipo_dato.Value);
-  end;
-
+    // ___________________________________________________ Zoom from picture ___
+    if dbgrid_modelsDBTableView1maschera.Focused then
+    begin
+      call_mask_def(dm_form.t_modellitipo_dato.Value);
+    end;
   end;
 end;
 
@@ -6853,13 +6847,12 @@ end;
 
 procedure Tf_work.call_mask_def(tipodato: string);
 begin
-   f_wizmask.alpha.Visible:=tipodato = 'Alpha';
-   f_wizmask.number.Visible:=tipodato = 'Number';
-   f_wizmask.date.Visible:=tipodato = 'Date';
-   f_wizmask.time.Visible:=tipodato = 'Time';
-   f_wizmask.structured.Visible:=tipodato = 'Structured';
-   f_wizmask.logical.Visible:=tipodato = 'Logical';
-
+   f_wizmask.alpha.Visible      := (tipodato = 'Alpha');
+   f_wizmask.number.Visible     := (tipodato = 'Number');
+   f_wizmask.date.Visible       := (tipodato = 'Date');
+   f_wizmask.time.Visible       := (tipodato = 'Time');
+   f_wizmask.structured.Visible := (tipodato = 'Structured');
+   f_wizmask.logical.Visible    := (tipodato = 'Logical');
    f_wizmask.ShowModal;
 end;
 

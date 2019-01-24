@@ -83,7 +83,7 @@ object f_work: Tf_work
     Top = 32
     Width = 870
     Height = 662
-    ActivePage = ts_programmi
+    ActivePage = ts_models
     Align = alClient
     MultiLine = True
     PopupMenu = pop_pagecontrol1
@@ -2658,7 +2658,6 @@ object f_work: Tf_work
                   'Spool')
                 ReadOnly = True
                 Title.Caption = 'Media'
-                Width = -1
                 Visible = False
               end
               item
@@ -2669,7 +2668,6 @@ object f_work: Tf_work
                   'Output')
                 ReadOnly = True
                 Title.Caption = 'Access'
-                Width = -1
                 Visible = False
               end
               item
