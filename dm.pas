@@ -1051,6 +1051,21 @@ begin
     t_operazioni.Next;
   end;
   t_operazioni.MasterSource := ds_azioni;
+  // ________________________________________ Replace view name in protocols ___
+  str_old                    := #127 + Sender.AsString + #129;
+  str_new                    := #127 + newName + #129;
+  t_reportfield.MasterSource := nil;
+  t_reportfield.First;
+  while not t_reportfield.EOF do
+  begin
+    t_reportfield.Edit;
+    t_reportfieldcampo.Value := StringReplace(t_reportfieldcampo.Value,
+                                              str_old,
+                                              str_new,
+                                              [rfReplaceAll]);
+    t_reportfield.Next
+  end;
+  t_reportfield.MasterSource := ds_report;
   // __________________________________________________ Update main treeview ___
   if f_work.supertree.Selected.Parent <> nil then
   begin
