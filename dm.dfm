@@ -3750,7 +3750,6 @@ object dm_form: Tdm_form
     AfterInsert = t_aggregAfterInsert
     AfterEdit = t_aggregAfterEdit
     AfterDelete = t_aggregAfterDelete
-    OnCalcFields = t_aggregCalcFields
     Left = 952
     Top = 144
     object t_aggregprg: TStringField
@@ -3775,12 +3774,6 @@ object dm_form: Tdm_form
     object t_aggregresult_var: TStringField
       FieldName = 'result_var'
       Size = 80
-    end
-    object t_aggregresult_alias: TStringField
-      FieldKind = fkCalculated
-      FieldName = 'result_alias'
-      Size = 50
-      Calculated = True
     end
   end
   object ds_aggreg: TDataSource

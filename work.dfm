@@ -765,35 +765,35 @@ object f_work: Tf_work
           Caption = 'View Property'
           ImageIndex = 4
           object Label4: TLabel
-            Left = 10
+            Left = 18
             Top = 30
             Width = 55
             Height = 13
             Caption = 'View name:'
           end
           object Label27: TLabel
-            Left = 10
+            Left = 18
             Top = 60
-            Width = 113
-            Height = 13
-            Caption = 'Action on row selection:'
+            Width = 200
+            Height = 20
+            Caption = 'Prefix action (on row selection):'
           end
           object Label28: TLabel
-            Left = 10
+            Left = 18
             Top = 90
-            Width = 147
-            Height = 13
-            Caption = 'Action on leaving modified row:'
+            Width = 200
+            Height = 20
+            Caption = 'Suffix action (on leaving modified row):'
           end
           object Label63: TLabel
-            Left = 10
+            Left = 18
             Top = 232
             Width = 106
             Height = 13
             Caption = 'Aggregation functions:'
           end
           object DBEdit1: TDBEdit
-            Left = 176
+            Left = 224
             Top = 30
             Width = 200
             Height = 19
@@ -804,8 +804,8 @@ object f_work: Tf_work
             TabOrder = 0
           end
           object BitBtn6: TBitBtn
-            Left = 472
-            Top = 104
+            Left = 449
+            Top = 30
             Width = 90
             Height = 25
             Caption = 'Copy view'
@@ -813,7 +813,7 @@ object f_work: Tf_work
             OnClick = view_copiaExecute
           end
           object dbe_recprefix: TDBEdit
-            Left = 176
+            Left = 224
             Top = 60
             Width = 200
             Height = 19
@@ -826,7 +826,7 @@ object f_work: Tf_work
             TabOrder = 1
           end
           object dbe_recsufix: TDBEdit
-            Left = 176
+            Left = 224
             Top = 88
             Width = 200
             Height = 19
@@ -839,15 +839,15 @@ object f_work: Tf_work
             TabOrder = 2
           end
           object dbgrid_aggreg: TDBGrid
-            Left = 10
+            Left = 18
             Top = 256
-            Width = 601
+            Width = 407
             Height = 144
             Ctl3D = False
             DataSource = dm_form.ds_aggreg
             ParentCtl3D = False
             PopupMenu = pop_aggreg
-            TabOrder = 4
+            TabOrder = 5
             TitleFont.Charset = DEFAULT_CHARSET
             TitleFont.Color = clWindowText
             TitleFont.Height = -11
@@ -864,49 +864,50 @@ object f_work: Tf_work
                   'MIN'
                   'MAX')
                 Title.Caption = 'Function'
-                Width = 73
+                Width = 70
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'campo_view'
                 Title.Caption = 'On field'
-                Width = 126
+                Width = 150
                 Visible = True
               end
               item
                 Expanded = False
-                FieldName = 'result_alias'
+                FieldName = 'result_var'
                 Title.Caption = 'Return into variable'
+                Width = 150
                 Visible = True
               end>
           end
           object GroupBox1: TGroupBox
-            Left = 10
+            Left = 18
             Top = 134
-            Width = 369
+            Width = 407
             Height = 67
-            Caption = 'Requested row number'
+            Caption = ' Page rows '
             Ctl3D = False
             ParentCtl3D = False
             TabOrder = 3
             TabStop = True
             object Label75: TLabel
-              Left = 180
+              Left = 204
               Top = 30
               Width = 68
               Height = 13
               Caption = 'By expression:'
             end
             object Label45: TLabel
-              Left = 8
+              Left = 48
               Top = 30
               Width = 28
               Height = 13
               Caption = 'Fixed:'
             end
             object DBEdit9: TDBEdit
-              Left = 56
+              Left = 96
               Top = 30
               Width = 57
               Height = 19
@@ -917,7 +918,7 @@ object f_work: Tf_work
               TabOrder = 0
             end
             object dbe_righevisexp: TDBEdit
-              Left = 264
+              Left = 288
               Top = 30
               Width = 57
               Height = 19
@@ -930,16 +931,16 @@ object f_work: Tf_work
             end
           end
           object DBCheckBox5: TDBCheckBox
-            Left = 10
-            Top = 408
-            Width = 353
+            Left = 234
+            Top = 232
+            Width = 191
             Height = 17
             Caption = 'Evaluate aggregations automatically'
             Ctl3D = False
             DataField = 'autoaggregate'
             DataSource = dm_form.ds_task
             ParentCtl3D = False
-            TabOrder = 5
+            TabOrder = 4
             ValueChecked = 'True'
             ValueUnchecked = 'False'
           end

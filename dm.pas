@@ -321,7 +321,6 @@ type
     t_aggregcampo_view: TStringField;
     t_aggregresult_var: TStringField;
     t_aggregresult_view: TStringField;
-    t_aggregresult_alias: TStringField;
     t_operazioniservice: TStringField;
     t_labels: TClientDataSet;
     ds_labels: TDataSource;
@@ -524,7 +523,6 @@ type
     procedure t_tabelleNomeChange(Sender: TField);
     procedure t_formnomeformChange(Sender: TField);
     procedure t_selectBeforePost(DataSet: TDataSet);
-    procedure t_aggregCalcFields(DataSet: TDataSet);
     procedure t_labelsBeforeInsert(DataSet: TDataSet);
     procedure t_labelsNewRecord(DataSet: TDataSet);
     procedure t_menuAfterEdit(DataSet: TDataSet);
@@ -986,7 +984,7 @@ begin
     t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value,
                                            str_new,
                                            True);
-    t_espressioni.Next
+    t_espressioni.Next;
   end;
   // _________________________________________ Replace view name in controls ___
   str_old                      := #127 + Sender.AsString;
@@ -1018,9 +1016,9 @@ begin
                                           str_old2,
                                           str_new2,
                                           [rfReplaceAll]);
-    t_controlliform.Next
+    t_controlliform.Next;
   end;
-  t_controlliform.MasterSource:=ds_form;
+  t_controlliform.MasterSource := ds_form;
   // __________________________________________ Replace view name in actions ___
   str_old  := #127 + Sender.AsString + #129;
   str_new  := #127 + newName + #129;
@@ -1046,7 +1044,7 @@ begin
                                                  str_old,
                                                  str_new,
                                                  [rfReplaceAll]);
-    t_operazioni.Next
+    t_operazioni.Next;
   end;
   t_operazioni.MasterSource := ds_azioni;
   // __________________________________________________ Update main treeview ___
@@ -1331,122 +1329,109 @@ begin
 end;
 
 
-
-procedure Tdm_form.t_variabili_prgaliasSetText(Sender: TField; const Text: string);
+{*
+ * Fired on variable name changed: seek and fix references to variable.
+ *}
+procedure Tdm_form.t_variabili_prgaliasSetText(Sender: TField;
+                                               const Text: string);
 var
   newName, str_old, str_new: string;
+  r: TRegExpr;
 begin
+  // _______________________________ Format new name with only allowed chars ___
   newName := formatName(Text);
-  //espressioni
-  //se c'e' variazione di valore preesistente
   if Sender.AsString <> '' then
   begin
-
-
+    // __________________________________ Chack variable name in expressions ___
     t_espressioni.First;
+    r := TRegExpr.Create;
     while not t_espressioni.EOF do
     begin
       t_espressioni.Edit;
-      str_old := 'o2val(' + chr(39) + 'prg§_§var' + chr(39) + ',' + chr(39) + Sender.AsString + chr(39);
-      str_new := 'o2val(' + chr(39) + 'prg§_§var' + chr(39) + ',' + chr(39) + newName + chr(39);
-
-      t_espressionireturn.Value :=
-        StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-      t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-        str_old, str_new, [rfReplaceAll]);
-
-      str_old := 'o2pre(' + chr(39) + 'prg§_§var' + chr(39) + ',' + chr(39) + Sender.AsString + chr(39);
-      str_new := 'o2pre(' + chr(39) + 'prg§_§var' + chr(39) + ',' + chr(39) + newName + chr(39);
-
-      t_espressionireturn.Value :=
-        StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-      t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-        str_old, str_new, [rfReplaceAll]);
-
-      str_old := 'o2zero(' + chr(39) + 'prg§_§var' + chr(39) + ',' + chr(39) + Sender.AsString + chr(39);
-      str_new := 'o2zero(' + chr(39) + 'prg§_§var' + chr(39) + ',' + chr(39) + newName + chr(39);
-
-      t_espressionireturn.Value :=
-        StringReplace(t_espressionireturn.Value, str_old, str_new, [rfReplaceAll]);
-      t_espressioniexpr.Value   := StringReplace(t_espressioniexpr.Value,
-        str_old, str_new, [rfReplaceAll]);
-
+      // _________________________ Check and replace in o2val() and o2zero() ___
+      r.Expression              := 'o2(\w+)\s*\(\s*["' + #39 + ']' +
+                                   'prg§_§var["' + #39 + ']\s*,\s*["' + #39 +
+                                   ']' + Sender.AsString +
+                                   '["' + #39 + ']\s*\)';
+      str_new                   := 'o2$1(' + #39 + 'prg§_§var' + #39 + ',' +
+                                             #39 + newName + #39 + ')';
+      t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
+                                             str_new,
+                                             True);
+      t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value,
+                                             str_new,
+                                             True);
       t_espressioni.Next
     end;
-
-
-    //sistema istruzioni
-    //operazioni
-    str_old := 'prg§_§var' + chr(129) + Sender.AsString;
-    str_new := 'prg§_§var' + chr(129) + newName;
+    // ____________________________________ Replace variable name in actions ___
+    str_old                   := #127 + 'prg§_§var' + #129 + Sender.AsString;
+    str_new                   := #127 + 'prg§_§var' + #129 + newName;
     t_operazioni.MasterSource := nil;
     t_operazioni.First;
     while not t_operazioni.EOF do
     begin
       t_operazioni.Edit;
-      t_operazionio2ref.Value     := StringReplace(t_operazionio2ref.Value,
-        str_old, str_new, [rfReplaceAll]);
-      t_operazionicallparam.Value :=
-        StringReplace(t_operazionicallparam.Value, str_old, str_new, [rfReplaceAll]);
+      // __________________________________ Variable name in field reference ___
+      if t_operazionio2ref.Value = str_old then
+      begin
+        t_operazionio2ref.Value := str_new;
+      end;
+      // ________________ Variable name in field passed as parameter in call ___
 
-      t_operazioni.Next
+      r.Expression                := #127 + 'prg§_§var' +
+                                     #129 + Sender.AsString + '(\W|$)';
+      str_new                     := #127 + 'prg§_§var' + #129 + newName + '$1';
+      t_operazionicallparam.Value := r.Replace(t_operazionicallparam.Value,
+                                               str_new,
+                                               True);
+      t_operazioni.Next;
     end;
     t_operazioni.MasterSource := ds_azioni;
-
-    //controlli form
-    t_controlliform.MasterSource:=nil;
+    // ___________________________________ Replace variable name in controls ___
+    str_old                      := #127 + 'prg§_§var' + #129 + Sender.AsString;
+    str_new                      := #127 + 'prg§_§var' + #129 + newName;
+    t_controlliform.MasterSource := nil;
     t_controlliform.First;
-    str_old := chr(127) + 'prg§_§var' + chr(129) + Sender.AsString;
-    str_new := chr(127) + 'prg§_§var' + chr(129) + newName;
-
     while not t_controlliform.EOF do
     begin
       t_controlliform.Edit;
-       if t_controlliformriferimento.Value = str_old then
-       begin
-
-        t_controlliformriferimento.Value :=
-        StringReplace(t_controlliformriferimento.Value, str_old, str_new, [rfReplaceAll]);
-       end;
-      if t_controlliformcaption.Value = str_old then
-        t_controlliformcaption.Value     :=
-        StringReplace(t_controlliformcaption.Value, str_old, str_new, [rfReplaceAll]);
-
-
-      t_controlliform.Next
+      // ___________________________ Replace reference to variable in fields ___
+      if t_controlliformriferimento.Value = str_old then
+      begin
+        t_controlliformriferimento.Value := str_new;
+      end;
+      t_controlliform.Next;
     end;
-    t_controlliform.MasterSource:=ds_form;
-
-      //funzioni aggregazione
-    str_old := Sender.AsString;
-    str_new := newName;
+    t_controlliform.MasterSource := ds_form;
+    // __________________________ Replace variable name in view aggregations ___
     t_aggreg.First;
     while not t_aggreg.EOF do
     begin
       t_aggreg.Edit;
-      t_aggregresult_var.Value := StringReplace(t_aggregresult_var.Value,
-        str_old, str_new, [rfReplaceAll]);
-
-      t_aggreg.Next
+      if t_aggregresult_var.Value = Sender.AsString then
+      begin
+        t_aggregresult_var.Value := newName;
+      end;
+      t_aggreg.Next;
     end;
-
-      //protocols
-    str_old := 'prg§_§var' + chr(129) + Sender.AsString;
-    str_new := 'prg§_§var' + chr(129) + newName;
-    t_reportfield.MasterSource:=nil;
+    // __________________________________ Replace variable name in protocols ___
+    str_old                    := #127 + 'prg§_§var' + #129 + Sender.AsString;
+    str_new                    := #127 + 'prg§_§var' + #129 + newName;
+    t_reportfield.MasterSource := nil;
     t_reportfield.First;
     while not t_reportfield.EOF do
     begin
       t_reportfield.Edit;
-      t_reportfieldcampo.Value := StringReplace(t_reportfieldcampo.Value,
-        str_old, str_new, [rfReplaceAll]);
-
+      if t_reportfieldcampo.Value = str_old then
+      begin
+        t_reportfieldcampo.Value := str_new;
+      end;
       t_reportfield.Next
     end;
-    t_reportfield.MasterSource:=ds_report;
-  end; //fine condizione di valore preesistente
+    t_reportfield.MasterSource := ds_report;
+  end; // ________________________ End of previous value existance condition ___
+  // ____________________________________________ Update variable name field ___
   Sender.Value := newName;
-
 end;
 
 
@@ -1766,16 +1751,6 @@ begin
   else
   begin
     stato_recordset_select := ''
-  end;
-end;
-
-
-procedure Tdm_form.t_aggregCalcFields(DataSet: TDataSet);
-begin
-  if t_aggregresult_var.Value <> '' then
-  begin
-    t_aggregresult_alias.Value := '[' + t_aggregresult_var.Value +
-      '] on view [' + t_aggregresult_view.Value + ']'
   end;
 end;
 

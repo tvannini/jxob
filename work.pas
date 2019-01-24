@@ -5186,36 +5186,45 @@ begin
 
 end;
 
-
+{*
+ * Zoom action on view aggregations.
+ * Selects aggregated field from view and aggregation target variable
+ *}
 procedure Tf_work.Zoom21Click(Sender: TObject);
 begin
-  // SE CAMPO VIEW
+  // ____________________________________________ Aggregated field from view ___
   if dbgrid_aggreg.SelectedField.FieldName = 'campo_view' then
   begin
-
-    if (call_scelta_campoprg(dm_form.t_aggregcampo_view.Value, false, false, false, true, dm_form.t_tasknome.Value)) <> '' then
+    if (call_scelta_campoprg(dm_form.t_aggregcampo_view.Value,
+                             false,
+                             false,
+                             false,
+                             true,
+                             dm_form.t_tasknome.Value)) <> '' then
     begin
       dm_form.t_aggreg.Edit;
-      dm_form.t_aggregcampo_view.Value := f_sceltacampiprg.ListView1.Selected.Caption;
+      dm_form.t_aggregcampo_view.Value :=
+                                    f_sceltacampiprg.ListView1.Selected.Caption;
     end;
-
   end;
-
-  // se campo di return
+  // ___________________________________________ Aggregation target variable ___
   if dbgrid_aggreg.SelectedField.FieldName = 'result_alias' then
   begin
-    if (call_scelta_campoprg(dm_form.t_aggregcampo_view.Value, false, false, true, false)) <> '' then
+    if (call_scelta_campoprg(dm_form.t_aggregcampo_view.Value,
+                             false,
+                             false,
+                             true,
+                             false)) <> '' then
     begin
       dm_form.t_aggreg.Edit;
       dm_form.t_aggregresult_view.Value :=
-        f_sceltacampiprg.ListView1.Selected.SubItems[1];
-      dm_form.t_aggregresult_var.Value  := f_sceltacampiprg.ListView1.Selected.Caption;
-
+                                f_sceltacampiprg.ListView1.Selected.SubItems[1];
+      dm_form.t_aggregresult_var.Value  :=
+                                    f_sceltacampiprg.ListView1.Selected.Caption;
     end;
-
   end;
-
 end;
+
 
 procedure Tf_work.Gettablesdefinition1Click(Sender: TObject);
 begin
