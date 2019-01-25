@@ -36,6 +36,7 @@ object f_work: Tf_work
     BevelEdges = []
     BevelInner = bvNone
     BevelOuter = bvNone
+    BorderStyle = bsNone
     Ctl3D = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clDefault
@@ -83,7 +84,7 @@ object f_work: Tf_work
     Top = 32
     Width = 870
     Height = 662
-    ActivePage = ts_models
+    ActivePage = ts_appvars
     Align = alClient
     MultiLine = True
     PopupMenu = pop_pagecontrol1
@@ -523,7 +524,7 @@ object f_work: Tf_work
         Width = 368
         Height = 607
         Align = alClient
-        Caption = 'Fields in table'
+        Caption = ' Fields in table '
         Ctl3D = False
         ParentCtl3D = False
         TabOrder = 1
@@ -533,6 +534,7 @@ object f_work: Tf_work
           Width = 366
           Height = 592
           Align = alClient
+          BorderStyle = bsNone
           Ctl3D = False
           DataSource = dm_form.ds_campi
           ParentCtl3D = False
@@ -587,7 +589,7 @@ object f_work: Tf_work
         TabOrder = 2
         object Splitter3: TSplitter
           Left = 0
-          Top = 412
+          Top = 410
           Width = 491
           Height = 5
           Cursor = crVSplit
@@ -597,13 +599,15 @@ object f_work: Tf_work
           Left = 0
           Top = 0
           Width = 491
-          Height = 412
+          Height = 410
           Align = alClient
+          BevelEdges = []
           BevelInner = bvNone
           BevelOuter = bvNone
           PopupMenu = pop_grid_tabelle
           TabOrder = 0
           OnEnter = dbgrid_tabelle_savEnter
+          LookAndFeel.Kind = lfFlat
           object dbgrid_tabelleDBTableView1: TcxGridDBTableView
             DataController.DataSource = dm_form.ds_tabelle
             DataController.Summary.DefaultGroupSummaryItems = <>
@@ -655,19 +659,20 @@ object f_work: Tf_work
         end
         object gb_indexes: TGroupBox
           Left = 0
-          Top = 417
+          Top = 415
           Width = 491
-          Height = 190
+          Height = 192
           Align = alBottom
-          Caption = 'Indexes in table'
+          Caption = ' Indexes in table '
           Ctl3D = False
           ParentCtl3D = False
           TabOrder = 1
           object dbgrid_indici: TDBGrid
-            Left = 0
-            Top = 16
+            Left = 1
+            Top = 15
             Width = 225
-            Height = 174
+            Height = 176
+            BorderStyle = bsNone
             Ctl3D = False
             DataSource = dm_form.ds_indicitesta
             ParentCtl3D = False
@@ -696,10 +701,11 @@ object f_work: Tf_work
               end>
           end
           object dbgrid_segmenti: TDBGrid
-            Left = 232
-            Top = 16
+            Left = 233
+            Top = 15
             Width = 257
-            Height = 174
+            Height = 176
+            BorderStyle = bsNone
             Ctl3D = False
             DataSource = dm_form.ds_indici
             ParentCtl3D = False
@@ -2758,7 +2764,7 @@ object f_work: Tf_work
         Left = 440
         Top = 70
         Width = 200
-        Height = 19
+        Height = 20
         Ctl3D = False
         DataField = 'label'
         DataSource = dm_form.ds_menu
@@ -2769,7 +2775,7 @@ object f_work: Tf_work
         Left = 440
         Top = 190
         Width = 300
-        Height = 19
+        Height = 20
         Ctl3D = False
         DataField = 'valore'
         DataSource = dm_form.ds_menu
@@ -2810,8 +2816,8 @@ object f_work: Tf_work
       object Button1: TButton
         Left = 640
         Top = 70
-        Width = 21
-        Height = 21
+        Width = 20
+        Height = 20
         Caption = '...'
         TabOrder = 6
         Visible = False
@@ -2821,7 +2827,7 @@ object f_work: Tf_work
         Left = 440
         Top = 250
         Width = 300
-        Height = 19
+        Height = 20
         Ctl3D = False
         DataField = 'icona'
         DataSource = dm_form.ds_menu
@@ -7979,13 +7985,14 @@ object f_work: Tf_work
         Left = 0
         Top = 0
         Width = 862
-        Height = 607
+        Height = 614
         Align = alClient
         BevelInner = bvNone
         BevelOuter = bvNone
         PopupMenu = pop_models
         TabOrder = 0
         OnEnter = dbgrid_modelssavEnter
+        LookAndFeel.Kind = lfFlat
         LookAndFeel.NativeStyle = False
         object dbgrid_modelsDBTableView1: TcxGridDBTableView
           DataController.DataSource = dm_form.ds_modelli
@@ -8261,11 +8268,13 @@ object f_work: Tf_work
         Width = 862
         Height = 567
         Align = alClient
+        BevelEdges = []
         BevelInner = bvNone
         BevelOuter = bvNone
         PopupMenu = pop_gridprogrammi
         TabOrder = 0
         OnEnter = dbgrid_programmiEnter
+        LookAndFeel.Kind = lfFlat
         object dbgrid_programmiDBTableView1: TcxGridDBTableView
           DataController.DataSource = dm_form.ds_elenco_prg
           DataController.Summary.DefaultGroupSummaryItems = <>
