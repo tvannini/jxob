@@ -1099,122 +1099,124 @@ begin
   newName := formatName(Text);
   // _______________________________________________ Changing existing alias ___
   if (Sender.AsString <> '') and (Sender.AsString <> newName) then
-  try
-    t_operazioni.DisableControls;
-    t_espressioni.DisableControls;
-    t_controlliform.DisableControls;
-
-    //espressioni
-    r            := TRegExpr.Create;
-    r.expression := '((o2val|o2pre|o2zero)\s*\(\s*[' + #34#39 + ']' +
-                    t_tasknome.Value +
-                    '[' + #34#39 + ']\s*,\s*[' + #34#39 + '])' +
-                    Sender.AsString + '([' + #34#39 + ']\s*[),])';
-    t_espressioni.First;
-    while not t_espressioni.EOF do
-    begin
-      t_espressioni.Edit;
-      if r.Exec(t_espressionireturn.Value) then
+  begin
+    try
+      t_operazioni.DisableControls;
+      t_espressioni.DisableControls;
+      t_controlliform.DisableControls;
+      r            := TRegExpr.Create;
+      // ___________ Replace in o2val(), o2pre() and o2zero() in expressions ___
+      r.Expression := 'o2(\w+)\s*\(\s*["' + #39 + ']' + t_tasknome.Value +
+                                     '["' + #39 + ']\s*,\s*["' + #39 + ']' +
+                                     Sender.AsString + '["' + #39 + ']\s*\)';
+      str_new      := 'o2$1(' + #39 + t_tasknome.Value + #39 + ',' +
+                                #39 + newName + #39 + ')';
+      t_espressioni.First;
+      while not t_espressioni.EOF do
       begin
+        t_espressioni.Edit;
         t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
-                                               '$1' + newName + '$3',
-                                               true);
+                                               str_new,
+                                               True);
+        t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value,
+                                               str_new,
+                                               True);
+        t_espressioni.Next
       end;
-      if r.Exec(t_espressioniexpr.Value) then
+      // ___________________________________ Replace select alias in actions ___
+      t_operazioni.MasterSource := nil;
+      t_operazioni.First;
+      while not t_operazioni.EOF do
       begin
-        t_espressioniexpr.Value := r.Replace(t_espressioniexpr.Value,
-                                             '$1' + newName + '$3',
-                                             true);
+        t_operazioni.Edit;
+        str_old := #127 + t_tasknome.Value + #129 + Sender.AsString;
+        str_new := #127 + t_tasknome.Value + #129 + newName;
+        // ____________________________ Select alias name in field reference ___
+        if t_operazionio2ref.Value = str_old then
+        begin
+          t_operazionio2ref.Value := str_new;
+        end;
+        // _______________ Select alias in field passed as parameter in call ___
+        r.Expression                := #127 + t_tasknome.Value + #129 +
+                                       Sender.AsString + '(\W|$)';
+        str_new                     := #127 + t_tasknome.Value + #129 +
+                                       newName + '$1';
+        t_operazionicallparam.Value := r.Replace(t_operazionicallparam.Value,
+                                                 str_new,
+                                                 True);
+        t_operazioni.Next
       end;
-      t_espressioni.Next
-    end;
-
-    //sistema istruzioni
-    //operazioni
-    str_old                   := #127 + t_tasknome.Value + #129 +
-                                 Sender.AsString;
-    str_new                   := #127 + t_tasknome.Value + #129 + newName;
-    t_operazioni.MasterSource := nil;
-    t_operazioni.First;
-    while not t_operazioni.EOF do
-    begin
-      t_operazioni.Edit;
-      t_operazionio2ref.Value     := StringReplace(t_operazionio2ref.Value,
-                                                   str_old,
-                                                   str_new,
-                                                   [rfReplaceAll]);
-      t_operazionicallparam.Value := StringReplace(t_operazionicallparam.Value,
-                                                   str_old,
-                                                   str_new,
-                                                   [rfReplaceAll]);
-      t_operazioni.Next
-    end;
-    t_operazioni.MasterSource := ds_azioni;
-
-    //controlli form
-    t_controlliform.MasterSource:=nil;
-    t_controlliform.First;
-    while not t_controlliform.EOF do
-    begin
-    t_controlliform.Edit;
-      if t_controlliformriferimento.Value = str_old then
+      t_operazioni.MasterSource := ds_azioni;
+      // __________________________________ Replace select alias in controls ___
+      t_controlliform.MasterSource :=nil;
+      t_controlliform.First;
+      while not t_controlliform.EOF do
       begin
-
-        t_controlliformriferimento.Value :=
-        StringReplace(t_controlliformriferimento.Value, str_old, str_new, [rfReplaceAll]);
-       t_controlliformcaption.Value     :=
-        StringReplace(t_controlliformcaption.Value, str_old, str_new, [rfReplaceAll]);
+        t_controlliform.Edit;
+        str_old := #127 + t_tasknome.Value + #129 + Sender.AsString;
+        str_new := #127 + t_tasknome.Value + #129 + newName;
+        if t_controlliformriferimento.Value = str_old then
+        begin
+          t_controlliformriferimento.Value := str_new;
+        end;
+        // _______________________ Replace in o2viewlist() in combo/list-box ___
+        str_old := 'o2_view2list("' + t_tasknome.Value + '", "' +
+                                      Sender.AsString + '"';
+        str_new := 'o2_view2list("' + t_tasknome.Value + '", "' +
+                                      newName + '"';
+        // _________________________________ Replace when used as code field ___
+        t_controlliformscelte_possibili.Value := StringReplace(
+                                          t_controlliformscelte_possibili.Value,
+                                          str_old,
+                                          str_new,
+                                          [rfReplaceAll]);
+        // __________________________ Replace when used as description field ___
+        r.Expression := 'o2_view2list\("' + t_tasknome.Value + '", "(\w+)", "' +
+                                            Sender.AsString + '"\)';
+        str_new      := 'o2_view2list("' + t_tasknome.Value + '", "$1", "' +
+                                           newName + '")';
+        t_controlliformscelte_possibili.Value := r.Replace(
+                                          t_controlliformscelte_possibili.Value,
+                                          str_new,
+                                          True);
+        t_controlliform.Next
       end;
-
-      if PosEx('2_view2list("' + t_tasknome.Value +'"', t_controlliformscelte_possibili.Value) > 0 then
+      t_controlliform.MasterSource := ds_form;
+      // _________________________ Replace select alias in view aggregations ___
+      t_aggreg.First;
+      while not t_aggreg.EOF do
       begin
-        str_old := '", "' + Sender.AsString +'")';
-        str_new := '", "' + newName +'")';
-        t_controlliformscelte_possibili.Value:= StringReplace(t_controlliformscelte_possibili.Value, str_old, str_new, [rfReplaceAll]);
-
-        str_old := '", "' + Sender.AsString +'", "';
-        str_new := '", "' + newName +'", "';
-        t_controlliformscelte_possibili.Value:= StringReplace(t_controlliformscelte_possibili.Value, str_old, str_new, [rfReplaceAll]);
+        t_aggreg.Edit;
+        if (t_aggregidtask.Value = t_taskid.Value) and
+           (t_aggregcampo_view.Value = Sender.AsString) then
+        begin
+          t_aggregcampo_view.Value := newName;
+        end;
+        t_aggreg.Next;
       end;
-
-      t_controlliform.Next
+      // _________________________________ Replace select alias in protocols ___
+      str_old                    := #127 + t_tasknome.Value + #129 +
+                                           Sender.AsString;
+      str_new                    := #127 + t_tasknome.Value + #129 + newName;
+      t_reportfield.MasterSource := nil;
+      t_reportfield.First;
+      while not t_reportfield.EOF do
+      begin
+        t_reportfield.Edit;
+        if t_reportfieldcampo.Value = str_old then
+        begin
+          t_reportfieldcampo.Value := str_new;
+        end;
+        t_reportfield.Next
+      end;
+      t_reportfield.MasterSource := ds_report;
+    finally
+      t_operazioni.EnableControls;
+      t_espressioni.EnableControls;
+      t_controlliform.EnableControls;
     end;
-    t_controlliform.MasterSource:=ds_form;
-
-    //funzioni aggregazione
-    str_old := Sender.AsString;
-    str_new := newName;
-    t_aggreg.First;
-    while not t_aggreg.EOF do
-    begin
-      t_aggreg.Edit;
-      t_aggregcampo_view.Value := StringReplace(t_aggregcampo_view.Value,
-        str_old, str_new, [rfReplaceAll]);
-
-      t_aggreg.Next
-    end;
-
-      //protocols
-    str_old := chr(127) + t_tasknome.Value + chr(129) + Sender.AsString;
-    str_new := chr(127) + t_tasknome.Value + chr(129) + newName;
-    t_reportfield.MasterSource:=nil;
-    t_reportfield.First;
-    while not t_reportfield.EOF do
-    begin
-      t_reportfield.Edit;
-      t_reportfieldcampo.Value := StringReplace(t_reportfieldcampo.Value,
-        str_old, str_new, [rfReplaceAll]);
-
-      t_reportfield.Next
-    end;
-    t_reportfield.MasterSource:=ds_report;
-
-  finally
-    t_operazioni.EnableControls;
-    t_espressioni.EnableControls;
-    t_controlliform.EnableControls;
   end;
-
+  // _____________________________________________________ Update field name ___
   Sender.Value := newName;
 end;
 
@@ -2848,7 +2850,7 @@ begin
                             #127,
                             '',
                             [rfReplaceAll]);
-    f_name := ExtractWord(2, t_reportfieldcampo.Value, [#129]);
+    f_name := Trim(ExtractWord(2, t_reportfieldcampo.Value, [#129]));
     if v_name = 'prg§_§var' then
     begin
       v_name := '(LOCAL)';
