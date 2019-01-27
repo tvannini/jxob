@@ -1109,7 +1109,7 @@ begin
       r.Expression := 'o2(\w+)\s*\(\s*["' + #39 + ']' + t_tasknome.Value +
                                      '["' + #39 + ']\s*,\s*["' + #39 + ']' +
                                      Sender.AsString + '["' + #39 + ']\s*\)';
-      str_new      := 'o2$1(' + #39 + t_tasknome.Value + #39 + ',' +
+      str_new      := 'o2$1(' + #39 + t_tasknome.Value + #39 + ', ' +
                                 #39 + newName + #39 + ')';
       t_espressioni.First;
       while not t_espressioni.EOF do
@@ -1385,20 +1385,19 @@ begin
       t_espressioni.Next
     end;
     // ____________________________________ Replace variable name in actions ___
-    str_old                   := #127 + 'prg§_§var' + #129 + Sender.AsString;
-    str_new                   := #127 + 'prg§_§var' + #129 + newName;
     t_operazioni.MasterSource := nil;
     t_operazioni.First;
     while not t_operazioni.EOF do
     begin
       t_operazioni.Edit;
       // __________________________________ Variable name in field reference ___
+      str_old := #127 + 'prg§_§var' + #129 + Sender.AsString;
+      str_new := #127 + 'prg§_§var' + #129 + newName;
       if t_operazionio2ref.Value = str_old then
       begin
         t_operazionio2ref.Value := str_new;
       end;
       // ________________ Variable name in field passed as parameter in call ___
-
       r.Expression                := #127 + 'prg§_§var' +
                                      #129 + Sender.AsString + '(\W|$)';
       str_new                     := #127 + 'prg§_§var' + #129 + newName + '$1';
