@@ -1626,6 +1626,7 @@ object dm_form: Tdm_form
     object t_controlliformnomecontrollo: TStringField
       DisplayWidth = 48
       FieldName = 'nomecontrollo'
+      OnSetText = t_controlliformnomecontrolloSetText
       Size = 40
     end
     object t_controlliformtipo: TStringField
@@ -3003,7 +3004,6 @@ object dm_form: Tdm_form
     AfterInsert = t_variabili_prgAfterInsert
     AfterEdit = t_variabili_prgAfterEdit
     AfterDelete = t_variabili_prgAfterDelete
-    OnCalcFields = t_variabili_prgCalcFields
     Left = 792
     Top = 24
     object t_variabili_prgprg: TStringField
@@ -3018,15 +3018,6 @@ object dm_form: Tdm_form
     object t_variabili_prgpicture: TStringField
       FieldName = 'picture'
       Size = 30
-    end
-    object t_variabili_prgaction: TStringField
-      FieldName = 'action'
-      Size = 40
-    end
-    object t_variabili_prgalias_senza_action: TStringField
-      FieldKind = fkCalculated
-      FieldName = 'alias_senza_action'
-      Calculated = True
     end
   end
   object t_variabili_app: TClientDataSet

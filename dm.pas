@@ -463,8 +463,6 @@ type
     t_controlliformZoomAction: TStringField;
     t_usa_filedbname_exp: TIntegerField;
     t_usa_filetablename_exp: TIntegerField;
-    t_variabili_prgaction: TStringField;
-    t_variabili_prgalias_senza_action: TStringField;
     t_taskautoaggregate: TBooleanField;
     t_databasesasp: TStringField;
     t_controlliformTooltipExp: TIntegerField;
@@ -622,7 +620,6 @@ type
     procedure t_tabelleIdSetText(Sender: TField; const Text: String);
     function datetoo2date(date: TDateTime): String;
     procedure t_parametriidSetText(Sender: TField; const Text: String);
-    procedure t_variabili_prgCalcFields(DataSet: TDataSet);
     procedure t_variabili_actAfterDelete(DataSet: TDataSet);
     procedure t_variabili_actAfterEdit(DataSet: TDataSet);
     procedure t_variabili_actAfterInsert(DataSet: TDataSet);
@@ -647,6 +644,8 @@ type
     procedure t_formnomeformSetText(Sender: TField; const Text: String);
     procedure t_reportfieldCalcFields(DataSet: TDataSet);
     procedure t_input_outputCalcFields(DataSet: TDataSet);
+    procedure t_controlliformnomecontrolloSetText(Sender: TField;
+      const Text: String);
 
 
   private
@@ -1221,103 +1220,158 @@ begin
 end;
 
 
+{*
+ * Fired on action name changed: seek and fix references to action.
+ *}
 procedure Tdm_form.t_azioniazioneSetText(Sender: TField; const Text: string);
 var
-  newName, str_old, str_new, str_old2, str_new2: string;
+  newName, str_old, str_new, str_old2, str_new2, tmpValue: string;
 
 begin
   if (Sender.AsString <> '') and (not(in_importazione)) then
   begin
+    // _____________________________ Format new name with only allowed chars ___
     newName := formatName(Text);
     t_operazioni.DisableControls;
-
     str_old := Sender.AsString;
     str_new := newName;
-
-    nomeactionprev:=str_old;
-
-    t_variabili_prg.First;
-    while (not(t_variabili_prg.EOF)) do
-    begin
-    if t_variabili_prgaction.Value <> '' then
-     begin
-       t_variabili_prg.Edit;
-       t_variabili_prgaction.Value:=str_new;
-       t_variabili_prgalias.Value:= StringReplace(t_variabili_prgalias.Value, str_old +'#_#', str_new + '#_#', [rfReplaceAll]);
-     end;
-       t_variabili_prg.Next;
-    end;
-
+    // ____________________ Save old name: see Tdm_form.t_azioniazioneChange ___
+    nomeactionprev := str_old;
+    // ___________________________ Replace action name in forms and controls ___
     t_form.First;
     while (not(t_form.EOF)) do
     begin
-
+      // ___________________________________ Replace action name in controls ___
       t_controlliform.First;
       while not(t_controlliform.EOF) do
       begin
         t_controlliform.Edit;
-        t_controlliformazione.Value := StringReplace(t_controlliformazione.Value, str_old, str_new, [rfReplaceAll]);
-        t_controlliformInsertAction.Value := StringReplace(t_controlliformInsertAction.Value, str_old, str_new, [rfReplaceAll]);
-        t_controlliformDeleteAction.Value := StringReplace(t_controlliformDeleteAction.Value, str_old, str_new, [rfReplaceAll]);
-        t_controlliformPostAction.Value := StringReplace(t_controlliformPostAction.Value, str_old, str_new, [rfReplaceAll]);
-        t_controlliformUndoAction.Value := StringReplace(t_controlliformUndoAction.Value, str_old, str_new, [rfReplaceAll]);
-        t_controlliformDetailAction.Value := StringReplace(t_controlliformDetailAction.Value, str_old, str_new, [rfReplaceAll]);
-        t_controlliformSelectAction.Value := StringReplace(t_controlliformSelectAction.Value, str_old, str_new, [rfReplaceAll]);
+        // ____________________________________ Main action on most controls ___
+        if t_controlliformazione.Value = str_old then
+        begin
+          t_controlliformazione.Value := str_new;
+        end;
+        // _____________________________________________________ Zoom action ___
+        if t_controlliformZoomAction.Value = str_old then
+        begin
+          t_controlliformZoomAction.Value := str_new;
+        end;
+        // _______________________________________________ Navigator actions ___
+        if t_controlliformtipo.Value = 'navigator' then
+        begin
+          if t_controlliformInsertAction.Value = str_old then
+          begin
+            t_controlliformInsertAction.Value := str_new;
+          end;
+          if t_controlliformDeleteAction.Value = str_old then
+          begin
+            t_controlliformDeleteAction.Value := str_new;
+          end;
+          if t_controlliformPostAction.Value = str_old then
+          begin
+            t_controlliformPostAction.Value := str_new;
+          end;
+          if t_controlliformUndoAction.Value = str_old then
+          begin
+            t_controlliformUndoAction.Value := str_new;
+          end;
+          if t_controlliformDetailAction.Value = str_old then
+          begin
+            t_controlliformDetailAction.Value := str_new;
+          end;
+          if t_controlliformSelectAction.Value = str_old then
+          begin
+            t_controlliformSelectAction.Value := str_new;
+          end;
+        end;
+        // __________________________________ Delete action on Images-Lister ___
+        if (t_controlliformtipo.Value = 'imglist') and
+           (t_controlliformextra2.Value = str_old) then
+        begin
+          t_controlliformextra2.Value := str_new;
+        end;
+        // ______________________________________ End action on Progress-Bar ___
+        if (t_controlliformtipo.Value = 'progress') and
+           (t_controlliformextra2.Value = str_old) then
+        begin
+          t_controlliformextra2.Value := str_new;
+        end;
+        // ____________________________________ Column header action in grid ___
+        if (t_controlliformparent.Value <> '') then
+        begin
+          tmpValue := trim(ExtractWord(12,
+                                       t_controlliformparent_info.Value,
+                                       ['§']));
+          tmpValue := Copy(tmpValue, 2, Length(tmpValue) - 2);
+          if tmpValue = str_old then
+          begin
+            // __________ Header-action is the 12th parameter in parent-info ___
+            t_controlliformparent_info.Value :=
+                ExtractWord(1, t_controlliformparent_info.Value, ['§']) + '§' +
+                ExtractWord(2, t_controlliformparent_info.Value, ['§']) + '§' +
+                ExtractWord(3, t_controlliformparent_info.Value, ['§']) + '§' +
+                ExtractWord(4, t_controlliformparent_info.Value, ['§']) + '§' +
+                ExtractWord(5, t_controlliformparent_info.Value, ['§']) + '§' +
+                ExtractWord(6, t_controlliformparent_info.Value, ['§']) + '§' +
+                ExtractWord(7, t_controlliformparent_info.Value, ['§']) + '§' +
+                ExtractWord(8, t_controlliformparent_info.Value, ['§']) + '§' +
+                ExtractWord(9, t_controlliformparent_info.Value, ['§']) + '§' +
+                ExtractWord(10, t_controlliformparent_info.Value, ['§']) + '§' +
+                ExtractWord(11, t_controlliformparent_info.Value, ['§']) +
+                '§"' + str_new + '"';
+          end;
+        end;
         t_controlliform.Post;
         t_controlliform.Next
       end;
-
+      // ______________________________________ Replace action name in forms ___
       t_form.Edit;
-      if t_formcloseclick_action.Value = str_old then t_formcloseclick_action.Value:=str_new;
-      if t_formrefresh_action.Value = str_old then t_formrefresh_action.Value:=str_new;
-
-      if t_form.State=dsEdit then t_form.Post;
-
-
+      if t_formcloseclick_action.Value = str_old then
+      begin
+        t_formcloseclick_action.Value := str_new;
+      end;
+      if t_formrefresh_action.Value = str_old then
+      begin
+        t_formrefresh_action.Value := str_new;
+      end;
+      t_form.Post;
       t_form.Next;
     end;
-
-    //esegui action
-    //sistema istruzioni
-    //operazioni
+    // ___________________________________ Replace action name in statements ___
     str_old2 := Sender.AsString + '::';
     str_new2 := newName + '::';
-
     t_operazioni.First;
     while not t_operazioni.EOF do
     begin
       t_operazioni.Edit;
-
-      // cambia qui la action sulle operazioni
-      t_operazioniazione.Value:=str_new;
+      t_operazioniazione.Value := str_new;
       t_operazioni.Post;
     end;
-
+    // _______________________________ Replace action name in execute-action ___
     t_operazioni.MasterSource := nil;
     t_operazioni.First;
     while not t_operazioni.EOF do
     begin
       t_operazioni.Edit;
-
-
       if t_operazionioperazione.Value = 'Execute action' then
       begin
-        t_operazionio2ref.Value := StringReplace(t_operazionio2ref.Value, str_old2,
-          str_new2, [rfReplaceAll])
+        if Copy(t_operazionio2ref.Value,
+                1,
+                StrLength(str_old) + 2) = str_old + '::' then
+        begin
+          t_operazionio2ref.Value := str_new + '::' +
+                                     Copy(t_operazionio2ref.Value,
+                                          StrLength(str_old) + 3,
+                                          StrLength(t_operazionio2ref.Value));
+        end;
       end;
-      //    t_operazionicallparam.Value:=StringReplace(t_operazionicallparam.Value,str_old,str_new,[rfReplaceAll]);
-
       t_operazioni.Next;
     end;
-
     t_operazioni.MasterSource := ds_azioni;
-
-   end;  //fine blocco se valore iniziale <> ''
-
-//  t_azioni.Edit;
+  end; // ________________________ End of previous value existance condition ___
+  // ____________________________________________ Update variable name field ___
   Sender.Value := newName;
   t_operazioni.EnableControls;
-
 end;
 
 
@@ -1363,7 +1417,7 @@ begin
   newName := formatName(Text);
   if Sender.AsString <> '' then
   begin
-    // __________________________________ Chack variable name in expressions ___
+    // __________________________________ Check variable name in expressions ___
     t_espressioni.First;
     r := TRegExpr.Create;
     while not t_espressioni.EOF do
@@ -1457,15 +1511,15 @@ end;
 
 procedure Tdm_form.t_azioniazioneChange(Sender: TField);
 begin
-
-    if (not(in_importazione)) and (t_programmiref.Value = nomeactionprev) and (t_programmiref.Value <> '')
-    then
-    begin
-        t_programmi.Edit;
-        t_programmiref.Value:=Sender.AsString;
-        t_programmi.Post;
-    end;
-
+  // ___________________________________ Change start action name on program ___
+  if (not(in_importazione)) and
+     (t_programmiref.Value <> '') and
+     (t_programmiref.Value = nomeactionprev) then
+  begin
+      t_programmi.Edit;
+      t_programmiref.Value := Sender.AsString;
+      t_programmi.Post;
+  end;
 end;
 
 
@@ -1748,18 +1802,15 @@ begin
   while not (t_controlliform.EOF) do
   begin
     t_controlliform.Edit;
-    //cambia il nome form
+    // ________________________________________ Change form name in controls ___
     t_controlliformnomeform.Value := Sender.AsString;
     if LeftStr(t_controlliformparent.Value, 7) = '_stage_' then
     begin
       t_controlliformparent.Value := '_stage_' + Sender.AsString
     end;
-    //ri va al primo (che sarebbe il successivo)
-    t_controlliform.First;
+    t_controlliform.Next;
   end;
 end;
-
-
 
 
 procedure Tdm_form.t_selectBeforePost(DataSet: TDataSet);
@@ -2690,12 +2741,6 @@ begin
 
 end;
 
-
-procedure Tdm_form.t_variabili_prgCalcFields(DataSet: TDataSet);
-begin
-  t_variabili_prgalias_senza_action.Value:=t_variabili_prgalias.Value;
-end;
-
 procedure Tdm_form.t_variabili_actAfterDelete(DataSet: TDataSet);
 begin
 program_modificato:=true;
@@ -2833,11 +2878,51 @@ begin
   Sender.Value := formatName(Text);
 end;
 
-procedure Tdm_form.t_formnomeformSetText(Sender: TField;
-  const Text: String);
+{*
+ * Fired on form name changed: seek and fix references to form.
+ *}
+procedure Tdm_form.t_formnomeformSetText(Sender: TField; const Text: String);
+var
+  newName, str_new: String;
+  r: TRegExpr;
 begin
-  Sender.Value := formatName(Text);
+  // _______________________________ Format new name with only allowed chars ___
+  newName := formatName(Text);
+  if Sender.AsString <> '' then
+  begin
+    // ______________________________________ Check form name in expressions ___
+    t_espressioni.First;
+    r := TRegExpr.Create;
+    while not t_espressioni.EOF do
+    begin
+      t_espressioni.Edit;
+      // ____________________________________ Check and replace in o2form*() ___
+      r.Expression              := 'o2form(\w+)\s*\(["' + #39 + ']' +
+                                    Sender.AsString + '["' + #39 + ']';
+      str_new                   := 'o2form$1(' + #39 + newName + #39;
+      t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
+                                             str_new,
+                                             True);
+      t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value,
+                                             str_new,
+                                             True);
+      // ____________________________________ Check and replace in o2ctrl*() ___
+      r.Expression              := 'o2ctrl(\w+)\s*\(["' + #39 + ']' +
+                                    Sender.AsString + '["' + #39 + ']';
+      str_new                   := 'o2ctrl$1(' + #39 + newName + #39;
+      t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
+                                             str_new,
+                                             True);
+      t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value,
+                                             str_new,
+                                             True);
+      t_espressioni.Next
+    end;
+  end; // ________________________ End of previous value existance condition ___
+  // ________________________________________________ Update form name field ___
+  Sender.Value := newName;
 end;
+
 
 procedure Tdm_form.t_reportfieldCalcFields(DataSet: TDataSet);
 var
@@ -2885,6 +2970,43 @@ begin
   begin
     t_input_outputdecode_exp.Value := '';
   end;
+end;
+
+procedure Tdm_form.t_controlliformnomecontrolloSetText(Sender: TField;
+                                                       const Text: String);
+var
+  newName, str_new: string;
+  r: TRegExpr;
+begin
+{ =================== MISSING HANDLER FOR CONTROLNAME CHANGE ===================
+
+  // _______________________________ Format new name with only allowed chars ___
+  newName := formatName(Text);
+  r       := TRegExpr.Create;
+  // _____________________________________ Check control name in expressions ___
+  t_espressioni.First;
+  while not t_espressioni.EOF do
+  begin
+    t_espressioni.Edit;
+    // _____________________________________ Check and replace in o2ctrl_*() ___
+    r.Expression              := 'o2ctrl(\w+)\s*\(\s*["' + #39 + ']' +
+                                 t_controlliformnomeform.Value + '["' + #39 +
+                                 ']\s*,\s*["' + #39 + ']' + Sender.AsString +
+                                 '["' + #39 + ']\s*\)';
+    str_new                   := 'o2$1(' + #39 + t_controlliformnomeform.Value +
+                                           #39 + ',' + #39 + newName + #39 +')';
+    t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
+                                           str_new,
+                                           True);
+    t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value,
+                                           str_new,
+                                           True);
+    t_espressioni.Post;
+    t_espressioni.Next
+  end;
+  // _____________________________________________ Update control name field ___
+  Sender.Value := newName;
+}
 end;
 
 end.
