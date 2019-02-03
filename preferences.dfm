@@ -1180,6 +1180,33 @@ object f_config: Tf_config
         end
       end
     end
+    object TabSheet1: TTabSheet
+      Caption = 'Expressions Editor'
+      ImageIndex = 2
+      object Label21: TLabel
+        Left = 20
+        Top = 48
+        Width = 185
+        Height = 20
+        Caption = 'Functions proposal insert brackets:'
+      end
+      object e_brackets: TComboBox
+        Left = 208
+        Top = 48
+        Width = 145
+        Height = 21
+        BevelInner = bvNone
+        BevelOuter = bvNone
+        Ctl3D = False
+        ItemHeight = 13
+        ParentCtl3D = False
+        TabOrder = 0
+        Items.Strings = (
+          'None'
+          'Open bracket only'
+          'Both (open and close)')
+      end
+    end
   end
   object Panel1: TPanel
     Left = 0
@@ -1187,6 +1214,7 @@ object f_config: Tf_config
     Width = 397
     Height = 51
     Align = alBottom
+    BevelOuter = bvNone
     TabOrder = 1
     object Button1: TButton
       Left = 166
@@ -1236,11 +1264,11 @@ object f_config: Tf_config
   end
   object OpenDialog_path: TOpenDialog
     Options = [ofHideReadOnly, ofNoChangeDir, ofEnableSizing]
-    Left = 348
-    Top = 112
+    Left = 316
+    Top = 8
   end
   object DialogSelectDir: TJvSelectDirectory
-    Left = 308
-    Top = 113
+    Left = 284
+    Top = 9
   end
 end

@@ -65,6 +65,9 @@ type
     e_iniFile: TEdit;
     DialogSelectDir: TJvSelectDirectory;
     e_cvs: TCheckBox;
+    TabSheet1: TTabSheet;
+    Label21: TLabel;
+    e_brackets: TComboBox;
     procedure FormShow(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -106,6 +109,19 @@ begin
   f_work.settings.WriteString('O2_ENV', 'jxrnt', e_jxrntpath.Text);
   f_work.settings.WriteString('O2_ENV', 'design_report', e_reppath.Text);
   f_work.settings.WriteBool('O2_ENV', 'cvs_versioning', e_cvs.Checked);
+  // __________________________________________ Save brackets mode in editor ___
+  if e_brackets.ItemIndex = 1 then
+  begin
+    f_work.settings.WriteString('Editor', 'brackets', 'O');
+  end
+  else if e_brackets.ItemIndex = 2 then
+  begin
+    f_work.settings.WriteString('Editor', 'brackets', 'B');
+  end
+  else
+  begin
+    f_work.settings.WriteString('Editor', 'brackets', 'N');
+  end;
   e_temppath.Text := Trim(e_temppath.Text);
   if (e_temppath.Text <> '') and
      (e_temppath.Text[Length(e_temppath.Text)] <> '\') then
@@ -157,8 +173,8 @@ end;
  *}
 procedure Tf_config.carica_iniExecute(Sender: TObject);
 var
-  iniColor : String;
-  i        : Integer;
+  iniColor, brackets : String;
+  i : Integer;
 begin
   e_def_user.Text  := f_work.settings.ReadString('O2_ENV',
                                                  'default_user',
@@ -169,6 +185,22 @@ begin
   e_cvs.Checked    := f_work.settings.ReadBool('O2_ENV',
                                                'cvs_versioning',
                                                false);
+  brackets := f_work.settings.ReadString('Editor', 'brackets', 'N');
+  // _____________________________________________________ Only open bracket ___
+  if brackets = 'O' then
+  begin
+    e_brackets.ItemIndex := 1;
+  end
+  // _________________________________________ Both, open and close brackets ___
+  else if brackets = 'B' then
+  begin
+    e_brackets.ItemIndex := 2;
+  end
+  // ___________________________________________________________ No brackets ___
+  else
+  begin
+    e_brackets.ItemIndex := 0;
+  end;
   // __________________________________ Set colors for operations in actions ___
   for i := 0 to gb_oper_colors.ControlCount - 1 do
   begin

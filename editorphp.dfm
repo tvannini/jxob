@@ -33,15 +33,18 @@ object f_editorphp: Tf_editorphp
     TabOrder = 0
     BorderStyle = bsNone
     Gutter.AutoSize = True
+    Gutter.BorderStyle = gbsNone
     Gutter.DigitCount = 3
     Gutter.Font.Charset = DEFAULT_CHARSET
     Gutter.Font.Color = clWindowText
     Gutter.Font.Height = -11
     Gutter.Font.Name = 'Terminal'
     Gutter.Font.Style = []
+    Gutter.LeftOffset = 4
     Gutter.RightOffset = 4
     Gutter.ShowLineNumbers = True
     Highlighter = SynPHPSyn1
+    TabWidth = 4
     OnChange = EditorChange
     OnPaintTransient = EditorPaintTransient
   end
@@ -94,12 +97,12 @@ object f_editorphp: Tf_editorphp
     EndOfTokenChr = '()[]{}'
     TriggerChars = 
       'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,0,1,2,3,4,5,' +
-      '6,7,8,9,$,_'
+      '6,7,8,9,$'
     Title = 'Select...'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
+    Font.Height = 16
+    Font.Name = 'Microsoft Sans Serif'
     Font.Style = []
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clBtnText
@@ -108,12 +111,16 @@ object f_editorphp: Tf_editorphp
     TitleFont.Style = [fsBold]
     Columns = <
       item
-        BiggestWord = 'boolean'
+        BiggestWord = 'o2_ctrl_imglist'
       end>
+    ItemHeight = 18
     OnChange = SynCompletionProposal1Change
+    OnExecute = SynCompletionProposal1Execute
     ShortCut = 16416
     Editor = Editor
     TimerInterval = 200
+    OnAfterCodeCompletion = SynCompletionProposal1AfterCodeCompletion
+    OnCodeCompletion = SynCompletionProposal1CodeCompletion
     Left = 672
     Top = 224
   end

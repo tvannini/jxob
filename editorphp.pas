@@ -24,6 +24,7 @@ type
     Save1: TMenuItem;
     SynPHPSyn1: TSynPHPSyn;
     aggiornavar: TAction;
+    procedure proposalBrackets();
     procedure EditorPaintTransient(Sender: TObject; Canvas: TCanvas;
       TransientType: TTransientType);
     procedure FormCreate(Sender: TObject);
@@ -35,6 +36,15 @@ type
       AIndex: Integer);
     procedure aggiornavarExecute(Sender: TObject);
     procedure EditorChange(Sender: TObject);
+    procedure SynCompletionProposal1AfterCodeCompletion(Sender: TObject;
+      const Value: String; Shift: TShiftState; Index: Integer;
+      EndToken: Char);
+    procedure SynCompletionProposal1CodeCompletion(Sender: TObject;
+      var Value: String; Shift: TShiftState; Index: Integer;
+      EndToken: Char);
+    procedure SynCompletionProposal1Execute(Kind: SynCompletionType;
+      Sender: TObject; var CurrentInput: String; var x, y: Integer;
+      var CanExecute: Boolean);
   private
     { Private declarations }
     FBracketFG: TColor;
@@ -48,10 +58,11 @@ type
 
 var
   f_editorphp: Tf_editorphp;
+  completionStart: Integer;
 
 implementation
 
-uses work, sceltastatiview, sceltacampiprg, dm, Math;
+uses work, sceltastatiview, sceltacampiprg, dm, Math, StrUtils;
 
 {$R *.DFM}
 
@@ -290,18 +301,51 @@ end;
 
 
 procedure Tf_editorphp.aggiornavarExecute(Sender: TObject);
-var w: integer;
 begin
   // __________________________________________________ Reload proposal list ___
   SynCompletionProposal1.ItemList.Clear;
   SynCompletionProposal1.InsertList.Clear;
-
+  // ______________________________________________________ Reload functions ___
   SynCompletionProposal1.ItemList.AddStrings(item_funzioni);
   SynCompletionProposal1.InsertList.AddStrings(insert_funzioni);
-
+  // _________________________ Manage functions brackets depending on config ___
+  proposalBrackets;
+  // ___________________________________ Reload expression-defined variables ___
   SynCompletionProposal1.ItemList.AddStrings(item_variabili);
   SynCompletionProposal1.InsertList.AddStrings(insert_variabili);
+end;
 
+
+{*
+ * Set proposal inserted brackets depending on config
+ *}
+procedure Tf_editorphp.proposalBrackets();
+var
+  i: Integer;
+  w: String;
+  b: String;
+begin
+  b := f_work.settings.ReadString('Editor', 'brackets', 'N');
+  if b <> 'B' then
+  begin
+    for i := 0 to SynCompletionProposal1.InsertList.Count - 1 do
+    begin
+      w := SynCompletionProposal1.InsertList.Strings[i];
+      if RightStr(w, 2) = '()' then
+      begin
+        if b = 'O' then
+        begin
+          SynCompletionProposal1.InsertList.Strings[i] := LeftStr(w,
+                                                                Length(w) - 1 );
+        end
+        else
+        begin
+          SynCompletionProposal1.InsertList.Strings[i] := LeftStr(w,
+                                                                Length(w) - 2 );
+        end;
+      end;
+    end;
+  end;
 end;
 
 
@@ -335,13 +379,65 @@ begin
          (WordPos <> InsertPos - 1) then
       begin
         insert_variabili.Append(word);
-        item_variabili.Append('\style{+B}' + word + '\style{-B}');
+        item_variabili.Append('\style{+B}\color{$000000AA}' + word +
+                              '\style{-B}');
       end;
     until not r.ExecNext;
   end;
   FreeAndNil(r);
   aggiornavar.Execute;
 
+end;
+
+procedure Tf_editorphp.SynCompletionProposal1AfterCodeCompletion(
+                                                            Sender: TObject;
+                                                            const Value: String;
+                                                            Shift: TShiftState;
+                                                            Index: Integer;
+                                                            EndToken: Char);
+begin
+  { If Value ends with "()" means that:
+     1. selected item is a function;
+     2. option brackets is set to "Both". }
+  // ________________________________________ Position caret inside brackets ___
+  if RightStr(Value, 2) = '()' then
+  begin
+    // __________________________________________ Move caret backward 1 char ___
+    Editor.CaretX := Editor.CaretX - 1;
+  end;
+end;
+
+
+{*
+ * This method and next one (SynCompletionProposal1Execute) are used to avoid
+ * next-word replacing on item selection.
+ *}
+procedure Tf_editorphp.SynCompletionProposal1CodeCompletion(Sender: TObject;
+                                                            var Value: String;
+                                                            Shift: TShiftState;
+                                                            Index: Integer;
+  EndToken: Char);
+begin
+  // ___________________________________________ Allow replace for variables ___
+  if LeftStr(Editor.SelText, 1) <> '$' then
+  begin
+    Editor.SelEnd := completionStart +
+                     Length(SynCompletionProposal1.CurrentString);
+  end;
+end;
+
+
+{*
+ * This method and previous one (SynCompletionProposal1CodeCompletion) are used
+ * to avoid next-word replacing on item selection.
+ *}
+procedure Tf_editorphp.SynCompletionProposal1Execute(Kind: SynCompletionType;
+                                                     Sender: TObject;
+                                                     var CurrentInput: String;
+                                                     var x, y: Integer;
+                                                     var CanExecute: Boolean);
+begin
+  completionStart := Editor.SelStart - Length(CurrentInput);
 end;
 
 end.
