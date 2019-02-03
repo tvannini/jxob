@@ -628,19 +628,11 @@ begin
             par1 := extractword(1, selezione2, [',']);
             par1 := copy(trim(par1), 2, length(trim(par1)) - 2);
 
-            par2 := '';
-
-            if  (PosEx('#_#', par1) > 0) then
-            begin
-                num1:= PosEx('#_#', par1);
-                par2:= LeftStr(par1, num1 -1);
-            end;
-
             //picture
-            par3 := extractword(2, selezione2, [',']);
-            par3 := copy(trim(par3), 2, length(trim(par3)) - 2);
+            par2 := extractword(2, selezione2, [',']);
+            par2 := copy(trim(par2), 2, length(trim(par2)) - 2);
 
-            dm_form.t_variabili_prg.InsertRecord([nomeprg, par1, par3, par2]);
+            dm_form.t_variabili_prg.InsertRecord([nomeprg, par1, par2]);
 
           end;
 
