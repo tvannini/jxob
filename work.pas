@@ -2307,15 +2307,22 @@ begin
         begin
           Pagecontrol2.ActivePage := ts_espressioni;
         end
-        // ______________________ Selection on "Views" node: create new view ___
-        else if supertree.Selected.Text = 'Views' then
+        // ________________________ Selection on "Views" and "Actions" nodes ___
+        else if (supertree.Selected.Text = 'Views') or
+                (supertree.Selected.Text = 'Actions') then
         begin
-          new_view.Execute();
-        end
-        // __________________ Selection on "Actions" node: create new action ___
-        else if supertree.Selected.Text = 'Actions' then
-        begin
-          new_actionExecute(self);
+          // ___________________________________________ Fired from keyboard ___
+          if Sender.ClassName = 'TMenuItem' then
+          begin
+            if supertree.Selected.Expanded then
+            begin
+              supertree.Selected.Collapse(True);
+            end
+            else
+            begin
+              supertree.Selected.Expand(False);
+            end;
+          end;
         end;
         PageControl1.ActivePage := ts_programmi;
         refresh_bottoni_check(self);
@@ -2499,16 +2506,24 @@ begin
   if InputQuery('New view name', 'Name', nome_view) then
   begin
     nome_view := dm_form.formatName(nome_view);
-    dm_form.t_task.Insert;
-    dm_form.t_tasknome.Value := nome_view;
-    dm_form.t_taskautoaggregate.Value := False;
-    dm_form.t_task.Post;
-    nodotemp := supertree.Items.AddChild(supertree.Selected, nome_view);
-    nodotemp.ImageIndex := 2;
-    nodotemp.SelectedIndex := 2;
-    nodotemp2:=supertree.Items.AddChild(nodotemp, 'View properties');
-    nodotemp2.ImageIndex := 1;
-    nodotemp2.SelectedIndex := 1;
+    // ____________________________________________ View name already exists ___
+    if dm_form.t_task.Locate('nome', nome_view, [loCaseInsensitive]) then
+    begin
+      ShowMessage('View ' + nome_view + ' already exists!');
+    end
+    else
+    begin
+      dm_form.t_task.Insert;
+      dm_form.t_tasknome.Value := nome_view;
+      dm_form.t_taskautoaggregate.Value := False;
+      dm_form.t_task.Post;
+      nodotemp := supertree.Items.AddChild(supertree.Selected, nome_view);
+      nodotemp.ImageIndex := 2;
+      nodotemp.SelectedIndex := 2;
+      nodotemp2:=supertree.Items.AddChild(nodotemp, 'View properties');
+      nodotemp2.ImageIndex := 1;
+      nodotemp2.SelectedIndex := 1;
+    end;
   end;
 end;
 
@@ -4631,29 +4646,36 @@ begin
   if InputQuery('New action', 'Action name', nome_azione) then
   begin
     nome_azione := dm_form.formatName(nome_azione);
-    if dm_form.ds_operazioni.State = dsInsert then dm_form.t_operazioni.Post;
+    if dm_form.ds_operazioni.State = dsInsert then
+    begin
+      dm_form.t_operazioni.Post;
+    end;
     azionepos:=dm_form.t_azioni.GetBookmark;
     ope_pos:=dm_form.t_operazioni.GetBookmark;
-
-    dm_form.t_azioni.Insert;
-    dm_form.t_azioni.Edit;
-    dm_form.t_azioniazione.Value := nome_azione;
- 
-    dm_form.t_azioni.Post;
-
-    //dm_form.t_azioni.InsertRecord([dm_form.t_programminome.Value,nome_azione]);
-
-    // aggiunge al nodo all the actions
-    nodotemp := supertree.Items.AddChild(nodo_azioni_all, nome_azione);
-    nodotemp.ImageIndex := 29;
-    nodotemp.SelectedIndex := 29;
-
-    Result:=nome_azione;
-    dm_form.t_azioni.GotoBookmark(azionepos);
-    dm_form.t_operazioni.GotoBookmark(ope_pos);
+    // ____________________________________________ View name already exists ___
+    if dm_form.t_azioni.Locate('azione', nome_azione, [loCaseInsensitive]) then
+    begin
+      ShowMessage('Action ' + nome_azione + ' already exists!');
+      Result := '';
+    end
+    else
+    begin
+      dm_form.t_azioni.Insert;
+      dm_form.t_azioni.Edit;
+      dm_form.t_azioniazione.Value := nome_azione;
+      dm_form.t_azioni.Post;
+      // ____________________________________________ Add new action to tree ___
+      nodotemp := supertree.Items.AddChild(nodo_azioni_all, nome_azione);
+      nodotemp.ImageIndex := 29;
+      nodotemp.SelectedIndex := 29;
+      // ____________________________________________________ Reset datasets ___
+      dm_form.t_azioni.GotoBookmark(azionepos);
+      dm_form.t_operazioni.GotoBookmark(ope_pos);
+      Result := nome_azione;
+    end;
+  end;
 end;
 
-end;
 
 procedure Tf_work.dbgrid_operazioni_savDrawColumnCell(Sender: TObject;
   const Rect: TRect; DataCol: integer; Column: TColumn; State: TGridDrawState);
@@ -6337,9 +6359,6 @@ begin
   f_find.ShowModal;
 //  panel_filtro_table.Visible:=True
 end;
-
-
-
 
 
 procedure Tf_work.crea_azioni_default_view(Sender: TObject; vista: string;

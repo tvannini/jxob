@@ -2019,6 +2019,7 @@ object dm_form: Tdm_form
     object t_espressioniidexp: TIntegerField
       DisplayWidth = 12
       FieldName = 'idexp'
+      OnSetText = t_espressioniidexpSetText
     end
     object t_espressioniexpr: TMemoField
       DisplayWidth = 33

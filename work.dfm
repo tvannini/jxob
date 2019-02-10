@@ -84,7 +84,7 @@ object f_work: Tf_work
     Top = 32
     Width = 870
     Height = 662
-    ActivePage = ts_appvars
+    ActivePage = ts_programmi
     Align = alClient
     MultiLine = True
     PopupMenu = pop_pagecontrol1
@@ -763,7 +763,7 @@ object f_work: Tf_work
         Top = 0
         Width = 862
         Height = 607
-        ActivePage = ts_azioni
+        ActivePage = ts_parametri
         Align = alClient
         Style = tsButtons
         TabOrder = 1
@@ -2764,7 +2764,7 @@ object f_work: Tf_work
         Left = 440
         Top = 70
         Width = 200
-        Height = 20
+        Height = 19
         Ctl3D = False
         DataField = 'label'
         DataSource = dm_form.ds_menu
@@ -2775,7 +2775,7 @@ object f_work: Tf_work
         Left = 440
         Top = 190
         Width = 300
-        Height = 20
+        Height = 19
         Ctl3D = False
         DataField = 'valore'
         DataSource = dm_form.ds_menu
@@ -2827,7 +2827,7 @@ object f_work: Tf_work
         Left = 440
         Top = 250
         Width = 300
-        Height = 20
+        Height = 19
         Ctl3D = False
         DataField = 'icona'
         DataSource = dm_form.ds_menu
@@ -7985,7 +7985,7 @@ object f_work: Tf_work
         Left = 0
         Top = 0
         Width = 862
-        Height = 614
+        Height = 607
         Align = alClient
         BevelInner = bvNone
         BevelOuter = bvNone

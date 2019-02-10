@@ -234,22 +234,19 @@ end;
 
 procedure Tf_sceltaazione.nuova_actClick(Sender: TObject);
 var
- parent_local: TTreeNode;
- list_item_loc : TListItem;
- nome_az_local:string;
+ parentLocal: TTreeNode;
+ listItemLocal: TListItem;
+ nomeAzioneLocal: string;
 begin
-{if abilita_esegui_in_batch then parent_local:=f_work.nodo_ultimo_selezionato
-else parent_local:=f_work.nodo_azioni;
- }
-// nuova azione
- nome_az_local:=f_work.new_actionExecute(self);
- list_item_loc:=ListView1.Items.Add;
- list_item_loc.Caption:=nome_az_local;
- list_item_loc.Selected:=true;
- list_item_loc.Focused:=true;
- ListView1.SetFocus;
-
-
+  nomeAzioneLocal := f_work.new_actionExecute(self);
+  if nomeAzioneLocal <> '' then
+  begin
+    listItemLocal          := ListView1.Items.Add;
+    listItemLocal.Caption  := nomeAzioneLocal;
+    listItemLocal.Selected := true;
+    listItemLocal.Focused  := true;
+    ListView1.SetFocus;
+  end;
 end;
 
 procedure Tf_sceltaazione.cb_repeatChange(Sender: TObject);
