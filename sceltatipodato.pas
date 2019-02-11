@@ -32,8 +32,11 @@ implementation
 
 procedure Tf_selecttype.Select1Click(Sender: TObject);
 begin
-  scelta      := ListView1.Selected.Caption;
-  ModalResult := mrOk;
+  if ListView1.SelCount > 0 then
+  begin
+    scelta      := ListView1.Selected.Caption;
+    ModalResult := mrOk;
+  end;
 end;
 
 procedure Tf_selecttype.Exit1Click(Sender: TObject);

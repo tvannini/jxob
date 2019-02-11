@@ -415,7 +415,13 @@ object dm_form: Tdm_form
         Name = 'check_esist_tab'
         DataType = ftBoolean
       end>
-    IndexDefs = <>
+    IndexDefs = <
+      item
+        Name = 't_databasesIndex1'
+        Fields = 'nomedb'
+        Options = [ixPrimary, ixUnique]
+      end>
+    IndexName = 't_databasesIndex1'
     Params = <>
     StoreDefs = True
     AfterInsert = t_databasesAfterInsert
@@ -883,6 +889,7 @@ object dm_form: Tdm_form
         Fields = 'nomeserver'
         Options = [ixPrimary, ixUnique]
       end>
+    IndexName = 't_serversIndex1'
     Params = <>
     StoreDefs = True
     AfterInsert = t_serversAfterInsert
@@ -1096,10 +1103,10 @@ object dm_form: Tdm_form
     IndexDefs = <
       item
         Name = 't_formIndex1'
-        Fields = 'prg;posizione;nomeform'
+        Fields = 'prg;nomeform'
         Options = [ixPrimary, ixUnique]
       end>
-    IndexFieldNames = 'prg;posizione;nomeform'
+    IndexName = 't_formIndex1'
     MasterFields = 'nome'
     MasterSource = ds_programmi
     Params = <>
@@ -1999,7 +2006,7 @@ object dm_form: Tdm_form
         Fields = 'prg;idexp'
         Options = [ixPrimary, ixUnique]
       end>
-    IndexFieldNames = 'prg;idexp'
+    IndexName = 't_espressioniIndex3'
     MasterFields = 'nome'
     MasterSource = ds_programmi
     Params = <>
@@ -2019,7 +2026,6 @@ object dm_form: Tdm_form
     object t_espressioniidexp: TIntegerField
       DisplayWidth = 12
       FieldName = 'idexp'
-      OnSetText = t_espressioniidexpSetText
     end
     object t_espressioniexpr: TMemoField
       DisplayWidth = 33
@@ -3042,10 +3048,10 @@ object dm_form: Tdm_form
     IndexDefs = <
       item
         Name = 't_variabili_appIndex1'
-        Fields = 'tipo;alias'
+        Fields = 'alias'
         Options = [ixPrimary, ixUnique]
       end>
-    IndexFieldNames = 'alias'
+    IndexName = 't_variabili_appIndex1'
     Params = <>
     StoreDefs = True
     AfterInsert = t_variabili_appAfterInsert
@@ -3263,8 +3269,9 @@ object dm_form: Tdm_form
       item
         Name = 't_parametriIndex1'
         Fields = 'prg;id'
+        Options = [ixPrimary, ixUnique]
       end>
-    IndexFieldNames = 'prg;id'
+    IndexName = 't_parametriIndex1'
     MasterFields = 'nome'
     MasterSource = ds_programmi
     Params = <>

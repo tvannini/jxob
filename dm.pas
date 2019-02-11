@@ -646,8 +646,6 @@ type
     procedure t_input_outputCalcFields(DataSet: TDataSet);
     procedure t_controlliformnomecontrolloSetText(Sender: TField;
       const Text: String);
-    procedure t_espressioniidexpSetText(Sender: TField;
-      const Text: String);
 
   private
     temp_table: TClientDataSet;
@@ -926,7 +924,7 @@ var
 begin
   // _______________________________ Format new name with only allowed chars ___
   newName := formatName(Text);
-  // ________________________________________ Chack view name in expressions ___
+  // ________________________________________ Check view name in expressions ___
   t_espressioni.First;
   r := TRegExpr.Create;
   while not t_espressioni.EOF do
@@ -2680,18 +2678,7 @@ procedure Tdm_form.t_parametriidSetText(Sender: TField;
 var
   str_old, str_new: string;
   progr, i: Integer;
-  ds: TClientDataSet;
 begin
-  { ________________________________________________ Can't fix it to work... ___
-  // _____________________________________ Stop duplication for parameter ID ___
-  i := StrToInt(Text);
-  if i = Sender.DataSet.Lookup('id', i, 'id') then
-  begin
-    ShowMessage('Parameter ID ' + IntToStr(i) + ' already exists!');
-    Abort;
-    Exit;
-  end;
-  }
 
   //se c'e' variazione di valore preesistente
   if Sender.AsString <> '' then
@@ -3019,19 +3006,6 @@ begin
   // _____________________________________________ Update control name field ___
   Sender.Value := newName;
 }
-end;
-
-procedure Tdm_form.t_espressioniidexpSetText(Sender: TField;
-                                             const Text: String);
-var
-  i: Integer;
-begin
-  i := StrToInt(Text);
-  if i = Sender.DataSet.Lookup('idexp', i, 'idexp') then
-  begin
-    ShowMessage('Expression ID ' + IntToStr(i) + ' already exists!');
-    Abort;
-  end;
 end;
 
 end.
