@@ -763,7 +763,7 @@ object f_work: Tf_work
         Top = 0
         Width = 862
         Height = 607
-        ActivePage = ts_espressioni
+        ActivePage = ts_taskprop
         Align = alClient
         Style = tsButtons
         TabOrder = 1

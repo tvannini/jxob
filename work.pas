@@ -5222,7 +5222,7 @@ begin
     end;
   end;
   // ___________________________________________ Aggregation target variable ___
-  if dbgrid_aggreg.SelectedField.FieldName = 'result_alias' then
+  if dbgrid_aggreg.SelectedField.FieldName = 'result_var' then
   begin
     if (call_scelta_campoprg(dm_form.t_aggregcampo_view.Value,
                              false,
