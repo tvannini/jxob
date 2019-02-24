@@ -646,6 +646,7 @@ type
     procedure t_input_outputCalcFields(DataSet: TDataSet);
     procedure t_controlliformnomecontrolloSetText(Sender: TField;
       const Text: String);
+    procedure t_formBeforePost(DataSet: TDataSet);
 
   private
     temp_table: TClientDataSet;
@@ -3006,6 +3007,24 @@ begin
   // _____________________________________________ Update control name field ___
   Sender.Value := newName;
 }
+end;
+
+procedure Tdm_form.t_formBeforePost(DataSet: TDataSet);
+var
+  CDSClone: TCustomClientDataSet;
+begin
+  CDSClone := TCustomClientDataSet.Create(dm_form);
+  CDSClone.CloneCursor(t_form, False, False);
+  // ____________ If FormName chenged look for new name in alternate dataset ___
+  if (DataSet.Fields[1].AsString <> DataSet.Fields[1].OldValue) and
+     CDSClone.Locate('nomeform', DataSet.Fields[1].AsString, []) then
+  begin
+    ShowMessage('Form name ' + DataSet.Fields[1].AsString + ' already exists!');
+    Abort;
+  end;
+  CDSClone.Close;
+  CDSClone.Free;
+
 end;
 
 end.

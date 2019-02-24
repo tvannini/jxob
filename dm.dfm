@@ -1105,14 +1105,19 @@ object dm_form: Tdm_form
         Name = 't_formIndex1'
         Fields = 'prg;nomeform'
         Options = [ixPrimary, ixUnique]
+      end
+      item
+        Name = 't_formIndex2'
+        Fields = 'prg;posizione'
       end>
-    IndexName = 't_formIndex1'
+    IndexName = 't_formIndex2'
     MasterFields = 'nome'
     MasterSource = ds_programmi
     Params = <>
     StoreDefs = True
     AfterInsert = t_formAfterInsert
     AfterEdit = t_formAfterEdit
+    BeforePost = t_formBeforePost
     BeforeDelete = t_formBeforeDelete
     AfterDelete = t_formAfterDelete
     OnNewRecord = t_formNewRecord
