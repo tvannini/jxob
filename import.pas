@@ -3104,7 +3104,7 @@ begin
   end;
 
   //importa i server
-  r.Expression := 'o2def::server(.*?);';
+  r.Expression := '^\s*o2def::server(.*?);';
   if r.Exec(programma.Lines.Text) then
   begin
     repeat
@@ -3155,7 +3155,7 @@ begin
   programma.SelLength := 0;
 
 
-  r.Expression := 'o2def::db(.*?);';
+  r.Expression := '^\s*o2def::db(.*?);';
   if r.Exec(programma.Lines.Text) then
   begin
     repeat
