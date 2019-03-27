@@ -3008,7 +3008,7 @@ object dm_form: Tdm_form
         Fields = 'prg;alias'
         Options = [ixPrimary, ixUnique]
       end>
-    IndexFieldNames = 'prg;alias'
+    IndexName = 't_variabili_prgIndex1'
     MasterFields = 'nome'
     MasterSource = ds_programmi
     Params = <>
