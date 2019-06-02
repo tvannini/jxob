@@ -479,6 +479,13 @@ type
     t_controlliformPinCols: TSmallintField;
     t_reportfieldshown_field: TStringField;
     t_input_outputdecode_exp: TStringField;
+    t_formulas_sql: TClientDataSet;
+    ds_formulas_sql: TDataSource;
+    t_formulas_sqlID: TIntegerField;
+    t_formulas_sqlType: TStringField;
+    t_formulas_sqlExp: TIntegerField;
+    t_formulas_sqlField: TStringField;
+    t_selectsql: TStringField;
     procedure t_tabelleBeforeInsert(DataSet: TDataSet);
     procedure t_tabelleSaveRecord(DataSet: TDataSet; var Accept: boolean);
     procedure t_indici_savNewRecord(DataSet: TDataSet);
@@ -647,6 +654,7 @@ type
     procedure t_controlliformnomecontrolloSetText(Sender: TField;
       const Text: String);
     procedure t_formBeforePost(DataSet: TDataSet);
+    procedure t_formulas_sqlBeforePost(DataSet: TDataSet);
 
   private
     temp_table: TClientDataSet;
@@ -683,7 +691,7 @@ var
 
 implementation
 
-uses work, checkprg, sceltaespressioni, StrUtils;
+uses work, checkprg, sceltaespressioni, StrUtils, Math;
 
 {$R *.dfm}
 
@@ -3025,6 +3033,50 @@ begin
   CDSClone.Close;
   CDSClone.Free;
 
+end;
+
+
+procedure Tdm_form.t_formulas_sqlBeforePost(DataSet: TDataSet);
+begin
+  // ______________________________ Field reference set but wrong param type ___
+  if (t_formulas_sqlField.Value <> '') and
+     (t_formulas_sqlType.Value <> 'Ref') then
+  begin
+    // ____________ Type to 'Exp' and expression set: remove field reference ___
+    if (t_formulas_sqlType.Value = 'Exp') and (t_formulas_sqlExp.Value > 0) then
+    begin
+      t_formulas_sqlField.Value := '';
+    end
+    // __________________________________________________ Fix parameter type ___
+    else
+    begin
+      t_formulas_sqlType.Value := 'Ref';
+      t_formulas_sqlExp.Value  := 0;
+    end;
+  end
+  // ___________________________________ Expression set but wrong param type ___
+  else if (t_formulas_sqlExp.Value > 0) and
+          (t_formulas_sqlType.Value <> 'Exp') then
+  begin
+    // ____________ Type to 'Ref' and field reference set: remove expression ___
+    if (t_formulas_sqlType.Value = 'Ref') and
+       (t_formulas_sqlField.Value <> '') then
+    begin
+      t_formulas_sqlExp.Value := 0;
+    end
+    // __________________________________________________ Fix parameter type ___
+    else
+    begin
+      t_formulas_sqlType.Value  := 'Exp';
+      t_formulas_sqlField.Value := '';
+    end;
+  end;
+  // __________________________________________________ Delete empty records ___
+  if (t_formulas_sqlExp.Value = 0) and (t_formulas_sqlField.Value = '') then
+  begin
+    DataSet.Cancel;
+    Abort;
+  end;
 end;
 
 end.

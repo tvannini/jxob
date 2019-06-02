@@ -37,7 +37,7 @@ object f_import: Tf_import
     Left = 16
     Top = 178
     Width = 281
-    Height = 100
+    Height = 103
     Lines.Strings = (
       'o2def::tab("o2_users", "default", "o2sys_users", "o2user");'
       ''
@@ -49,6 +49,7 @@ object f_import: Tf_import
       #9'o2def::field("last_time", "last_time", "_o2time");'
       #9'o2def::field("login_type", "login_type", "o2sys_login_type");'
       #9'o2def::field("last_pwd_date", "last_pwd_date", "_o2date");'
+      #9'o2def::field("creation_date", "creation_date", "_o2date");'
       
         #9'o2def::field("force_pwd_change", "force_pwd_change", "_o2logica' +
         'l");'
@@ -62,9 +63,9 @@ object f_import: Tf_import
   end
   object tab_sessions: TMemo
     Left = 16
-    Top = 278
+    Top = 280
     Width = 281
-    Height = 100
+    Height = 98
     Lines.Strings = (
       'o2def::tab("o2_sessions", "default", "o2sys_sessions", "sid");'
       ''

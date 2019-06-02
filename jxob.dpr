@@ -68,7 +68,8 @@ uses
   debug in 'debug.pas' {f_debug},
   cvsinfo in 'cvsinfo.pas' {f_CVSInfo},
   grid_options in 'grid_options.pas' {f_grid_options},
-  o2frame in 'o2frame.pas';
+  o2frame in 'o2frame.pas',
+  formula_sql_concat in 'formula_sql_concat.pas' {f_formula_sql_concat};
 
 {$R *.res}
 
@@ -94,6 +95,7 @@ begin
   Application.CreateForm(Tf_debug, f_debug);
   Application.CreateForm(Tf_CVSInfo, f_CVSInfo);
   Application.CreateForm(Tf_grid_options, f_grid_options);
+  Application.CreateForm(Tf_formula_sql_concat, f_formula_sql_concat);
   f_login := Tf_login.Create(Application);
       f_login.ShowModal;
       f_login.Update;

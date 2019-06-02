@@ -988,7 +988,8 @@ begin
       while not t_select.EOF do
       begin
         if (t_selecttipo.Value <> 'Select') and
-          (t_selecttipo.Value <> 'Calculated') then
+           (t_selecttipo.Value <> 'Calculated') and
+           (t_selecttipo.Value <> 'SQL') then
         begin
           Memo2.Lines.Append('Check row without tipology. Line: ' +
             t_selectidcampo.AsString + ' View:' + nome_view)
@@ -1030,12 +1031,12 @@ begin
         end;
 
         //esistenza espressioni init min max not like
-        if (errexp(t_selectinit.AsString)) then
+        if (t_selecttipo.Value = 'Calculated') and
+           (errexp(t_selectinit.AsString)) then
         begin
           Memo2.Lines.Append('Calc Expression ' + t_selectinit.AsString +
             ' not found in Row ' + t_selectidcampo.AsString + ' - View:' + nome_view)
         end;
-
 
         if (errexp(t_selectrangemin.AsString)) then
         begin

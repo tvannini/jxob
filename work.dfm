@@ -763,7 +763,7 @@ object f_work: Tf_work
         Top = 0
         Width = 862
         Height = 607
-        ActivePage = ts_taskprop
+        ActivePage = ts_main
         Align = alClient
         Style = tsButtons
         TabOrder = 1
@@ -1238,14 +1238,16 @@ object f_work: Tf_work
                 AutoDropDown = True
                 ButtonStyle = cbsCombo
                 Color = clBtnFace
-                DropDownRows = 2
+                DropDownRows = 3
                 FieldName = 'tipo'
                 PickList.Strings = (
                   'Select'
-                  'Formula')
+                  'Formula'
+                  'SQL')
                 PickValues.Strings = (
                   'Select'
-                  'Calculated')
+                  'Calculated'
+                  'SQL')
                 Title.Alignment = taLeftJustify
                 Title.Caption = 'Type'
                 ValueChecked = 'Select'

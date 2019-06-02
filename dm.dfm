@@ -31,18 +31,18 @@ object dm_form: Tdm_form
   end
   object ds_task: TDataSource
     DataSet = t_task
-    Left = 632
-    Top = 192
+    Left = 552
+    Top = 200
   end
   object ds_usa_file: TDataSource
     DataSet = t_usa_file
-    Left = 712
-    Top = 192
+    Left = 632
+    Top = 200
   end
   object ds_select: TDataSource
     DataSet = t_select
-    Left = 872
-    Top = 192
+    Left = 792
+    Top = 200
   end
   object t_tabelle: TClientDataSet
     Aggregates = <>
@@ -533,8 +533,8 @@ object dm_form: Tdm_form
     BeforeDelete = t_taskBeforeDelete
     AfterDelete = t_taskAfterDelete
     OnNewRecord = t_taskNewRecord
-    Left = 632
-    Top = 144
+    Left = 552
+    Top = 152
     object t_taskprg: TStringField
       DisplayWidth = 8
       FieldName = 'prg'
@@ -660,8 +660,8 @@ object dm_form: Tdm_form
     BeforeDelete = t_usa_fileBeforeDelete
     AfterDelete = t_usa_fileAfterDelete
     OnNewRecord = t_usa_fileNewRecord
-    Left = 712
-    Top = 144
+    Left = 632
+    Top = 152
     object t_usa_fileprg: TStringField
       DisplayWidth = 5
       FieldName = 'prg'
@@ -767,6 +767,11 @@ object dm_form: Tdm_form
       item
         Name = 'like'
         DataType = ftInteger
+      end
+      item
+        Name = 'sql'
+        DataType = ftString
+        Size = 500
       end>
     IndexDefs = <
       item
@@ -792,8 +797,8 @@ object dm_form: Tdm_form
     BeforeDelete = t_selectBeforeDelete
     AfterDelete = t_selectAfterDelete
     OnNewRecord = t_selectNewRecord
-    Left = 872
-    Top = 144
+    Left = 792
+    Top = 152
     object t_selectprg: TStringField
       DisplayWidth = 17
       FieldName = 'prg'
@@ -848,6 +853,10 @@ object dm_form: Tdm_form
     object t_selectlike: TIntegerField
       DisplayWidth = 15
       FieldName = 'like'
+    end
+    object t_selectsql: TStringField
+      FieldName = 'sql'
+      Size = 500
     end
   end
   object t_servers: TClientDataSet
@@ -3138,8 +3147,8 @@ object dm_form: Tdm_form
     AfterEdit = t_unionAfterEdit
     AfterDelete = t_unionAfterDelete
     OnNewRecord = t_unionNewRecord
-    Left = 792
-    Top = 144
+    Left = 712
+    Top = 152
     object t_unionprg: TStringField
       DisplayWidth = 18
       FieldName = 'prg'
@@ -3184,8 +3193,8 @@ object dm_form: Tdm_form
   end
   object ds_union: TDataSource
     DataSet = t_union
-    Left = 792
-    Top = 192
+    Left = 712
+    Top = 200
   end
   object t_modelli: TClientDataSet
     Aggregates = <>
@@ -3768,8 +3777,8 @@ object dm_form: Tdm_form
     AfterInsert = t_aggregAfterInsert
     AfterEdit = t_aggregAfterEdit
     AfterDelete = t_aggregAfterDelete
-    Left = 952
-    Top = 144
+    Left = 872
+    Top = 152
     object t_aggregprg: TStringField
       FieldName = 'prg'
       Size = 100
@@ -3796,8 +3805,8 @@ object dm_form: Tdm_form
   end
   object ds_aggreg: TDataSource
     DataSet = t_aggreg
-    Left = 952
-    Top = 192
+    Left = 872
+    Top = 200
   end
   object t_labels: TClientDataSet
     Aggregates = <>
@@ -4255,5 +4264,57 @@ object dm_form: Tdm_form
     DataSet = tmp_callparams
     Left = 792
     Top = 448
+  end
+  object t_formulas_sql: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <
+      item
+        Name = 'ID'
+        DataType = ftInteger
+      end
+      item
+        Name = 'Type'
+        DataType = ftString
+        Size = 20
+      end
+      item
+        Name = 'Exp'
+        DataType = ftInteger
+      end
+      item
+        Name = 'Field'
+        DataType = ftString
+        Size = 200
+      end>
+    IndexDefs = <
+      item
+        Name = 't_formulas_sqlIndex1'
+        Fields = 'ID'
+      end>
+    IndexName = 't_formulas_sqlIndex1'
+    Params = <>
+    StoreDefs = True
+    BeforePost = t_formulas_sqlBeforePost
+    Left = 952
+    Top = 152
+    object t_formulas_sqlID: TIntegerField
+      AutoGenerateValue = arAutoInc
+      FieldName = 'ID'
+    end
+    object t_formulas_sqlType: TStringField
+      FieldName = 'Type'
+    end
+    object t_formulas_sqlExp: TIntegerField
+      FieldName = 'Exp'
+    end
+    object t_formulas_sqlField: TStringField
+      FieldName = 'Field'
+      Size = 200
+    end
+  end
+  object ds_formulas_sql: TDataSource
+    DataSet = t_formulas_sql
+    Left = 952
+    Top = 200
   end
 end

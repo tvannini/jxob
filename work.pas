@@ -812,8 +812,8 @@ uses dm, area_form, start, sceltacampofile, sceltaprogramma,
   sceltaazione, copymove, sceltarecordset, sceltaform, sceltadb,
   sceltacampiprg, sceltatipodato, vers, sceltachiavefile, scelta_tipo_select,
   sceltaserver, sceltadbengine, sceltaespressioni, sceltatabella, sceltafiletask,
-  oggetti_form, parametri_call, parametri, editorphp, checkprg, nuovoprogetto, scelta_css,
-  import, export, cvs, cvsinfo, scelta_message, sceltamodello,
+  formula_sql_concat, oggetti_form, parametri_call, parametri, editorphp, checkprg,
+  nuovoprogetto, scelta_css, import, export, cvs, cvsinfo, scelta_message, sceltamodello,
   sceltaio, sceltalabel, sceltamenu, print, preferences, users,
   locate, go_to, about, conversioni, sceltacampiview, getdef, importfrom,
   JvColorCombo, find,sceltacampotab, TypInfo, crossref, wizmask, DateUtils, shortcut, debug,
@@ -969,7 +969,7 @@ begin
   // _______________________________________________________________ Version ___
   build_1 := 2;
   // _______________________________________________________________ Release ___
-  build_2 := 4;
+  build_2 := 5;
   // ______________________________________________ Build release - NOT USED ___
   build_3 := 0;
   build   := IntToStr(build_1) + '.' + IntToStr(build_2);
@@ -1666,7 +1666,8 @@ begin
      else DBGrid_select.SelectedField := dm_form.t_selectrangemin;
   end;
 
-  if (dm_form.t_selecttipo.Value = 'Calculated') and ((DBGrid_select.SelectedField=dm_form.t_selecttabella) or (DBGrid_select.SelectedField=dm_form.t_selectcampo)) then
+  if ((dm_form.t_selecttipo.Value = 'Calculated') or (dm_form.t_selecttipo.Value = 'SQL')) and
+     ((DBGrid_select.SelectedField=dm_form.t_selecttabella) or (DBGrid_select.SelectedField=dm_form.t_selectcampo)) then
   begin
     if campo_in_grid_select = 'con_nome' then DBGrid_select.SelectedField := dm_form.t_selecttipo
      else DBGrid_select.SelectedField := dm_form.t_selectcon_nome;
@@ -1790,14 +1791,31 @@ begin
 
   end;
 
-  if (campo_in_grid_select = 'init') or
+  // __________________________________________________________ SQL formulas ___
+  if (campo_in_grid_select = 'init') and
+     (dm_form.t_selecttipo.Text = 'SQL') then
+  begin
+    if f_formula_sql_concat.ShowModal() = mrOk then
+    begin
+      if (dm_form.t_select.State = dsEdit) or
+         (dm_form.t_select.State = dsInsert) then
+      begin
+        dm_form.t_select.Post
+      end;
+      dm_form.t_select.Edit;
+      dm_form.t_selectsql.Value  := f_formula_sql_concat.ResParsText.Text;
+      dm_form.t_selectinit.Value := f_formula_sql_concat.ResParsCount;
+    end;
+  end
+  // ___________________________________________________________ Expressions ___
+  else if (campo_in_grid_select = 'init') or
     (campo_in_grid_select = 'rangemin') or
     (campo_in_grid_select = 'rangemax') or
     (campo_in_grid_select = 'not') or
     (campo_in_grid_select = 'like') then
-
   begin
-    if (dm_form.t_select.State = dsEdit) or (dm_form.t_select.State = dsInsert) then
+    if (dm_form.t_select.State = dsEdit) or
+       (dm_form.t_select.State = dsInsert) then
     begin
       dm_form.t_select.Post
     end;
@@ -1807,7 +1825,7 @@ begin
     end;
     pos_select := dm_form.t_select.GetBookmark;
     if DBGrid_select.SelectedField.Text <> '' then exp_local:=strtoint(DBGrid_select.SelectedField.Text) else exp_local:= 0;
-    exp_local:=call_scelta_exp(exp_local);
+    exp_local := call_scelta_exp(exp_local);
     dm_form.t_select.GotoBookmark(pos_select);
     dm_form.t_select.FreeBookmark(pos_select);
     if exp_local <> 0 then
@@ -3941,6 +3959,7 @@ begin
     tmp_postab.Close;
     tmp_parametri.Close;
     tmp_callparams.Close;
+    t_formulas_sql.Close;
 
     t_applicazione.FileName := tempdir + progetto + '_' + user + '_application.cds';
     t_servers.FileName   := tempdir + progetto + '_' + user + '_servers.cds';
@@ -3981,6 +4000,7 @@ begin
     tmp_postab.FileName := tempdir + progetto + '_' + user + '_tmp_postab.cds';
     tmp_parametri.FileName := tempdir + progetto + '_' + user + '_tmp_parameters.cds';
     tmp_callparams.FileName := tempdir + progetto + '_' + user + '_tmp_callparams.cds';
+    t_formulas_sql.FileName := tempdir + progetto + '_' + user + '_tmp_sql_formulas.cds';
 
     //razza tutte le tabelle
     if FileExists(tempdir + progetto + '_' + user + '_application.cds') then
@@ -4469,6 +4489,14 @@ begin
     end
     else begin
       tmp_callparams.CreateDataSet
+    end;
+
+    if FileExists(tempdir + progetto + '_' + user + '_tmp_sql_formulas.cds') then
+    begin
+      t_formulas_sql.Open
+    end
+    else begin
+      t_formulas_sql.CreateDataSet
     end;
 
     t_applicazione.ReadOnly := False;

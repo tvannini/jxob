@@ -64,7 +64,7 @@ var
   css10, css11, css12, css13, css14, css15, valori, indice, azione, maschera,
   boolean1, parentname, parentinfo, exp1, exp2, exp3, exp4, exp5, exp6, exp7,
   prefisso_per_view1, prefisso_per_view2, id, id_padre, nome_prg, nome_risorsa,
-  master, index, dircds, Expand: string;
+  master, index, dircds, Expand, SQLdef: string;
   tokenlist: TStrings;
   istruzione, rif_oggetto, parametri, nomecontrollo, tipo: string;
   i, posiz1, posiz2, posiz3, posiz4, submit, tooltipexp: integer;
@@ -434,7 +434,7 @@ begin
             exp4 := 'null';
           end;
           // ____________________________________________ Formula expression ___
-          if t_selectinit.Value <> 0 then
+          if (t_selectinit.Value <> 0) and (t_selecttipo.Value <> 'SQL') then
           begin
             exp5 := '"' + nomeprg + '_exp_' +
                     IntToStr(t_selectinit.Value) + '()"';
@@ -443,7 +443,7 @@ begin
           begin
             exp5 := 'null';
           end;
-          // _________ Selects and link criteria (no formula and no virtual) ___
+          // _ Selects and link criteria (no formula, no SQL and no virtual) ___
           if (t_selecttipo.Value = 'Select') or
              (t_selecttipo.Value = 'Link') then
           begin
@@ -510,6 +510,31 @@ begin
                       t_selectcon_nome.Value + '", ' + exp5 + ',' +
                       exp1 + ',' + exp2 + ',' + exp3 + ',' + exp4 + ');';
           end; // _______________________________ End variables and formulas ___
+          // __________________________________________________ SQL formulas ___
+          if (t_selecttipo.Value = 'SQL') then
+          begin
+            tipousa        := 'sql_formula';
+            tokenlist      := TStringList.Create;
+            tokenlist.Text := t_selectsql.Text;
+            SQLdef := '';
+            for i := 0 to tokenlist.Count - 1 do
+            begin
+              if StrLeft(tokenlist[i], 1) = #127 then
+              begin
+                SQLdef := SQLdef + '["' +
+                          StrRight(tokenlist[i], StrLength(tokenlist[i]) - 1) +
+                          '"],';
+              end
+              else
+              begin
+                SQLdef := SQLdef + nomeprg + '_exp_' + tokenlist[i] + '(),';
+              end;
+            end;
+            SQLdef := StrLeft(SQLdef, StrLength(SQLdef) - 1);
+            buffer := chr(9) + '$task_' + nometask + '->sql_formula("' +
+                      t_selectcon_nome.Value + '", ["CONCAT",' + SQLdef + '],' +
+                      exp1 + ',' + exp2 + ',' + exp3 + ',' + exp4 + ');';
+          end; // _________________________________________ End SQL formulas ___
           if tipousa <> '' then
           begin
             Memo3.Add(buffer)

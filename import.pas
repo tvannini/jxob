@@ -101,8 +101,10 @@ var
   id_operazione, exp1, exp2, dataprg, datacds, pin_cols: integer;
   i: smallint;
   boolean1, boolean2: boolean;
+  SQLdef: TStringList;
 begin
   Memo1.Lines.Clear;
+  SQLdef := TStringList.Create;
   // ______________________________________________________ Set program name ___
   if nomeprogramma <> '' then
   begin
@@ -781,7 +783,7 @@ begin
 
       //select del task
       r.Expression := 'task_' + trim(t_tasknome.Value) +
-        '->(usa|unisci|match|definisci|calcola|param|aggregate)\((.*?);';
+        '->(usa|unisci|match|definisci|calcola|param|aggregate|sql_formula)\((.*?);';
       puntatore    := 0;
       if r.Exec(programma.Lines.Text) then
       begin
@@ -802,30 +804,34 @@ begin
             if pos('->usa', selezione) > 0 then
             begin
               tipo := 'Select'
-            end;
-            if pos('->match', selezione) > 0 then
+            end
+            else if pos('->match', selezione) > 0 then
             begin
               tipo := 'Match'
-            end;
-            if pos('->unisci', selezione) > 0 then
+            end
+            else if pos('->unisci', selezione) > 0 then
             begin
               tipo := 'Link'
-            end;
-            if pos('->definisci', selezione) > 0 then
+            end
+            else if pos('->definisci', selezione) > 0 then
             begin
               tipo := 'Virtual'
-            end;
-            if pos('->calcola', selezione) > 0 then
+            end
+            else if pos('->calcola', selezione) > 0 then
             begin
               tipo := 'Calculated'
-            end;
-            if pos('->param', selezione) > 0 then
+            end
+            else if pos('->param', selezione) > 0 then
             begin
               tipo := 'Parameter'
-            end;
-            if pos('->aggregate', selezione) > 0 then
+            end
+            else if pos('->aggregate', selezione) > 0 then
             begin
               tipo := 'Aggregate'
+            end
+            else if pos('->sql_formula', selezione) > 0 then
+            begin
+              tipo := 'SQL'
             end;
 
             if tipo <> 'Link' then
@@ -960,6 +966,109 @@ begin
                 dm_form.t_select.InsertRecord([nomeprg, t_taskid.Value, puntatore, tipo, par1,
                   null, null, par8, par4, par5, par6, par7])
               end;
+
+              // _______________________________________________ SQL formula ___
+              if (tipo = 'SQL') then
+              begin
+                SQLdef.Clear;
+                SQLdef.Delimiter := ',';
+                // ______________________________ This gets ["CONCAT", ...]  ___
+                SQLdef.DelimitedText := StrMid(selezione2,
+                                               Pos('[', selezione2) + 1,
+                                               StrLength(selezione2) -
+                                               Pos(']',
+                                                   ReverseString(selezione2)) -
+                                               Pos('[', selezione2));
+                par9 := '';
+                // _______________________________ Skip SQLdef[0] = 'CONCAT' ___
+                for i := 1 to SQLdef.Count - 1 do
+                begin
+                  // ___________________________________ Token as view field ___
+                  if StrLeft(SQLdef[i], 1) = '[' then
+                  begin
+                    par9 := par9 + #127 +
+                            Copy(SQLdef[i], 3, StrLength(SQLdef[i]) - 4) +
+                            #13 + #10;;
+                  end
+                  // ___________________________________ Token by expression ___
+                  else
+                  begin
+                    par9 := par9 +
+                            Copy(StrLeft(SQLdef[i], StrLength(SQLdef[i]) - 2),
+                                 StrLength(nomeprg) + 6,
+                                 StrLength(SQLdef[i]) - StrLength(nomeprg) - 5)+
+                            #13 + #10;
+                  end;
+                end;
+
+                // ________________________________________________ rangemin ___
+                par4 := trim(extractword(2, copy(selezione2,
+                                                 LastDelimiter(']', selezione2),
+                                                 100),
+                                         [',']));
+                if par4 = 'null' then
+                begin
+                  par4 := '0'
+                end
+                else begin
+                  par4 := copy(par4, length(trim(nomeprg)) + 7, 10);
+                  par4 := copy(par4, 1, length(trim(par4)) - 3);
+                end;
+                // ________________________________________________ rangemax ___
+                par5 := trim(extractword(3, copy(selezione2,
+                                                 LastDelimiter(']', selezione2),
+                                                 100),
+                                         [',']));
+                if par5 = 'null' then
+                begin
+                  par5 := '0'
+                end
+                else begin
+                  par5 := copy(par5, length(trim(nomeprg)) + 7, 10);
+                  par5 := copy(par5, 1, length(trim(par5)) - 3);
+                end;
+                // _____________________________________________________ not ___
+                par6 := trim(extractword(4, copy(selezione2,
+                                                 LastDelimiter(']', selezione2),
+                                                 100),
+                                         [',']));
+                if par6 = 'null' then
+                begin
+                  par6 := '0'
+                end
+                else begin
+                  par6 := copy(par6, length(trim(nomeprg)) + 7, 10);
+                  par6 := copy(par6, 1, length(trim(par6)) - 3);
+                end;
+                // ____________________________________________________ like ___
+                par7 := trim(extractword(5, copy(selezione2,
+                                                 LastDelimiter(']', selezione2),
+                                                 100),
+                                         [',']));
+                if par7 = 'null' then
+                begin
+                  par7 := '0'
+                end
+                else begin
+                  par7 := copy(par7, length(trim(nomeprg)) + 7, 10);
+                  par7 := copy(par7, 1, length(trim(par7)) - 3);
+                end;
+
+                dm_form.t_select.InsertRecord([nomeprg,
+                                               t_taskid.Value,
+                                               puntatore,
+                                               tipo,
+                                               par1,
+                                               null,
+                                               null,
+                                               SQLdef.Count - 1,
+                                               par4,
+                                               par5,
+                                               par6,
+                                               par7,
+                                               par9]);
+              end;
+
             end;
 
             if (tipo = 'Parameter') then
