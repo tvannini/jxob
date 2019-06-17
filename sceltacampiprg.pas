@@ -206,6 +206,13 @@ begin
                                              t_selectidtask.Value,
                                              'nome'));
           end
+          else if t_selecttipo.Value = 'SQL' then
+          begin
+            campo.SubItems.Add('[SQL]');
+            campo.SubItems.Add(t_task.Lookup('id',
+                                             t_selectidtask.Value,
+                                             'nome'));
+          end
           else
           begin
             v := t_usa_file.Lookup('idtask;con_nome',
