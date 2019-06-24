@@ -655,6 +655,8 @@ type
       const Text: String);
     procedure t_formBeforePost(DataSet: TDataSet);
     procedure t_formulas_sqlBeforePost(DataSet: TDataSet);
+    procedure t_formulas_sqlAfterPost(DataSet: TDataSet);
+    procedure t_formulas_sqlAfterInsert(DataSet: TDataSet);
 
   private
     temp_table: TClientDataSet;
@@ -3077,6 +3079,27 @@ begin
     DataSet.Cancel;
     Abort;
   end;
+end;
+
+
+procedure Tdm_form.t_formulas_sqlAfterPost(DataSet: TDataSet);
+  var missID, nextID: integer;
+begin
+  if t_formulas_sqlID.Value < 1 then
+  begin
+    missID := t_formulas_sqlID.Value;
+    t_formulas_sql.Last;
+    nextID := t_formulas_sqlID.Value + 1;
+    t_formulas_sql.Locate('ID', missID, []);
+    t_formulas_sql.Edit;
+    t_formulas_sqlID.Value := nextID;
+    t_formulas_sql.Post;
+  end;
+end;
+
+procedure Tdm_form.t_formulas_sqlAfterInsert(DataSet: TDataSet);
+begin
+  t_formulas_sqlID.Value := -1;
 end;
 
 end.

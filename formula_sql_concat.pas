@@ -264,7 +264,7 @@ begin
   with dm_form do
   begin
     t_formulas_sql.Append;
-    ParamsGrid.Columns[3].Field.FocusControl;
+    ParamsGrid.Columns[1].Field.FocusControl;
   end;
 end;
 

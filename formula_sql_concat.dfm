@@ -64,6 +64,12 @@ object f_formula_sql_concat: Tf_formula_sql_concat
     OnKeyUp = ParamsGridKeyUp
     Columns = <
       item
+        FieldName = 'ID'
+        Title.Caption = '#'
+        Visible = True
+        Width = 37
+      end
+      item
         FieldName = 'Exp'
         Title.Caption = 'Expression'
         Visible = True

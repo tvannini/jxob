@@ -4290,11 +4290,14 @@ object dm_form: Tdm_form
       item
         Name = 't_formulas_sqlIndex1'
         Fields = 'ID'
+        Options = [ixPrimary, ixUnique]
       end>
     IndexName = 't_formulas_sqlIndex1'
     Params = <>
     StoreDefs = True
+    AfterInsert = t_formulas_sqlAfterInsert
     BeforePost = t_formulas_sqlBeforePost
+    AfterPost = t_formulas_sqlAfterPost
     Left = 952
     Top = 152
     object t_formulas_sqlID: TIntegerField
