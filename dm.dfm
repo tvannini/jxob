@@ -1140,8 +1140,6 @@ object dm_form: Tdm_form
     object t_formnomeform: TStringField
       DisplayWidth = 30
       FieldName = 'nomeform'
-      OnChange = t_formnomeformChange
-      OnSetText = t_formnomeformSetText
       Size = 150
     end
     object t_formposizione: TIntegerField

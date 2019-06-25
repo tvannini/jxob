@@ -280,7 +280,6 @@ type
     dbgrid_appvars: TDBGrid;
     GroupBox5: TGroupBox;
     Crossreference1: TMenuItem;
-    Conversion1: TMenuItem;
     pop_vars: TPopupMenu;
     Zoom19: TMenuItem;
     Label60: TLabel;
@@ -357,7 +356,6 @@ type
     pop_defmenu: TPopupMenu;
     Zoom24: TMenuItem;
     moverow: TMenuItem;
-    Importfrom1: TMenuItem;
     salva_prg: TAction;
     Save1: TMenuItem;
     salva_db: TAction;
@@ -639,7 +637,6 @@ type
     procedure db_nomeazioneChange(Sender: TObject);
     procedure Zoom18Click(Sender: TObject);
     procedure About1Click(Sender: TObject);
-    procedure Conversion1Click(Sender: TObject);
     procedure Zoom19Click(Sender: TObject);
     procedure dbgrid_operazioni_savKeyUp(Sender: TObject; var Key: word;
       Shift: TShiftState);
@@ -702,7 +699,6 @@ type
     procedure Zoom23Click(Sender: TObject);
     procedure Zoom24Click(Sender: TObject);
     procedure moverowClick(Sender: TObject);
-    procedure Importfrom1Click(Sender: TObject);
     procedure salva_prgExecute(Sender: TObject);
     procedure salva_dbExecute(Sender: TObject);
     procedure salvaExecute(Sender: TObject);
@@ -815,7 +811,7 @@ uses dm, area_form, start, sceltacampofile, sceltaprogramma,
   formula_sql_concat, oggetti_form, parametri_call, parametri, editorphp, checkprg,
   nuovoprogetto, scelta_css, import, export, cvs, cvsinfo, scelta_message, sceltamodello,
   sceltaio, sceltalabel, sceltamenu, print, preferences, users,
-  locate, go_to, about, conversioni, sceltacampiview, getdef, importfrom,
+  locate, go_to, about, conversioni, sceltacampiview, getdef,
   JvColorCombo, find,sceltacampotab, TypInfo, crossref, wizmask, DateUtils, shortcut, debug,
   JvTypedEdit;
 
@@ -4873,11 +4869,6 @@ begin
   AboutBox.ShowModal;
 end;
 
-procedure Tf_work.Conversion1Click(Sender: TObject);
-begin
-  f_conversioni.ShowModal;
-end;
-
 procedure Tf_work.Zoom19Click(Sender: TObject);
 begin
   f_sceltamodel.ShowModal;
@@ -6204,11 +6195,6 @@ begin
 
 
 
-end;
-
-procedure Tf_work.Importfrom1Click(Sender: TObject);
-begin
-  f_importfrom.ShowModal;
 end;
 
 

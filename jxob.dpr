@@ -56,7 +56,6 @@ uses
   Controls,
   preferences in 'preferences.pas' {f_config},
   copymove in 'copymove.pas' {f_copymove},
-  importfrom in 'importfrom.pas' {f_importfrom},
   find in 'find.pas' {f_find},
   sceltacampotab in 'sceltacampotab.pas' {f_sceltacampotab},
   tabdef in 'tabdef.pas' {f_tabdef},
@@ -83,7 +82,6 @@ begin
   Application.CreateForm(Tf_editorphp, f_editorphp);
   Application.CreateForm(Tf_config, f_config);
   Application.CreateForm(Tf_copymove, f_copymove);
-  Application.CreateForm(Tf_importfrom, f_importfrom);
   Application.CreateForm(Tf_find, f_find);
   Application.CreateForm(Tf_sceltacampotab, f_sceltacampotab);
   Application.CreateForm(Tf_tabdef, f_tabdef);

@@ -528,7 +528,6 @@ type
     procedure t_operazioniCalcFields(DataSet: TDataSet);
     procedure t_campinomecampoChange(Sender: TField);
     procedure t_tabelleNomeChange(Sender: TField);
-    procedure t_formnomeformChange(Sender: TField);
     procedure t_selectBeforePost(DataSet: TDataSet);
     procedure t_labelsBeforeInsert(DataSet: TDataSet);
     procedure t_labelsNewRecord(DataSet: TDataSet);
@@ -648,7 +647,6 @@ type
     procedure t_indicitestanomekeySetText(Sender: TField;
       const Text: String);
     procedure t_parametrinomeSetText(Sender: TField; const Text: String);
-    procedure t_formnomeformSetText(Sender: TField; const Text: String);
     procedure t_reportfieldCalcFields(DataSet: TDataSet);
     procedure t_input_outputCalcFields(DataSet: TDataSet);
     procedure t_controlliformnomecontrolloSetText(Sender: TField;
@@ -1806,23 +1804,6 @@ begin
   end;
 end;
 
-procedure Tdm_form.t_formnomeformChange(Sender: TField);
-begin
-  t_controlliform.First;
-  while not (t_controlliform.EOF) do
-  begin
-    t_controlliform.Edit;
-    // ________________________________________ Change form name in controls ___
-    t_controlliformnomeform.Value := Sender.AsString;
-    if LeftStr(t_controlliformparent.Value, 7) = '_stage_' then
-    begin
-      t_controlliformparent.Value := '_stage_' + Sender.AsString
-    end;
-    t_controlliform.Next;
-  end;
-end;
-
-
 procedure Tdm_form.t_selectBeforePost(DataSet: TDataSet);
 begin
   if ds_select.State = dsInsert then
@@ -2888,51 +2869,6 @@ begin
   Sender.Value := formatName(Text);
 end;
 
-{*
- * Fired on form name changed: seek and fix references to form.
- *}
-procedure Tdm_form.t_formnomeformSetText(Sender: TField; const Text: String);
-var
-  newName, str_new: String;
-  r: TRegExpr;
-begin
-  // _______________________________ Format new name with only allowed chars ___
-  newName := formatName(Text);
-  if Sender.AsString <> '' then
-  begin
-    // ______________________________________ Check form name in expressions ___
-    t_espressioni.First;
-    r := TRegExpr.Create;
-    while not t_espressioni.EOF do
-    begin
-      t_espressioni.Edit;
-      // ____________________________________ Check and replace in o2form*() ___
-      r.Expression              := 'o2form(\w+)\s*\(["' + #39 + ']' +
-                                    Sender.AsString + '["' + #39 + ']';
-      str_new                   := 'o2form$1(' + #39 + newName + #39;
-      t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
-                                             str_new,
-                                             True);
-      t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value,
-                                             str_new,
-                                             True);
-      // ____________________________________ Check and replace in o2ctrl*() ___
-      r.Expression              := 'o2ctrl(\w+)\s*\(["' + #39 + ']' +
-                                    Sender.AsString + '["' + #39 + ']';
-      str_new                   := 'o2ctrl$1(' + #39 + newName + #39;
-      t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
-                                             str_new,
-                                             True);
-      t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value,
-                                             str_new,
-                                             True);
-      t_espressioni.Next
-    end;
-  end; // ________________________ End of previous value existance condition ___
-  // ________________________________________________ Update form name field ___
-  Sender.Value := newName;
-end;
-
 
 procedure Tdm_form.t_reportfieldCalcFields(DataSet: TDataSet);
 var
@@ -3022,19 +2958,85 @@ end;
 procedure Tdm_form.t_formBeforePost(DataSet: TDataSet);
 var
   CDSClone: TCustomClientDataSet;
+  newName, oldName, str_new: String;
+  r: TRegExpr;
 begin
-  CDSClone := TCustomClientDataSet.Create(dm_form);
-  CDSClone.CloneCursor(t_form, False, False);
-  // ____________ If FormName chenged look for new name in alternate dataset ___
-  if (DataSet.Fields[1].AsString <> DataSet.Fields[1].OldValue) and
-     CDSClone.Locate('nomeform', DataSet.Fields[1].AsString, []) then
+  if DataSet.Fields[1].AsString <> '' then
   begin
-    ShowMessage('Form name ' + DataSet.Fields[1].AsString + ' already exists!');
+    // _____________________________ Format new name with only allowed chars ___
+    newName := formatName(DataSet.Fields[1].AsString);
+    oldName := DataSet.Fields[1].OldValue;
+    // _________________________________________________ If FormName chenged ___
+    if (newName <> oldName) then
+    begin
+      // ____________________________ Look for new name in alternate dataset ___
+      CDSClone := TCustomClientDataSet.Create(dm_form);
+      CDSClone.CloneCursor(t_form, False, False);
+      if CDSClone.Locate('nomeform', newName, []) then
+      begin
+        ShowMessage('Form name ' + newName + ' already exists!');
+        DataSet.Fields[1].Value := oldName;
+        Abort;
+      end
+      // __________________________________________ New name is a valid name ___
+      else
+      begin
+        t_controlliform.MasterSource := nil;
+        t_controlliform.First;
+        while not (t_controlliform.EOF) do
+        begin
+          // __________________________________ Change form name in controls ___
+          if t_controlliformnomeform.Value = oldName then
+          begin
+            t_controlliform.Edit;
+            t_controlliformnomeform.Value := newName;
+            if t_controlliformparent.Value = '_stage_' + oldName then
+            begin
+              t_controlliformparent.Value := '_stage_' + newName
+            end;
+            t_controlliform.Post;
+          end;
+          t_controlliform.Next;
+        end;
+        // __________________________________ Check form name in expressions ___
+        t_espressioni.First;
+        r := TRegExpr.Create;
+        while not t_espressioni.EOF do
+        begin
+          t_espressioni.Edit;
+          // ________________________________ Check and replace in o2form*() ___
+          r.Expression              := 'o2form(\w+)\s*\(["' + #39 + ']' +
+                                        oldName + '["' + #39 + ']';
+          str_new                   := 'o2form$1(' + #39 + newName + #39;
+          t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
+                                                 str_new,
+                                                 True);
+          t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value,
+                                                 str_new,
+                                                 True);
+          // ________________________________ Check and replace in o2ctrl*() ___
+          r.Expression              := 'o2ctrl(\w+)\s*\(["' + #39 + ']' +
+                                        oldName + '["' + #39 + ']';
+          str_new                   := 'o2ctrl$1(' + #39 + newName + #39;
+          t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
+                                                 str_new,
+                                                 True);
+          t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value,
+                                                 str_new,
+                                                 True);
+          t_espressioni.Next
+        end;
+      end;
+    CDSClone.Close;
+    CDSClone.Free;
+    end;
+  end
+  else
+  begin
+    ShowMessage('Insert a valid name for the form!');
+    DataSet.Fields[1].Value := oldName;
     Abort;
   end;
-  CDSClone.Close;
-  CDSClone.Free;
-
 end;
 
 

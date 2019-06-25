@@ -8515,20 +8515,10 @@ object f_work: Tf_work
         ShortCut = 121
         OnClick = Crossreference1Click
       end
-      object Conversion1: TMenuItem
-        Caption = 'Conversion'
-        Visible = False
-        OnClick = Conversion1Click
-      end
       object Gettablesdefinition1: TMenuItem
         Caption = 'Get tables definition'
         Visible = False
         OnClick = Gettablesdefinition1Click
-      end
-      object Importfrom1: TMenuItem
-        Caption = 'Import from...'
-        Visible = False
-        OnClick = Importfrom1Click
       end
       object DEBUG1: TMenuItem
         Caption = 'DEBUG'
