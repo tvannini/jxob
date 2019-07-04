@@ -4672,15 +4672,16 @@ var
   nodotemp:    TTreeNode;
   azionepos, ope_pos: TBookmark;
 begin
-  if InputQuery('New action', 'Action name', nome_azione) then
+  if InputQuery('New action', 'Action name', nome_azione) and
+     (nome_azione <> '') then
   begin
     nome_azione := dm_form.formatName(nome_azione);
     if dm_form.ds_operazioni.State = dsInsert then
     begin
       dm_form.t_operazioni.Post;
     end;
-    azionepos:=dm_form.t_azioni.GetBookmark;
-    ope_pos:=dm_form.t_operazioni.GetBookmark;
+    azionepos := dm_form.t_azioni.GetBookmark;
+    ope_pos   := dm_form.t_operazioni.GetBookmark;
     // ____________________________________________ View name already exists ___
     if dm_form.t_azioni.Locate('azione', nome_azione, [loCaseInsensitive]) then
     begin
@@ -4695,7 +4696,7 @@ begin
       dm_form.t_azioni.Post;
       // ____________________________________________ Add new action to tree ___
       nodotemp := supertree.Items.AddChild(nodo_azioni_all, nome_azione);
-      nodotemp.ImageIndex := 29;
+      nodotemp.ImageIndex    := 29;
       nodotemp.SelectedIndex := 29;
       // ____________________________________________________ Reset datasets ___
       dm_form.t_azioni.GotoBookmark(azionepos);
