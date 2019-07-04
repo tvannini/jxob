@@ -1791,6 +1791,11 @@ begin
   if (campo_in_grid_select = 'init') and
      (dm_form.t_selecttipo.Text = 'SQL') then
   begin
+    if (dm_form.t_select.State = dsEdit) or
+       (dm_form.t_select.State = dsInsert) then
+    begin
+      dm_form.t_select.Post
+    end;
     if f_formula_sql_concat.ShowModal() = mrOk then
     begin
       if (dm_form.t_select.State = dsEdit) or
