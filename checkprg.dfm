@@ -1,6 +1,6 @@
 object f_checkprg: Tf_checkprg
-  Left = 373
-  Top = 82
+  Left = 636
+  Top = 158
   Width = 496
   Height = 581
   Caption = 'Checker Result'
@@ -133,5 +133,12 @@ object f_checkprg: Tf_checkprg
       Caption = 'CheckExpNotUsed'
       OnExecute = CheckExpNotUsedExecute
     end
+  end
+  object DosCMD: TDosCommand
+    InputToOutput = False
+    MaxTimeAfterBeginning = 0
+    MaxTimeAfterLastOutput = 0
+    Left = 448
+    Top = 504
   end
 end

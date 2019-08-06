@@ -33,6 +33,7 @@ type
     ripristina_posizioni: TAction;
     CheckExpNotUsed: TAction;
     btn_elimina_expnotused: TButton;
+    DosCMD: TDosCommand;
     procedure expressioniExecute(Sender: TObject);
     function errview(testo: string): boolean;
     function check_field(testo: string): boolean;
@@ -72,6 +73,7 @@ type
     procedure CheckExpNotUsedExecute(Sender: TObject);
     procedure btn_elimina_expnotusedClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure checkExpSyntax(Sender: TObject);
 
   private
 
@@ -593,16 +595,68 @@ begin
           Memo2.Lines.Append('Expression ' +  IntToStr(idexp) + ': Return is empty');
      end;
 
-
     //verifica se espressione non usata
-
-
-
 
     temp_espressioni.Next;
   end;
 
+  checkExpSyntax(Sender);
+
 end;
+
+
+procedure Tf_checkprg.checkExpSyntax(Sender: TObject);
+var
+  idexp, line: integer;
+  buffer: TStringList;
+  cmdOut: TStringList;
+  txtOut: String;
+begin
+
+  buffer := TStringList.Create;
+  buffer.Clear;
+  buffer.add('<?php');
+
+  temp_espressioni.First;
+  while not (temp_espressioni.EOF) do
+  begin
+    idexp  := temp_espressioni.FieldValues['idexp'];
+    buffer.add('function jxchex_' + IntToStr(idexp) + '() {' +
+               StringReplace(StringReplace(temp_espressioni.FieldValues['expr'],
+                                           #10, ' ', [rfReplaceAll]),
+                             #13, ' ', [rfReplaceAll]) +
+               ' return (' + temp_espressioni.FieldValues['return'] + ');}');
+    temp_espressioni.Next;
+  end;
+  buffer.add('?>');
+  buffer.SaveToFile(f_work.tempdir + 'check_exps.tmp');
+  // ___________________________________________ Execute PHP to check syntax ___
+  cmdOut := TStringList.Create;
+  cmdOut.Clear;
+  dosCMD.OutputLines := cmdOut;
+  dosCMD.CommandLine := ExtractFileDir(Application.ExeName) +
+                        '\php.exe -c ' + ExtractFileDir(Application.ExeName) +
+                        ' -l ' + f_work.tempdir + 'check_exps.tmp';
+  dosCMD.Execute;
+  Sleep(100);
+  // ________________________________________________________ If error found ___
+  if Copy(cmdOut.Text, 1, 25) <> 'No syntax errors detected' then
+  begin
+    // ____________________________________________ Get line error in buffer ___
+    txtOut := Copy(cmdOut.Text,
+                  Pos('check_exps.tmp on line ', cmdOut.Text) + 23,
+                  20);
+    line := StrToInt(Trim(Copy(txtOut, 0, Pos(#10, txtOut)))) - 1;
+    // __________________________________ Get exp-ID and add error to output ___
+    Memo2.Lines.Append('Expression ' +
+                       Copy(buffer.Strings[line],
+                            17,
+                            Pos('(', buffer.Strings[line]) - 17) +
+                       ': syntax error in expression');
+  end;
+
+end;
+
 
 procedure Tf_checkprg.clona_tabelleExecute(Sender: TObject);
 begin
@@ -744,8 +798,6 @@ begin
   end;
 
 end;
-
-
 
 
 procedure Tf_checkprg.check_propertyExecute(Sender: TObject);
@@ -2151,6 +2203,7 @@ begin
   Result:=(appoggio='') or (dm_form.t_parametri.Lookup('id',appoggio,'id') <> appoggio);
 
 end;
+
 
 procedure Tf_checkprg.CheckExpNotUsedExecute(Sender: TObject);
 var exp_usata: boolean;
