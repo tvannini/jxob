@@ -33,7 +33,6 @@ uses
   sceltaview in 'sceltaview.pas' {f_sceltaview},
   checkprg in 'checkprg.pas' {f_checkprg},
   parametri_call in 'parametri_call.pas' {f_parametri},
-  vers in 'vers.pas' {f_vers},
   sceltadb in 'sceltadb.pas' {f_sceltadb},
   sceltaio in 'sceltaio.pas' {f_scelta_output},
   print in 'print.pas' {f_print},
@@ -124,7 +123,6 @@ begin
     Application.CreateForm(Tf_tabdef, f_tabdef);
     Application.CreateForm(Tf_checkprg, f_checkprg);
     Application.CreateForm(Tf_parametri, f_parametri);
-    Application.CreateForm(Tf_vers, f_vers);
     Application.CreateForm(Tf_sceltadb, f_sceltadb);
     Application.CreateForm(Tf_scelta_output, f_scelta_output);
     Application.CreateForm(Tf_print, f_print);

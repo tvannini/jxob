@@ -79,6 +79,8 @@ object f_import: Tf_import
       #9'o2def::field("e_time", "e_time", "_o2time");'
       #9'o2def::field("terminal_id", "terminal_id", "jxterminal_id");'
       #9'o2def::field("app_name", "app_name", "_o2alpha");'
+      #9'o2def::field("run_mode", "run_mode", "o2sys_app_run_mode");'
+      #9'o2def::field("host", "host", "jxhost");'
       ''
       #9'o2def::index("sid", "sid","A");'
       #9'o2def::index("expire", "e_date","A", "e_time","A", "sid","A");'

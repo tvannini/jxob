@@ -806,7 +806,7 @@ implementation
 
 uses dm, area_form, start, sceltacampofile, sceltaprogramma,
   sceltaazione, copymove, sceltarecordset, sceltaform, sceltadb,
-  sceltacampiprg, sceltatipodato, vers, sceltachiavefile, scelta_tipo_select,
+  sceltacampiprg, sceltatipodato, sceltachiavefile, scelta_tipo_select,
   sceltaserver, sceltadbengine, sceltaespressioni, sceltatabella, sceltafiletask,
   formula_sql_concat, oggetti_form, parametri_call, parametri, editorphp, checkprg,
   nuovoprogetto, scelta_css, import, export, cvs, cvsinfo, scelta_message, sceltamodello,
@@ -965,7 +965,7 @@ begin
   // _______________________________________________________________ Version ___
   build_1 := 2;
   // _______________________________________________________________ Release ___
-  build_2 := 5;
+  build_2 := 6;
   // ______________________________________________ Build release - NOT USED ___
   build_3 := 0;
   build   := IntToStr(build_1) + '.' + IntToStr(build_2);
