@@ -607,7 +607,7 @@ end;
 
 procedure Tf_checkprg.checkExpSyntax(Sender: TObject);
 var
-  idexp, line: integer;
+  idexp, line, tooLate: integer;
   buffer: TStringList;
   cmdOut: TStringList;
   txtOut: String;
@@ -620,12 +620,11 @@ begin
   temp_espressioni.First;
   while not (temp_espressioni.EOF) do
   begin
-    idexp  := temp_espressioni.FieldValues['idexp'];
-    buffer.add('function jxchex_' + IntToStr(idexp) + '() {' +
-               StringReplace(StringReplace(temp_espressioni.FieldValues['expr'],
-                                           #10, ' ', [rfReplaceAll]),
-                             #13, ' ', [rfReplaceAll]) +
-               ' return (' + temp_espressioni.FieldValues['return'] + ');}');
+    idexp := temp_espressioni.FieldValues['idexp'];
+    buffer.Add('function jxchex_' + IntToStr(idexp) + '() {');
+    buffer.Add(temp_espressioni.FieldValues['expr']);
+    buffer.Add('return (' + temp_espressioni.FieldValues['return'] + ');');
+    buffer.Add('}');
     temp_espressioni.Next;
   end;
   buffer.add('?>');
@@ -638,15 +637,32 @@ begin
                         '\php.exe -c ' + ExtractFileDir(Application.ExeName) +
                         ' -l ' + f_work.tempdir + 'check_exps.tmp';
   dosCMD.Execute;
-  Sleep(100);
+  tooLate := 0;
+  while ((cmdOut.Text = '') and (tooLate < 100)) do
+  begin
+    tooLate := tooLate + 1;
+    Sleep(10);
+  end;
+  // ______________________________________ Timeout expired for syntax check ___
+  if tooLate > 99 then
+  begin
+    ShowMessage('Syntax check takes too long: not checked!');
+    Exit;
+  end;
   // ________________________________________________________ If error found ___
   if Copy(cmdOut.Text, 1, 25) <> 'No syntax errors detected' then
   begin
+    buffer.Clear;
+    buffer.LoadFromFile(f_work.tempdir + 'check_exps.tmp');
     // ____________________________________________ Get line error in buffer ___
     txtOut := Copy(cmdOut.Text,
                   Pos('check_exps.tmp on line ', cmdOut.Text) + 23,
                   20);
     line := StrToInt(Trim(Copy(txtOut, 0, Pos(#10, txtOut)))) - 1;
+    while Copy(buffer.Strings[line], 0, 16) <> 'function jxchex_' do
+    begin
+      line := line - 1;
+    end;
     // __________________________________ Get exp-ID and add error to output ___
     Memo2.Lines.Append('Expression ' +
                        Copy(buffer.Strings[line],
