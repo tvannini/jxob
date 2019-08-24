@@ -2223,192 +2223,179 @@ end;
 
 procedure Tf_checkprg.CheckExpNotUsedExecute(Sender: TObject);
 var exp_usata: boolean;
+    ConcatText: TStringList;
+    i: Integer;
 begin
-  {
-   Le espressioni non usate.
-   Loop sulle espressioni. Per ognuna controllo in sequenza view, operazioni, form, controlli
-   appena trovo esco.
-  }
-
 try
-Screen.Cursor:=crHourGlass;
-
-With dm_form do
-begin
-  in_importazione:=true;
-  t_espressioni.DisableControls;
-  t_espressioni.First;
-  contatore_errori:=0;
-
-  while not t_espressioni.Eof do
+  Screen.Cursor := crHourGlass;
+  ConcatText    := TStringList.Create;
+  With dm_form do
   begin
-      exp_usata:=False;
-
-      // check istruzioni
-      temp_table:=TClientDataSet.Create(nil);
-      t_operazioni.MasterSource:=nil;
-      temp_table.CloneCursor(t_operazioni,True,False);
-      t_operazioni.MasterSource:=ds_azioni;
-
-
+    in_importazione := true;
+    t_espressioni.DisableControls;
+    t_espressioni.First;
+    contatore_errori := 0;
+    // _________________________________________________ Loop on expressions ___
+    while not t_espressioni.Eof do
+    begin
+      exp_usata := False;
+      // ________________________________________ Check used in instructions ___
+      temp_table := TClientDataSet.Create(nil);
+      t_operazioni.MasterSource := nil;
+      temp_table.CloneCursor(t_operazioni, True, False);
+      t_operazioni.MasterSource := ds_azioni;
       temp_table.First;
+      // ______________________________________________ Loop on instructions ___
       while not temp_table.Eof do
       begin
-      if (temp_table.FieldValues['exp2'] = t_espressioniidexp.Value) or
-         (
-         (temp_table.FieldValues['exp1'] = t_espressioniidexp.Value)
-          and
-         (temp_table.FieldValues['operazione']<>'Call program')
-          and
-         (temp_table.FieldValues['operazione']<>'Go to')
-         )
-         then
-         begin
-          exp_usata:=true;
-          Break;
-         end;
-      temp_table.Next
+        if (temp_table.FieldValues['exp2'] = t_espressioniidexp.Value) or
+           ((temp_table.FieldValues['exp1'] = t_espressioniidexp.Value) and
+            (temp_table.FieldValues['operazione'] <> 'Call program') and
+            (temp_table.FieldValues['operazione'] <> 'Go to'))
+          then
+          begin
+            exp_usata := true;
+            Break;
+          end;
+        temp_table.Next
       end;
-      FreeAndNil(temp_table);   //fine istruzioni
-
-      // check view
+      FreeAndNil(temp_table); // __________________________ Instructions end ___
+      // _______________________________________________ Check used in views ___
       if not(exp_usata) then
       begin
-        temp_table:=TClientDataSet.Create(nil);
-        temp_table.CloneCursor(t_task,True,False);
-
+        temp_table := TClientDataSet.Create(nil);
+        temp_table.CloneCursor(t_task, True, False);
+        temp_table.First;
+        // ___________________________________________________ Loop on views ___
+        while not temp_table.Eof do
+        begin
+          if (temp_table.FieldValues['righevisexp'] =
+              t_espressioniidexp.Value) then
+          begin
+            exp_usata := true;
+            Break;
+          end;
+          temp_table.Next;
+        end;
+        FreeAndNil(temp_table);
+      end; // ____________________________________________________ Views end ___
+      // _________________________________________ Check used in view tables ___
+      if not(exp_usata) then
+      begin
+        temp_table := TClientDataSet.Create(nil);
+        t_usa_file.MasterSource := nil;
+        temp_table.CloneCursor(t_usa_file, True, False);
+        t_usa_file.MasterSource := ds_task;
+        temp_table.First;
+        // _____________________________________________ Loop on view tables ___
+        while not temp_table.Eof do
+        begin
+          if (temp_table.FieldValues['chiave'] = '[o2exp_' +
+                                                 t_espressioniidexp.AsString +
+                                                 ']') then
+          begin
+            exp_usata := true;
+            Break;
+          end;
+          if (temp_table.FieldValues['dbname_exp'] =
+              t_espressioniidexp.AsString) then
+          begin
+            exp_usata := true;
+            Break;
+          end;
+          if (temp_table.FieldValues['tablename_exp'] =
+              t_espressioniidexp.AsString) then
+          begin
+            exp_usata := true;
+            Break;
+          end;
+          temp_table.Next;
+        end;
+        FreeAndNil(temp_table);
+      end; // ______________________________________________ View tables end ___
+      // ________________________________________________ Check used in I/Os ___
+      if not(exp_usata) then
+      begin
+        temp_table := TClientDataSet.Create(nil);
+        temp_table.CloneCursor(t_input_output, True, False);
+        temp_table.First;
+        // ____________________________________________________ Loop on I/Os ___
+        while not temp_table.Eof do
+        begin
+          if (temp_table.FieldValues['outputfile'] =
+              t_espressioniidexp.AsString) then
+          begin
+            exp_usata := true;
+            Break;
+          end;
+          temp_table.Next;
+        end;
+        FreeAndNil(temp_table);
+      end; // _____________________________________________________ I/Os end ___
+      // _____________________________________________ Check used in selects ___
+      if not(exp_usata) then
+      begin
+        temp_table := TClientDataSet.Create(nil);
+        t_select.MasterSource := nil;
+        temp_table.CloneCursor(t_select, True, False);
+        t_select.MasterSource := ds_task;
+        temp_table.First;
+        // _________________________________________________ Loop on selects ___
+        while not temp_table.Eof do
+        begin
+          if ((temp_table.FieldValues['tipo'] <> 'SQL') and
+              (temp_table.FieldValues['init'] = t_espressioniidexp.Value)) or
+             (temp_table.FieldValues['rangemin'] = t_espressioniidexp.Value) or
+             (temp_table.FieldValues['rangemax'] = t_espressioniidexp.Value) or
+             (temp_table.FieldValues['not'] = t_espressioniidexp.Value) or
+             (temp_table.FieldValues['like'] = t_espressioniidexp.Value) then
+          begin
+            exp_usata := true;
+            Break;
+          end;
+          if (temp_table.FieldValues['tipo'] = 'SQL') then
+          begin
+            // ____________________ Check expresion use in concat text lines ___
+            ConcatText.Clear;
+            ConcatText.Text := temp_table.FieldValues['sql'];
+            for i := 0 to ConcatText.Count - 1 do
+            begin
+              if ConcatText.Strings[i] = t_espressioniidexp.AsString then
+              begin
+                exp_usata := true;
+                Break;
+              end;
+            end;
+          end;
+          temp_table.Next
+        end;
+        FreeAndNil(temp_table);
+      end; // __________________________________________________ Selects end ___
+      // _______________________________________ Check used in link criteria ___
+      if not(exp_usata) then
+      begin
+        temp_table := TClientDataSet.Create(nil);
+        t_union.MasterSource := nil;
+        temp_table.CloneCursor(t_union, True, False);
+        t_union.MasterSource := ds_usa_file;
         temp_table.First;
         while not temp_table.Eof do
         begin
-          if (temp_table.FieldValues['righevisexp'] = t_espressioniidexp.Value) then
+          if (temp_table.FieldValues['rangemin'] = t_espressioniidexp.Value) or
+             (temp_table.FieldValues['rangemax'] = t_espressioniidexp.Value) or
+             (temp_table.FieldValues['not'] = t_espressioniidexp.Value) or
+             (temp_table.FieldValues['like'] = t_espressioniidexp.Value) then
           begin
             exp_usata:=true;
             Break;
           end;
-
-          temp_table.Next;
+          temp_table.Next
         end;
-      end;
-      FreeAndNil(temp_table);   //fine view
-
-
-      // check usafile (indice con espressione)
+        FreeAndNil(temp_table);
+      end; // ____________________________________________ Link criteria end ___
+      // _______________________________________________ Check used in forms ___
       if not(exp_usata) then
       begin
-        temp_table:=TClientDataSet.Create(nil);
-        t_usa_file.MasterSource:=nil;
-        temp_table.CloneCursor(t_usa_file,True,False);
-        t_usa_file.MasterSource:=ds_task;
-
-        temp_table.First;
-        while not temp_table.Eof do
-        begin
-
-          if (temp_table.FieldValues['chiave'] ='[o2exp_'+ t_espressioniidexp.AsString+']') then
-          begin
-            exp_usata:=true;
-            Break;
-          end;
-
-          if (temp_table.FieldValues['dbname_exp'] = t_espressioniidexp.AsString) then
-          begin
-            exp_usata:=true;
-            Break;
-          end;
-
-          if (temp_table.FieldValues['tablename_exp'] = t_espressioniidexp.AsString) then
-          begin
-            exp_usata:=true;
-            Break;
-          end;
-
-          temp_table.Next;
-        end;
-      end;
-      FreeAndNil(temp_table);   //fine usafile
-
-
-      // check I/O
-      if not(exp_usata) then
-      begin
-        temp_table:=TClientDataSet.Create(nil);
-        temp_table.CloneCursor(t_input_output,True,False);
-
-        temp_table.First;
-        while not temp_table.Eof do
-        begin
-
-          if (temp_table.FieldValues['outputfile'] =t_espressioniidexp.AsString) then
-          begin
-            exp_usata:=true;
-            Break;
-          end;
-
-          temp_table.Next;
-        end;
-      end;
-      FreeAndNil(temp_table);   //fine IO
-
-      // check select
-      if not(exp_usata) then
-      begin
-
-
-      temp_table:=TClientDataSet.Create(nil);
-
-      t_select.MasterSource:=nil;
-      temp_table.CloneCursor(t_select,True,False);
-      t_select.MasterSource:=ds_task;
-
-      temp_table.First;
-      while not temp_table.Eof do
-      begin
-      if (temp_table.FieldValues['init'] = t_espressioniidexp.Value) or
-         (temp_table.FieldValues['rangemin'] = t_espressioniidexp.Value) or
-         (temp_table.FieldValues['rangemax'] = t_espressioniidexp.Value) or
-         (temp_table.FieldValues['not'] = t_espressioniidexp.Value) or
-         (temp_table.FieldValues['like'] = t_espressioniidexp.Value)
-         then
-         begin
-          exp_usata:=true;
-          Break;
-         end;
-      temp_table.Next
-      end;
-      FreeAndNil(temp_table);   //fine select
-
-      end;
-
-      if not(exp_usata) then
-      begin
-      // check union
-      temp_table:=TClientDataSet.Create(nil);
-      t_union.MasterSource:=nil;
-      temp_table.CloneCursor(t_union,True,False);
-      t_union.MasterSource:=ds_usa_file;
-
-      temp_table.First;
-      while not temp_table.Eof do
-      begin
-      if (temp_table.FieldValues['rangemin'] = t_espressioniidexp.Value) or
-         (temp_table.FieldValues['rangemax'] = t_espressioniidexp.Value) or
-         (temp_table.FieldValues['not'] = t_espressioniidexp.Value) or
-         (temp_table.FieldValues['like'] = t_espressioniidexp.Value)
-         then
-         begin
-          exp_usata:=true;
-          Break;
-         end;
-      temp_table.Next
-      end;
-      FreeAndNil(temp_table);   //fine union
-
-      end;
-
-      // check form
-      if not(exp_usata) then
-      begin
-
 
       temp_table:=TClientDataSet.Create(nil);
       temp_table.CloneCursor(t_form,True,False);
