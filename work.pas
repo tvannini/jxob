@@ -1656,20 +1656,37 @@ end;
 procedure Tf_work.DBGrid_selectsavColEnter(Sender: TObject);
 begin
 
-  if (dm_form.t_selecttipo.Value = 'Select') and (DBGrid_select.SelectedField=dm_form.t_selectinit) then
+  // ___________________________________________ In SELECTS skip INIT column ___
+  if (dm_form.t_selecttipo.Value = 'Select') and
+     (DBGrid_select.SelectedField = dm_form.t_selectinit) then
   begin
-    if campo_in_grid_select = 'rangemin' then DBGrid_select.SelectedField := dm_form.t_selectcon_nome
-     else DBGrid_select.SelectedField := dm_form.t_selectrangemin;
-  end;
-
-  if ((dm_form.t_selecttipo.Value = 'Calculated') or (dm_form.t_selecttipo.Value = 'SQL')) and
-     ((DBGrid_select.SelectedField=dm_form.t_selecttabella) or (DBGrid_select.SelectedField=dm_form.t_selectcampo)) then
+    if campo_in_grid_select = 'rangemin' then
+    begin
+      DBGrid_select.SelectedField := dm_form.t_selectcon_nome;
+    end
+    else
+    begin
+      DBGrid_select.SelectedField := dm_form.t_selectrangemin;
+    end;
+  end
+  // _____________ In FORMULAS and SQL-FORMULAS skip TABLE and FIELD columns ___
+  else if ((dm_form.t_selecttipo.Value = 'Calculated') or
+           (dm_form.t_selecttipo.Value = 'SQL')) and
+          ((DBGrid_select.SelectedField = dm_form.t_selecttabella) or
+           (DBGrid_select.SelectedField = dm_form.t_selectcampo)) then
   begin
-    if campo_in_grid_select = 'con_nome' then DBGrid_select.SelectedField := dm_form.t_selecttipo
-     else DBGrid_select.SelectedField := dm_form.t_selectcon_nome;
+    if campo_in_grid_select = 'con_nome' then
+    begin
+      DBGrid_select.SelectedField := dm_form.t_selecttipo;
+    end
+    else
+    begin
+      DBGrid_select.SelectedField := dm_form.t_selectcon_nome;
+    end;
   end;
-
+  // _______________________________________ Set field name selected in grid ___
   campo_in_grid_select := DBGrid_select.SelectedField.FieldName;
+
 end;
 
 procedure Tf_work.DBGrid_selectsavEnter(Sender: TObject);
@@ -5637,17 +5654,18 @@ begin
 
   if (DBGrid_select.SelectedField.Text <> '') and
     (DBGrid_select.SelectedField.Text <> '0') and
-    ((campo_in_grid_select = 'init') or
-    (campo_in_grid_select = 'rangemin') or
-    (campo_in_grid_select = 'rangemax') or
-    (campo_in_grid_select = 'not') or
-    (campo_in_grid_select = 'like')) then
+    (((campo_in_grid_select = 'init') and
+      (dm_form.t_selecttipo.Text <> 'SQL')) or
+     (campo_in_grid_select = 'rangemin') or
+     (campo_in_grid_select = 'rangemax') or
+     (campo_in_grid_select = 'not') or
+     (campo_in_grid_select = 'like')) then
   begin
     dm_form.t_espressioni.Locate('idexp', DBGrid_select.SelectedField.Text, []);
-    panel_expression_view.Visible:=true;
+    panel_expression_view.Visible := true;
   end
   else
-    panel_expression_view.Visible:=false;
+    panel_expression_view.Visible := false;
 
 end;
 
