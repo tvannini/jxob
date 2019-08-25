@@ -3356,6 +3356,7 @@ object dm_form: Tdm_form
     end
     object t_reportalias: TStringField
       FieldName = 'alias'
+      OnSetText = t_reportaliasSetText
       Size = 40
     end
     object t_reporttipo: TStringField
