@@ -127,20 +127,22 @@ begin
     curItem := ResTree.Items.AddChild(RootNode, NodeText);
     // ______________________________________________________ Set item image ___
     ImgIdx := -1;
-    if NodeType = 'table'          then ImgIdx := 16
-    else if NodeType = 'prg'       then ImgIdx := 14
-    else if NodeType = 'view'      then ImgIdx := 0
-    else if NodeType = 'field'     then ImgIdx := 6
-    else if NodeType = 'menu'      then ImgIdx := 12
-    else if NodeType = 'var'       then ImgIdx := 17
-    else if NodeType = 'par'       then ImgIdx := 13
-    else if NodeType = 'form'      then ImgIdx := 9
-    else if NodeType = 'ctrl'      then ImgIdx := 3
-    else if NodeType = 'exp'       then ImgIdx := 18
-    else if NodeType = 'act'       then ImgIdx := 1
-    else if NodeType = 'aggregate' then ImgIdx := 2
-    else if NodeType = 'step'      then ImgIdx := 15
-    else if NodeType = 'io'        then ImgIdx := 10;
+    if NodeType = 'table'            then ImgIdx := 16
+    else if NodeType = 'prg'         then ImgIdx := 14
+    else if NodeType = 'view'        then ImgIdx := 0
+    else if NodeType = 'field'       then ImgIdx := 6
+    else if NodeType = 'formula'     then ImgIdx := 6
+    else if NodeType = 'sql_formula' then ImgIdx := 6
+    else if NodeType = 'menu'        then ImgIdx := 12
+    else if NodeType = 'var'         then ImgIdx := 17
+    else if NodeType = 'par'         then ImgIdx := 13
+    else if NodeType = 'form'        then ImgIdx := 9
+    else if NodeType = 'ctrl'        then ImgIdx := 3
+    else if NodeType = 'exp'         then ImgIdx := 18
+    else if NodeType = 'act'         then ImgIdx := 1
+    else if NodeType = 'aggregate'   then ImgIdx := 2
+    else if NodeType = 'step'        then ImgIdx := 15
+    else if NodeType = 'io'          then ImgIdx := 10;
     curItem.ImageIndex    := ImgIdx;
     curItem.SelectedIndex := ImgIdx;
     // ______________________________________________ Add node to list by ID ___
