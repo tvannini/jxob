@@ -14,7 +14,6 @@ type
     ActionList1: TActionList;
     check_expressions: TAction;
     clona_tabelle: TAction;
-    check_select: TAction;
     check_globale: TAction;
     check_exp_php: TAction;
     termina_comando: TAction;
