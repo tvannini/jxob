@@ -655,6 +655,8 @@ type
     procedure t_formulas_sqlBeforePost(DataSet: TDataSet);
     procedure t_formulas_sqlAfterPost(DataSet: TDataSet);
     procedure t_formulas_sqlAfterInsert(DataSet: TDataSet);
+    procedure t_input_outputnomeSetText(Sender: TField;
+      const Text: String);
 
   private
     temp_table: TClientDataSet;
@@ -3102,6 +3104,12 @@ end;
 procedure Tdm_form.t_formulas_sqlAfterInsert(DataSet: TDataSet);
 begin
   t_formulas_sqlID.Value := -1;
+end;
+
+procedure Tdm_form.t_input_outputnomeSetText(Sender: TField;
+  const Text: String);
+begin
+  Sender.Value := formatName(Text);
 end;
 
 end.

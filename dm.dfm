@@ -3504,6 +3504,7 @@ object dm_form: Tdm_form
     end
     object t_input_outputnome: TStringField
       FieldName = 'nome'
+      OnSetText = t_input_outputnomeSetText
       Size = 40
     end
     object t_input_outputtipo: TStringField
