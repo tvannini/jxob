@@ -658,6 +658,8 @@ type
     procedure t_input_outputnomeSetText(Sender: TField;
       const Text: String);
     procedure t_reportaliasSetText(Sender: TField; const Text: String);
+    procedure t_reportfieldaliasSetText(Sender: TField;
+      const Text: String);
 
   private
     temp_table: TClientDataSet;
@@ -3114,6 +3116,12 @@ begin
 end;
 
 procedure Tdm_form.t_reportaliasSetText(Sender: TField;
+  const Text: String);
+begin
+  Sender.Value := formatName(Text);
+end;
+
+procedure Tdm_form.t_reportfieldaliasSetText(Sender: TField;
   const Text: String);
 begin
   Sender.Value := formatName(Text);
