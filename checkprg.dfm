@@ -13,7 +13,6 @@ object f_checkprg: Tf_checkprg
   OldCreateOrder = False
   PopupMenu = PopupMenu1
   Position = poOwnerFormCenter
-  OnClose = FormClose
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13

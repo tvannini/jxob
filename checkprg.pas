@@ -68,7 +68,6 @@ type
     procedure ripristina_posizioniExecute(Sender: TObject);
     procedure CheckExpNotUsedExecute(Sender: TObject);
     procedure btn_elimina_expnotusedClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure checkExpSyntax(Sender: TObject);
 
   private
@@ -85,7 +84,8 @@ type
     { Private declarations }
   public
     pos_1, pos_2, pos_3, pos_4, pos_5, pos_6, pos_7, pos_8, pos_9, pos_10, pos_11, pos_12, pos_13, pos_14, pos_15, pos_16: TBookmark;
-
+    ErrorsFound: Boolean;
+    
     { Public declarations }
   end;
 
@@ -436,7 +436,8 @@ end;
 
 procedure Tf_checkprg.check_globaleExecute(Sender: TObject);
 begin
-
+  ErrorsFound := False;
+  btn_elimina_expnotused.Visible := False;
   try
     Screen.Cursor := crHourGlass;
     Memo2.Clear;
@@ -462,6 +463,7 @@ begin
       Memo2.Lines.Insert(0, '');
       Memo2.Lines.Insert(1, '   ATTENTION! One error found:');
       Memo2.Lines.Insert(2, '');
+      ErrorsFound := True;
     end
     else
     begin
@@ -469,6 +471,7 @@ begin
       Memo2.Lines.Insert(1, '   ATTENTION! ' + IntToStr(Memo2.Lines.Count - 1) +
                             ' errors found:');
       Memo2.Lines.Insert(2, '');
+      ErrorsFound := True;
     end;
   finally
     Screen.Cursor := crDefault;
@@ -580,11 +583,11 @@ begin
       nome_view := t_tasknome.Value;
       if errazione(t_taskrecordprefix.Value, False) then
       begin
-        Memo2.Lines.Append('The record prefix action dos not exist in view ' + nome_view)
+        Memo2.Lines.Append('The record prefix action does not exist in view ' + nome_view)
       end;
       if errazione(t_taskrecordsufix.Value, False) then
       begin
-        Memo2.Lines.Append('The record suffix action dos not exist in view ' + nome_view)
+        Memo2.Lines.Append('The record suffix action does not exist in view ' + nome_view)
       end;
 
       // usa file
@@ -686,14 +689,8 @@ begin
           t_union.Next
         end;
 
-
-
-
         t_usa_file.Next
       end;
-
-
-
 
       // select
       t_select.First;
@@ -703,8 +700,8 @@ begin
            (t_selecttipo.Value <> 'Calculated') and
            (t_selecttipo.Value <> 'SQL') then
         begin
-          Memo2.Lines.Append('Check row without tipology. Line: ' +
-            t_selectidcampo.AsString + ' View:' + nome_view)
+          Memo2.Lines.Append('Missing select row type in view "' + nome_view +
+                             '", line ' + t_selectidcampo.AsString);
         end;
 
 
@@ -714,7 +711,6 @@ begin
         begin
 
           // esistenza tabella in dbrepository
-
           if t_usa_file.Lookup('con_nome', t_selecttabella.Value, 'con_nome') <>
             t_selecttabella.Value then
           begin
@@ -733,41 +729,63 @@ begin
           end;
         end;
 
-        //esistenza espressioni init min max not like
-        if (t_selecttipo.Value = 'Calculated') and
-           (errexp(t_selectinit.AsString)) then
+        // _______________________________ Check init expression in formulas ___
+        if (t_selecttipo.Value = 'Calculated') then
         begin
-          Memo2.Lines.Append('Calc Expression ' + t_selectinit.AsString +
-            ' not found in Row ' + t_selectidcampo.AsString + ' - View:' + nome_view)
+          if (t_selectinit.AsString = '') or (t_selectinit.AsString = '0') then
+          begin
+            Memo2.Lines.Append('Missing definition expression for formula "' +
+                               t_selectcon_nome.Value + '" in view "' +
+                               nome_view + '" row ' + t_selectidcampo.AsString);
+          end
+          else if errexp(t_selectinit.AsString) then
+          begin
+            Memo2.Lines.Append('Expression ' + t_selectinit.AsString +
+                               ' not found for definition of formula "' +
+                               t_selectcon_nome.Value + '" in view "' +
+                               nome_view + '" row ' + t_selectidcampo.AsString);
+          end;
         end;
-
+        // _________________________________ Check MIN expression in selects ___
         if (errexp(t_selectrangemin.AsString)) then
         begin
-          Memo2.Lines.Append('RangeMin Expression ' + t_selectrangemin.AsString +
-            ' not found in Row ' + t_selectidcampo.AsString + ' - View:' + nome_view)
+          Memo2.Lines.Append('Range Minimum expression ' +
+                             t_selectrangemin.AsString +
+                             ' not found for field "' +
+                             t_selectcon_nome.AsString +
+                             '" in view "' + nome_view +
+                             '" row ' + t_selectidcampo.AsString);
         end;
-
+        // _________________________________ Check MAX expression in selects ___
         if (errexp(t_selectrangemax.AsString)) then
         begin
-          Memo2.Lines.Append('RangeMax Expression ' + t_selectrangemax.AsString +
-            ' not found in Row ' + t_selectidcampo.AsString + ' - View:' + nome_view)
+          Memo2.Lines.Append('Range Maximum expression ' +
+                             t_selectrangemax.AsString +
+                             ' not found for field "' +
+                             t_selectcon_nome.AsString +
+                             '" in view "' + nome_view +
+                             '" row ' + t_selectidcampo.AsString);
         end;
-
+        // _________________________________ Check NOT expression in selects ___
         if (errexp(t_selectnot.AsString)) then
         begin
-          Memo2.Lines.Append('RangeNot Expression ' + t_selectnot.AsString +
-            ' not found in Row ' + t_selectidcampo.AsString + ' - View:' + nome_view)
+          Memo2.Lines.Append('Range Not expression ' +
+                             t_selectnot.AsString +
+                             ' not found for field "' +
+                             t_selectcon_nome.AsString +
+                             '" in view "' + nome_view +
+                             '" row ' + t_selectidcampo.AsString);
         end;
-
+        // ________________________________ Check LIKE expression in selects ___
         if (errexp(t_selectlike.AsString)) then
         begin
-          Memo2.Lines.Append('RangeLike Expression ' + t_selectlike.AsString +
-            ' not found in Row ' + t_selectidcampo.AsString + ' - View:' + nome_view)
+          Memo2.Lines.Append('Range Like expression ' +
+                             t_selectlike.AsString +
+                             ' not found for field "' +
+                             t_selectcon_nome.AsString +
+                             '" in view "' + nome_view +
+                             '" row ' + t_selectidcampo.AsString);
         end;
-
-
-
-
         t_select.Next
       end;
 
@@ -2205,12 +2223,6 @@ begin
   check_globale.Execute;
   CheckExpNotUsed.Execute;
 
-end;
-
-
-procedure Tf_checkprg.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-    btn_elimina_expnotused.Visible:=false;
 end;
 
 end.

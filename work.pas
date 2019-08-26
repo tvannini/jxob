@@ -2087,16 +2087,21 @@ end;
 
 procedure Tf_work.checkExecute(Sender: TObject);
 begin
+
   f_checkprg.check_globale.Execute;
   f_checkprg.ripristina_posizioni.Execute;
-
-  if MessageDlg('Ignore unused expression?', mtConfirmation,[mbYes,mbNo],0) = mrNo then
+  if MessageDlg('Ignore unused expression?',
+                mtConfirmation,
+                [mbYes, mbNo],
+                0) = mrNo then
   begin
    f_checkprg.CheckExpNotUsed.Execute;
-   f_checkprg.btn_elimina_expnotused.Visible:=true;
+   f_checkprg.btn_elimina_expnotused.Visible := True;
   end
-  else f_checkprg.btn_elimina_expnotused.Visible:=false;
-
+  else
+  begin
+    f_checkprg.btn_elimina_expnotused.Visible := False;
+  end;
   f_checkprg.ShowModal;
 
 end;
@@ -3564,9 +3569,8 @@ begin
       // fa sempre il controllo sintattico del programma e se ci sono problemi
       // apre la form per evidenziare i problemi e non fa il checkin !!!)
       f_checkprg.check_globale.Execute;
-      if f_checkprg.Memo2.Lines.Count > 1 then
+      if f_checkprg.ErrorsFound then
       begin
-        ShowMessage('Syntax error');
         f_checkprg.ShowModal;
         forzacheckin := MessageDlg('Do you want check-in the program anyway?',
                                    mtConfirmation,
@@ -6273,9 +6277,8 @@ begin
     begin
       // ________________ Check syntax and open result if errors are present ___
       f_checkprg.check_globale.Execute;
-      if f_checkprg.Memo2.Lines.Count > 1 then
+      if f_checkprg.ErrorsFound then
       begin
-        ShowMessage('Syntax error');
         f_checkprg.ShowModal;
       end;
       f_export.prg_exportExecute(self, dm_form.t_programminome.Value);
