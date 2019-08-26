@@ -17,7 +17,6 @@ type
     check_globale: TAction;
     check_exp_php: TAction;
     termina_comando: TAction;
-    Memo1: TMemo;
     check_property: TAction;
     Memo2: TMemo;
     check_param: TAction;
@@ -39,7 +38,6 @@ type
     function check_espressione(testo: string): boolean;
     function check_o2expvalore(testo: string): boolean;
     function err_o2par(testo: string): boolean;
-    function errnomeobj(testo: string): boolean;
     function errmodello(testo: string): boolean;
     function errtabella(testo: string): boolean;
     function errchiave(testo: string): boolean;
@@ -436,74 +434,44 @@ begin
 end;
 
 
-function Tf_checkprg.errnomeobj(testo: string): boolean;
-var
-  singolo_carattere: string;
-var
-  posizione: integer;
-begin
-    { Questa funzione verifica che il testo inserito nel nome degli oggetti sia privo di caratteri
-      non conformi}
-
-  posizione := 0;
-
-  while posizione <= StrLength(testo) do
-  begin
-    singolo_carattere := StrMid(testo, posizione, 1);
-
-    if
-    (singolo_carattere <> '#') and
-    (
-    (singolo_carattere < #48) or
-      ((singolo_carattere > #57) and (singolo_carattere < #65)) or
-      ((singolo_carattere > #90) and (singolo_carattere < #95)) or
-      ((singolo_carattere > #95) and (singolo_carattere < #97)) or
-      (singolo_carattere > #122)) then
-
-    begin
-      Result := True;
-      Break;
-    end
-    else begin
-      Result := False
-    end;
-
-    Inc(posizione);
-  end;
-
-end;
-
 procedure Tf_checkprg.check_globaleExecute(Sender: TObject);
 begin
 
   try
-  Screen.Cursor:=crHourGlass;
-
-  Memo2.Clear;
-
-  memo_posizioni.Execute;
-
-  clona_tabelleExecute(self);
-  check_property.Execute;
-  check_param.Execute;
-  check_var.Execute;
-  check_view.Execute;
-  check_form.Execute;
-  check_expressions.Execute;
-  check_azioni.Execute;
-  check_io.Execute;
-  check_protocol.Execute;
-
-  ripristina_posizioni.Execute;
-
-  if Memo2.Lines.Count = 0 then
-                            Memo2.Lines.Append('--- Program is ok ---')
-                            else
-                            Memo2.Lines.Append('--- Check this/these error/s ---');
-
+    Screen.Cursor := crHourGlass;
+    Memo2.Clear;
+    memo_posizioni.Execute;
+    clona_tabelleExecute(self);
+    check_property.Execute;
+    check_param.Execute;
+    check_var.Execute;
+    check_view.Execute;
+    check_form.Execute;
+    check_expressions.Execute;
+    check_azioni.Execute;
+    check_io.Execute;
+    check_protocol.Execute;
+    ripristina_posizioni.Execute;
+    if Memo2.Lines.Count = 0 then
+    begin
+      Memo2.Lines.Append('');
+      Memo2.Lines.Append('   Program is OK.');
+    end
+    else if Memo2.Lines.Count = 1 then
+    begin
+      Memo2.Lines.Insert(0, '');
+      Memo2.Lines.Insert(1, '   ATTENTION! One error found:');
+      Memo2.Lines.Insert(2, '');
+    end
+    else
+    begin
+      Memo2.Lines.Insert(0, '');
+      Memo2.Lines.Insert(1, '   ATTENTION! ' + IntToStr(Memo2.Lines.Count - 1) +
+                            ' errors found:');
+      Memo2.Lines.Insert(2, '');
+    end;
   finally
-  Screen.Cursor:=crDefault;
-
+    Screen.Cursor := crDefault;
   end;
 
 end;
@@ -511,91 +479,85 @@ end;
 
 procedure Tf_checkprg.check_propertyExecute(Sender: TObject);
 begin
-  with dm_form do
+  // ____________________________________________________ Check start action ___
+  if errazione(dm_form.t_programmiref.Value, False) then
   begin
-    // nome
-    if errnomeobj(t_programminome.Value) then
-    begin
-      Memo2.Lines.Append('Incorrect program name')
-    end;
-    // azione iniziale
-    if errazione(t_programmiref.Value, False) then
-    begin
-      Memo2.Lines.Append('Initial action does not exist')
-    end;
+    Memo2.Lines.Append('Initial action does not exist');
   end;
 end;
 
+
 procedure Tf_checkprg.check_paramExecute(Sender: TObject);
 begin
+
   with dm_form do
   begin
-    // modello errato sui parametri
+    // __________________________________________ Check parameter data-model ___
     temp_parametri.First;
     while not temp_parametri.EOF do
     begin
-
-      if errnomeobj(temp_parametri.FieldValues['nome']) then
-      begin
-        Memo2.Lines.Append('Incorrect syntax in parameter alias')
-      end;
-
       if (temp_parametri.FieldValues['modello'] = null) or
          (temp_parametri.FieldValues['modello'] = '')  then
       begin
-        Memo2.Lines.Append('Model in parameter "'+ VarToStr(temp_parametri.FieldValues['nome']) +'" not defined')
+        Memo2.Lines.Append('Missing model for parameter (' +
+                           IntToStr(temp_parametri.FieldValues['id']) + ') "' +
+                           VarToStr(temp_parametri.FieldValues['nome']) + '"');
       end
-      else
+      else if (errmodello(temp_parametri.FieldValues['modello'])) then
       begin
-        if (errmodello(temp_parametri.FieldValues['modello'])) then
-        begin
-         Memo2.Lines.Append('Model in parameter "'+ VarToStr(temp_parametri.FieldValues['nome']) +'" does not exists')
-        end;
+        Memo2.Lines.Append('Model for parameter (' +
+                           IntToStr(temp_parametri.FieldValues['id']) + ') "' +
+                           VarToStr(temp_parametri.FieldValues['nome']) +
+                           '" does not exists')
       end;
-
       temp_parametri.Next;
     end;
   end;
+
 end;
 
 function Tf_checkprg.errmodello(testo: string): boolean;
 begin
+
   if testo = '' then
   begin
-      Result:=true;
-      Exit;
+    Result:=true;
+    Exit;
   end;
-
   if testo = dm_form.t_modelli.Lookup('idmodello', testo, 'idmodello') then
   begin
-    Result := False
+    Result := False;
   end
   else begin
-    Result := True
+    Result := True;
   end;
+
 end;
 
 procedure Tf_checkprg.check_varExecute(Sender: TObject);
 begin
+
   with dm_form do
   begin
-    // nome non valido e modello errato
+    // ______________________________ Loop on variables and check data-model ___
     temp_var.First;
     while not temp_var.EOF do
     begin
-
-      if errnomeobj(temp_var.FieldValues['alias']) then
+      if (temp_var.FieldValues['picture'] = null) or
+         (temp_var.FieldValues['picture'] = '')  then
       begin
-        Memo2.Lines.Append('Incorrect syntax in variable alias: ' + temp_var.FieldValues['alias'])
-      end;
-      if errmodello(temp_var.FieldValues['picture']) then
+        Memo2.Lines.Append('Missing model for variable "' +
+                           temp_var.FieldValues['alias'] + '"');
+      end
+      else if errmodello(temp_var.FieldValues['picture']) then
       begin
-        Memo2.Lines.Append('Model in variable dos not exist:' + temp_var.FieldValues['alias'])
+        Memo2.Lines.Append('Model in variable "' +
+                           temp_var.FieldValues['alias'] + '" does not exist');
       end;
-
       temp_var.Next;
     end;
   end;
+
 end;
 
 procedure Tf_checkprg.check_viewExecute(Sender: TObject);
@@ -609,22 +571,13 @@ begin
   f_scelta_campiview.cosa_cerco := 'elenco_view';
   f_scelta_campiview.carica_lista.Execute;
 
-
-  //loop sulle view e per ognuna analizza dati base e dati da tabelle collegate
   with dm_form do
   begin
-
+    // _______________________________________________________ Loop on views ___
     t_task.First;
-
     while not t_task.EOF do
     begin
-
       nome_view := t_tasknome.Value;
-
-      if errnomeobj(nome_view) then
-      begin
-        Memo2.Lines.Append('Incorrect syntax in view alias: ' + nome_view)
-      end;
       if errazione(t_taskrecordprefix.Value, False) then
       begin
         Memo2.Lines.Append('The record prefix action dos not exist in view ' + nome_view)
@@ -634,9 +587,7 @@ begin
         Memo2.Lines.Append('The record suffix action dos not exist in view ' + nome_view)
       end;
 
-
       // usa file
-
       t_usa_file.First;
       n := 0;
       while not t_usa_file.EOF do
@@ -753,15 +704,6 @@ begin
            (t_selecttipo.Value <> 'SQL') then
         begin
           Memo2.Lines.Append('Check row without tipology. Line: ' +
-            t_selectidcampo.AsString + ' View:' + nome_view)
-        end;
-
-
-
-        // per tutti verifica validità alias
-        if (errnomeobj(t_selectcon_nome.Value)) then
-        begin
-          Memo2.Lines.Append('Check select alias: Row ' +
             t_selectidcampo.AsString + ' View:' + nome_view)
         end;
 
@@ -981,13 +923,6 @@ begin
 
       nome_form := t_formnomeform.Value;
 
-      // check nome
-      if (errnomeobj(nome_form)) then
-      begin
-        Memo2.Lines.Append('Check Form alias: Form ' + nome_form)
-      end;
-
-
       // check espressioni di titolo/visible/url/titlebar/statusbar
       if (errexp(t_formdicitura_exp.AsString)) then
       begin
@@ -1085,14 +1020,6 @@ begin
       begin
 
         // ZONA UGUALE PER TUTTI I CONTROLLI
-
-        //nome
-        if errnomeobj(t_controlliformnomecontrollo.Value) then
-        begin
-          Memo2.Lines.Append('Form:' + nome_form + '. Incorrect control name '
-            + t_controlliformnomecontrollo.Value)
-        end;
-
 
         //parent
 
@@ -1467,11 +1394,6 @@ begin
     t_azioni.First;
     while not t_azioni.EOF do
     begin
-      //controlla il nome
-      if errnomeobj(t_azioniazione.Value) then
-      begin
-        memo2.Lines.Append('Actions: Incorrect action name "' + t_azioniazione.Value + '".')
-      end;
 
       nome_azione := t_azioniazione.Value;
 
@@ -1802,74 +1724,61 @@ end;
 
 procedure Tf_checkprg.check_ioExecute(Sender: TObject);
 begin
-   // loop su io
+
    With dm_form do
    begin
-
-       t_input_output.First;
-       while not t_input_output.Eof do
+     // _______________________________________________________ Loop on I/Os ___
+     t_input_output.First;
+     while not t_input_output.Eof do
+     begin
+       // _____________________________________ Check output name expression ___
+       if errexp(t_input_outputoutputfile.AsString, true) then
        begin
-
-           // per ogni io testa nome object e expression di nome
-           if errnomeobj(t_input_outputnome.Value) then
-                         Memo2.Lines.Append('I/O: Incorrect I/O name "' + t_input_outputnome.Value + '"');
-
-
-           if errexp(t_input_outputoutputfile.AsString, true) then
-                         Memo2.Lines.Append('I/O: Expression "' + t_input_outputoutputfile.AsString + '" not found on I/O "' + t_input_outputnome.Value +'"');
-
-       t_input_output.Next;
+         Memo2.Lines.Append('I/O: Expression "' +
+                            t_input_outputoutputfile.AsString +
+                            '" not found on I/O "' +
+                            t_input_outputnome.Value +'"');
        end;
-
-
-
-
+     t_input_output.Next;
+     end;
    end;
 
 end;
 
 procedure Tf_checkprg.check_protocolExecute(Sender: TObject);
 begin
- // loop sui report
+
    With dm_form do
    begin
-
-       t_report.First;
-       while not t_report.Eof do
+     // ____________________________________________________ Loop on reports ___
+     t_report.First;
+     while not t_report.Eof do
+     begin
+       // ____________________________________________ Check protocol fields ___
+       t_reportfield.First;
+       while not t_reportfield.Eof do
        begin
-
-           // per ogni protocl testa nome object
-           if errnomeobj(t_reportalias.Value) then
-                         Memo2.Lines.Append('Protocol: Incorrect protocol name "' + t_reportalias.Value + '"');
-
-           //esamina campi del protocollo
-           t_reportfield.First;
-           while not t_reportfield.Eof do
-           begin
-
-            if errnomeobj(t_reportfieldalias.Value) then
-                         Memo2.Lines.Append('Protocol "' +t_reportalias.Value +'": Incorrect alias name "' + t_reportfieldalias.Value + '"');
-
-            if errctrlref(t_reportfieldcampo.Value) then
-                         Memo2.Lines.Append('Protocol "' +t_reportalias.Value +'": Field not found in line "' + t_reportfieldid.AsString + '"');
-
-            if (t_reportfieldmodel.Value<> '') and (errmodello(t_reportfieldmodel.Value)) then
-                         Memo2.Lines.Append('Protocol "' +t_reportalias.Value +'": Model not found in line "' + t_reportfieldid.AsString + '"');
-
-
-
-           t_reportfield.Next;
-           end;
-
-
-
+         // ____________________________________________________ Check field ___
+         if errctrlref(t_reportfieldcampo.Value) then
+         begin
+           Memo2.Lines.Append('Protocol "' + t_reportalias.Value +
+                              '": Field not found in line "' +
+                              t_reportfieldid.AsString + '"');
+         end;
+         // ____________________________________________________ Check model ___
+         if (t_reportfieldmodel.Value <> '') and
+            (errmodello(t_reportfieldmodel.Value)) then
+         begin
+           Memo2.Lines.Append('Protocol "' + t_reportalias.Value +
+                              '": Model not found in line "' +
+                              t_reportfieldid.AsString + '"');
+         end;
+         t_reportfield.Next;
+       end;
        t_report.Next;
        end;
-
-
-
-
    end;
+
 end;
 
 procedure Tf_checkprg.ripristina_posizioniExecute(Sender: TObject);
@@ -1915,13 +1824,14 @@ end;
 
 
 procedure Tf_checkprg.CheckExpNotUsedExecute(Sender: TObject);
-var exp_usata: boolean;
+var exp_usata, FirstTime: boolean;
     ConcatText: TStringList;
     i: Integer;
 begin
 try
   Screen.Cursor := crHourGlass;
   ConcatText    := TStringList.Create;
+  FirstTime     := True;
   With dm_form do
   begin
     in_importazione := true;
@@ -2256,7 +2166,14 @@ try
 
       if not(exp_usata) then
       begin
-       Memo2.Lines.Append('Expression not used: '+ t_espressioniidexp.AsString);
+        if FirstTime then
+        begin
+          Memo2.Lines.Append('');
+          Memo2.Lines.Append('   Unused expressions:');
+          Memo2.Lines.Append('');
+          FirstTime := False;
+        end;
+        Memo2.Lines.Append('Expression not used: '+ t_espressioniidexp.AsString);
       end;
       t_espressioni.Next
   end;
@@ -2275,21 +2192,20 @@ procedure Tf_checkprg.btn_elimina_expnotusedClick(Sender: TObject);
 var i,idlocal:integer;
 begin
 
-  for i:=0 to Memo2.Lines.Count -1 do
+  for i:=0 to Memo2.Lines.Count - 1 do
   begin
-      if (LeftStr(Memo2.Lines[i],20) = 'Expression not used:') then
-      with dm_form do
-      begin
-         idlocal:=strtoint(MidStr(memo2.Lines[i],21,5));
-         t_espressioni.Locate('idexp',idlocal,[]);
-         t_espressioni.Delete;
-      end;
-
+    if (LeftStr(Memo2.Lines[i],20) = 'Expression not used:') then
+    with dm_form do
+    begin
+      idlocal := StrToInt(MidStr(Memo2.Lines[i], 21, 5));
+      t_espressioni.Locate('idexp', idlocal, []);
+      t_espressioni.Delete;
+    end;
   end;
   check_globale.Execute;
   CheckExpNotUsed.Execute;
-end;
 
+end;
 
 
 procedure Tf_checkprg.FormClose(Sender: TObject; var Action: TCloseAction);

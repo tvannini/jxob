@@ -1,8 +1,8 @@
 object f_checkprg: Tf_checkprg
-  Left = 636
-  Top = 158
+  Left = 610
+  Top = 293
   Width = 496
-  Height = 581
+  Height = 273
   Caption = 'Checker Result'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,47 +18,38 @@ object f_checkprg: Tf_checkprg
   PixelsPerInch = 96
   TextHeight = 13
   object Button1: TButton
-    Left = 200
-    Top = 496
+    Left = 208
+    Top = 208
     Width = 75
     Height = 25
     Caption = '&Ok'
     ModalResult = 1
     TabOrder = 0
   end
-  object Memo1: TMemo
-    Left = 320
-    Top = 480
-    Width = 113
-    Height = 41
-    Lines.Strings = (
-      'Memo1')
-    TabOrder = 1
-    Visible = False
-  end
   object Memo2: TMemo
     Left = 0
     Top = 0
     Width = 488
-    Height = 465
+    Height = 193
     Align = alTop
     Lines.Strings = (
       'Memo2')
     ReadOnly = True
-    TabOrder = 2
+    ScrollBars = ssVertical
+    TabOrder = 1
   end
   object btn_elimina_expnotused: TButton
-    Left = 16
-    Top = 496
+    Left = 24
+    Top = 208
     Width = 153
     Height = 25
     Caption = 'Delete not used expressions'
-    TabOrder = 3
+    TabOrder = 2
     OnClick = btn_elimina_expnotusedClick
   end
   object PopupMenu1: TPopupMenu
-    Left = 80
-    Top = 472
+    Left = 424
+    Top = 208
     object Exit1: TMenuItem
       Caption = 'Exit'
       ShortCut = 27
@@ -66,8 +57,8 @@ object f_checkprg: Tf_checkprg
     end
   end
   object ActionList1: TActionList
-    Left = 280
-    Top = 480
+    Left = 392
+    Top = 208
     object check_expressions: TAction
       Caption = 'check_expressions'
       OnExecute = check_expressionsExecute
@@ -138,7 +129,7 @@ object f_checkprg: Tf_checkprg
     InputToOutput = False
     MaxTimeAfterBeginning = 0
     MaxTimeAfterLastOutput = 0
-    Left = 448
-    Top = 504
+    Left = 456
+    Top = 208
   end
 end
