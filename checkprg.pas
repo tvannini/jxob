@@ -751,7 +751,6 @@ begin
         // ______________________ Check fields and expressions in CONCAT-SQL ___
         else if t_selecttipo.Value = 'SQL' then
         begin
-
           // ______________________ Check expresion use in concat text lines ___
           ConcatText.Clear;
           ConcatText.Text := t_selectsql.AsString;
@@ -1530,6 +1529,7 @@ begin
           // controllo i parametri (variabili e espressioni)
           for i := 0 to f_work.db_parametri.Lines.Count - 1 do
           begin
+            // _____________________________________ Parameter by expression ___
             if StrLeft(f_work.db_parametri.Lines[i], 7) = '[o2exp_' then
             begin
               if errexp(f_import.decodifica_exp(f_work.db_parametri.Lines[i],
@@ -1538,10 +1538,11 @@ begin
                 Memo2.Lines.Append('Action: ' + nome_azione +
                                    ' Line: ' + t_operazioniid.AsString +
                                    '. Expression '+
-                                   f_import.decodifica_exp(f_work.db_parametri.Lines[i],
-                                                           t_programminome.Value) +
+                           f_import.decodifica_exp(f_work.db_parametri.Lines[i],
+                                                   t_programminome.Value) +
                                    ' not found in Call program parameters');
             end
+            // ______________________________________ Parameter by reference ___
             else
             begin
               if ((LowerCase(f_work.db_parametri.Lines[i]) <> 'null') and
@@ -1554,7 +1555,6 @@ begin
               end;
             end;
           end;
-
         end; // _______________________________________________ End CALL-PRG ___
 
         // operatore GOTOPROGRAM (Controllo esistenza programma chiamato)
@@ -2232,7 +2232,7 @@ try
           Memo2.Lines.Append('');
           FirstTime := False;
         end;
-        Memo2.Lines.Append('Expression not used: '+ t_espressioniidexp.AsString);
+        Memo2.Lines.Append('Unused expression: '+ t_espressioniidexp.AsString);
       end;
       t_espressioni.Next
   end;
@@ -2251,12 +2251,12 @@ procedure Tf_checkprg.btn_elimina_expnotusedClick(Sender: TObject);
 var i,idlocal:integer;
 begin
 
-  for i:=0 to Memo2.Lines.Count - 1 do
+  for i := 0 to Memo2.Lines.Count - 1 do
   begin
-    if (LeftStr(Memo2.Lines[i],20) = 'Expression not used:') then
+    if (LeftStr(Memo2.Lines[i], 18) = 'Unused expression:') then
     with dm_form do
     begin
-      idlocal := StrToInt(MidStr(Memo2.Lines[i], 21, 5));
+      idlocal := StrToInt(MidStr(Memo2.Lines[i], 19, 5));
       t_espressioni.Locate('idexp', idlocal, []);
       t_espressioni.Delete;
     end;

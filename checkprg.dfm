@@ -42,7 +42,7 @@ object f_checkprg: Tf_checkprg
     Top = 208
     Width = 153
     Height = 25
-    Caption = 'Delete not used expressions'
+    Caption = 'Delete unused expressions'
     TabOrder = 2
     OnClick = btn_elimina_expnotusedClick
   end
