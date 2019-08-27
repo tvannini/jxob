@@ -565,10 +565,13 @@ end;
 
 procedure Tf_checkprg.check_viewExecute(Sender: TObject);
 var
-  n: integer;
+  n, i: integer;
+  ConcatText: TStringList;
 var
   nome_view: string;
 begin
+
+  ConcatText := TStringList.Create;
 
   //carica listview delle viste in o2viewmodels
   f_scelta_campiview.cosa_cerco := 'elenco_view';
@@ -583,56 +586,55 @@ begin
       nome_view := t_tasknome.Value;
       if errazione(t_taskrecordprefix.Value, False) then
       begin
-        Memo2.Lines.Append('The record prefix action does not exist in view ' + nome_view)
+        Memo2.Lines.Append('The record prefix action does not exist in view ' +
+                           nome_view);
       end;
       if errazione(t_taskrecordsufix.Value, False) then
       begin
-        Memo2.Lines.Append('The record suffix action does not exist in view ' + nome_view)
+        Memo2.Lines.Append('The record suffix action does not exist in view ' +
+                           nome_view);
       end;
-
-      // usa file
+      // _________________________________________ Check tables used in view ___
       t_usa_file.First;
       n := 0;
       while not t_usa_file.EOF do
       begin
-
-        // controlla tipo di tabella in view
+        // _______________________________________ Check table level in view ___
         if (t_usa_file.FieldValues['tipo'] <> 'Main') and
-          (t_usa_file.FieldValues['tipo'] <> 'Link') and
-          (t_usa_file.FieldValues['tipo'] <> 'View') then
+           (t_usa_file.FieldValues['tipo'] <> 'Link') and
+           (t_usa_file.FieldValues['tipo'] <> 'View') then
         begin
-          Memo2.Lines.Append('Level unknown in view ' + nome_view)
+          Memo2.Lines.Append('Unknown level in view "' + nome_view +
+                             '" for table "' + t_usa_filecon_nome.AsString +
+                             '"');
         end;
-
-        // controlla che ci sia un solo main
+        // ____________________ Check only one Main/View table level in view ___
         if ((t_usa_file.FieldValues['tipo'] = 'Main') or
-          (t_usa_file.FieldValues['tipo'] = 'View')) then
+            (t_usa_file.FieldValues['tipo'] = 'View')) then
         begin
           Inc(n)
         end;
         if n > 1 then
         begin
-          Memo2.Lines.Append('Only a Main/View table is allowed in view ' + nome_view)
+          Memo2.Lines.Append('Only one Main/View table is allowed in view "' +
+                             nome_view + '"');
         end;
-
-        //controlla esistenza tabella e chiave di sort
+        // _________________________ Check tables and keys existance in view ___
         if (t_usa_file.FieldValues['tipo'] = 'Main') or
-          (t_usa_file.FieldValues['tipo'] = 'Link') then
+           (t_usa_file.FieldValues['tipo'] = 'Link') then
         begin
-          if errtabella(t_usa_file.FieldValues['tabella']) then
+          if errtabella(t_usa_filetabella.AsString) then
           begin
-            Memo2.Lines.Append('Table ' + t_usa_filetabella.Value + ' does not exist in view ' +
-              nome_view)
+            Memo2.Lines.Append('Table "' + t_usa_filetabella.AsString +
+                               '" in view "' + nome_view + '" does not exist');
           end;
-
-          // si posiziona sul record della tabella x verificare la chiave
-          t_tabelle.Locate('nome', t_usa_file.FieldValues['tabella'], []);
-          if errchiave(t_usa_file.FieldValues['chiave']) then
+          // _________________________ Locate on table record to check index ___
+          t_tabelle.Locate('nome', t_usa_filetabella.AsString, []);
+          if errchiave(t_usa_filechiave.AsString) then
           begin
-            Memo2.Lines.Append('Index does not exist in table ' +
-              t_usa_filetabella.Value + '- view ' + nome_view)
+            Memo2.Lines.Append('Index does not exist for table "' +
+              t_usa_filetabella.AsString + '" in view "' + nome_view + '"');
           end;
-
         end;
 
         // controlla esistenza view e chiave di sort della view
@@ -692,7 +694,7 @@ begin
         t_usa_file.Next
       end;
 
-      // select
+      // ________________________________ Check selected fields and formulas ___
       t_select.First;
       while not t_select.EOF do
       begin
@@ -703,19 +705,19 @@ begin
           Memo2.Lines.Append('Missing select row type in view "' + nome_view +
                              '", line ' + t_selectidcampo.AsString);
         end;
-
-
-        // per le select controlla esistenza tabella e campi
+        // ________________ Selected fields: check table and field existance ___
         if (t_selecttipo.Value = 'Select') and
-          (t_usa_file.Lookup('con_nome', t_selecttabella.Value, 'tipo') <> 'View') then
+           (t_usa_file.Lookup('con_nome',
+                              t_selecttabella.Value,
+                              'tipo') <> 'View') then
         begin
-
-          // esistenza tabella in dbrepository
-          if t_usa_file.Lookup('con_nome', t_selecttabella.Value, 'con_nome') <>
-            t_selecttabella.Value then
+          // ________________________ Check table existance in db-repository ___
+          if t_usa_file.Lookup('con_nome',
+                               t_selecttabella.Value,
+                               'con_nome') <> t_selecttabella.Value then
           begin
-            Memo2.Lines.Append('Check table in select: Row ' +
-              t_selectidcampo.AsString + ' View:' + nome_view)
+            Memo2.Lines.Append('Check table in select: view "' + nome_view +
+                               '" row ' + t_selectidcampo.AsString);
           end;
 
           // esistenza campo in dbrepository (prima fa la locate della tabella)
@@ -744,6 +746,45 @@ begin
                                ' not found for definition of formula "' +
                                t_selectcon_nome.Value + '" in view "' +
                                nome_view + '" row ' + t_selectidcampo.AsString);
+          end;
+        end
+        // ______________________ Check fields and expressions in CONCAT-SQL ___
+        else if t_selecttipo.Value = 'SQL' then
+        begin
+
+          // ______________________ Check expresion use in concat text lines ___
+          ConcatText.Clear;
+          ConcatText.Text := t_selectsql.AsString;
+          for i := 0 to ConcatText.Count - 1 do
+          begin
+            if Copy(ConcatText.Strings[i], 1, 1) = #127 then
+            begin
+              // __________________________ Check field in CONCAT definition ___
+              if t_select.Lookup('con_nome',
+                                 Copy(ConcatText.Strings[i], 2, 200),
+                                 'con_nome') <>
+                                 Copy(ConcatText.Strings[i], 2, 200) then
+              begin
+                Memo2.Lines.Append('Field "' +
+                                   Copy(ConcatText.Strings[i], 2, 200) +
+                                   '" not found in definition of SQL-formula "'
+                                   + t_selectcon_nome.Value + '" in view "' +
+                                   nome_view + '" row ' +
+                                   t_selectidcampo.AsString);
+              end;
+            end
+            else
+            begin
+              // _____________________ Check expression in CONCAT definition ___
+              if errexp(ConcatText.Strings[i], True) then
+              begin
+                Memo2.Lines.Append('Expression ' + ConcatText.Strings[i] +
+                                   ' not found in definition of SQL-formula "' +
+                                   t_selectcon_nome.Value + '" in view "' +
+                                   nome_view + '" row ' +
+                                   t_selectidcampo.AsString);
+              end;
+            end;
           end;
         end;
         // _________________________________ Check MIN expression in selects ___
