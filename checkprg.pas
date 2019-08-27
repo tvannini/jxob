@@ -1526,7 +1526,7 @@ begin
                                '. Program "'+ t_operazionio2ref.AsString +
                                '" not found')
           end;
-          // controllo i parametri (variabili e espressioni)
+          // _________________________________________ Check call parameters ___
           for i := 0 to f_work.db_parametri.Lines.Count - 1 do
           begin
             // _____________________________________ Parameter by expression ___
@@ -1737,20 +1737,33 @@ end;
 
 function Tf_checkprg.errprgname(testo: string): boolean;
 begin
-  if testo = '' then  Result := True
+
+  if testo = '' then
+  begin
+    Result := True
+  end
   else
   begin
+    // ________________________________________ Program name (no expression) ___
     if Pos('[o2exp_', testo) = 0 then
     begin
-      if (FileExists(f_work.userdir + testo + '.prg')) or (FileExists(f_work.prgdir + testo + '.prg'))
-        then Result:=false
-        else Result:=true;
-    end;
-
-    if Pos('[o2exp_', testo) <> 0 then
+      if (FileExists(f_work.userdir + testo + '.prg')) or
+         (FileExists(f_work.prgdir + testo + '.prg')) then
+      begin
+        Result := False
+      end
+      else
+      begin
+        Result := True;
+      end;
+    end
+    // __________________________________________ Program name by expression ___
+    else
     begin
-      Result := errexp(copy(ExtractWord(2, testo, ['_']), 1,
-        length(ExtractWord(2, testo, ['_'])) - 1))
+      // __________________________________________________ Check expression ___
+      Result := errexp(Copy(ExtractWord(2, testo, ['_']),
+                            1,
+                            length(ExtractWord(2, testo, ['_'])) - 1));
     end;
 
   end;
@@ -1910,15 +1923,34 @@ try
       // ______________________________________________ Loop on instructions ___
       while not temp_table.Eof do
       begin
-        if (temp_table.FieldValues['exp2'] = t_espressioniidexp.Value) or
-           ((temp_table.FieldValues['exp1'] = t_espressioniidexp.Value) and
-            (temp_table.FieldValues['operazione'] <> 'Call program') and
-            (temp_table.FieldValues['operazione'] <> 'Go to'))
-          then
+        // _______________________________ Expression used in step condition ___
+        if (temp_table.FieldValues['exp2'] = t_espressioniidexp.Value) then
+        begin
+          exp_usata := true;
+          Break;
+        end;
+        // ________________________________ All statements but Call and Goto ___
+        if  (temp_table.FieldValues['operazione'] <> 'Call program') and
+            (temp_table.FieldValues['operazione'] <> 'Go to') then
+        begin
+          // ________________________ Expression used as statement parameter ___
+          if temp_table.FieldValues['exp1'] = t_espressioniidexp.Value then
           begin
             exp_usata := true;
             Break;
           end;
+        end
+        // ________________________________________ Call and Goto statements ___
+        else
+        begin
+          // __________________ Expression used in Call/Goto as program name ___
+          if temp_table.FieldValues['o2ref'] =
+             '[o2exp_' + t_espressioniidexp.AsString + ']' then
+          begin
+            exp_usata := true;
+            Break;
+          end;
+        end;
         temp_table.Next
       end;
       FreeAndNil(temp_table); // __________________________ Instructions end ___
