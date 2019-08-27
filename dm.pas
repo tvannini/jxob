@@ -1235,6 +1235,7 @@ begin
   // _____________________________________________________ Update field name ___
   Sender.Value := newName;
   // ____________________ Replace select alias in view SQL-formulas (CONCAT) ___
+  // ______ NOTE: Done after all because must leave t_select current record! ___
   p := t_select.GetBookmark;
   t_select.DisableControls;
   t_select.First;
