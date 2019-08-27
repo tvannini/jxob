@@ -1107,6 +1107,7 @@ var
   newName, str_old, str_new: string;
   progr : integer;
   r : TRegExpr;
+  p : TBookmark;
 begin
   newName := formatName(Text);
   // _______________________________________________ Changing existing alias ___
@@ -1228,8 +1229,31 @@ begin
       t_controlliform.EnableControls;
     end;
   end;
+  // _______ Store original old and new names to use in SQL-formulas changes ___
+  str_old := #127 + Sender.AsString;
+  str_new := #127 + newName;
   // _____________________________________________________ Update field name ___
   Sender.Value := newName;
+  // ____________________ Replace select alias in view SQL-formulas (CONCAT) ___
+  p := t_select.GetBookmark;
+  t_select.DisableControls;
+  t_select.First;
+  while not t_select.EOF do
+  begin
+    if (t_selectsql.AsString <> '') and
+      (Pos(str_old, t_selectsql.Value) > 0) then
+    begin
+      t_select.Edit;
+      t_selectsql.Value := StringReplace(t_selectsql.Value,
+                                         str_old,
+                                         str_new,
+                                         [rfReplaceAll]);
+    end;
+    t_select.Next;
+  end;
+  t_select.GotoBookmark(p);
+  t_select.EnableControls;
+
 end;
 
 
