@@ -625,6 +625,7 @@ type
     procedure HeaderControl1SectionClick(HeaderControl: THeaderControl;
       Section: THeaderSection);
     procedure inizializza_tabelleExecute(Sender: TObject);
+    procedure preset_table(tabObj: TClientDataSet; fileName: String);
     procedure Chiudi2Click(Sender: TObject);
     procedure Zoom6Click(Sender: TObject);
     procedure Exit2Click(Sender: TObject);
@@ -3935,289 +3936,52 @@ begin
 end;
 
 procedure Tf_work.inizializza_tabelleExecute(Sender: TObject);
+var namePart : String;
 begin
 
-  //setta path tabelle
   with dm_form do
   begin
-
-    // chiude tutte le tabelle
-    t_applicazione.Close;
-    t_servers.Close;
-    t_databases.Close;
-    t_tabelle.Close;
-    t_campi.Close;
-    t_indicitesta.Close;
-    t_indici.Close;
-    t_programmi.Close;
-    elenco_prg.Close;
-    t_task.Close;
-    t_aggreg.Close;
-    t_usa_file.Close;
-    t_union.Close;
-    t_select.Close;
-    t_espressioni.Close;
-    t_form.Close;
-    t_controlliform.Close;
-    t_azioni.Close;
-    t_operazioni.Close;
-    t_menu.Close;
-    t_agenti.Close;
-    t_agentitab.Close;
-    t_variabili_prg.Close;
-    t_variabili_app.Close;
-    t_apphandlers.Close;
-    t_modelli.Close;
-    t_parametri.Close;
-    t_report.Close;
-    t_reportfield.Close;
-    t_input_output.Close;
-    t_printdef.Close;
-    t_value_list.Close;
-    tab_ope.Close;
-    tab_tipi_file.Close;
-    t_labels.Close;
-    t_ope_x_copia.Close;
-    tmp_postab.Close;
-    tmp_parametri.Close;
-    tmp_callparams.Close;
-    t_formulas_sql.Close;
-
-    t_applicazione.FileName := tempdir + progetto + '_' + user + '_application.cds';
-    t_servers.FileName   := tempdir + progetto + '_' + user + '_servers.cds';
-    t_databases.FileName := tempdir + progetto + '_' + user + '_databases.cds';
-    t_tabelle.FileName   := tempdir + progetto + '_' + user + '_tables.cds';
-    t_campi.FileName     := tempdir + progetto + '_' + user + '_fields.cds';
-    t_indicitesta.FileName := tempdir + progetto + '_' + user + '_indexh.cds';
-    t_indici.FileName    := tempdir + progetto + '_' + user + '_indexd.cds';
-    t_programmi.FileName := tempdir + progetto + '_' + user + '_programs.cds';
-    elenco_prg.FileName := tempdir + progetto + '_' + user + '_programslist.cds';
-    t_task.FileName      := tempdir + progetto + '_' + user + '_tasks.cds';
-    t_aggreg.FileName    := tempdir + progetto + '_' + user + '_aggreg.cds';
-    t_usa_file.FileName  := tempdir + progetto + '_' + user + '_dbtables.cds';
-    t_union.FileName     := tempdir + progetto + '_' + user + '_unions.cds';
-    t_select.FileName    := tempdir + progetto + '_' + user + '_views.cds';
-    t_espressioni.FileName := tempdir + progetto + '_' + user + '_expressions.cds';
-    t_form.FileName      := tempdir + progetto + '_' + user + '_forms.cds';
-    t_controlliform.FileName := tempdir + progetto + '_' + user + '_controls.cds';
-    t_azioni.FileName    := tempdir + progetto + '_' + user + '_actions.cds';
-    t_operazioni.FileName := tempdir + progetto + '_' + user + '_operations.cds';
-    t_menu.FileName      := tempdir + progetto + '_' + user + '_menu.cds';
-    t_agenti.FileName    := tempdir + progetto + '_' + user + '_operators.cds';
-    t_agentitab.FileName := tempdir + progetto + '_' + user + '_operators_tab.cds';
-    t_variabili_prg.FileName := tempdir + progetto + '_' + user + '_var_prg.cds';
-    t_variabili_app.FileName := tempdir + progetto + '_' + user + '_var_app.cds';
-    t_apphandlers.FileName := tempdir + progetto + '_' + user + '_handler_app.cds';
-    t_modelli.FileName   := tempdir + progetto + '_' + user + '_models.cds';
-    t_parametri.FileName := tempdir + progetto + '_' + user + '_parameters.cds';
-    t_report.FileName    := tempdir + progetto + '_' + user + '_reports.cds';
-    t_reportfield.FileName := tempdir + progetto + '_' + user + '_reportfields.cds';
-    t_input_output.FileName := tempdir + progetto + '_' + user + '_iofiles.cds';
-    t_printdef.FileName  := tempdir + progetto + '_' + user + '_printdef.cds';
-    t_value_list.FileName := tempdir + progetto + '_' + user + '_valuelist.cds';
-    tab_ope.FileName     := tempdir + progetto + '_' + user + '_tabope.cds';
-    tab_tipi_file.FileName := tempdir + progetto + '_' + user + '_tabfile.cds';
-    t_labels.FileName    := tempdir + progetto + '_' + user + '_labels.cds';
-    t_ope_x_copia.FileName    := tempdir + progetto + '_' + user + '_opecopy.cds';
-    tmp_postab.FileName := tempdir + progetto + '_' + user + '_tmp_postab.cds';
-    tmp_parametri.FileName := tempdir + progetto + '_' + user + '_tmp_parameters.cds';
-    tmp_callparams.FileName := tempdir + progetto + '_' + user + '_tmp_callparams.cds';
-    t_formulas_sql.FileName := tempdir + progetto + '_' + user + '_tmp_sql_formulas.cds';
-
-    //razza tutte le tabelle
-    if FileExists(tempdir + progetto + '_' + user + '_application.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_application.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_programs.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_programs.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_servers.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_servers.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_databases.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_databases.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_tables.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_tables.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_fields.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_fields.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_indexh.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_indexh.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_indexd.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_indexd.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_programs.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_programs.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_programslist.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_programslist.cds')
-    end;
-
-    if FileExists(tempdir + progetto + '_' + user + '_tasks.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_tasks.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_aggreg.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_aggreg.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_dbtables.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_dbtables.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_unions.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_unions.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_views.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_views.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_expressions.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_expressions.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_forms.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_forms.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_controls.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_controls.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_actions.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_actions.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_subactions.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_subactions.cds')
-    end;
-
-    if FileExists(tempdir + progetto + '_' + user + '_operations.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_operations.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_menu.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_menu.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_operators.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_operators.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_operators_tab.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_operators_tab.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_var_prg.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_var_prg.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_var_app.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_var_app.cds')
-    end;
-
-    if FileExists(tempdir + progetto + '_' + user + '_handler_app.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_var_app.cds')
-    end;
-
-    if FileExists(tempdir + progetto + '_' + user + '_models.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_models.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_parameters.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_parameters.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_reports.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_reports.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_reportfields.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_reportfields.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_iofiles.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_iofiles.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_printdef.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_printdef.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_valuelist.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_valuelist.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_tabope.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_tabope.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_tabfile.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_tabfile.cds')
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_services.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_services.cds')
-    end;
-     if FileExists(tempdir + progetto + '_' + user + '_labels.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_labels.cds')
-    end;
-     if FileExists(tempdir + progetto + '_' + user + '_opecopy.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_opecopy.cds')
-    end;
-     if FileExists(tempdir + progetto + '_' + user + '_tmp_postab.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_tmp_postab.cds')
-    end;
-
-     if FileExists(tempdir + progetto + '_' + user + '_tmp_parameters.cds') then
-    begin
-      DeleteFile(tempdir + progetto + '_' + user + '_tmp_parameters.cds')
-    end;
-
-    //riapre tutte le tabelle
-    if FileExists(tempdir + progetto + '_' + user + '_tabope.cds') then
-    begin
-      tab_ope.Open
-    end
-    else begin
-      tab_ope.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_tabfile.cds') then
-    begin
-      tab_tipi_file.Open
-    end
-    else begin
-      tab_tipi_file.CreateDataSet
-    end;
-
-
-
-
-
-    //inizializza le tabelline
-
-    // operazioni
+    preset_table(t_applicazione, 'application');
+    preset_table(t_modelli, 'models');
+    preset_table(t_variabili_app, 'var_app');
+    preset_table(t_servers, 'servers');
+    preset_table(t_databases, 'databases');
+    preset_table(t_tabelle, 'tables');
+    preset_table(t_campi, 'fields');
+    preset_table(t_indicitesta, 'indexh');
+    preset_table(t_indici, 'indexd');
+    preset_table(t_menu, 'menu');
+    preset_table(t_programmi, 'programs');
+    preset_table(elenco_prg, 'programslist');
+    preset_table(t_task, 'tasks');
+    preset_table(t_aggreg, 'aggreg');
+    preset_table(t_usa_file, 'dbtables');
+    preset_table(t_union, 'unions');
+    preset_table(t_select, 'views');
+    preset_table(t_formulas_sql, 'tmp_sql_formulas');
+    preset_table(t_espressioni, 'expressions');
+    preset_table(t_form, 'forms');
+    preset_table(t_controlliform, 'controls');
+    preset_table(t_azioni, 'actions');
+    preset_table(t_operazioni, 'operations');
+    preset_table(t_agenti, 'operators');
+    preset_table(t_agentitab, 'operators_tab');
+    preset_table(t_variabili_prg, 'var_prg');
+    preset_table(t_apphandlers, 'handler_app');
+    preset_table(t_parametri, 'parameters');
+    preset_table(t_report, 'reports');
+    preset_table(t_reportfield, 'reportfields');
+    preset_table(t_input_output, 'iofiles');
+    preset_table(t_printdef, 'printdef');
+    preset_table(t_value_list, 'valuelist');
+    preset_table(tab_ope, 'tabope');
+    preset_table(tab_tipi_file, 'tabfile');
+    preset_table(t_labels, 'labels');
+    preset_table(t_ope_x_copia, 'opecopy');
+    preset_table(tmp_postab, 'tmp_postab');
+    preset_table(tmp_parametri, 'tmp_parameters');
+    preset_table(tmp_callparams, 'tmp_callparams');
+    // ___________________________________________ Preset operations records ___
     tab_ope.InsertRecord(['Call program']);
     tab_ope.InsertRecord(['Close program']);
     tab_ope.InsertRecord(['Confirm']);
@@ -4232,332 +3996,32 @@ begin
     tab_ope.InsertRecord(['Return parameter']);
     tab_ope.InsertRecord(['Set menu']);
     tab_ope.InsertRecord(['Update']);
-
-    //tipi file in usa file
+    // __________________________________________ Preset tables type records ___
     tab_tipi_file.InsertRecord(['Main']);
     tab_tipi_file.InsertRecord(['Link']);
     tab_tipi_file.InsertRecord(['View']);
-
-    if FileExists(tempdir + progetto + '_' + user + '_application.cds') then
-    begin
-      t_applicazione.Open
-    end
-    else begin
-      t_applicazione.CreateDataSet
-    end;
-
-    if FileExists(tempdir + progetto + '_' + user + '_servers.cds') then
-    begin
-      t_servers.Open
-    end
-    else begin
-      t_servers.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_databases.cds') then
-    begin
-      t_databases.Open
-    end
-    else begin
-      t_databases.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_tables.cds') then
-    begin
-      t_tabelle.Open
-    end
-    else begin
-      t_tabelle.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_fields.cds') then
-    begin
-      t_campi.Open
-    end
-    else begin
-      t_campi.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_indexh.cds') then
-    begin
-      t_indicitesta.Open
-    end
-    else begin
-      t_indicitesta.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_indexd.cds') then
-    begin
-      t_indici.Open
-    end
-    else begin
-      t_indici.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_programs.cds') then
-    begin
-      t_programmi.Open
-    end
-    else begin
-      t_programmi.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_programslist.cds') then
-    begin
-      elenco_prg.Open
-    end
-    else
-    begin
-      elenco_prg.CreateDataSet
-    end;
-
-
-    if FileExists(tempdir + progetto + '_' + user + '_tasks.cds') then
-    begin
-      t_task.Open
-    end
-    else begin
-      t_task.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_aggreg.cds') then
-    begin
-      t_aggreg.Open
-    end
-    else begin
-      t_aggreg.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_dbtables.cds') then
-    begin
-      t_usa_file.Open
-    end
-    else begin
-      t_usa_file.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_unions.cds') then
-    begin
-      t_union.Open
-    end
-    else begin
-      t_union.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_views.cds') then
-    begin
-      t_select.Open
-    end
-    else begin
-      t_select.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_expressions.cds') then
-    begin
-      t_espressioni.Open
-    end
-    else begin
-      t_espressioni.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_forms.cds') then
-    begin
-      t_form.Open
-    end
-    else begin
-      t_form.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_controls.cds') then
-    begin
-      t_controlliform.Open
-    end
-    else begin
-      t_controlliform.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_actions.cds') then
-    begin
-      t_azioni.Open
-    end
-    else begin
-      t_azioni.CreateDataSet
-    end;
-
-    if FileExists(tempdir + progetto + '_' + user + '_operations.cds') then
-    begin
-      t_operazioni.Open
-    end
-    else begin
-      t_operazioni.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_menu.cds') then
-    begin
-      t_menu.Open
-    end
-    else begin
-      t_menu.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_operators.cds') then
-    begin
-      t_agenti.Open
-    end
-    else begin
-      t_agenti.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_operators_tab.cds') then
-    begin
-      t_agentitab.Open
-    end
-    else begin
-      t_agentitab.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_var_prg.cds') then
-    begin
-      t_variabili_prg.Open
-    end
-    else begin
-      t_variabili_prg.CreateDataSet
-    end;
-
-
-    if FileExists(tempdir + progetto + '_' + user + '_var_app.cds') then
-    begin
-      t_variabili_app.Open
-    end
-    else begin
-      t_variabili_app.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_models.cds') then
-    begin
-      t_modelli.Open
-    end
-    else begin
-      t_modelli.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_parameters.cds') then
-    begin
-      t_parametri.Open
-    end
-    else begin
-      t_parametri.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_reports.cds') then
-    begin
-      t_report.Open
-    end
-    else begin
-      t_report.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_reportfields.cds') then
-    begin
-      t_reportfield.Open
-    end
-    else begin
-      t_reportfield.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_iofiles.cds') then
-    begin
-      t_input_output.Open
-    end
-    else begin
-      t_input_output.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_printdef.cds') then
-    begin
-      t_printdef.Open
-    end
-    else begin
-      t_printdef.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_valuelist.cds') then
-    begin
-      t_value_list.Open
-    end
-    else begin
-      t_value_list.CreateDataSet
-    end;
-    if FileExists(tempdir + progetto + '_' + user + '_labels.cds') then
-    begin
-      t_labels.Open
-    end
-    else
-    begin
-      t_labels.CreateDataSet
-    end;
-
-    if FileExists(tempdir + progetto + '_' + user + '_opecopy.cds') then
-    begin
-      t_ope_x_copia.Open
-    end
-    else
-    begin
-      t_ope_x_copia.CreateDataSet
-    end;
-
-    if FileExists(tempdir + progetto + '_' + user + '_handler_app.cds') then
-    begin
-      t_apphandlers.Open
-    end
-    else
-    begin
-      t_apphandlers.CreateDataSet
-    end;
-
-    if FileExists(tempdir + progetto + '_' + user + '_tmp_postab.cds') then
-    begin
-      tmp_postab.Open
-    end
-    else begin
-      tmp_postab.CreateDataSet
-    end;
-
-    if FileExists(tempdir + progetto + '_' + user + '_tmp_parameters.cds') then
-    begin
-      tmp_parametri.Open
-    end
-    else begin
-      tmp_parametri.CreateDataSet
-    end;
-
-    if FileExists(tempdir + progetto + '_' + user + '_tmp_callparams.cds') then
-    begin
-      tmp_callparams.Open
-    end
-    else begin
-      tmp_callparams.CreateDataSet
-    end;
-
-    if FileExists(tempdir + progetto + '_' + user + '_tmp_sql_formulas.cds') then
-    begin
-      t_formulas_sql.Open
-    end
-    else begin
-      t_formulas_sql.CreateDataSet
-    end;
-
-    t_applicazione.ReadOnly := False;
-    t_servers.ReadOnly   := False;
-    t_databases.ReadOnly := False;
-    t_tabelle.ReadOnly   := False;
-    t_campi.ReadOnly     := False;
-    t_indicitesta.ReadOnly := False;
-    t_indici.ReadOnly    := False;
-    t_programmi.ReadOnly := False;
-    t_task.ReadOnly      := False;
-    t_aggreg.ReadOnly    := False;
-    t_usa_file.ReadOnly  := False;
-    t_union.ReadOnly     := False;
-    t_select.ReadOnly    := False;
-    t_espressioni.ReadOnly := False;
-    t_form.ReadOnly      := False;
-    t_controlliform.ReadOnly := False;
-    t_azioni.ReadOnly    := False;
-    t_operazioni.ReadOnly := False;
-    t_menu.ReadOnly      := False;
-    t_agenti.ReadOnly    := False;
-    t_agentitab.ReadOnly := False;
-    t_variabili_prg.ReadOnly := False;
-    t_variabili_app.ReadOnly := False;
-    t_modelli.ReadOnly   := False;
-    t_parametri.ReadOnly := False;
-    t_report.ReadOnly    := False;
-    t_reportfield.ReadOnly := False;
-    t_input_output.ReadOnly := False;
-    t_printdef.ReadOnly  := False;
-    t_value_list.ReadOnly := False;
-    tab_ope.ReadOnly     := False;
-    tab_tipi_file.ReadOnly := False;
-    t_labels.ReadOnly    := False;
-    t_ope_x_copia.ReadOnly:=false;
-    t_apphandlers.ReadOnly    := False;
-
   end;
+
+end;
+
+procedure Tf_work.preset_table(tabObj: TClientDataSet; fileName: String);
+var namePart : String;
+begin
+
+  namePart := tempdir + progetto + '_' + user + '_';
+  // ___________________________________________________________ Close table ___
+  tabObj.Close;
+  // ________________________________________________ Delete user's tmp file ___
+  if FileExists(namePart + fileName + '.cds') then
+  begin
+    DeleteFile(namePart + fileName + '.cds')
+  end;
+  // ___________________________________________________ Set table file name ___
+  tabObj.FileName := namePart + fileName + '.cds';
+  // ______________________________________________ Recreate user's tmp file ___
+  tabObj.CreateDataSet;
+  // ____________________________________________________ Set table readable ___
+  tabObj.ReadOnly := False;
 
 end;
 

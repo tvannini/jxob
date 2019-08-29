@@ -139,40 +139,6 @@ object f_sceltachiave: Tf_sceltachiave
       OnClick = UscitaClick
     end
   end
-  object t_indicitestalocal: TClientDataSet
-    Active = True
-    Aggregates = <>
-    FileName = 'indicitesta.cds'
-    Params = <>
-    Left = 544
-    Top = 328
-    Data = {
-      7A0000009619E0BD0100000018000000050000000000030000007A000A69645F
-      746162656C6C6104000100000000000969645F696E6469636504000100000000
-      00076E6F6D656B65790100490000000100055749445448020002001E00056D61
-      7463680400010000000000086D617463686C656E04000100000000000000}
-    object t_indicitestalocalid_tabella: TIntegerField
-      FieldName = 'id_tabella'
-    end
-    object t_indicitestalocalid_indice: TIntegerField
-      FieldName = 'id_indice'
-    end
-    object t_indicitestalocalnomekey: TStringField
-      FieldName = 'nomekey'
-      Size = 30
-    end
-    object t_indicitestalocalmatch: TIntegerField
-      FieldName = 'match'
-    end
-    object t_indicitestalocalmatchlen: TIntegerField
-      FieldName = 'matchlen'
-    end
-  end
-  object ds_local: TDataSource
-    DataSet = t_indicitestalocal
-    Left = 520
-    Top = 328
-  end
   object PopupMenu2: TPopupMenu
     Left = 440
     Top = 328

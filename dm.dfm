@@ -253,14 +253,6 @@ object dm_form: Tdm_form
         Name = 'nomekey'
         DataType = ftString
         Size = 30
-      end
-      item
-        Name = 'match'
-        DataType = ftInteger
-      end
-      item
-        Name = 'matchlen'
-        DataType = ftInteger
       end>
     IndexDefs = <
       item
@@ -289,12 +281,6 @@ object dm_form: Tdm_form
       OnSetText = t_indicitestanomekeySetText
       Size = 30
     end
-    object t_indicitestamatch: TIntegerField
-      FieldName = 'match'
-    end
-    object t_indicitestamatchlen: TIntegerField
-      FieldName = 'matchlen'
-    end
   end
   object t_indici: TClientDataSet
     Aggregates = <>
@@ -313,22 +299,9 @@ object dm_form: Tdm_form
         DataType = ftInteger
       end
       item
-        Name = 'nomekey'
-        DataType = ftString
-        Size = 30
-      end
-      item
         Name = 'segmento'
         DataType = ftString
         Size = 30
-      end
-      item
-        Name = 'match'
-        DataType = ftInteger
-      end
-      item
-        Name = 'matchlen'
-        DataType = ftInteger
       end
       item
         Name = 'direzione'
@@ -360,19 +333,9 @@ object dm_form: Tdm_form
     object t_indiciid_segmento: TIntegerField
       FieldName = 'id_segmento'
     end
-    object t_indicinomekey: TStringField
-      FieldName = 'nomekey'
-      Size = 30
-    end
     object t_indicisegmento: TStringField
       FieldName = 'segmento'
       Size = 30
-    end
-    object t_indicimatch: TIntegerField
-      FieldName = 'match'
-    end
-    object t_indicimatchlen: TIntegerField
-      FieldName = 'matchlen'
     end
     object t_indicidirezione: TStringField
       DefaultExpression = #39'A'#39

@@ -84,7 +84,7 @@ object f_work: Tf_work
     Top = 32
     Width = 870
     Height = 662
-    ActivePage = ts_programmi
+    ActivePage = ts_tabelle
     Align = alClient
     MultiLine = True
     PopupMenu = pop_pagecontrol1
@@ -676,7 +676,7 @@ object f_work: Tf_work
             Ctl3D = False
             DataSource = dm_form.ds_indicitesta
             ParentCtl3D = False
-            PopupMenu = pop_grid_indici
+            PopupMenu = pop_grid_segmenti
             TabOrder = 0
             TitleFont.Charset = DEFAULT_CHARSET
             TitleFont.Color = clWindowText

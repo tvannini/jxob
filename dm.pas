@@ -37,16 +37,11 @@ type
     t_indicitestaid_tabella: TIntegerField;
     t_indicitestaid_indice: TIntegerField;
     t_indicitestanomekey: TStringField;
-    t_indicitestamatch: TIntegerField;
-    t_indicitestamatchlen: TIntegerField;
     t_indici: TClientDataSet;
     t_indiciid_tabella: TIntegerField;
     t_indiciid_indice: TIntegerField;
     t_indiciid_segmento: TIntegerField;
-    t_indicinomekey: TStringField;
     t_indicisegmento: TStringField;
-    t_indicimatch: TIntegerField;
-    t_indicimatchlen: TIntegerField;
     t_indicidirezione: TStringField;
     t_databases: TClientDataSet;
     t_databasesnomedb: TStringField;
@@ -622,7 +617,6 @@ type
     procedure t_indicitestaBeforeDelete(DataSet: TDataSet);
     procedure t_serversNewRecord(DataSet: TDataSet);
     procedure t_databasesNewRecord(DataSet: TDataSet);
-    procedure t_tabelleIdChange(Sender: TField);
     procedure t_tabelleIdSetText(Sender: TField; const Text: String);
     function datetoo2date(date: TDateTime): String;
     procedure t_parametriidSetText(Sender: TField; const Text: String);
@@ -2616,39 +2610,6 @@ begin
     t_databasescheck_esist_tab.Value:=true;
 end;
 
-
-
-
-
-
-
-procedure Tdm_form.t_tabelleIdChange(Sender: TField);
-begin
-{  // cambia i collegati
-  if (Sender.OldValue <> null) and (t_tabelle.State<>dsInsert) then
-  begin
-    t_campi.First;
-    while not (t_campi.Eof) do
-    begin
-      t_campi.Edit;
-      t_campiid_tabella.Value:=t_tabelleId.Value;
-      t_campi.Post;
-
-      t_campi.Next;
-    end;
-
-    t_indicitesta.First;
-    while not (t_indicitesta.Eof) do
-    begin
-      t_indicitesta.Edit;
-      t_indicitestaid_tabella.Value:=t_tabelleId.Value;
-      t_indicitesta.Post;
-      ShowMessage(t_indicitestaid_tabella.AsString);
-      t_indicitesta.Next;
-    end;
-  end;
- }
-end;
 
 procedure Tdm_form.t_tabelleIdSetText(Sender: TField; const Text: String);
 begin

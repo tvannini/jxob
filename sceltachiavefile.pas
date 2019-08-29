@@ -12,13 +12,6 @@ type
     Button1: TButton;
     PopupMenu1: TPopupMenu;
     scelta1: TMenuItem;
-    t_indicitestalocal: TClientDataSet;
-    ds_local: TDataSource;
-    t_indicitestalocalid_tabella: TIntegerField;
-    t_indicitestalocalid_indice: TIntegerField;
-    t_indicitestalocalnomekey: TStringField;
-    t_indicitestalocalmatch: TIntegerField;
-    t_indicitestalocalmatchlen: TIntegerField;
     Uscita: TMenuItem;
     GroupBox1: TGroupBox;
     DBGrid2: TDBGrid;
@@ -55,8 +48,6 @@ end;
 
 procedure Tf_sceltachiave.FormShow(Sender: TObject);
 begin
-  t_indicitestalocal.Filter   := 'id_tabella = ' + IntToStr(id_tabellasel);
-  t_indicitestalocal.Filtered := True;
   if not(abilita_expression) then
   begin
    e_expr.Text:='';

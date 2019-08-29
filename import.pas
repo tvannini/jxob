@@ -3514,12 +3514,7 @@ begin
           // ______________________________________________ Key informations ___
           nome                := r2.Match[1];
           // ________________________________ Insert single key in CDS table ___
-          dm_form.t_indicitesta.InsertRecord([tabIdx,
-                                              keyIdx,
-                                              nome,
-                                              r2.MatchPos[0] - 1,
-                                              r2.MatchLen[0]]);
-
+          dm_form.t_indicitesta.InsertRecord([tabIdx, keyIdx, nome]);
           // __________________________________________________ Key segments ___
           selezione2 := r2.Match[2];
           // __________________________________ Loop on pairs column divided ___
@@ -3540,10 +3535,7 @@ begin
               dm_form.t_indici.InsertRecord([tabIdx,
                                              keyIdx,
                                              segmIdx,
-                                             r2.Match[1],
                                              nome,
-                                             r2.MatchPos[0] - 1,
-                                             r2.MatchLen[0],
                                              direzione]);
             end;
           end;
