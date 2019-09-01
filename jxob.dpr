@@ -44,7 +44,6 @@ uses
   about in 'about.pas' {AboutBox},
   conversioni in 'conversioni.pas' {f_conversioni},
   DosCommand in 'DosCommand.pas',
-  import_0_0_0 in 'import_0_0_0.pas' {f_import_0_0_0},
   sceltacampiview in 'sceltacampiview.pas' {f_scelta_campiview},
   go_to in 'go_to.pas' {f_goto},
   editorphp in 'editorphp.pas' {f_editorphp},
@@ -132,7 +131,6 @@ begin
     Application.CreateForm(Tf_sceltamenu, f_sceltamenu);
     Application.CreateForm(Tf_locate, f_locate);
     Application.CreateForm(Tf_conversioni, f_conversioni);
-    Application.CreateForm(Tf_import_0_0_0, f_import_0_0_0);
     Application.CreateForm(Tf_scelta_campiview, f_scelta_campiview);
     Application.CreateForm(Tf_goto, f_goto);
     Application.CreateForm(Tf_getdef, f_getdef);

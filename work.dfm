@@ -508,6 +508,7 @@ object f_work: Tf_work
       object Splitter6: TSplitter
         Left = 491
         Top = 0
+        Width = 5
         Height = 607
       end
       object DBNavigator_tabelle: TDBNavigator
@@ -518,67 +519,6 @@ object f_work: Tf_work
         TabOrder = 0
         Visible = False
       end
-      object gb_fields: TGroupBox
-        Left = 494
-        Top = 0
-        Width = 368
-        Height = 607
-        Align = alClient
-        Caption = ' Fields in table '
-        Ctl3D = False
-        ParentCtl3D = False
-        TabOrder = 1
-        object DBGrid_campi: TDBGrid
-          Left = 1
-          Top = 14
-          Width = 366
-          Height = 592
-          Align = alClient
-          BorderStyle = bsNone
-          Ctl3D = False
-          DataSource = dm_form.ds_campi
-          ParentCtl3D = False
-          PopupMenu = pop_grid_campi
-          TabOrder = 0
-          TitleFont.Charset = DEFAULT_CHARSET
-          TitleFont.Color = clWindowText
-          TitleFont.Height = -11
-          TitleFont.Name = 'MS Sans Serif'
-          TitleFont.Style = []
-          OnColEnter = DBGrid_campiColEnter
-          OnEnter = DBGrid_campiEnter
-          Columns = <
-            item
-              Expanded = False
-              FieldName = 'id_campo'
-              Title.Caption = '#'
-              Width = 23
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'nomecampo'
-              Title.Caption = 'Field'
-              Width = 120
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'dbname'
-              Title.Caption = 'Physical Name'
-              Width = 120
-              Visible = True
-            end
-            item
-              Color = clBtnFace
-              Expanded = False
-              FieldName = 'picture'
-              Title.Caption = 'Data type'
-              Width = 90
-              Visible = True
-            end>
-        end
-      end
       object Panel_tab_indici: TPanel
         Left = 0
         Top = 0
@@ -586,10 +526,10 @@ object f_work: Tf_work
         Height = 607
         Align = alLeft
         BevelOuter = bvNone
-        TabOrder = 2
+        TabOrder = 1
         object Splitter3: TSplitter
           Left = 0
-          Top = 410
+          Top = 426
           Width = 491
           Height = 5
           Cursor = crVSplit
@@ -599,7 +539,7 @@ object f_work: Tf_work
           Left = 0
           Top = 0
           Width = 491
-          Height = 410
+          Height = 426
           Align = alClient
           BevelEdges = []
           BevelInner = bvNone
@@ -657,93 +597,227 @@ object f_work: Tf_work
             GridView = dbgrid_tabelleDBTableView1
           end
         end
-        object gb_indexes: TGroupBox
+        object IndexesPages: TPageControl
           Left = 0
-          Top = 415
+          Top = 431
           Width = 491
-          Height = 192
+          Height = 176
+          ActivePage = pageUnique
           Align = alBottom
-          Caption = ' Indexes in table '
-          Ctl3D = False
-          ParentCtl3D = False
           TabOrder = 1
-          object dbgrid_indici: TDBGrid
-            Left = 1
-            Top = 15
-            Width = 225
-            Height = 176
-            BorderStyle = bsNone
-            Ctl3D = False
-            DataSource = dm_form.ds_indicitesta
-            ParentCtl3D = False
-            PopupMenu = pop_grid_segmenti
-            TabOrder = 0
-            TitleFont.Charset = DEFAULT_CHARSET
-            TitleFont.Color = clWindowText
-            TitleFont.Height = -11
-            TitleFont.Name = 'MS Sans Serif'
-            TitleFont.Style = []
-            OnEnter = dbgrid_indiciEnter
-            Columns = <
-              item
-                Expanded = False
-                FieldName = 'id_indice'
-                Title.Caption = '#'
-                Width = 20
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'nomekey'
-                Title.Caption = 'Index'
-                Width = 163
-                Visible = True
-              end>
+          object pageUnique: TTabSheet
+            Caption = 'Unique indexes'
+            object dbgrid_indici: TDBGrid
+              Left = 0
+              Top = 0
+              Width = 225
+              Height = 148
+              Align = alLeft
+              BorderStyle = bsNone
+              Ctl3D = False
+              DataSource = dm_form.ds_indicitesta
+              ParentCtl3D = False
+              PopupMenu = pop_grid_indici
+              TabOrder = 0
+              TitleFont.Charset = DEFAULT_CHARSET
+              TitleFont.Color = clWindowText
+              TitleFont.Height = -11
+              TitleFont.Name = 'MS Sans Serif'
+              TitleFont.Style = []
+              OnEnter = dbgrid_indiciEnter
+              Columns = <
+                item
+                  Expanded = False
+                  FieldName = 'id_indice'
+                  Title.Caption = '#'
+                  Width = 25
+                  Visible = True
+                end
+                item
+                  Expanded = False
+                  FieldName = 'nomekey'
+                  Title.Caption = 'Index'
+                  Width = 162
+                  Visible = True
+                end>
+            end
+            object dbgrid_segmenti: TDBGrid
+              Left = 233
+              Top = 0
+              Width = 250
+              Height = 148
+              Align = alRight
+              BorderStyle = bsNone
+              Ctl3D = False
+              DataSource = dm_form.ds_indici
+              ParentCtl3D = False
+              PopupMenu = pop_grid_segmenti
+              TabOrder = 1
+              TitleFont.Charset = DEFAULT_CHARSET
+              TitleFont.Color = clWindowText
+              TitleFont.Height = -11
+              TitleFont.Name = 'MS Sans Serif'
+              TitleFont.Style = []
+              OnEnter = dbgrid_segmentiEnter
+              Columns = <
+                item
+                  Expanded = False
+                  FieldName = 'id_segmento'
+                  Title.Caption = '#'
+                  Width = 22
+                  Visible = True
+                end
+                item
+                  Expanded = False
+                  FieldName = 'segmento'
+                  Title.Caption = 'Segment'
+                  Width = 139
+                  Visible = True
+                end
+                item
+                  DropDownRows = 2
+                  Expanded = False
+                  FieldName = 'direzione'
+                  PickList.Strings = (
+                    'Ascending'
+                    'Descending')
+                  Title.Caption = 'Asc/Desc'
+                  Visible = True
+                end>
+            end
           end
-          object dbgrid_segmenti: TDBGrid
-            Left = 233
-            Top = 15
-            Width = 257
-            Height = 176
-            BorderStyle = bsNone
-            Ctl3D = False
-            DataSource = dm_form.ds_indici
-            ParentCtl3D = False
-            PopupMenu = pop_grid_segmenti
-            TabOrder = 1
-            TitleFont.Charset = DEFAULT_CHARSET
-            TitleFont.Color = clWindowText
-            TitleFont.Height = -11
-            TitleFont.Name = 'MS Sans Serif'
-            TitleFont.Style = []
-            OnColEnter = dbgrid_segmentiColEnter
-            OnEnter = dbgrid_segmentiEnter
-            Columns = <
-              item
-                Expanded = False
-                FieldName = 'id_segmento'
-                Title.Caption = '#'
-                Width = 22
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'segmento'
-                Title.Caption = 'Segment'
-                Width = 139
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'direzione'
-                PickList.Strings = (
-                  'Ascending=A'
-                  'Descending=D')
-                Title.Caption = 'Asc/Desc'
-                Visible = True
-              end>
+          object pageNotUnique: TTabSheet
+            Caption = 'Not unique indexes'
+            ImageIndex = 1
+            object dbgrid_notunique: TDBGrid
+              Left = 0
+              Top = 0
+              Width = 225
+              Height = 148
+              Align = alLeft
+              BorderStyle = bsNone
+              Ctl3D = False
+              DataSource = dm_form.ds_indicitestanu
+              ParentCtl3D = False
+              PopupMenu = pop_grid_indici
+              TabOrder = 0
+              TitleFont.Charset = DEFAULT_CHARSET
+              TitleFont.Color = clWindowText
+              TitleFont.Height = -11
+              TitleFont.Name = 'MS Sans Serif'
+              TitleFont.Style = []
+              OnEnter = dbgrid_notuniqueEnter
+              Columns = <
+                item
+                  Expanded = False
+                  FieldName = 'id_indice'
+                  Title.Caption = '#'
+                  Width = 25
+                  Visible = True
+                end
+                item
+                  Expanded = False
+                  FieldName = 'nomekey'
+                  Title.Caption = 'Index'
+                  Width = 166
+                  Visible = True
+                end>
+            end
+            object dbgrid_segmentinu: TDBGrid
+              Left = 233
+              Top = 0
+              Width = 250
+              Height = 148
+              Align = alRight
+              BorderStyle = bsNone
+              Ctl3D = False
+              DataSource = dm_form.ds_indicinu
+              ParentCtl3D = False
+              PopupMenu = pop_grid_segmenti
+              TabOrder = 1
+              TitleFont.Charset = DEFAULT_CHARSET
+              TitleFont.Color = clWindowText
+              TitleFont.Height = -11
+              TitleFont.Name = 'MS Sans Serif'
+              TitleFont.Style = []
+              OnEnter = dbgrid_segmentinuEnter
+              Columns = <
+                item
+                  Expanded = False
+                  FieldName = 'id_segmento'
+                  Title.Caption = '#'
+                  Width = 22
+                  Visible = True
+                end
+                item
+                  Expanded = False
+                  FieldName = 'segmento'
+                  Title.Caption = 'Segment'
+                  Width = 139
+                  Visible = True
+                end
+                item
+                  Expanded = False
+                  FieldName = 'direzione'
+                  PickList.Strings = (
+                    'Ascending=A'
+                    'Descending=D')
+                  Title.Caption = 'Asc/Desc'
+                  Visible = True
+                end>
+            end
           end
         end
+      end
+      object DBGrid_campi: TDBGrid
+        Left = 496
+        Top = 0
+        Width = 366
+        Height = 607
+        Align = alClient
+        BorderStyle = bsNone
+        Ctl3D = False
+        DataSource = dm_form.ds_campi
+        ParentCtl3D = False
+        PopupMenu = pop_grid_campi
+        TabOrder = 2
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'MS Sans Serif'
+        TitleFont.Style = []
+        OnColEnter = DBGrid_campiColEnter
+        OnEnter = DBGrid_campiEnter
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'id_campo'
+            Title.Caption = '#'
+            Width = 23
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'nomecampo'
+            Title.Caption = 'Field'
+            Width = 105
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'dbname'
+            Title.Caption = 'Physical Name'
+            Width = 105
+            Visible = True
+          end
+          item
+            Color = clBtnFace
+            Expanded = False
+            FieldName = 'picture'
+            Title.Caption = 'Data type'
+            Width = 95
+            Visible = True
+          end>
       end
     end
     object ts_programmi: TTabSheet

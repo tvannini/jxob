@@ -341,7 +341,7 @@ object dm_form: Tdm_form
       DefaultExpression = #39'A'#39
       FieldName = 'direzione'
       Required = True
-      EditMask = '>L;1;_'
+      EditMask = '>L'
       Size = 1
     end
   end
@@ -4283,5 +4283,122 @@ object dm_form: Tdm_form
     DataSet = t_formulas_sql
     Left = 952
     Top = 200
+  end
+  object ds_indicitestanu: TDataSource
+    DataSet = t_indicitestanu
+    Left = 328
+    Top = 312
+  end
+  object ds_indicinu: TDataSource
+    DataSet = t_indicinu
+    Left = 400
+    Top = 312
+  end
+  object t_indicitestanu: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <
+      item
+        Name = 'id_tabella'
+        DataType = ftInteger
+      end
+      item
+        Name = 'id_indice'
+        DataType = ftInteger
+      end
+      item
+        Name = 'nomekey'
+        DataType = ftString
+        Size = 30
+      end>
+    IndexDefs = <
+      item
+        Name = 't_indicitestaIndex3'
+        Fields = 'id_tabella;id_indice'
+      end>
+    IndexFieldNames = 'id_tabella;id_indice'
+    MasterFields = 'Id'
+    MasterSource = ds_tabelle
+    Params = <>
+    StoreDefs = True
+    AfterInsert = t_indicitestaAfterInsert
+    AfterEdit = t_indicitestaAfterEdit
+    BeforeDelete = t_indicitestanuBeforeDelete
+    OnNewRecord = t_indicitestanuNewRecord
+    Left = 328
+    Top = 264
+    object t_indicitestanuid_tabella: TIntegerField
+      FieldName = 'id_tabella'
+    end
+    object t_indicitestanuid_indice: TIntegerField
+      FieldName = 'id_indice'
+    end
+    object t_indicitestanunomekey: TStringField
+      FieldName = 'nomekey'
+      OnSetText = t_indicitestanomekeySetText
+      Size = 30
+    end
+  end
+  object t_indicinu: TClientDataSet
+    Aggregates = <>
+    FileName = 'indicinu.cds'
+    FieldDefs = <
+      item
+        Name = 'id_tabella'
+        DataType = ftInteger
+      end
+      item
+        Name = 'id_indice'
+        DataType = ftInteger
+      end
+      item
+        Name = 'id_segmento'
+        DataType = ftInteger
+      end
+      item
+        Name = 'segmento'
+        DataType = ftString
+        Size = 30
+      end
+      item
+        Name = 'direzione'
+        DataType = ftString
+        Size = 1
+      end>
+    IndexDefs = <
+      item
+        Name = 't_indiciIndex1'
+        Fields = 'id_tabella;id_indice;id_segmento'
+      end>
+    IndexFieldNames = 'id_tabella;id_indice;id_segmento'
+    MasterFields = 'id_tabella;id_indice'
+    MasterSource = ds_indicitestanu
+    Params = <>
+    StoreDefs = True
+    AfterInsert = t_indiciAfterInsert
+    AfterEdit = t_indiciAfterEdit
+    AfterDelete = t_indiciAfterDelete
+    OnNewRecord = t_indicinuNewRecord
+    Left = 400
+    Top = 264
+    object t_indicinuid_tabella: TIntegerField
+      FieldName = 'id_tabella'
+    end
+    object t_indicinuid_indice: TIntegerField
+      FieldName = 'id_indice'
+    end
+    object t_indicinuid_segmento: TIntegerField
+      FieldName = 'id_segmento'
+    end
+    object t_indicinusegmento: TStringField
+      FieldName = 'segmento'
+      Size = 30
+    end
+    object t_indicinudirezione: TStringField
+      DefaultExpression = #39'A'#39
+      FieldName = 'direzione'
+      Required = True
+      EditMask = '>L'
+      Size = 1
+    end
   end
 end

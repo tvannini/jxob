@@ -52,9 +52,6 @@ type
     Label2: TLabel;
     dbgrid_server: TDBGrid;
     ts_tabelle: TTabSheet;
-    dbgrid_indici: TDBGrid;
-    DBGrid_campi: TDBGrid;
-    dbgrid_segmenti: TDBGrid;
     DBNavigator_tabelle: TDBNavigator;
     ts_programmi: TTabSheet;
     BitBtn1: TBitBtn;
@@ -403,8 +400,6 @@ type
     DBEdit23: TDBEdit;
     Label26: TLabel;
     dbgrid_programmiDBTableView1DBColumn1: TcxGridDBColumn;
-    gb_fields: TGroupBox;
-    gb_indexes: TGroupBox;
     Panel_tab_indici: TPanel;
     Splitter3: TSplitter;
     Splitter6: TSplitter;
@@ -479,6 +474,14 @@ type
     Panel_expression: TPanel;
     Label7: TLabel;
     DB_espress: TDBMemo;
+    IndexesPages: TPageControl;
+    pageUnique: TTabSheet;
+    dbgrid_indici: TDBGrid;
+    dbgrid_segmenti: TDBGrid;
+    pageNotUnique: TTabSheet;
+    dbgrid_notunique: TDBGrid;
+    dbgrid_segmentinu: TDBGrid;
+    DBGrid_campi: TDBGrid;
     procedure dbgrid_tabelle_savEnter(Sender: TObject);
     procedure DBGrid_campiEnter(Sender: TObject);
     procedure dbgrid_indiciEnter(Sender: TObject);
@@ -527,7 +530,6 @@ type
     procedure DBGrid_databases_savColEnter(Sender: TObject);
     procedure zoom_tabelleClick(Sender: TObject);
     procedure Zoom_segmentiClick(Sender: TObject);
-    procedure dbgrid_segmentiColEnter(Sender: TObject);
     procedure Zoom_campiClick(Sender: TObject);
     procedure Zoom_indiciClick(Sender: TObject);
     procedure Esc_indiciClick(Sender: TObject);
@@ -761,6 +763,8 @@ type
     procedure LogProjectLoad(LoadItem: String = ''; Progress: Integer = 0);
     procedure dbgrid_formCellClick(Column: TColumn);
     procedure dbgrid_formColEnter(Sender: TObject);
+    procedure dbgrid_notuniqueEnter(Sender: TObject);
+    procedure dbgrid_segmentinuEnter(Sender: TObject);
 
   private
     { Private declarations }
@@ -782,7 +786,7 @@ type
     memophp: TMemoField;
     campo_in_grid_operazioni, campo_in_grid_azioni, campo_in_grid_programmi,
     campo_in_grid_server, campo_in_grid_databases, campo_in_grid_tabelle,
-    campo_in_grid_campi, campo_in_grid_union, campo_in_grid_indici, campo_in_grid_segmenti,
+    campo_in_grid_campi, campo_in_grid_union, campo_in_grid_indici,
     campo_in_grid_dbfile, campo_in_grid_select,
     campo_in_grid_espressioni, campo_in_grid_agentitab: string;
     ultimo_field: TField;
@@ -840,7 +844,6 @@ end;
 
 procedure Tf_work.dbgrid_segmentiEnter(Sender: TObject);
 begin
-  campo_in_grid_segmenti := dbgrid_segmenti.SelectedField.FieldName;
   dbnav.DataSource := dm_form.ds_indici;
 end;
 
@@ -1420,54 +1423,77 @@ procedure Tf_work.Zoom_segmentiClick(Sender: TObject);
 var n : integer;
 begin
 
-  if campo_in_grid_segmenti = 'segmento' then
+  // ________________________________________________ Work on unique indexes ___
+  if IndexesPages.ActivePageIndex = 0 then
   begin
-    f_sceltacampotab.ShowModal;
-    if f_sceltacampotab.ModalResult = mrOk then
+    if dbgrid_segmenti.SelectedField.FieldName = 'segmento' then
     begin
-      // in caso di selezione multipla
-      if f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRowCount > 1 then
+      f_sceltacampotab.ShowModal;
+      if f_sceltacampotab.ModalResult = mrOk then
       begin
-      // annulla la insert corrente
-       dm_form.t_indici.Cancel;
-
-        // lavora sulla selezione
-       for n:= 0 to  f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRowCount - 1 do
+        // ______________________________________________ Multiple selection ___
+        if f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRowCount > 1
+        then begin
+          // _________________________________________ Cancel current insert ___
+          dm_form.t_indici.Cancel;
+          // ________________________________________ Work on selection list ___
+          for n:= 0 to
+          f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRowCount -1 do
+          begin
+            dm_form.t_indici.Insert;
+            dm_form.t_indiciSegmento.Value :=
+   f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRecords[n].Values[1];
+            dm_form.t_indici.Post;
+          end;
+        end
+        // ________________________________________________ Single selection ___
+        else
         begin
-          dm_form.t_indici.Insert;
-          dm_form.t_indiciSegmento.Value := f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRecords[n].Values[1];
-          dm_form.t_indici.Post;
-        end;
-      end
-      else
-      begin
           dm_form.t_indici.Edit;
           dm_form.t_indiciSegmento.Value := dm_form.t_campinomecampo.Value;
+        end;
       end;
+    end;
+  end
+  // __________________________________________ Work on not unique indexes ___
+  else
+  begin
+    if dbgrid_segmentinu.SelectedField.FieldName = 'segmento' then
+    begin
+      f_sceltacampotab.ShowModal;
+      if f_sceltacampotab.ModalResult = mrOk then
+      begin
+        // ______________________________________________ Multiple selection ___
+        if f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRowCount > 1
+        then begin
+          // _________________________________________ Cancel current insert ___
+          dm_form.t_indicinu.Cancel;
+          // ________________________________________ Work on selection list ___
+          for n:= 0 to
+          f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRowCount -1 do
+          begin
+            dm_form.t_indicinu.Insert;
+            dm_form.t_indicinusegmento.Value :=
+   f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRecords[n].Values[1];
+            dm_form.t_indicinu.Post;
+          end;
+        end
+        // ________________________________________________ Single selection ___
+        else
+          begin
+            dm_form.t_indicinu.Edit;
+            dm_form.t_indicinusegmento.Value := dm_form.t_campinomecampo.Value;
+          end;
+        end;
+      end;
+    end;
 
-  end;
-  end;
-end;
-
-procedure Tf_work.dbgrid_segmentiColEnter(Sender: TObject);
-begin
-  campo_in_grid_segmenti := dbgrid_segmenti.SelectedField.FieldName;
 end;
 
 procedure Tf_work.Zoom_campiClick(Sender: TObject);
 begin
-  //campo tipo dato
-  if DBGrid_campi.SelectedField.DisplayName = 'tipo' then
-  begin
-    f_selecttype.ShowModal;
-    if f_selecttype.ModalResult = mrOk then
-    begin
-      dm_form.t_campi.Edit;
-      dm_form.t_campitipo.Value := f_selecttype.scelta;
-    end;
-  end;
 
-  //campo modello
+  // _____________________________________________________ Select data model ___
   if DBGrid_campi.SelectedField.DisplayName = 'picture' then
   begin
     dm_form.t_modelli.Locate('idmodello', dm_form.t_campipicture.Value, []);
@@ -1478,18 +1504,33 @@ begin
       dm_form.t_campipicture.Value := dm_form.t_modelliidmodello.Value;
     end;
   end;
-
-
-  if (DBGrid_campi.SelectedField.DisplayName <> 'tipo') and
-    (DBGrid_campi.SelectedField.DisplayName <> 'picture') then
+  // ____________________________________________ Jump to indexes definition ___
+  if (DBGrid_campi.SelectedField.DisplayName <> 'picture') then
   begin
-    dbgrid_indici.SetFocus
+    if IndexesPages.ActivePageIndex = 0 then
+    begin
+      dbgrid_indici.SetFocus;
+    end
+    else
+    begin
+      DBGrid_notunique.SetFocus;
+    end;
   end;
+
 end;
 
 procedure Tf_work.Zoom_indiciClick(Sender: TObject);
 begin
-  dbgrid_segmenti.SetFocus;
+
+  if IndexesPages.ActivePageIndex = 0 then
+  begin
+    dbgrid_segmenti.SetFocus;
+  end
+  else
+  begin
+    dbgrid_segmentinu.SetFocus;
+  end;
+
 end;
 
 procedure Tf_work.Esc_indiciClick(Sender: TObject);
@@ -1499,9 +1540,15 @@ end;
 
 procedure Tf_work.Esc_segmentiClick(Sender: TObject);
 begin
-  dbgrid_indici.SetFocus;
+  if IndexesPages.ActivePageIndex = 0 then
+  begin
+    dbgrid_indici.SetFocus;
+  end
+  else
+  begin
+    dbgrid_notunique.SetFocus;
+  end;
 end;
-
 
 
 procedure Tf_work.DBGrid_campiColEnter(Sender: TObject);
@@ -3411,13 +3458,17 @@ begin
         cvs_checkout('__source__\tables.cache') and
         cvs_checkout('__source__\fields.cache') and
         cvs_checkout('__source__\indexes.cache') and
-        cvs_checkout('__source__\segments.cache')) then
+        cvs_checkout('__source__\segments.cache') and
+        cvs_checkout('__source__\nuindexes.cache') and
+        cvs_checkout('__source__\nusegments.cache')) then
     begin
       checkout(self, dm_form.t_applicazionetables.Value);
       checkout(self, '__source__\tables.cache');
       checkout(self, '__source__\fields.cache');
       checkout(self, '__source__\indexes.cache');
       checkout(self, '__source__\segments.cache');
+      checkout(self, '__source__\nuindexes.cache');
+      checkout(self, '__source__\nusegments.cache');
       dm_form.attiva_disattiva_tables(true);
       f_import.tables_import.Execute;
     end;
@@ -3560,7 +3611,9 @@ begin
                '__source__\tables.cache',
                '__source__\fields.cache',
                '__source__\indexes.cache',
-               '__source__\segments.cache'],
+               '__source__\segments.cache',
+               '__source__\nuindexes.cache',
+               '__source__\nuunsegments.cache'],
               cvsSet);
       dm_form.tables_modificato := false;
     end
@@ -3686,6 +3739,8 @@ begin
       uncheck(self, '__source__\fields.cache');
       uncheck(self, '__source__\indexes.cache');
       uncheck(self, '__source__\segments.cache');
+      uncheck(self, '__source__\nuindexes.cache');
+      uncheck(self, '__source__\nusegments.cache');
       f_import.tables_import.Execute;
     end
     else if PageControl1.ActivePage = ts_programmi then
@@ -3950,6 +4005,8 @@ begin
     preset_table(t_campi, 'fields');
     preset_table(t_indicitesta, 'indexh');
     preset_table(t_indici, 'indexd');
+    preset_table(t_indicitestanu, 'indexnuh');
+    preset_table(t_indicinu, 'indexnud');
     preset_table(t_menu, 'menu');
     preset_table(t_programmi, 'programs');
     preset_table(elenco_prg, 'programslist');
@@ -5816,21 +5873,44 @@ end;
 procedure Tf_work.salva_tableExecute(Sender: TObject);
 begin
 
-if mycheck_local and (dm_form.tables_modificato) then
+  if mycheck_local and (dm_form.tables_modificato) then
   begin
-    if MessageDlg('Save Tables changes?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    if MessageDlg('Save Tables changes?', mtConfirmation, [mbYes, mbNo], 0) =
+       mrYes then
     begin
-    With dm_form do
-    begin
-      if (ds_tabelle.State=dsInsert) or (ds_tabelle.State=dsEdit) then t_tabelle.Post;
-      if (ds_campi.State=dsInsert) or (ds_campi.State=dsEdit) then t_campi.Post;
-      if (ds_indicitesta.State=dsInsert) or (ds_indicitesta.State=dsEdit) then t_indicitesta.Post;
-      if (ds_indici.State=dsInsert) or (ds_indici.State=dsEdit) then t_indici.Post;
-    end;
+      With dm_form do
+      begin
+        if (ds_tabelle.State=dsInsert) or (ds_tabelle.State=dsEdit) then
+        begin
+          t_tabelle.Post;
+        end;
+        if (ds_campi.State=dsInsert) or (ds_campi.State=dsEdit) then
+        begin
+          t_campi.Post;
+        end;
+        if (ds_indicitesta.State=dsInsert) or (ds_indicitesta.State=dsEdit) then
+        begin
+          t_indicitesta.Post;
+        end;
+        if (ds_indici.State=dsInsert) or (ds_indici.State=dsEdit) then
+        begin
+          t_indici.Post;
+        end;
+        if (ds_indicitestanu.State=dsInsert) or
+           (ds_indicitestanu.State=dsEdit) then
+        begin
+          t_indicitestanu.Post;
+        end;
+        if (ds_indicinu.State=dsInsert) or (ds_indicinu.State=dsEdit) then
+        begin
+          t_indicinu.Post;
+        end;
+      end;
       f_export.tables_exportExecute(self);
     end;
     dm_form.tables_modificato := False;
-  end
+  end;
+
 end;
 
 procedure Tf_work.salva_appvarsExecute(Sender: TObject);
@@ -6510,10 +6590,12 @@ end;
  *}
 procedure Tf_work.abilitaTableRepExecute(Sender: TObject);
 begin
-  dm_form.t_tabelle.BlockReadSize     := 0;
-  dm_form.t_campi.BlockReadSize       := 0;
-  dm_form.t_indicitesta.BlockReadSize := 0;
-  dm_form.t_indici.BlockReadSize      := 0;
+  dm_form.t_tabelle.BlockReadSize       := 0;
+  dm_form.t_campi.BlockReadSize         := 0;
+  dm_form.t_indicitesta.BlockReadSize   := 0;
+  dm_form.t_indici.BlockReadSize        := 0;
+  dm_form.t_indicitestanu.BlockReadSize := 0;
+  dm_form.t_indicinu.BlockReadSize      := 0;
 end;
 
 
@@ -6521,12 +6603,14 @@ end;
  * Disables upgrading of controls related to dataset.
  * Useful to process dataset quickly, without upgrading related dbgrid.
  *}
-procedure Tf_work.disabiliTatableRepExecute(Sender: TObject);
+procedure Tf_work.disabilitaTableRepExecute(Sender: TObject);
 begin
-  dm_form.t_tabelle.BlockReadSize     := 999999;
-  dm_form.t_campi.BlockReadSize       := 99999999;
-  dm_form.t_indicitesta.BlockReadSize := 999999;
-  dm_form.t_indici.BlockReadSize      := 999999;
+  dm_form.t_tabelle.BlockReadSize       := 999999;
+  dm_form.t_campi.BlockReadSize         := 99999999;
+  dm_form.t_indicitesta.BlockReadSize   := 999999;
+  dm_form.t_indici.BlockReadSize        := 999999;
+  dm_form.t_indicitestanu.BlockReadSize := 999999;
+  dm_form.t_indicinu.BlockReadSize      := 999999;
 end;
 
 
@@ -7135,6 +7219,16 @@ procedure Tf_work.dbgrid_formColEnter(Sender: TObject);
 begin
   // __________ Allow design forms visibility switching in a not checked prg ___
   dm_form.t_form.ReadOnly := false;
+end;
+
+procedure Tf_work.dbgrid_notuniqueEnter(Sender: TObject);
+begin
+  dbnav.DataSource := dm_form.ds_indicitestanu;
+end;
+
+procedure Tf_work.dbgrid_segmentinuEnter(Sender: TObject);
+begin
+  dbnav.DataSource := dm_form.ds_indicinu;
 end;
 
 end.

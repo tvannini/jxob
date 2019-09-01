@@ -3336,8 +3336,8 @@ procedure Tf_import.tables_importExecute(Sender: TObject);
 var
   nome, nomefisico, database, chiaveprimaria, modello,
   selezione, selezione2, prgsDir, userDir, folder, direzione : string;
-  tabIdx, fieldIdx, keyIdx, segmIdx, i : Integer;
-  withCheck : Boolean;
+  tabIdx, fieldIdx, keyIdx, nukeyIdx, segmIdx, i : Integer;
+  withCheck, unique : Boolean;
 begin
   da_Refresh := True;
   // _______________ Unlink tables from related grids to speed up processing ___
@@ -3362,6 +3362,9 @@ begin
       dm_form.t_campi.LoadFromFile(userDir + '__source__\fields.cache');
       dm_form.t_indicitesta.LoadFromFile(userDir + '__source__\indexes.cache');
       dm_form.t_indici.LoadFromFile(userDir + '__source__\segments.cache');
+      dm_form.t_indicitestanu.LoadFromFile(userDir +
+                                           '__source__\nuindexes.cache');
+      dm_form.t_indicinu.LoadFromFile(userDir + '__source__\nusegments.cache');
       da_Refresh := False;
       Exit;
     end;
@@ -3383,6 +3386,9 @@ begin
       dm_form.t_campi.LoadFromFile(prgsDir + '__source__\fields.cache');
       dm_form.t_indicitesta.LoadFromFile(prgsDir + '__source__\indexes.cache');
       dm_form.t_indici.LoadFromFile(prgsDir + '__source__\segments.cache');
+      dm_form.t_indicitestanu.LoadFromFile(prgsDir +
+                                           '__source__\nuindexes.cache');
+      dm_form.t_indicinu.LoadFromFile(prgsDir + '__source__\nusegments.cache');
       da_Refresh := False;
       Exit;
     end;
@@ -3450,7 +3456,7 @@ begin
   tabIdx       := 0;
   r.Expression := 'o2def::tab\(\s*[''"](\w*)[''"]\s*,\s*[''"](\w*)[''"]\s*,' +
                   '\s*[''"](\w*)[''"]\s*,\s*[''"](\w*)[''"]\s*\);(\s*' +
-                  'o2def::field.*?;){0,}(\s*o2def::index.*?;){0,}';
+                  'o2def::field.*?;){0,}(\s*o2def::(nu|)index.*?;){0,}';
   if r.Exec(programma.Lines.Text) then
   begin
     // __________________________________________ Loop on tables definitions ___
@@ -3505,18 +3511,35 @@ begin
       end;
       // _____________________ Look for keys in single table definition code ___
       keyIdx        := 0;
-      r2.Expression := 'o2def::index\(\s*[''"](\w*)[''"]\s*,\s*([^;]*)\);';
+      nukeyIdx      := 0;
+      r2.Expression := 'o2def::(nu|)index\(\s*[''"](\w*)[''"]\s*,\s*([^;]*)\);';
       if r2.Exec(selezione) then
       begin
         repeat
-          inc(keyIdx);
+          if r2.Match[1] <> 'nu' then
+          begin
+            unique := True;
+            inc(keyIdx);
+          end
+          else
+          begin
+            unique := False;
+            inc(nukeyIdx);
+          end;
           segmIdx := 0;
           // ______________________________________________ Key informations ___
-          nome                := r2.Match[1];
+          nome    := r2.Match[2];
           // ________________________________ Insert single key in CDS table ___
-          dm_form.t_indicitesta.InsertRecord([tabIdx, keyIdx, nome]);
+          if unique then
+          begin
+            dm_form.t_indicitesta.InsertRecord([tabIdx, keyIdx, nome]);
+          end
+          else
+          begin
+            dm_form.t_indicitestanu.InsertRecord([tabIdx, nukeyIdx, nome]);
+          end;
           // __________________________________________________ Key segments ___
-          selezione2 := r2.Match[2];
+          selezione2 := r2.Match[3];
           // __________________________________ Loop on pairs column divided ___
           for i := 1 to (StrCharCount(selezione2, ',') + 1) do
           begin
@@ -3532,11 +3555,22 @@ begin
               direzione := changexchars('"', chr(0), direzione);
               direzione := changexchars(chr(39), chr(0), direzione);
               // ________________________ Insert single segment in CDS table ___
-              dm_form.t_indici.InsertRecord([tabIdx,
-                                             keyIdx,
-                                             segmIdx,
-                                             nome,
-                                             direzione]);
+              if unique then
+              begin
+                dm_form.t_indici.InsertRecord([tabIdx,
+                                               keyIdx,
+                                               segmIdx,
+                                               nome,
+                                               direzione]);
+              end
+              else
+              begin
+                dm_form.t_indicinu.InsertRecord([tabIdx,
+                                                 nukeyIdx,
+                                                 segmIdx,
+                                                 nome,
+                                                 direzione]);
+              end;
             end;
           end;
         until not r2.ExecNext
@@ -3552,8 +3586,13 @@ begin
     end;
     dm_form.t_tabelle.SaveToFile(userDir + '__source__\tables.cache', dfXML);
     dm_form.t_campi.SaveToFile(userDir + '__source__\fields.cache', dfXML);
-    dm_form.t_indicitesta.SaveToFile(userDir+'__source__\indexes.cache', dfXML);
+    dm_form.t_indicitesta.SaveToFile(userDir +
+                                     '__source__\indexes.cache', dfXML);
     dm_form.t_indici.SaveToFile(userDir + '__source__\segments.cache', dfXML);
+    dm_form.t_indicitestanu.SaveToFile(userDir +
+                                       '__source__\nuindexes.cache', dfXML);
+    dm_form.t_indicinu.SaveToFile(userDir +
+                                  '__source__\nusegments.cache', dfXML);
   end
   else
   begin
@@ -3563,17 +3602,24 @@ begin
     end;
     dm_form.t_tabelle.SaveToFile(prgsDir + '__source__\tables.cache', dfXML);
     dm_form.t_campi.SaveToFile(prgsDir + '__source__\fields.cache', dfXML);
-    dm_form.t_indicitesta.SaveToFile(prgsDir+'__source__\indexes.cache', dfXML);
+    dm_form.t_indicitesta.SaveToFile(prgsDir +
+                                     '__source__\indexes.cache', dfXML);
     dm_form.t_indici.SaveToFile(prgsDir + '__source__\segments.cache', dfXML);
+    dm_form.t_indicitestanu.SaveToFile(prgsDir +
+                                       '__source__\nuindexes.cache', dfXML);
+    dm_form.t_indicinu.SaveToFile(prgsDir +
+                                  '__source__\nusegments.cache', dfXML);
   end;
   // ________________________________________________________ End operations ___
   FreeAndNil(r);
   FreeAndNil(r2);
   dm_form.t_tabelle.Filtered   := False;
   dm_form.t_tabelle.Open;
-  dm_form.t_campi.Active       := True;
-  dm_form.t_indicitesta.Active := True;
-  dm_form.t_indici.Active      := True;
+  dm_form.t_campi.Active         := True;
+  dm_form.t_indicitesta.Active   := True;
+  dm_form.t_indici.Active        := True;
+  dm_form.t_indicitestanu.Active := True;
+  dm_form.t_indicinu.Active      := True;
   dm_form.t_tabelle.First;
   f_work.ts_tabelle.Visible    := True;
   dm_form.tables_modificato    := False;

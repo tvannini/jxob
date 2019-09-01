@@ -2618,7 +2618,6 @@ end;
 procedure Tf_export.tables_exportExecute(Sender: TObject);
 var
   buffer, chiaveDef, nomeTab: string;
-  contatore_per_demo: integer;
 begin
   // ______________________________________ Unlink tables from grid controls ___
   f_work.disabilitaTableRep.Execute;
@@ -2626,7 +2625,6 @@ begin
   Memo2.Clear;
   Memo2.Append('<?php');
   // ________________________________________________________ Loop on tables ___
-  contatore_per_demo := 1;
   dm_form.t_tabelle.First;
   repeat
     if dm_form.t_tabelleNome.Value <> '' then
@@ -2693,14 +2691,40 @@ begin
           dm_form.t_indiciTesta.Next;
         until dm_form.t_indiciTesta.EOF;
         Memo2.Append('');
-      end;
-      if (TIPO = 'DEMO') and (contatore_per_demo = 30) then
-      begin
-        ShowMessage('Demo Edition. Exported only 30 tables');
-        Break;
+        // ________________________________ Loop on table not unique indexes ___
+        chiaveDef := '';
+        dm_form.t_indicitestanu.First;
+        repeat
+          if dm_form.t_indicitestanunomekey.Value <> '' then
+          begin
+            // ________________________________ Set index name in definition ___
+            buffer := chr(9) + 'o2def::nuindex("' +
+                      dm_form.t_indicitestanunomekey.Text + '", ';
+            // ________________________________________ Loop on key segments ___
+            dm_form.t_indicinu.First;
+            repeat
+              if dm_form.t_indicinuid_segmento.Text <> '' then
+              begin
+                // ___________________________ Skip first token adding comma ___
+                if StrToInt(dm_form.t_indicinuid_segmento.Text) > 1 then
+                begin
+                  buffer := buffer + ', ';
+                end;
+              end;
+              // ____________________________ Add segment and direction pair ___
+              buffer := buffer + '"' + dm_form.t_indicinusegmento.Text + '","' +
+                        dm_form.t_indicinudirezione.Text + '"';
+              dm_form.t_indicinu.Next;
+            until dm_form.t_indicinu.EOF;
+            // ___________________________ Close index definition and append ___
+            buffer := buffer + ');';
+            Memo2.Append(buffer);
+          end;
+          dm_form.t_indicitestanu.Next;
+        until dm_form.t_indicitestanu.EOF;
+        Memo2.Append('');
       end;
     end;
-    Inc(contatore_per_demo);
     dm_form.t_tabelle.Next;
   until dm_form.t_tabelle.EOF;
   Memo2.Append('?>');
@@ -2714,6 +2738,11 @@ begin
                                    dfXML);
   dm_form.t_indici.SaveToFile(f_work.userdir + '__source__\segments.cache',
                               dfXML);
+  dm_form.t_indicitestanu.SaveToFile(f_work.userdir +
+                                     '__source__\nuindexes.cache',
+                                     dfXML);
+  dm_form.t_indicinu.SaveToFile(f_work.userdir + '__source__\nusegments.cache',
+                                dfXML);
   f_import.tables_import.Execute;
 end;
 

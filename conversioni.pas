@@ -40,7 +40,7 @@ implementation
 
 {$R *.dfm}
 
-uses work, import, import_0_0_0, export;
+uses work, import, export;
 
 procedure Tf_conversioni.Button1Click(Sender: TObject);
 var

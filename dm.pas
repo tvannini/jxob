@@ -481,6 +481,18 @@ type
     t_formulas_sqlExp: TIntegerField;
     t_formulas_sqlField: TStringField;
     t_selectsql: TStringField;
+    ds_indicitestanu: TDataSource;
+    ds_indicinu: TDataSource;
+    t_indicitestanu: TClientDataSet;
+    t_indicitestanuid_tabella: TIntegerField;
+    t_indicitestanuid_indice: TIntegerField;
+    t_indicitestanunomekey: TStringField;
+    t_indicinu: TClientDataSet;
+    t_indicinuid_tabella: TIntegerField;
+    t_indicinuid_indice: TIntegerField;
+    t_indicinuid_segmento: TIntegerField;
+    t_indicinusegmento: TStringField;
+    t_indicinudirezione: TStringField;
     procedure t_tabelleBeforeInsert(DataSet: TDataSet);
     procedure t_tabelleSaveRecord(DataSet: TDataSet; var Accept: boolean);
     procedure t_indici_savNewRecord(DataSet: TDataSet);
@@ -654,6 +666,9 @@ type
     procedure t_reportaliasSetText(Sender: TField; const Text: String);
     procedure t_reportfieldaliasSetText(Sender: TField;
       const Text: String);
+    procedure t_indicitestanuBeforeDelete(DataSet: TDataSet);
+    procedure t_indicitestanuNewRecord(DataSet: TDataSet);
+    procedure t_indicinuNewRecord(DataSet: TDataSet);
 
   private
     temp_table: TClientDataSet;
@@ -3111,6 +3126,36 @@ procedure Tdm_form.t_reportfieldaliasSetText(Sender: TField;
   const Text: String);
 begin
   Sender.Value := formatName(Text);
+end;
+
+procedure Tdm_form.t_indicitestanuBeforeDelete(DataSet: TDataSet);
+begin
+  //elimina segmenti
+  while (t_indicinuid_indice.Value <> 0) do
+  begin
+    t_indicinu.Delete;
+    t_indicinu.Next;
+  end;
+
+  tables_modificato := True;
+end;
+
+procedure Tdm_form.t_indicitestanuNewRecord(DataSet: TDataSet);
+begin
+  if (not (da_Refresh)) then
+  begin
+    t_indicitestanuid_indice.Value := t_indicitestanu.RecordCount + 1;
+  end;
+end;
+
+procedure Tdm_form.t_indicinuNewRecord(DataSet: TDataSet);
+begin
+
+  if (not (da_Refresh)) then
+  begin
+    t_indicinuid_segmento.Value := t_indicinu.RecordCount + 1;
+  end;
+
 end;
 
 end.
