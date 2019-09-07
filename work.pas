@@ -3613,7 +3613,7 @@ begin
                '__source__\indexes.cache',
                '__source__\segments.cache',
                '__source__\nuindexes.cache',
-               '__source__\nuunsegments.cache'],
+               '__source__\nusegments.cache'],
               cvsSet);
       dm_form.tables_modificato := false;
     end
