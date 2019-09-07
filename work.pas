@@ -3631,7 +3631,7 @@ begin
                                    [mbYes, mbNo],
                                    1) = mrYes;
       end;
-      if (f_checkprg.Memo2.Lines.Count <= 1) or (forzacheckin) then
+      if (not (f_checkprg.ErrorsFound)) or (forzacheckin) then
       begin
         f_export.prg_exportExecute(self, dm_form.t_programminome.Value);
         // f_checkprg.ripristina_posizioni.Execute;
