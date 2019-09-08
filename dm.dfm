@@ -98,6 +98,7 @@ object dm_form: Tdm_form
     StoreDefs = True
     AfterInsert = t_tabelleAfterInsert
     AfterEdit = t_tabelleAfterEdit
+    BeforePost = t_tabelleBeforePost
     BeforeDelete = t_tabelleBeforeDelete
     AfterDelete = t_tabelleAfterDelete
     OnNewRecord = t_tabelleNewRecord
@@ -197,6 +198,7 @@ object dm_form: Tdm_form
     StoreDefs = True
     AfterInsert = t_campiAfterInsert
     AfterEdit = t_campiAfterEdit
+    BeforePost = t_campiBeforePost
     AfterDelete = t_campiAfterDelete
     OnNewRecord = t_campiNewRecord
     Left = 256
@@ -266,6 +268,7 @@ object dm_form: Tdm_form
     StoreDefs = True
     AfterInsert = t_indicitestaAfterInsert
     AfterEdit = t_indicitestaAfterEdit
+    BeforePost = t_indicitestaBeforePost
     BeforeDelete = t_indicitestaBeforeDelete
     OnNewRecord = t_indicitestaNewRecord
     Left = 328
@@ -4313,6 +4316,7 @@ object dm_form: Tdm_form
     StoreDefs = True
     AfterInsert = t_indicitestaAfterInsert
     AfterEdit = t_indicitestaAfterEdit
+    BeforePost = t_indicitestaBeforePost
     BeforeDelete = t_indicitestanuBeforeDelete
     OnNewRecord = t_indicitestanuNewRecord
     Left = 328

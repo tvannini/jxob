@@ -668,6 +668,9 @@ type
     procedure t_indicitestanuBeforeDelete(DataSet: TDataSet);
     procedure t_indicitestanuNewRecord(DataSet: TDataSet);
     procedure t_indicinuNewRecord(DataSet: TDataSet);
+    procedure t_campiBeforePost(DataSet: TDataSet);
+    procedure t_tabelleBeforePost(DataSet: TDataSet);
+    procedure t_indicitestaBeforePost(DataSet: TDataSet);
 
   private
     temp_table: TClientDataSet;
@@ -3154,6 +3157,100 @@ begin
   begin
     t_indicinuid_segmento.Value := t_indicinu.RecordCount + 1;
   end;
+
+end;
+
+procedure Tdm_form.t_campiBeforePost(DataSet: TDataSet);
+var
+  CDSClone: TCustomClientDataSet;
+  newName: String;
+begin
+
+  if DataSet.Fields[2].AsString <> '' then
+  begin
+    // _____________________________ Format new name with only allowed chars ___
+    newName := formatName(DataSet.Fields[2].AsString);
+    // ______________________________ Look for new name in alternate dataset ___
+    CDSClone := TCustomClientDataSet.Create(dm_form);
+    CDSClone.CloneCursor(t_campi, False, False);
+    if CDSClone.Locate('nomecampo', newName, []) then
+    begin
+      ShowMessage('Field name ' + newName + ' already exists!');
+      DataSet.Cancel;
+      Abort;
+    end
+    else
+    begin
+      DataSet.Fields[2].Text := newName;
+    end;
+  end;
+  FreeAndNil(CDSClone);
+
+end;
+
+procedure Tdm_form.t_tabelleBeforePost(DataSet: TDataSet);
+var
+  CDSClone: TCustomClientDataSet;
+  newName: String;
+begin
+
+  if DataSet.Fields[1].AsString <> '' then
+  begin
+    // _____________________________ Format new name with only allowed chars ___
+    newName := formatName(DataSet.Fields[1].AsString);
+    // ______________________________ Look for new name in alternate dataset ___
+    CDSClone := TCustomClientDataSet.Create(dm_form);
+    CDSClone.CloneCursor(t_tabelle, False, False);
+    if CDSClone.Locate('nome', newName, []) then
+    begin
+      ShowMessage('Table name ' + newName + ' already exists!');
+      DataSet.Cancel;
+      Abort;
+    end
+    else
+    begin
+      DataSet.Fields[1].Text := newName;
+    end;
+  end;
+  FreeAndNil(CDSClone);
+
+end;
+
+procedure Tdm_form.t_indicitestaBeforePost(DataSet: TDataSet);
+var
+  CDSClone, CDSClone2: TCustomClientDataSet;
+  newName: String;
+begin
+
+  if DataSet.Fields[2].AsString <> '' then
+  begin
+    // _____________________________ Format new name with only allowed chars ___
+    newName := formatName(DataSet.Fields[2].AsString);
+    // ______________________________ Look for new name in alternate dataset ___
+    CDSClone  := TCustomClientDataSet.Create(dm_form);
+    CDSClone2 := TCustomClientDataSet.Create(dm_form);
+    CDSClone.CloneCursor(t_indicitesta, False, False);
+    CDSClone2.CloneCursor(t_indicitestanu, False, False);
+    if CDSClone.Locate('nomekey', newName, []) then
+    begin
+      ShowMessage('Index name ' + newName +
+                  ' already exists in unique indexes!');
+      DataSet.Cancel;
+      Abort;
+    end
+    else if CDSClone2.Locate('nomekey', newName, []) then
+    begin
+      ShowMessage('Index name ' + newName +
+                  ' already exists in not unique indexes!');
+      DataSet.Cancel;
+      Abort;
+    end
+    else
+    begin
+      DataSet.Fields[2].Text := newName;
+    end;
+  end;
+  FreeAndNil(CDSClone);
 
 end;
 
