@@ -339,29 +339,22 @@ begin
   if r.Exec(programma.Lines.Text) then
   begin
     repeat
-      programma.SelStart := r.MatchPos[0] - 1;
+      programma.SelStart  := r.MatchPos[0] - 1;
       programma.SelLength := r.MatchLen[0];
-      selezione := programma.SelText;
-
-
-      r2.Expression := '\(.*\)';
+      selezione           := programma.SelText;
+      r2.Expression       := '\(.*\)';
 
       if r2.exec(selezione) then
       begin
         selezione2 := copy(r2.match[0], 2, r2.MatchLen[0] - 2);
-        //nome azione
+        // _____________________________________________________ Action name ___
         par1 := extractword(1, selezione2, [',']);
         par1 := copy(par1, 2, length(trim(par1)) - 2);
-
-        //nome service
-        par2 := trim(extractword(2, selezione2, [',']));
-        par2 := copy(par2, 2, length(trim(par2)) - 2);
         with dm_form do
         begin
           t_azioni.Insert;
-          t_azioniprg.Value:=nomeprg;
-          t_azioniazione.Value:=par1;
-          t_azioniservice.Value:=par2;
+          t_azioniprg.Value    := nomeprg;
+          t_azioniazione.Value := par1;
           t_azioni.Post;
         end;
       end;

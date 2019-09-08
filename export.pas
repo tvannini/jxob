@@ -131,8 +131,7 @@ begin
     repeat
       if t_azioniazione.Value <> '' then
       begin
-        Memo2.Add('o2def::act("' +  t_azioniazione.Value +
-                  '", "' +  t_azioniservice.Value + '");');
+        Memo2.Add('o2def::act("' +  t_azioniazione.Value + '");');
       end;
       t_azioni.Next
     until (t_azioni.EOF); // ___________________________ End loop on actions ___

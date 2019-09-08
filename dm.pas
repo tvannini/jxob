@@ -410,7 +410,6 @@ type
     t_apphandlersdescrizione: TStringField;
     t_apphandlerskey: TIntegerField;
     t_apphandlerskeychar: TStringField;
-    t_azioniservice: TStringField;
     t_applicazioneposmenu: TStringField;
     t_menuicona: TStringField;
     t_formrefresh_action: TStringField;

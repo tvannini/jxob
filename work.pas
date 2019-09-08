@@ -861,9 +861,20 @@ end;
 procedure Tf_work.creazioneExecute(Sender: TObject);
 begin
   crea_con_F4 := true;
+  // ____________________________________________________ Create new program ___
   if dbnav.DataSource = dm_form.ds_programmi then
   begin
     tree_new_prg.Execute;
+  end
+  // _______________________________________________________ Create new view ___
+  else if dbnav.DataSource = dm_form.ds_task then
+  begin
+    new_viewExecute(self);
+  end
+  // _____________________________________________________ Create new action ___
+  else if dbnav.DataSource = dm_form.ds_azioni then
+  begin
+    new_actionExecute(self);
   end
   else
   begin
@@ -2412,6 +2423,14 @@ begin
               supertree.Selected.Expand(False);
             end;
           end;
+          if supertree.Selected.Text = 'Views' then
+          begin
+            dbnav.DataSource := dm_form.ds_task;
+          end
+          else
+          begin
+            dbnav.DataSource := dm_form.ds_azioni;
+          end;
         end;
         PageControl1.ActivePage := ts_programmi;
         refresh_bottoni_check(self);
@@ -2612,6 +2631,10 @@ begin
       nodotemp2:=supertree.Items.AddChild(nodotemp, 'View properties');
       nodotemp2.ImageIndex := 1;
       nodotemp2.SelectedIndex := 1;
+      supertree.Selected := nodotemp;
+      dm_form.t_task.Locate('nome', supertree.Selected.Text, []);
+      lab_nomeview.Caption    := 'Tables in view ' + supertree.Selected.Text;
+      Pagecontrol2.ActivePage := ts_main;
     end;
   end;
 end;
@@ -4224,7 +4247,7 @@ begin
     end;
     azionepos := dm_form.t_azioni.GetBookmark;
     ope_pos   := dm_form.t_operazioni.GetBookmark;
-    // ____________________________________________ View name already exists ___
+    // __________________________________________ Action name already exists ___
     if dm_form.t_azioni.Locate('azione', nome_azione, [loCaseInsensitive]) then
     begin
       ShowMessage('Action ' + nome_azione + ' already exists!');
@@ -4240,9 +4263,19 @@ begin
       nodotemp := supertree.Items.AddChild(nodo_azioni_all, nome_azione);
       nodotemp.ImageIndex    := 29;
       nodotemp.SelectedIndex := 29;
+      if supertree.Selected.Text = 'Actions' then
+      begin
+        dm_form.t_azioni.Locate('azione', nome_azione, []);
+        supertree.Selected       := nodotemp;
+        Pagecontrol2.ActivePage  := ts_azioni;
+        Panel_expression.Visible := False;
+      end
       // ____________________________________________________ Reset datasets ___
-      dm_form.t_azioni.GotoBookmark(azionepos);
-      dm_form.t_operazioni.GotoBookmark(ope_pos);
+      else
+      begin
+        dm_form.t_azioni.GotoBookmark(azionepos);
+        dm_form.t_operazioni.GotoBookmark(ope_pos);
+      end;
       Result := nome_azione;
     end;
   end;

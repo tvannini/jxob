@@ -2137,11 +2137,6 @@ object dm_form: Tdm_form
       item
         Name = 'chunk_size'
         DataType = ftInteger
-      end
-      item
-        Name = 'service'
-        DataType = ftString
-        Size = 50
       end>
     IndexDefs = <
       item
@@ -2180,10 +2175,6 @@ object dm_form: Tdm_form
     end
     object t_azionichunk_size: TIntegerField
       FieldName = 'chunk_size'
-    end
-    object t_azioniservice: TStringField
-      FieldName = 'service'
-      Size = 50
     end
   end
   object ds_azioni: TDataSource
