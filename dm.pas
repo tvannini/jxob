@@ -1614,10 +1614,12 @@ end;
 
 procedure Tdm_form.attiva_disattiva_tables(attivo: boolean);
 begin
-  t_tabelle.ReadOnly     := not (attivo);
-  t_campi.ReadOnly       := not (attivo);
-  t_indicitesta.ReadOnly := not (attivo);
-  t_indici.ReadOnly      := not (attivo);
+  t_tabelle.ReadOnly       := not (attivo);
+  t_campi.ReadOnly         := not (attivo);
+  t_indicitesta.ReadOnly   := not (attivo);
+  t_indici.ReadOnly        := not (attivo);
+  t_indicitestanu.ReadOnly := not (attivo);
+  t_indicinu.ReadOnly      := not (attivo);
 end;
 
 
