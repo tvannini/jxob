@@ -2302,71 +2302,71 @@ begin
                 copy(t_operazionio2ref.Value, pos('::', t_operazionio2ref.Value) + 2, 50));
               if exp2 = 'First' then
               begin
-                exp3 := '1'
-              end;
-              if exp2 = 'Previous row' then
+                exp3 := '1';
+              end
+              else if exp2 = 'Previous row' then
               begin
-                exp3 := '2'
-              end;
-              if exp2 = 'Next row' then
+                exp3 := '2';
+              end
+              else if exp2 = 'Next row' then
               begin
-                exp3 := '3'
-              end;
-              if exp2 = 'Last' then
+                exp3 := '3';
+              end
+              else if exp2 = 'Last' then
               begin
-                exp3 := '4'
-              end;
-              if exp2 = 'Previous page' then
+                exp3 := '4';
+              end
+              else if exp2 = 'Previous page' then
               begin
-                exp3 := '5'
-              end;
-              if exp2 = 'Next page' then
+                exp3 := '5';
+              end
+              else if exp2 = 'Next page' then
               begin
-                exp3 := '6'
-              end;
-              if exp2 = 'Refresh' then
+                exp3 := '6';
+              end
+              else if exp2 = 'Refresh' then
               begin
-                exp3 := '0'
-              end;
-              if exp2 = 'Post row' then
+                exp3 := '0';
+              end
+              else if exp2 = 'Post row' then
               begin
-                exp3 := 'S'
-              end;
-              if exp2 = 'Edit' then
+                exp3 := 'S';
+              end
+              else if exp2 = 'Undo' then
               begin
-                exp3 := 'M'
-              end;
-              if exp2 = 'Read' then
+                exp3 := 'A';
+              end
+              else if exp2 = 'Prepare insert' then
               begin
-                exp3 := 'R'
-              end;
-              if exp2 = 'Undo' then
+                exp3 := 'I';
+              end
+              else if exp2 = 'Delete row' then
               begin
-                exp3 := 'A'
-              end;
-              if exp2 = 'Prepare insert' then
+                exp3 := 'C';
+              end
+              else if exp2 = 'Locate' then
               begin
-                exp3 := 'I'
-              end;
-              if exp2 = 'Delete row' then
+                exp3 := 'L';
+              end
+              else if exp2 = 'Delete all rows' then
               begin
-                exp3 := 'C'
-              end;
-              if exp2 = 'Locate' then
+                exp3 := 'D';
+              end
+              else if exp2 = 'Lock rows' then
               begin
-                exp3 := 'L'
-              end;
-              if exp2 = 'Delete all rows' then
+                exp3 := 'K';
+              end
+              else if exp2 = 'Aggregate' then
               begin
-                exp3 := 'D'
-              end;
-              if exp2 = 'Lock rows' then
+                exp3 := 'G';
+              end
+              else if exp2 = 'Bulk insert' then
               begin
-                exp3 := 'K'
-              end;
-              if exp2 = 'Aggregate' then
+                exp3 := 'B';
+              end
+              else if exp2 = 'Bulk end' then
               begin
-                exp3 := 'G'
+                exp3 := 'E';
               end;
 
               // eventuale array per la locate

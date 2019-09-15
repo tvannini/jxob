@@ -2386,71 +2386,71 @@ begin
                 par8 := copy(trim(par8), 2, length(trim(par8)) - 2);
                 if par8 = '1' then
                 begin
-                  par8 := 'First'
+                  par8 := 'First';
                 end
                 else if par8 = '2' then
                 begin
-                  par8 := 'Previous row'
+                  par8 := 'Previous row';
                 end
                 else if par8 = '3' then
                 begin
-                  par8 := 'Next row'
+                  par8 := 'Next row';
                 end
                 else if par8 = '4' then
                 begin
-                  par8 := 'Last'
+                  par8 := 'Last';
                 end
                 else if par8 = '5' then
                 begin
-                  par8 := 'Previous page'
+                  par8 := 'Previous page';
                 end
                 else if par8 = '6' then
                 begin
-                  par8 := 'Next page'
+                  par8 := 'Next page';
                 end
                 else if par8 = 'S' then
                 begin
-                  par8 := 'Post row'
-                end
-                else if par8 = 'M' then
-                begin
-                  par8 := 'Edit'
-                end
-                else if par8 = 'R' then
-                begin
-                  par8 := 'Read'
+                  par8 := 'Post row';
                 end
                 else if par8 = 'L' then
                 begin
-                  par8 := 'Locate'
+                  par8 := 'Locate';
                 end
                 else if par8 = 'A' then
                 begin
-                  par8 := 'Undo'
+                  par8 := 'Undo';
                 end
                 else if par8 = 'I' then
                 begin
-                  par8 := 'Prepare insert'
+                  par8 := 'Prepare insert';
                 end
                 else if par8 = 'C' then
                 begin
-                  par8 := 'Delete row'
+                  par8 := 'Delete row';
                 end
                 else if par8 = 'D' then
                 begin
-                  par8 := 'Delete all rows'
+                  par8 := 'Delete all rows';
                 end
                 else if par8 = 'K' then
                 begin
-                  par8 := 'Lock rows'
+                  par8 := 'Lock rows';
                 end
                 else if par8 = 'G' then
                 begin
-                  par8 := 'Aggregate'
+                  par8 := 'Aggregate';
+                end
+                else if par8 = 'B' then
+                begin
+                  par8 := 'Bulk insert';
+                end
+                else if par8 = 'E' then
+                begin
+                  par8 := 'Bulk end';
                 end
                 else
                 begin
-                  par8 := 'Refresh'
+                  par8 := 'Refresh';
                 end;
 
                 par3 := trim(par3) + par8;
@@ -3179,12 +3179,11 @@ begin
 
   da_Refresh := True;
 
-
-
   // recupera il file repository
   r  := TRegExpr.Create;
   r.ModifierI := True;
   r.ModifierS := False;
+  r.ModifierM := True;
   r2 := TRegExpr.Create;
   r2.ModifierI := True;
 
@@ -3214,7 +3213,6 @@ begin
       programma.SelLength := r.MatchLen[0];
       selezione := programma.SelText;
 
-
       r2.Expression := '\(.*\)';
 
       if r2.exec(selezione) then
@@ -3224,11 +3222,9 @@ begin
         exp1 := extractword(1, selezione2, [',']);
         exp1 := copy(trim(exp1), 2, length(trim(exp1)) - 2);
 
-
         //tipo engine
         exp2 := extractword(2, selezione2, [',']);
         exp2 := copy(trim(exp2), 2, length(trim(exp2)) - 2);
-
 
         //path fisico
         exp3 := extractword(3, selezione2, [',']);
