@@ -2442,7 +2442,7 @@ begin
                 end
                 else if par8 = 'B' then
                 begin
-                  par8 := 'Bulk insert';
+                  par8 := 'Prepare bulk insert';
                 end
                 else if par8 = 'E' then
                 begin

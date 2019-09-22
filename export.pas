@@ -2360,7 +2360,7 @@ begin
               begin
                 exp3 := 'G';
               end
-              else if exp2 = 'Bulk insert' then
+              else if exp2 = 'Prepare bulk insert' then
               begin
                 exp3 := 'B';
               end
