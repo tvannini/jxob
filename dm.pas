@@ -1417,6 +1417,24 @@ begin
       t_operazioni.Next;
     end;
     t_operazioni.MasterSource := ds_azioni;
+    // ______________________ Replace action name in views prefix and suffix ___
+    t_task.First;
+    while not t_task.EOF do
+    begin
+      if t_taskrecordprefix.Value = str_old then
+      begin
+        t_task.Edit;
+        t_taskrecordprefix.Value := str_new;
+        t_task.Post;
+      end;
+      if t_taskrecordsufix.Value = str_old then
+      begin
+        t_task.Edit;
+        t_taskrecordsufix.Value := str_new;
+        t_task.Post;
+      end;
+      t_task.Next;
+    end;
   end; // ________________________ End of previous value existance condition ___
   // ____________________________________________ Update variable name field ___
   Sender.Value := newName;
