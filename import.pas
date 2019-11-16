@@ -2448,6 +2448,18 @@ begin
                 begin
                   par8 := 'Bulk end';
                 end
+                else if par8 = 'SS' then
+                begin
+                  par8 := 'Snapshot start';
+                end
+                else if par8 = 'SM' then
+                begin
+                  par8 := 'Snapshot sync';
+                end
+                else if par8 = 'SE' then
+                begin
+                  par8 := 'Snapshot end';
+                end
                 else
                 begin
                   par8 := 'Refresh';

@@ -4708,8 +4708,7 @@ begin
     if f_sceltarecordset.ModalResult = mrOk then
     begin
       dm_form.t_operazioni.Edit;
-      dm_form.t_operazionio2ref.Value :=
-        f_sceltarecordset.scelta;
+      dm_form.t_operazionio2ref.Value := f_sceltarecordset.scelta;
 
     end;
   end;

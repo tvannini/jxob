@@ -43,8 +43,17 @@ uses dm, Math, sceltaespressioni, import, work;
 procedure Tf_sceltarecordset.BitBtn1Click(Sender: TObject);
 
 begin
-  scelta      := chr(127) + dm_form.t_tasknome.Value + '::' + ListView1.Selected.Caption;
-  ModalResult := mrOk;
+  if (dm_form.t_tasknome.Value <> '') and
+     (ListView1.Selected.Caption <> '') then
+  begin
+     scelta      := chr(127) + dm_form.t_tasknome.Value + '::' +
+                    ListView1.Selected.Caption;
+     ModalResult := mrOk;
+  end
+  else
+  begin
+    SysUtils.Abort;
+  end;
 end;
 
 procedure Tf_sceltarecordset.Actions1Click(Sender: TObject);

@@ -1,8 +1,8 @@
 object f_sceltarecordset: Tf_sceltarecordset
   Left = 423
   Top = 242
-  Width = 435
-  Height = 378
+  Width = 400
+  Height = 433
   Caption = 'Recordset options'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,8 +20,8 @@ object f_sceltarecordset: Tf_sceltarecordset
   object DBGrid1: TDBGrid
     Left = 0
     Top = 0
-    Width = 209
-    Height = 297
+    Width = 240
+    Height = 345
     Ctl3D = False
     DataSource = dm_form.ds_task
     Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgCancelOnExit]
@@ -39,23 +39,28 @@ object f_sceltarecordset: Tf_sceltarecordset
         Expanded = False
         FieldName = 'nome'
         Title.Caption = 'View name'
-        Width = 188
+        Width = 226
         Visible = True
       end>
   end
   object ListView1: TListView
-    Left = 208
+    Left = 241
     Top = 0
-    Width = 209
-    Height = 297
+    Width = 151
+    Height = 345
     Columns = <
       item
         Caption = 'Action on recordset'
-        Width = 190
+        Width = 150
       end>
     Ctl3D = False
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
     Items.Data = {
-      220200001200000000000000FFFFFFFFFFFFFFFF000000000000000005466972
+      9D0200001600000000000000FFFFFFFFFFFFFFFF000000000000000005466972
       737400000000FFFFFFFFFFFFFFFF00000000000000000D50726576696F757320
       7061676500000000FFFFFFFFFFFFFFFF00000000000000000C50726576696F75
       7320726F7700000000FFFFFFFFFFFFFFFF0000000000000000084E6578742072
@@ -70,17 +75,21 @@ object f_sceltarecordset: Tf_sceltarecordset
       00FFFFFFFFFFFFFFFF00000000000000000F44656C65746520616C6C20726F77
       7300000000FFFFFFFFFFFFFFFF0000000000000000094C6F636B20726F777300
       000000FFFFFFFFFFFFFFFF000000000000000009416767726567617465000000
-      00FFFFFFFFFFFFFFFF000000000000000013507265706172652062756C6B2069
-      6E7365727400000000FFFFFFFFFFFFFFFF00000000000000000842756C6B2065
-      6E64}
+      00FFFFFFFFFFFFFFFF00000000000000000000000000FFFFFFFFFFFFFFFF0000
+      00000000000013507265706172652062756C6B20696E7365727400000000FFFF
+      FFFFFFFFFFFF00000000000000000842756C6B20656E6400000000FFFFFFFFFF
+      FFFFFF00000000000000000E536E617073686F7420737461727400000000FFFF
+      FFFFFFFFFFFF00000000000000000D536E617073686F742073796E6300000000
+      FFFFFFFFFFFFFFFF00000000000000000C536E617073686F7420656E64}
     ReadOnly = True
+    ParentFont = False
     TabOrder = 1
     ViewStyle = vsReport
     OnKeyPress = FormKeyPress
   end
   object BitBtn1: TBitBtn
-    Left = 176
-    Top = 312
+    Left = 160
+    Top = 368
     Width = 75
     Height = 25
     Caption = '&Select'
@@ -89,7 +98,7 @@ object f_sceltarecordset: Tf_sceltarecordset
   end
   object pop: TPopupMenu
     Left = 32
-    Top = 304
+    Top = 360
     object Actions1: TMenuItem
       Caption = 'Change list'
       ShortCut = 16393

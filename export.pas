@@ -2367,6 +2367,18 @@ begin
               else if exp2 = 'Bulk end' then
               begin
                 exp3 := 'E';
+              end
+              else if exp2 = 'Snapshot start' then
+              begin
+                exp3 := 'SS';
+              end
+              else if exp2 = 'Snapshot sync' then
+              begin
+                exp3 := 'SM';
+              end
+              else if exp2 = 'Snapshot end' then
+              begin
+                exp3 := 'SE';
               end;
 
               // eventuale array per la locate
