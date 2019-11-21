@@ -2456,9 +2456,9 @@ begin
                 begin
                   par8 := 'Snapshot sync';
                 end
-                else if par8 = 'SE' then
+                else if par8 = 'SC' then
                 begin
-                  par8 := 'Snapshot end';
+                  par8 := 'Snapshot clear';
                 end
                 else
                 begin

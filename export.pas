@@ -2376,9 +2376,9 @@ begin
               begin
                 exp3 := 'SM';
               end
-              else if exp2 = 'Snapshot end' then
+              else if exp2 = 'Snapshot clear' then
               begin
-                exp3 := 'SE';
+                exp3 := 'SC';
               end;
 
               // eventuale array per la locate
