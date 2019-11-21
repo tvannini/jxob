@@ -1172,7 +1172,7 @@ begin
       end;
       t_operazioni.MasterSource := ds_azioni;
       // __________________________________ Replace select alias in controls ___
-      t_controlliform.MasterSource :=nil;
+      t_controlliform.MasterSource := nil;
       t_controlliform.First;
       while not t_controlliform.EOF do
       begin
@@ -1247,24 +1247,27 @@ begin
   Sender.Value := newName;
   // ____________________ Replace select alias in view SQL-formulas (CONCAT) ___
   // ______ NOTE: Done after all because must leave t_select current record! ___
-  p := t_select.GetBookmark;
-  t_select.DisableControls;
-  t_select.First;
-  while not t_select.EOF do
+  if (ds_select.State <> dsInsert) and (str_old <> str_new) then
   begin
-    if (t_selectsql.AsString <> '') and
-      (Pos(str_old, t_selectsql.Value) > 0) then
+    p := t_select.GetBookmark;
+    t_select.DisableControls;
+    t_select.First;
+    while not t_select.EOF do
     begin
-      t_select.Edit;
-      t_selectsql.Value := StringReplace(t_selectsql.Value,
-                                         str_old,
-                                         str_new,
-                                         [rfReplaceAll]);
+      if (t_selectsql.AsString <> '') and
+         (Pos(str_old, t_selectsql.Value) > 0) then
+      begin
+        t_select.Edit;
+        t_selectsql.Value := StringReplace(t_selectsql.Value,
+                                           str_old,
+                                           str_new,
+                                           [rfReplaceAll]);
+      end;
+      t_select.Next;
     end;
-    t_select.Next;
+    t_select.GotoBookmark(p);
+    t_select.EnableControls;
   end;
-  t_select.GotoBookmark(p);
-  t_select.EnableControls;
 
 end;
 
