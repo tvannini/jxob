@@ -166,7 +166,7 @@ begin
         // _____________________________________________ Check for selection ___
         if (campo.Caption = field_in) and (campo.SubItems[1] = task_in) then
         begin
-          ListView1.Selected:=campo;
+          ListView1.Selected := campo;
         end;
         t_parametri.Next;
       end;
@@ -201,7 +201,7 @@ begin
           campo.Caption := t_selectcon_nome.Value;
           if t_selecttipo.Value = 'Calculated' then
           begin
-            campo.SubItems.Add('[Calculated]');
+            campo.SubItems.Add('[Formula]');
             campo.SubItems.Add(t_task.Lookup('id',
                                              t_selectidtask.Value,
                                              'nome'));

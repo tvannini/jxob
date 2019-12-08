@@ -731,6 +731,21 @@ begin
           end;
         end;
 
+        // _______________________________ Check model existance in virtuals ___
+        if (t_selecttipo.Value = 'Calculated') or
+            (t_selecttipo.Value = 'SQL') then
+        begin
+          // ________________________ Check table existance in db-repository ___
+          if t_modelli.Lookup('idmodello',
+                              t_selectcampo.Value,
+                              'idmodello') <> t_selectcampo.Value then
+          begin
+            Memo2.Lines.Append('Check data model in ' + t_selecttipo.Value +
+                               ' field: view "' + nome_view +
+                               '" row ' + t_selectidcampo.AsString);
+          end;
+        end;
+
         // _______________________________ Check init expression in formulas ___
         if (t_selecttipo.Value = 'Calculated') then
         begin

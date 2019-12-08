@@ -1728,19 +1728,18 @@ begin
       DBGrid_select.SelectedField := dm_form.t_selectrangemin;
     end;
   end
-  // _____________ In FORMULAS and SQL-FORMULAS skip TABLE and FIELD columns ___
+  // ________________________ In FORMULAS and SQL-FORMULAS skip TABLE column ___
   else if ((dm_form.t_selecttipo.Value = 'Calculated') or
            (dm_form.t_selecttipo.Value = 'SQL')) and
-          ((DBGrid_select.SelectedField = dm_form.t_selecttabella) or
-           (DBGrid_select.SelectedField = dm_form.t_selectcampo)) then
+          (DBGrid_select.SelectedField = dm_form.t_selecttabella) then
   begin
-    if campo_in_grid_select = 'con_nome' then
+    if campo_in_grid_select = 'campo' then
     begin
       DBGrid_select.SelectedField := dm_form.t_selecttipo;
     end
     else
     begin
-      DBGrid_select.SelectedField := dm_form.t_selectcon_nome;
+      DBGrid_select.SelectedField := dm_form.t_selectcampo;
     end;
   end;
   // _______________________________________ Set field name selected in grid ___
@@ -1759,7 +1758,6 @@ var
   n, progr, exp_local: integer;
 begin
 
-
   //TABELLA
   if campo_in_grid_select = 'tabella' then
   begin
@@ -1772,95 +1770,96 @@ begin
     end;
   end;
 
-
   //CAMPO
   if campo_in_grid_select = 'campo' then
   begin
 
-    if dm_form.t_usa_file.Lookup('con_nome', dm_form.t_selecttabella.Value, 'tipo') <>
-      'View' then
+    // __________________________ If standard select (no formula and no SQL) ___
+    if dm_form.t_selecttipo.AsString = 'Select' then
     begin
 
-      //si posiziona sulla tabella selezionata
-
-      dm_form.t_tabelle.Locate('Nome', dm_form.t_usa_file.Lookup(
-        'con_nome', dm_form.t_selecttabella.Value, 'tabella'), []);
-
-     // si posiziona sul campo in questione
-      dm_form.t_campi.Locate('nomecampo', dm_form.t_selectcampo.Value, []);
-
-      f_sceltacampotab.ShowModal;
-
-      if f_sceltacampotab.ModalResult = mrOk then
+      if dm_form.t_usa_file.Lookup('con_nome', dm_form.t_selecttabella.Value, 'tipo') <>
+        'View' then
       begin
 
-      // in caso di selezione multipla
-     if f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRowCount > 1 then
-     begin
-      // annulla la insert corrente
-       alias_tabella:=dm_form.t_selecttabella.Value;
-       dm_form.t_select.Cancel;
+        //si posiziona sulla tabella selezionata
+        dm_form.t_tabelle.Locate('Nome', dm_form.t_usa_file.Lookup(
+          'con_nome', dm_form.t_selecttabella.Value, 'tabella'), []);
 
-        // lavora sulla selezione
-       for n:= 0 to  f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRowCount - 1 do
-       begin
-          // cerca univocita
-          // assegnazione alias campo
-          alias_assegnato := f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRecords[n].Values[1];
-          alias_trovato := '';
-          progr := 0;
+        // si posiziona sul campo in questione
+        dm_form.t_campi.Locate('nomecampo', dm_form.t_selectcampo.Value, []);
+        f_sceltacampotab.ShowModal;
+        if f_sceltacampotab.ModalResult = mrOk then
+        begin
 
-          repeat
+          // in caso di selezione multipla
+          if f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRowCount > 1 then
+          begin
+            // annulla la insert corrente
+            alias_tabella := dm_form.t_selecttabella.Value;
+            dm_form.t_select.Cancel;
+            // lavora sulla selezione
+            for n:= 0 to  f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRowCount - 1 do
+            begin
+              // cerca univocita
+              // assegnazione alias campo
+              alias_assegnato := f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRecords[n].Values[1];
+              alias_trovato := '';
+              progr := 0;
+              repeat
+                if dm_form.t_select.Lookup('con_nome', alias_assegnato, 'con_nome') =
+                 null then alias_trovato := 'S' ;
 
-            if dm_form.t_select.Lookup('con_nome', alias_assegnato, 'con_nome') =
-              null then alias_trovato := 'S' ;
+                //trovato copia
+                if dm_form.t_select.Lookup('con_nome', alias_assegnato, 'con_nome') <>
+                 null then
+                begin
+                  Inc(progr);
+                  alias_assegnato := f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRecords[n].Values[1]  + IntToStr(progr);
+                end;
+              until alias_trovato = 'S';
 
-            //trovato copia
-             if dm_form.t_select.Lookup('con_nome', alias_assegnato, 'con_nome') <>
-              null then
-             begin
-              Inc(progr);
-              alias_assegnato := f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRecords[n].Values[1]  + IntToStr(progr);
-             end;
-
-          until alias_trovato = 'S';
-
-          dm_form.t_select.Insert;
-
-          dm_form.t_selecttabella.Value:= alias_tabella;
-          dm_form.t_selectcampo.Value:= f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRecords[n].Values[1];
-          dm_form.t_selecttipo.Value:= 'Select';
-
-          dm_form.t_selectcon_nome.Value:= alias_assegnato;
-
-          dm_form.t_select.Post;
-       end;
-       end
-       else
-       //singola selezione aggiorna
-       begin
+              dm_form.t_select.Insert;
+              dm_form.t_selecttabella.Value:= alias_tabella;
+              dm_form.t_selectcampo.Value:= f_sceltacampotab.cxGrid1DBTableView1.Controller.SelectedRecords[n].Values[1];
+              dm_form.t_selecttipo.Value:= 'Select';
+              dm_form.t_selectcon_nome.Value:= alias_assegnato;
+              dm_form.t_select.Post;
+            end;
+          end
+          else
+          //singola selezione aggiorna
+          begin
+            dm_form.t_select.Edit;
+            dm_form.t_selectcampo.Value:= dm_form.t_campinomecampo.Value;
+          end;
+        end;
+      end
+      else begin
+        f_scelta_campiview.cosa_cerco  := '';
+        f_scelta_campiview.nomemodello :=
+         dm_form.t_usa_file.Lookup('con_nome', dm_form.t_selecttabella.Value, 'tabella');
+        f_scelta_campiview.ShowModal;
+        if f_scelta_campiview.ModalResult = mrOk then
+        begin
           dm_form.t_select.Edit;
-          dm_form.t_selectcampo.Value:= dm_form.t_campinomecampo.Value;
-       end;
-
-
+          dm_form.t_selectcampo.Value :=
+           f_scelta_campiview.ListBox1.Items[f_scelta_campiview.ListBox1.ItemIndex];
+        end;
       end;
     end
-    else begin
-      f_scelta_campiview.cosa_cerco  := '';
-      f_scelta_campiview.nomemodello :=
-        dm_form.t_usa_file.Lookup('con_nome', dm_form.t_selecttabella.Value, 'tabella');
-      f_scelta_campiview.ShowModal;
-      if f_scelta_campiview.ModalResult = mrOk then
+    // ___________________________________________________ If formula or SQL ___
+    else
+    begin
+      // ___________________________________ Position on selected data-model ___
+      dm_form.t_modelli.Locate('idmodello', dm_form.t_selectcampo.Value, []);
+      f_sceltamodel.ShowModal;
+      if f_sceltamodel.ModalResult = mrOk then
       begin
         dm_form.t_select.Edit;
-        dm_form.t_selectcampo.Value :=
-          f_scelta_campiview.ListBox1.Items[f_scelta_campiview.ListBox1.ItemIndex];
-
+        dm_form.t_selectcampo.Value := dm_form.t_modelliidmodello.Value;
       end;
-
     end;
-
   end;
 
   // __________________________________________________________ SQL formulas ___

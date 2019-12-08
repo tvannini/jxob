@@ -442,7 +442,7 @@ begin
           begin
             exp5 := 'null';
           end;
-          // _ Selects and link criteria (no formula, no SQL and no virtual) ___
+          // _____________ Selects and link criteria (no formula and no SQL) ___
           if (t_selecttipo.Value = 'Select') or
              (t_selecttipo.Value = 'Link') then
           begin
@@ -485,32 +485,17 @@ begin
                         exp1 + ',' + exp2 + ',' + exp3 + ',' + exp4 + ');';
             end;
           end; // ____________________________ End selects and link criteria ___
-          // ________________________________________ Variables and formulas ___
-          if (t_selecttipo.Value = 'Virtual') or
-             (t_selecttipo.Value = 'Calculated') then
+          // _______________________________________________________ Formula ___
+          if t_selecttipo.Value = 'Calculated' then
           begin
-            // ____________________________________________________ Variable ___
-            if t_selecttipo.Value = 'Virtual' then
-            begin
-              tipousa := 'definisci';
-              // ________________________________ Init expression (NOT USED) ___
-              if exp5 <> 'null' then
-              begin
-                exp5 := Copy(Trim(exp5), 2, Length(Trim(exp5)) - 2)
-              end;
-            end
-            // _____________________________________________________ Formula ___
-            else if t_selecttipo.Value = 'Calculated' then
-            begin
-              tipousa := 'calcola';
-            end;
-            buffer := chr(9) + '$task_' + nometask + '->' + tipousa + '(' +
-                      prefisso_per_view2 + '"' +
-                      t_selectcon_nome.Value + '", ' + exp5 + ',' +
-                      exp1 + ',' + exp2 + ',' + exp3 + ',' + exp4 + ');';
-          end; // _______________________________ End variables and formulas ___
+            tipousa := 'calcola';
+            buffer  := chr(9) + '$task_' + nometask + '->' + tipousa + '("' +
+                       t_selectcon_nome.Value + '","' +
+                       t_selectcampo.Value + '",' + exp5 + ',' +
+                       exp1 + ',' + exp2 + ',' + exp3 + ',' + exp4 + ');';
+          end // ______________________________________________ End formulas ___
           // __________________________________________________ SQL formulas ___
-          if (t_selecttipo.Value = 'SQL') then
+          else if (t_selecttipo.Value = 'SQL') then
           begin
             tipousa        := 'sql_formula';
             tokenlist      := TStringList.Create;
@@ -529,9 +514,17 @@ begin
                 SQLdef := SQLdef + nomeprg + '_exp_' + tokenlist[i] + '(),';
               end;
             end;
-            SQLdef := StrLeft(SQLdef, StrLength(SQLdef) - 1);
+            if SQLdef <> '' then
+            begin
+              SQLdef := '["CONCAT",' + StrLeft(SQLdef, StrLength(SQLdef) - 1) + ']';
+            end
+            else
+            begin
+              SQLdef := 'null';
+            end;
             buffer := chr(9) + '$task_' + nometask + '->sql_formula("' +
-                      t_selectcon_nome.Value + '", ["CONCAT",' + SQLdef + '],' +
+                      t_selectcon_nome.Value + '","' +
+                      t_selectcampo.Value + '",' + SQLdef + ',' +
                       exp1 + ',' + exp2 + ',' + exp3 + ',' + exp4 + ');';
           end; // _________________________________________ End SQL formulas ___
           if tipousa <> '' then
