@@ -246,8 +246,17 @@ begin
     // _________________________________________________ From within program ___
     else if f_work.PageControl1.ActivePage = f_work.ts_programmi then
     begin
+      // ______________________________________________________________ View ___
+      if f_work.dbnav.DataSource = dm_form.ds_task then
+      begin
+        // ____________________________________________ Compose command text ___
+        cmdTxt := ' prg_view ' + dm_form.t_programminome.Value + ' ' +
+                  dm_form.t_task.Lookup('Id',
+                                        dm_form.t_selectidtask.Value,
+                                        'nome');
+      end
       // ______________________________________________________ Field select ___
-      if f_work.dbnav.DataSource = dm_form.ds_select then
+      else if f_work.dbnav.DataSource = dm_form.ds_select then
       begin
         // ____________________________________________ Compose command text ___
         cmdTxt := ' prg_field ' + dm_form.t_programminome.Value + ' ' +

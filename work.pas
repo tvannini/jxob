@@ -2370,12 +2370,14 @@ begin
           dm_form.t_task.Locate('nome', supertree.Selected.Text, []);
           lab_nomeview.Caption    := 'Tables in view ' +
                                      supertree.Selected.Text;
+          dbnav.DataSource        := dm_form.ds_task;
           Pagecontrol2.ActivePage := ts_main;
         end
         // __________________________________ Selection on a view properties ___
         else if supertree.Selected.Text = 'View properties' then
         begin
           dm_form.t_task.Locate('nome', supertree.Selected.Parent.Text, []);
+          dbnav.DataSource        := dm_form.ds_task;
           PageControl2.ActivePage := ts_taskprop;
         end
         else if supertree.Selected.Text = 'Program properties' then
