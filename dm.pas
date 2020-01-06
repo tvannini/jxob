@@ -668,9 +668,6 @@ type
     procedure t_indicitestanuBeforeDelete(DataSet: TDataSet);
     procedure t_indicitestanuNewRecord(DataSet: TDataSet);
     procedure t_indicinuNewRecord(DataSet: TDataSet);
-    procedure t_campiBeforePost(DataSet: TDataSet);
-    procedure t_tabelleBeforePost(DataSet: TDataSet);
-    procedure t_indicitestaBeforePost(DataSet: TDataSet);
 
   private
     temp_table: TClientDataSet;
@@ -1117,157 +1114,178 @@ procedure Tdm_form.t_selectcon_nomeSetText(Sender: TField; const Text: string);
 var
   newName, str_old, str_new: string;
   progr : integer;
+  CDSClone : TCustomClientDataSet;
   r : TRegExpr;
   p : TBookmark;
 begin
+
+  // _______________________________ Format new name with only allowed chars ___
   newName := formatName(Text);
-  // _______________________________________________ Changing existing alias ___
-  if (Sender.AsString <> '') and (Sender.AsString <> newName) then
+  if (newName <> '') and (newName <> Sender.AsString) then
   begin
-    try
-      t_operazioni.DisableControls;
-      t_espressioni.DisableControls;
-      t_controlliform.DisableControls;
-      r            := TRegExpr.Create;
-      // ___________ Replace in o2val(), o2pre() and o2zero() in expressions ___
-      r.Expression := 'o2(\w+)\s*\(\s*["' + #39 + ']' + t_tasknome.Value +
-                                     '["' + #39 + ']\s*,\s*["' + #39 + ']' +
-                                     Sender.AsString + '["' + #39 + ']\s*\)';
-      str_new      := 'o2$1(' + #39 + t_tasknome.Value + #39 + ', ' +
-                                #39 + newName + #39 + ')';
-      t_espressioni.First;
-      while not t_espressioni.EOF do
+    // _____________________________ Look for new name in alternate datasets ___
+    CDSClone  := TCustomClientDataSet.Create(dm_form);
+    CDSClone.CloneCursor(t_select, False, False);
+    if CDSClone.Locate('con_nome', newName, []) then
+    begin
+      ShowMessage('Field alias ' + newName + ' already exists!');
+      Sender.DataSet.Cancel;
+      Abort;
+    end
+    else
+    begin
+
+      newName := formatName(Text);
+      // ___________________________________________ Changing existing alias ___
+      if (Sender.AsString <> '') and (Sender.AsString <> newName) then
       begin
-        t_espressioni.Edit;
-        t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
-                                               str_new,
-                                               True);
-        t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value,
-                                               str_new,
-                                               True);
-        t_espressioni.Next
-      end;
-      // ___________________________________ Replace select alias in actions ___
-      t_operazioni.MasterSource := nil;
-      t_operazioni.First;
-      while not t_operazioni.EOF do
-      begin
-        t_operazioni.Edit;
-        str_old := #127 + t_tasknome.Value + #129 + Sender.AsString;
-        str_new := #127 + t_tasknome.Value + #129 + newName;
-        // ____________________________ Select alias name in field reference ___
-        if t_operazionio2ref.Value = str_old then
-        begin
-          t_operazionio2ref.Value := str_new;
-        end;
-        // _______________ Select alias in field passed as parameter in call ___
-        r.Expression                := #127 + t_tasknome.Value + #129 +
-                                       Sender.AsString + '(\W|$)';
-        str_new                     := #127 + t_tasknome.Value + #129 +
-                                       newName + '$1';
-        t_operazionicallparam.Value := r.Replace(t_operazionicallparam.Value,
-                                                 str_new,
-                                                 True);
-        t_operazioni.Next
-      end;
-      t_operazioni.MasterSource := ds_azioni;
-      // __________________________________ Replace select alias in controls ___
-      t_controlliform.MasterSource := nil;
-      t_controlliform.First;
-      while not t_controlliform.EOF do
-      begin
-        t_controlliform.Edit;
-        str_old := #127 + t_tasknome.Value + #129 + Sender.AsString;
-        str_new := #127 + t_tasknome.Value + #129 + newName;
-        if t_controlliformriferimento.Value = str_old then
-        begin
-          t_controlliformriferimento.Value := str_new;
-        end;
-        // _______________________ Replace in o2viewlist() in combo/list-box ___
-        str_old := 'o2_view2list("' + t_tasknome.Value + '", "' +
-                                      Sender.AsString + '"';
-        str_new := 'o2_view2list("' + t_tasknome.Value + '", "' +
-                                      newName + '"';
-        // _________________________________ Replace when used as code field ___
-        t_controlliformscelte_possibili.Value := StringReplace(
+        try
+          t_operazioni.DisableControls;
+          t_espressioni.DisableControls;
+          t_controlliform.DisableControls;
+          r            := TRegExpr.Create;
+          // _______ Replace in o2val(), o2pre() and o2zero() in expressions ___
+          r.Expression := 'o2(\w+)\s*\(\s*["' + #39 + ']' + t_tasknome.Value +
+                                         '["' + #39 + ']\s*,\s*["' + #39 + ']' +
+                                        Sender.AsString + '["' + #39 + ']\s*\)';
+          str_new      := 'o2$1(' + #39 + t_tasknome.Value + #39 + ', ' +
+                                    #39 + newName + #39 + ')';
+          t_espressioni.First;
+          while not t_espressioni.EOF do
+          begin
+            t_espressioni.Edit;
+            t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
+                                                   str_new,
+                                                   True);
+            t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value,
+                                                   str_new,
+                                                   True);
+            t_espressioni.Next
+          end;
+          // _______________________________ Replace select alias in actions ___
+          t_operazioni.MasterSource := nil;
+          t_operazioni.First;
+          while not t_operazioni.EOF do
+          begin
+            t_operazioni.Edit;
+            str_old := #127 + t_tasknome.Value + #129 + Sender.AsString;
+            str_new := #127 + t_tasknome.Value + #129 + newName;
+            // ________________________ Select alias name in field reference ___
+            if t_operazionio2ref.Value = str_old then
+            begin
+              t_operazionio2ref.Value := str_new;
+            end;
+            // ___________ Select alias in field passed as parameter in call ___
+            r.Expression                := #127 + t_tasknome.Value + #129 +
+                                           Sender.AsString + '(\W|$)';
+            str_new                     := #127 + t_tasknome.Value + #129 +
+                                           newName + '$1';
+            t_operazionicallparam.Value := r.Replace(t_operazionicallparam.Value
+                                                    ,str_new,
+                                                    True);
+            t_operazioni.Next
+          end;
+          t_operazioni.MasterSource := ds_azioni;
+          // ______________________________ Replace select alias in controls ___
+          t_controlliform.MasterSource := nil;
+          t_controlliform.First;
+          while not t_controlliform.EOF do
+          begin
+            t_controlliform.Edit;
+            str_old := #127 + t_tasknome.Value + #129 + Sender.AsString;
+            str_new := #127 + t_tasknome.Value + #129 + newName;
+            if t_controlliformriferimento.Value = str_old then
+            begin
+              t_controlliformriferimento.Value := str_new;
+            end;
+            // ___________________ Replace in o2viewlist() in combo/list-box ___
+            str_old := 'o2_view2list("' + t_tasknome.Value + '", "' +
+                                          Sender.AsString + '"';
+            str_new := 'o2_view2list("' + t_tasknome.Value + '", "' +
+                                          newName + '"';
+            // _____________________________ Replace when used as code field ___
+            t_controlliformscelte_possibili.Value := StringReplace(
                                           t_controlliformscelte_possibili.Value,
                                           str_old,
                                           str_new,
                                           [rfReplaceAll]);
-        // __________________________ Replace when used as description field ___
-        r.Expression := 'o2_view2list\("' + t_tasknome.Value + '", "(\w+)", "' +
-                                            Sender.AsString + '"\)';
-        str_new      := 'o2_view2list("' + t_tasknome.Value + '", "$1", "' +
-                                           newName + '")';
-        t_controlliformscelte_possibili.Value := r.Replace(
+            // ______________________ Replace when used as description field ___
+            r.Expression := 'o2_view2list\("' + t_tasknome.Value +
+                                          '", "(\w+)", "' + Sender.AsString +
+                                          '"\)';
+            str_new      := 'o2_view2list("' + t_tasknome.Value +
+                                         '", "$1", "' + newName + '")';
+            t_controlliformscelte_possibili.Value := r.Replace(
                                           t_controlliformscelte_possibili.Value,
                                           str_new,
                                           True);
-        t_controlliform.Next
-      end;
-      t_controlliform.MasterSource := ds_form;
-      // _________________________ Replace select alias in view aggregations ___
-      t_aggreg.First;
-      while not t_aggreg.EOF do
-      begin
-        t_aggreg.Edit;
-        if (t_aggregidtask.Value = t_taskid.Value) and
-           (t_aggregcampo_view.Value = Sender.AsString) then
-        begin
-          t_aggregcampo_view.Value := newName;
+            t_controlliform.Next
+          end;
+          t_controlliform.MasterSource := ds_form;
+          // _____________________ Replace select alias in view aggregations ___
+          t_aggreg.First;
+          while not t_aggreg.EOF do
+          begin
+            t_aggreg.Edit;
+            if (t_aggregidtask.Value = t_taskid.Value) and
+               (t_aggregcampo_view.Value = Sender.AsString) then
+            begin
+              t_aggregcampo_view.Value := newName;
+            end;
+            t_aggreg.Next;
+          end;
+          // _____________________________ Replace select alias in protocols ___
+          str_old := #127 + t_tasknome.Value + #129 + Sender.AsString;
+          str_new := #127 + t_tasknome.Value + #129 + newName;
+          t_reportfield.MasterSource := nil;
+          t_reportfield.First;
+          while not t_reportfield.EOF do
+          begin
+            t_reportfield.Edit;
+            if t_reportfieldcampo.Value = str_old then
+            begin
+              t_reportfieldcampo.Value := str_new;
+            end;
+            t_reportfield.Next
+          end;
+          t_reportfield.MasterSource := ds_report;
+        finally
+          t_operazioni.EnableControls;
+          t_espressioni.EnableControls;
+          t_controlliform.EnableControls;
         end;
-        t_aggreg.Next;
       end;
-      // _________________________________ Replace select alias in protocols ___
-      str_old                    := #127 + t_tasknome.Value + #129 +
-                                           Sender.AsString;
-      str_new                    := #127 + t_tasknome.Value + #129 + newName;
-      t_reportfield.MasterSource := nil;
-      t_reportfield.First;
-      while not t_reportfield.EOF do
+      // ___ Store original old and new names to use in SQL-formulas changes ___
+      str_old := #127 + Sender.AsString;
+      str_new := #127 + newName;
+      // _________________________________________________ Update field name ___
+      Sender.Value := newName;
+      // ________________ Replace select alias in view SQL-formulas (CONCAT) ___
+      // __ NOTE: Done after all because must leave t_select current record! ___
+      if (ds_select.State <> dsInsert) and (str_old <> str_new) then
       begin
-        t_reportfield.Edit;
-        if t_reportfieldcampo.Value = str_old then
+        p := t_select.GetBookmark;
+        t_select.DisableControls;
+        t_select.First;
+        while not t_select.EOF do
         begin
-          t_reportfieldcampo.Value := str_new;
+          if (t_selectsql.AsString <> '') and
+             (Pos(str_old, t_selectsql.Value) > 0) then
+          begin
+            t_select.Edit;
+            t_selectsql.Value := StringReplace(t_selectsql.Value,
+                                               str_old,
+                                               str_new,
+                                               [rfReplaceAll]);
+          end;
+          t_select.Next;
         end;
-        t_reportfield.Next
+        t_select.GotoBookmark(p);
+        t_select.EnableControls;
       end;
-      t_reportfield.MasterSource := ds_report;
-    finally
-      t_operazioni.EnableControls;
-      t_espressioni.EnableControls;
-      t_controlliform.EnableControls;
     end;
   end;
-  // _______ Store original old and new names to use in SQL-formulas changes ___
-  str_old := #127 + Sender.AsString;
-  str_new := #127 + newName;
-  // _____________________________________________________ Update field name ___
-  Sender.Value := newName;
-  // ____________________ Replace select alias in view SQL-formulas (CONCAT) ___
-  // ______ NOTE: Done after all because must leave t_select current record! ___
-  if (ds_select.State <> dsInsert) and (str_old <> str_new) then
-  begin
-    p := t_select.GetBookmark;
-    t_select.DisableControls;
-    t_select.First;
-    while not t_select.EOF do
-    begin
-      if (t_selectsql.AsString <> '') and
-         (Pos(str_old, t_selectsql.Value) > 0) then
-      begin
-        t_select.Edit;
-        t_selectsql.Value := StringReplace(t_selectsql.Value,
-                                           str_old,
-                                           str_new,
-                                           [rfReplaceAll]);
-      end;
-      t_select.Next;
-    end;
-    t_select.GotoBookmark(p);
-    t_select.EnableControls;
-  end;
+  FreeAndNil(CDSClone);
 
 end;
 
@@ -2864,10 +2882,32 @@ begin
   Sender.Value := formatName(Text);
 end;
 
-procedure Tdm_form.t_tabelleNomeSetText(Sender: TField;
-  const Text: String);
+procedure Tdm_form.t_tabelleNomeSetText(Sender: TField; const Text: String);
+var
+  CDSClone: TCustomClientDataSet;
+  newName: String;
 begin
-  Sender.Value := formatName(Text);
+
+  // _______________________________ Format new name with only allowed chars ___
+  newName := formatName(Text);
+  if (newName <> '') and (newName <> Sender.AsString) then
+  begin
+    // ______________________________ Look for new name in alternate dataset ___
+    CDSClone := TCustomClientDataSet.Create(dm_form);
+    CDSClone.CloneCursor(t_tabelle, False, False);
+    if CDSClone.Locate('nome', newName, []) then
+    begin
+      ShowMessage('Table name ' + newName + ' already exists!');
+      t_tabelle.Cancel;
+      Abort;
+    end
+    else
+    begin
+      Sender.Value := newName;
+    end;
+  end;
+  FreeAndNil(CDSClone);
+  
 end;
 
 procedure Tdm_form.t_tabelleNome_fisicoSetText(Sender: TField;
@@ -2876,10 +2916,32 @@ begin
   Sender.Value := formatName(Text);
 end;
 
-procedure Tdm_form.t_campinomecampoSetText(Sender: TField;
-  const Text: String);
+procedure Tdm_form.t_campinomecampoSetText(Sender: TField; const Text: String);
+var
+  CDSClone: TCustomClientDataSet;
+  newName: String;
 begin
-  Sender.Value := formatName(Text);
+
+  // _______________________________ Format new name with only allowed chars ___
+  newName := formatName(Text);
+  if (newName <> '') and (newName <> Sender.AsString) then
+  begin
+    // ______________________________ Look for new name in alternate dataset ___
+    CDSClone := TCustomClientDataSet.Create(dm_form);
+    CDSClone.CloneCursor(t_campi, False, False);
+    if CDSClone.Locate('nomecampo', newName, []) then
+    begin
+      ShowMessage('Field name ' + newName + ' already exists!');
+      t_campi.Cancel;
+      Abort;
+    end
+    else
+    begin
+      Sender.Value := newName;
+    end;
+  end;
+  FreeAndNil(CDSClone);
+
 end;
 
 procedure Tdm_form.t_campidbnameSetText(Sender: TField;
@@ -2888,11 +2950,47 @@ begin
   Sender.Value := formatName(Text);
 end;
 
+
 procedure Tdm_form.t_indicitestanomekeySetText(Sender: TField;
-  const Text: String);
+                                               const Text: String);
+var
+  CDSClone, CDSClone2: TCustomClientDataSet;
+  newName: String;
 begin
-  Sender.Value := formatName(Text);
+
+  // _______________________________ Format new name with only allowed chars ___
+  newName := formatName(Text);
+  if (newName <> '') and (newName <> Sender.AsString) then
+  begin
+    // _____________________________ Look for new name in alternate datasets ___
+    CDSClone  := TCustomClientDataSet.Create(dm_form);
+    CDSClone2 := TCustomClientDataSet.Create(dm_form);
+    CDSClone.CloneCursor(t_indicitesta, False, False);
+    CDSClone2.CloneCursor(t_indicitestanu, False, False);
+    if CDSClone.Locate('nomekey', newName, []) then
+    begin
+      ShowMessage('Index name ' + newName +
+                  ' already exists in unique indexes!');
+      Sender.DataSet.Cancel;
+      Abort;
+    end
+    else if CDSClone2.Locate('nomekey', newName, []) then
+    begin
+      ShowMessage('Index name ' + newName +
+                  ' already exists in not unique indexes!');
+      Sender.DataSet.Cancel;
+      Abort;
+    end
+    else
+    begin
+      Sender.Value := newName;
+    end;
+  end;
+  FreeAndNil(CDSClone);
+  FreeAndNil(CDSClone2);
+
 end;
+
 
 procedure Tdm_form.t_parametrinomeSetText(Sender: TField;
   const Text: String);
@@ -3180,100 +3278,6 @@ begin
   begin
     t_indicinuid_segmento.Value := t_indicinu.RecordCount + 1;
   end;
-
-end;
-
-procedure Tdm_form.t_campiBeforePost(DataSet: TDataSet);
-var
-  CDSClone: TCustomClientDataSet;
-  newName: String;
-begin
-
-  if DataSet.Fields[2].AsString <> '' then
-  begin
-    // _____________________________ Format new name with only allowed chars ___
-    newName := formatName(DataSet.Fields[2].AsString);
-    // ______________________________ Look for new name in alternate dataset ___
-    CDSClone := TCustomClientDataSet.Create(dm_form);
-    CDSClone.CloneCursor(t_campi, False, False);
-    if CDSClone.Locate('nomecampo', newName, []) then
-    begin
-      ShowMessage('Field name ' + newName + ' already exists!');
-      DataSet.Cancel;
-      Abort;
-    end
-    else
-    begin
-      DataSet.Fields[2].Text := newName;
-    end;
-  end;
-  FreeAndNil(CDSClone);
-
-end;
-
-procedure Tdm_form.t_tabelleBeforePost(DataSet: TDataSet);
-var
-  CDSClone: TCustomClientDataSet;
-  newName: String;
-begin
-
-  if DataSet.Fields[1].AsString <> '' then
-  begin
-    // _____________________________ Format new name with only allowed chars ___
-    newName := formatName(DataSet.Fields[1].AsString);
-    // ______________________________ Look for new name in alternate dataset ___
-    CDSClone := TCustomClientDataSet.Create(dm_form);
-    CDSClone.CloneCursor(t_tabelle, False, False);
-    if CDSClone.Locate('nome', newName, []) then
-    begin
-      ShowMessage('Table name ' + newName + ' already exists!');
-      DataSet.Cancel;
-      Abort;
-    end
-    else
-    begin
-      DataSet.Fields[1].Text := newName;
-    end;
-  end;
-  FreeAndNil(CDSClone);
-
-end;
-
-procedure Tdm_form.t_indicitestaBeforePost(DataSet: TDataSet);
-var
-  CDSClone, CDSClone2: TCustomClientDataSet;
-  newName: String;
-begin
-
-  if DataSet.Fields[2].AsString <> '' then
-  begin
-    // _____________________________ Format new name with only allowed chars ___
-    newName := formatName(DataSet.Fields[2].AsString);
-    // ______________________________ Look for new name in alternate dataset ___
-    CDSClone  := TCustomClientDataSet.Create(dm_form);
-    CDSClone2 := TCustomClientDataSet.Create(dm_form);
-    CDSClone.CloneCursor(t_indicitesta, False, False);
-    CDSClone2.CloneCursor(t_indicitestanu, False, False);
-    if CDSClone.Locate('nomekey', newName, []) then
-    begin
-      ShowMessage('Index name ' + newName +
-                  ' already exists in unique indexes!');
-      DataSet.Cancel;
-      Abort;
-    end
-    else if CDSClone2.Locate('nomekey', newName, []) then
-    begin
-      ShowMessage('Index name ' + newName +
-                  ' already exists in not unique indexes!');
-      DataSet.Cancel;
-      Abort;
-    end
-    else
-    begin
-      DataSet.Fields[2].Text := newName;
-    end;
-  end;
-  FreeAndNil(CDSClone);
 
 end;
 
