@@ -27,7 +27,7 @@ object f_sceltaazione: Tf_sceltaazione
     Columns = <
       item
         Caption = 'Action Name'
-        Width = 200
+        Width = 220
       end>
     Ctl3D = False
     TabOrder = 0
@@ -44,57 +44,58 @@ object f_sceltaazione: Tf_sceltaazione
   end
   object GroupBox1: TGroupBox
     Left = 264
-    Top = 96
+    Top = 72
     Width = 217
-    Height = 129
+    Height = 137
     Caption = 'Repeat action'
     Ctl3D = False
     ParentCtl3D = False
     TabOrder = 1
     object Label2: TLabel
       Left = 7
-      Top = 75
-      Width = 64
+      Top = 27
+      Width = 67
       Height = 13
-      Caption = 'Loop on view'
+      Caption = 'Loop on view:'
     end
     object Label3: TLabel
       Left = 8
-      Top = 25
-      Width = 65
+      Top = 81
+      Width = 68
       Height = 13
-      Caption = 'End condition'
+      Caption = 'End condition:'
     end
     object Label1: TLabel
       Left = 152
-      Top = 25
-      Width = 21
+      Top = 81
+      Width = 24
       Height = 13
-      Caption = 'Expr'
+      Caption = 'Expr:'
     end
     object loop_task: TEdit
       Left = 8
-      Top = 95
+      Top = 47
       Width = 193
       Height = 19
       Ctl3D = False
       ParentCtl3D = False
-      TabOrder = 2
+      TabOrder = 0
+      OnChange = loop_taskChange
       OnDblClick = loop_taskDblClick
     end
     object end_expr: TEdit
       Left = 152
-      Top = 45
+      Top = 101
       Width = 49
       Height = 19
       Ctl3D = False
       ParentCtl3D = False
-      TabOrder = 1
+      TabOrder = 2
       OnDblClick = end_exprDblClick
     end
     object cb_repeat: TComboBox
       Left = 8
-      Top = 45
+      Top = 101
       Width = 129
       Height = 21
       Style = csOwnerDrawFixed
@@ -102,7 +103,7 @@ object f_sceltaazione: Tf_sceltaazione
       ItemHeight = 15
       ItemIndex = 0
       ParentCtl3D = False
-      TabOrder = 0
+      TabOrder = 1
       Text = 'True'
       OnChange = cb_repeatChange
       Items.Strings = (

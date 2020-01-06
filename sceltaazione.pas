@@ -32,6 +32,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure nuova_actClick(Sender: TObject);
     procedure cb_repeatChange(Sender: TObject);
+    procedure loop_taskChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -196,17 +197,21 @@ begin
   end;
 end;
 
+
 procedure Tf_sceltaazione.loop_taskDblClick(Sender: TObject);
 begin
-  f_sceltaview.scelta:=loop_task.Text;
-  f_sceltaview.solo_view:=True;
+
+  f_sceltaview.scelta    := loop_task.Text;
+  f_sceltaview.solo_view := True;
 
   f_Sceltaview.ShowModal;
   if f_sceltaview.ModalResult = mrOk then
   begin
     loop_task.Text := f_sceltaview.scelta;
   end;
+
 end;
+
 
 procedure Tf_sceltaazione.Zoom1Click(Sender: TObject);
 begin
@@ -252,6 +257,45 @@ end;
 procedure Tf_sceltaazione.cb_repeatChange(Sender: TObject);
 begin
   end_expr.Enabled:= cb_repeat.Text = 'By expression'
+end;
+
+procedure Tf_sceltaazione.loop_taskChange(Sender: TObject);
+var
+edit : TEdit;
+oldValue : String;
+begin
+
+  edit     := TEdit(Sender);
+  oldValue := cb_repeat.Items[cb_repeat.ItemIndex];
+  // ____________________________________________ Selected a view to loop on ___
+  if edit.Text <> '' then
+  begin
+    if (oldValue = 'True') or (oldValue = 'False') then
+    begin
+      // ___________________________________________ Force "True" to "False" ___
+      cb_repeat.ItemIndex := 1;
+    end
+    else
+    begin
+      // ___________________________________ leave "By expression" unchanged ___
+      cb_repeat.ItemIndex := 2;
+    end;
+  end
+  // ____________________________________________________ No view to loop on ___
+  else
+  begin
+    if (oldValue = 'True') or (oldValue = 'False') then
+    begin
+      // ___________________________________________ Force "False" to "True" ___
+      cb_repeat.ItemIndex := 0;
+    end
+    else
+    begin
+      // ___________________________________ leave "By expression" unchanged ___
+      cb_repeat.ItemIndex := 2;
+    end;
+  end;
+
 end;
 
 end.
