@@ -71,12 +71,12 @@ object f_work: Tf_work
       item
         Bevel = pbNone
         Text = 'Working dir:'
-        Width = 700
+        Width = 650
       end
       item
         Bevel = pbNone
         Text = 'Developer:'
-        Width = 50
+        Width = 100
       end>
   end
   object PageControl1: TPageControl
