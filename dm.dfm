@@ -1089,7 +1089,6 @@ object dm_form: Tdm_form
     StoreDefs = True
     AfterInsert = t_formAfterInsert
     AfterEdit = t_formAfterEdit
-    BeforePost = t_formBeforePost
     BeforeDelete = t_formBeforeDelete
     AfterDelete = t_formAfterDelete
     OnNewRecord = t_formNewRecord
@@ -1103,6 +1102,7 @@ object dm_form: Tdm_form
     object t_formnomeform: TStringField
       DisplayWidth = 30
       FieldName = 'nomeform'
+      OnSetText = t_formnomeformSetText
       Size = 150
     end
     object t_formposizione: TIntegerField
