@@ -3396,7 +3396,7 @@ object dm_form: Tdm_form
     object t_reportfieldalias: TStringField
       FieldName = 'alias'
       OnSetText = t_reportfieldaliasSetText
-      Size = 50
+      Size = 35
     end
     object t_reportfieldshown_field: TStringField
       FieldKind = fkCalculated

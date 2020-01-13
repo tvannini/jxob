@@ -3161,11 +3161,15 @@ begin
   Sender.Value := formatName(Text);
 end;
 
+
 procedure Tdm_form.t_reportfieldaliasSetText(Sender: TField;
-  const Text: String);
+                                             const Text: String);
 begin
+
   Sender.Value := formatName(Text);
+
 end;
+
 
 procedure Tdm_form.t_indicitestanuBeforeDelete(DataSet: TDataSet);
 begin
