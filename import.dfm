@@ -256,7 +256,6 @@ object f_import: Tf_import
     end
     object labels_import: TAction
       Caption = 'labels_import'
-      OnExecute = labels_importExecute
     end
     object apphandlers_import: TAction
       Caption = 'apphandlers_import'

@@ -171,7 +171,6 @@ object f_export: Tf_export
     end
     object labels_export: TAction
       Caption = 'labels_export'
-      OnExecute = labels_exportExecute
     end
     object prgsavcds: TAction
       Caption = 'prgsavcds'

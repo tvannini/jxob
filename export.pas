@@ -31,7 +31,6 @@ type
     function prepara_expression_num(exp_num: integer; nomeprg: string): string;
     function prepara_css(valore: string; nomeprg: string): string;
     procedure appvars_exportExecute(Sender: TObject);
-    procedure labels_exportExecute(Sender: TObject);
     procedure prgsavcdsExecute(Sender: TObject; nomeprg:string);
     procedure FormCreate(Sender: TObject);
   private
@@ -2868,36 +2867,6 @@ begin
 
 end;
 
-
-procedure Tf_export.labels_exportExecute(Sender: TObject);
-var
-  exp1, exp2, buffer: string;
-begin
-  // labels
-
-  Memo2.Clear;
-
-  Memo2.Append('<?php');
-
-
-  dm_form.t_labels.First;
-
-  while not (dm_form.t_labels.EOF) do
-  begin
-
-    exp1 := dm_form.t_labelsid.AsString;
-    exp2 := dm_form.t_labelslabel.Value;
-
-    buffer := '$labelslist[' + exp1 + '] = "' + exp2 + '";';
-
-    Memo2.Append(buffer);
-    dm_form.t_labels.Next;
-  end;
-
-  Memo2.Append('?>');
-  Memo2.SaveToFile(f_work.userdir + 'labels.rep');
-
-end;
 
 function Tf_export.prepara_css(valore, nomeprg: string): string;
 var temp : string;

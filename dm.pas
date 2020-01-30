@@ -88,10 +88,6 @@ type
     t_controlliformlarghezza: TIntegerField;
     ds_controlliform: TDataSource;
     t_selecttipo: TStringField;
-    t_agenti: TClientDataSet;
-    t_agentiidtask: TIntegerField;
-    t_agentitipoagente: TStringField;
-    ds_agenti: TDataSource;
     t_tasktipo: TStringField;
     t_espressioni: TClientDataSet;
     t_espressioniidexp: TIntegerField;
@@ -112,7 +108,6 @@ type
     t_azioniprg: TStringField;
     t_azioniazione: TStringField;
     ds_azioni: TDataSource;
-    t_agentiprg: TStringField;
     t_formprg: TStringField;
     t_controlliformprg: TStringField;
     t_espressioniprg: TStringField;
@@ -154,13 +149,10 @@ type
     t_programmiref: TStringField;
     t_controlliformscelte_possibili: TStringField;
     t_controlliformvocecss: TStringField;
-    t_agentitab: TClientDataSet;
-    ds_agentitab: TDataSource;
     t_formvisibile: TIntegerField;
     t_applicazionetitolo: TStringField;
     t_applicazionedefault_menu: TStringField;
     t_applicazionepagina_loginfailed: TStringField;
-    t_agenticonnome: TStringField;
     t_menuposizione: TIntegerField;
     t_menuid: TStringField;
     t_menuid_padre: TStringField;
@@ -200,16 +192,6 @@ type
     ds_parametri: TDataSource;
     t_controlliformparent: TStringField;
     t_controlliformparent_info: TStringField;
-    t_agentitabprg: TStringField;
-    t_agentitabidtask: TIntegerField;
-    t_agentitabnome_agente: TStringField;
-    t_agentitabcampo: TStringField;
-    t_agentitablabel: TStringField;
-    t_agentitabriga: TIntegerField;
-    t_agentitabcol_da: TIntegerField;
-    t_agentitabcol_a: TIntegerField;
-    t_agentitabalign: TStringField;
-    t_agentitabcheckbox: TBooleanField;
     t_controlliformextra1: TStringField;
     t_controlliformextra2: TStringField;
     t_report: TClientDataSet;
@@ -317,11 +299,6 @@ type
     t_aggregresult_var: TStringField;
     t_aggregresult_view: TStringField;
     t_operazioniservice: TStringField;
-    t_labels: TClientDataSet;
-    ds_labels: TDataSource;
-    t_labelsid: TIntegerField;
-    t_labelslabel: TStringField;
-    t_labelslabel_tmp: TStringField;
     t_formtop_exp: TIntegerField;
     t_formleft_exp: TIntegerField;
     t_formaltezza_exp: TIntegerField;
@@ -404,12 +381,6 @@ type
     elenco_prg: TClientDataSet;
     ds_elenco_prg: TDataSource;
     t_serverschunksize: TLargeintField;
-    t_apphandlers: TClientDataSet;
-    ds_apphandlers: TDataSource;
-    t_apphandlersalias: TStringField;
-    t_apphandlersdescrizione: TStringField;
-    t_apphandlerskey: TIntegerField;
-    t_apphandlerskeychar: TStringField;
     t_applicazioneposmenu: TStringField;
     t_menuicona: TStringField;
     t_formrefresh_action: TStringField;
@@ -524,8 +495,6 @@ type
     procedure attiva_disattiva_dbrep(attivo: boolean);
     procedure attiva_disattiva_tables(attivo: boolean);
     procedure attiva_disattiva_appvars(attivo: boolean);
-    procedure attiva_disattiva_labels(attivo: boolean);
-    procedure attiva_disattiva_apphandlers(attivo: boolean);
 
     procedure t_menuNewRecord(DataSet: TDataSet);
     procedure t_formNewRecord(DataSet: TDataSet);
@@ -536,7 +505,6 @@ type
     procedure t_tabelleNomeChange(Sender: TField);
     procedure t_selectBeforePost(DataSet: TDataSet);
     procedure t_labelsBeforeInsert(DataSet: TDataSet);
-    procedure t_labelsNewRecord(DataSet: TDataSet);
     procedure t_menuAfterEdit(DataSet: TDataSet);
     procedure t_serversAfterEdit(DataSet: TDataSet);
     procedure t_serversAfterDelete(DataSet: TDataSet);
@@ -1898,10 +1866,6 @@ begin
   end;
 end;
 
-procedure Tdm_form.attiva_disattiva_labels(attivo: boolean);
-begin
-  t_labels.ReadOnly := not (attivo);
-end;
 
 procedure Tdm_form.t_labelsBeforeInsert(DataSet: TDataSet);
 var
@@ -1929,10 +1893,6 @@ begin
 
 end;
 
-procedure Tdm_form.t_labelsNewRecord(DataSet: TDataSet);
-begin
-  t_labelsid.Value := id_assegnato;
-end;
 
 
 procedure Tdm_form.t_menuAfterEdit(DataSet: TDataSet);
@@ -2626,14 +2586,6 @@ begin
   end;
 end;
 
-
-
-
-
-procedure Tdm_form.attiva_disattiva_apphandlers(attivo: boolean);
-begin
-      t_apphandlers.ReadOnly   := not (attivo);
-end;
 
 procedure Tdm_form.t_apphandlersCalcFields(DataSet: TDataSet);
 var tmphk:THotKey;

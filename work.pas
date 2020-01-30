@@ -321,10 +321,6 @@ type
     Label66: TLabel;
     Label67: TLabel;
     del_vocetreemenu: TBitBtn;
-    ts_labels: TTabSheet;
-    DBGrid4: TDBGrid;
-    DBMemo2: TDBMemo;
-    Button1: TButton;
     refresh_expr: TAction;
     refresh_exp_join: TAction;
     Image1: TImage;
@@ -424,10 +420,6 @@ type
     Label75: TLabel;
     Label45: TLabel;
     Jvfileopera: TJvSHFileOperation;
-    ts_apphandlers: TTabSheet;
-    dbgrid_apphandlers: TDBGrid;
-    pop_apphandler: TPopupMenu;
-    Zoom26: TMenuItem;
     DBEdit28: TDBEdit;
     Label78: TLabel;
     Label79: TLabel;
@@ -503,7 +495,6 @@ type
     procedure DBGrid10Enter(Sender: TObject);
     procedure DBCtrlGrid_mainEnter(Sender: TObject);
     procedure DBCtrlGrid_operazioniEnter(Sender: TObject);
-    procedure DBCtrlGrid_agentiEnter(Sender: TObject);
     procedure DBCtrlGrid_risorsedbEnter(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
     procedure MenuItem6Click(Sender: TObject);
@@ -664,7 +655,6 @@ type
     procedure tree_menuDeletion(Sender: TObject; Node: TTreeNode);
     procedure db_nomeazioneExit(Sender: TObject);
     procedure ts_labelsExit(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
     procedure db_menutipoChange(Sender: TObject);
     procedure refresh_exprExecute(Sender: TObject);
     procedure DBGrid_selectsavCellClick(Column: TColumn);
@@ -737,8 +727,6 @@ type
     procedure bt_copyactClick(Sender: TObject);
     procedure abilitaprgtabExecute(Sender: TObject);
     procedure disabilitaprgtabExecute(Sender: TObject);
-    procedure dbgrid_apphandlersEnter(Sender: TObject);
-    procedure Zoom26Click(Sender: TObject);
     procedure dbgrid_operazioniKeyPress(Sender: TObject; var Key: Char);
     procedure ts_tabelleEnter(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -815,9 +803,9 @@ uses dm, area_form, start, sceltacampofile, sceltaprogramma,
   sceltaserver, sceltadbengine, sceltaespressioni, sceltatabella, sceltafiletask,
   formula_sql_concat, oggetti_form, parametri_call, parametri, editorphp, checkprg,
   nuovoprogetto, scelta_css, import, export, cvs, cvsinfo, scelta_message, sceltamodello,
-  sceltaio, sceltalabel, sceltamenu, print, preferences, users,
+  sceltaio, sceltamenu, print, preferences, users,
   locate, go_to, about, conversioni, sceltacampiview, getdef,
-  JvColorCombo, find,sceltacampotab, TypInfo, crossref, wizmask, DateUtils, shortcut, debug,
+  JvColorCombo, find,sceltacampotab, TypInfo, crossref, wizmask, DateUtils, debug,
   JvTypedEdit;
 
 {$R *.dfm}
@@ -1039,8 +1027,6 @@ begin
     t_azioni.EmptyDataSet;
     t_operazioni.EmptyDataSet;
     t_menu.EmptyDataSet;
-    t_agenti.EmptyDataSet;
-    t_agentitab.EmptyDataSet;
     t_variabili_prg.EmptyDataSet;
     t_variabili_app.EmptyDataSet;
     t_modelli.EmptyDataSet;
@@ -1162,13 +1148,6 @@ procedure Tf_work.DBCtrlGrid_operazioniEnter(Sender: TObject);
 begin
   dbnav.DataSource := dm_form.ds_operazioni;
 end;
-
-procedure Tf_work.DBCtrlGrid_agentiEnter(Sender: TObject);
-begin
-  dbnav.DataSource := dm_form.ds_agenti;
-
-end;
-
 
 
 procedure Tf_work.DBCtrlGrid_risorsedbEnter(Sender: TObject);
@@ -3448,15 +3427,6 @@ begin
       f_import.models_import.Execute;
     end;
   end
-  else if PageControl1.ActivePage = ts_labels then
-  begin
-    if (not cvsSet) or cvs_checkout('labels.rep') then
-    begin
-      checkout(self, 'labels.rep');
-      dm_form.attiva_disattiva_labels(true);
-      f_import.labels_import.Execute;
-    end;
-  end
   else if PageControl1.ActivePage = ts_menu then
   begin
     if (not cvsSet) or cvs_checkout(dm_form.t_applicazionemenus.Value) then
@@ -3605,13 +3575,6 @@ begin
               cvsSet);
       dm_form.datatypes_modificato := false;
     end
-    // ___________________________________________________ Labels (NOT USED) ___
-    else if PageControl1.ActivePage = ts_labels then
-    begin
-      f_export.labels_export.Execute;
-      checkin(self, ['labels.rep'], cvsSet);
-      dm_form.labels_modificato := false;
-    end
     // ________________________________________________________________ Menu ___
     else if PageControl1.ActivePage = ts_menu then
     begin
@@ -3740,11 +3703,6 @@ begin
       uncheck(self, '__source__\models.cache');
       f_import.models_import.Execute;
     end
-    else if PageControl1.ActivePage = ts_labels then
-    begin
-      uncheck(self, 'labels.rep');
-      f_import.labels_import.Execute;
-    end
     else if PageControl1.ActivePage = ts_menu then
     begin
       uncheck(self, dm_form.t_applicazionemenus.Value);
@@ -3862,12 +3820,6 @@ begin
     // ___________________________________________________ Models repository ___
     oggetto := dm_form.t_applicazionemodels.Value;
     dm_form.attiva_disattiva_models(mycheck(oggetto));
-  end
-  else if PageControl1.ActivePage = ts_labels then
-  begin
-    // ________________________________________ Labels repository (NOT USED) ___
-    oggetto := 'labels.rep';
-    dm_form.attiva_disattiva_labels(mycheck(oggetto));
   end
   else if PageControl1.ActivePage = ts_menu then
   begin
@@ -4045,10 +3997,7 @@ begin
     preset_table(t_controlliform, 'controls');
     preset_table(t_azioni, 'actions');
     preset_table(t_operazioni, 'operations');
-    preset_table(t_agenti, 'operators');
-    preset_table(t_agentitab, 'operators_tab');
     preset_table(t_variabili_prg, 'var_prg');
-    preset_table(t_apphandlers, 'handler_app');
     preset_table(t_parametri, 'parameters');
     preset_table(t_report, 'reports');
     preset_table(t_reportfield, 'reportfields');
@@ -4057,7 +4006,6 @@ begin
     preset_table(t_value_list, 'valuelist');
     preset_table(tab_ope, 'tabope');
     preset_table(tab_tipi_file, 'tabfile');
-    preset_table(t_labels, 'labels');
     preset_table(t_ope_x_copia, 'opecopy');
     preset_table(tmp_postab, 'tmp_postab');
     preset_table(tmp_parametri, 'tmp_parameters');
@@ -5160,17 +5108,6 @@ begin
 end;
 
 
-procedure Tf_work.Button1Click(Sender: TObject);
-begin
-  f_sceltalabel.ShowModal;
-  if f_sceltalabel.ModalResult = mrOk then
-  begin
-    dm_form.t_menu.Edit;
-    dm_form.t_menulabel.Value := f_sceltalabel.scelta_id;
-  end;
-end;
-
-
 procedure Tf_work.db_menutipoChange(Sender: TObject);
 var
   ImgIdx: Integer;
@@ -5866,7 +5803,6 @@ begin
   PageControl1.ActivePage := ts_running;
 //  f_checkprg.memo_posizioni.Execute;
   if ultimo_tabsheet = ts_appvars then salva_appvars.Execute;
-  if ultimo_tabsheet = ts_labels then salva_labels.Execute;
   if ultimo_tabsheet = ts_menu then salva_menu.Execute;
   if ultimo_tabsheet = ts_models then salva_type.Execute;
   if ultimo_tabsheet = ts_database then salva_db.Execute;
@@ -6860,24 +6796,6 @@ begin
     dm_form.t_form.Filtered              := false;
     dm_form.t_form.EnableControls;
   end;
-end;
-
-
-procedure Tf_work.dbgrid_apphandlersEnter(Sender: TObject);
-begin
-  dbnav.DataSource := dm_form.ds_apphandlers;
-end;
-
-
-procedure Tf_work.Zoom26Click(Sender: TObject);
-begin
-f_shortcut.ShowModal;
-If f_shortcut.ModalResult=mrOk THEN
-begin
-
-dm_form.t_apphandlers.Edit;
- dm_form.t_apphandlerskey.Value:=f_shortcut.HotKey1.HotKey;
-end;
 end;
 
 

@@ -48,7 +48,6 @@ uses
   go_to in 'go_to.pas' {f_goto},
   editorphp in 'editorphp.pas' {f_editorphp},
   getdef in 'getdef.pas' {f_getdef},
-  sceltalabel in 'sceltalabel.pas' {f_sceltalabel},
   Caption in 'caption.pas' {f_caption},
   login in 'login.pas' {f_login},
   Controls,
@@ -60,7 +59,6 @@ uses
   crossref in 'crossref.pas' {f_crossref},
   dbnavprop in 'dbnavprop.pas' {f_dbnavigator},
   wizmask in 'wizmask.pas' {f_wizmask},
-  shortcut in 'shortcut.pas' {f_shortcut},
   scelta_da_list in 'scelta_da_list.pas' {f_scelta_da_list},
   debug in 'debug.pas' {f_debug},
   cvsinfo in 'cvsinfo.pas' {f_CVSInfo},
@@ -86,7 +84,6 @@ begin
   Application.CreateForm(Tf_crossref, f_crossref);
   Application.CreateForm(Tf_dbnavigator, f_dbnavigator);
   Application.CreateForm(Tf_wizmask, f_wizmask);
-  Application.CreateForm(Tf_shortcut, f_shortcut);
   Application.CreateForm(Tf_scelta_da_list, f_scelta_da_list);
   Application.CreateForm(Tf_debug, f_debug);
   Application.CreateForm(Tf_CVSInfo, f_CVSInfo);
@@ -134,7 +131,6 @@ begin
     Application.CreateForm(Tf_scelta_campiview, f_scelta_campiview);
     Application.CreateForm(Tf_goto, f_goto);
     Application.CreateForm(Tf_getdef, f_getdef);
-    Application.CreateForm(Tf_sceltalabel, f_sceltalabel);
     Application.CreateForm(Tf_caption, f_caption);
     Application.CreateForm(TAboutBox, AboutBox);
     Application.Run;

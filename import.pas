@@ -45,7 +45,6 @@ type
     procedure db_importExecute(Sender: TObject);
     procedure tables_importExecute(Sender: TObject);
     procedure vars_importExecute(Sender: TObject);
-    procedure labels_importExecute(Sender: TObject);
     procedure apphandlers_importExecute(Sender: TObject);
   	procedure call_log(testolog: string);
 
@@ -2908,10 +2907,6 @@ begin
   dm_form.t_form.Open;
   dm_form.t_controlliform.EmptyDataSet;
   dm_form.t_controlliform.Open;
-  dm_form.t_agenti.EmptyDataSet;
-  dm_form.t_agenti.Open;
-  dm_form.t_agentitab.EmptyDataSet;
-  dm_form.t_agentitab.Open;
   dm_form.t_espressioni.EmptyDataSet;
   dm_form.t_espressioni.Open;
   dm_form.t_parametri.Emptydataset;
@@ -3744,50 +3739,6 @@ begin
 
   dm_form.appvar_modificato := False;
 end;  //fine appvars
-
-
-procedure Tf_import.labels_importExecute(Sender: TObject);
-var
-  i: integer;
-  pezzi_splittati: TStringList;
-begin
-  r := TRegExpr.Create;
-  r.ModifierI := True;
-  r.ModifierS := True;
-
-  pezzi_splittati := TStringList.Create;
-
-  dm_form.t_labels.Emptydataset;
-  dm_form.t_labels.Open;
-
-
-  if FileExists(f_work.userdir + 'labels.rep') then
-  begin
-    programma.Lines.LoadFromFile(f_work.userdir + 'labels.rep')
-  end
-  else if fileexists(f_work.prgdir + 'labels.rep') then
-  begin
-    programma.Lines.LoadFromFile(f_work.prgdir + 'labels.rep')
-  end;
-
-  //importa le labels dell'applicazione
-  r.Expression := '\$labelslist';
-  r.Split(programma.Lines.Text, pezzi_splittati);
-  for i := 0 to pezzi_splittati.Count - 1 do
-  begin
-    if LeftStr(pezzi_splittati[i], 1) = '[' then
-    begin
-      r.Expression := '\[(\d*)\]\s*\=\s*\"(.*)\"\;';
-      r.Exec(pezzi_splittati[i]);
-      dm_form.t_labels.InsertRecord([r.Match[1], r.Match[2]]);
-    end;
-
-  end;
-
-  FreeAndNil(r);
-
-  dm_form.labels_modificato := False;
-end;  // fine labels
 
 
 procedure Tf_import.apphandlers_importExecute(Sender: TObject);

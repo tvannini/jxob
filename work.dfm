@@ -84,7 +84,7 @@ object f_work: Tf_work
     Top = 32
     Width = 870
     Height = 662
-    ActivePage = ts_programmi
+    ActivePage = ts_cvs
     Align = alClient
     MultiLine = True
     PopupMenu = pop_pagecontrol1
@@ -2889,16 +2889,6 @@ object f_work: Tf_work
         TabOrder = 5
         OnClick = del_vocetreemenuClick
       end
-      object Button1: TButton
-        Left = 640
-        Top = 70
-        Width = 20
-        Height = 20
-        Caption = '...'
-        TabOrder = 6
-        Visible = False
-        OnClick = Button1Click
-      end
       object DBEdit28: TDBEdit
         Left = 440
         Top = 250
@@ -2909,7 +2899,7 @@ object f_work: Tf_work
         DataSource = dm_form.ds_menu
         ParentCtl3D = False
         PopupMenu = pop_menu
-        TabOrder = 7
+        TabOrder = 6
       end
     end
     object TabSheet4: TTabSheet
@@ -8287,54 +8277,6 @@ object f_work: Tf_work
         end
       end
     end
-    object ts_labels: TTabSheet
-      Caption = 'ts_labels'
-      ImageIndex = 12
-      OnExit = ts_labelsExit
-      object DBGrid4: TDBGrid
-        Left = 24
-        Top = 8
-        Width = 729
-        Height = 393
-        DataSource = dm_form.ds_labels
-        TabOrder = 0
-        TitleFont.Charset = DEFAULT_CHARSET
-        TitleFont.Color = clWindowText
-        TitleFont.Height = -11
-        TitleFont.Name = 'MS Sans Serif'
-        TitleFont.Style = []
-        Columns = <
-          item
-            Expanded = False
-            FieldName = 'id'
-            Title.Caption = 'Id'
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'label'
-            Title.Caption = 'Label'
-            Width = 300
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'label_tmp'
-            Title.Caption = 'Other language'
-            Width = 300
-            Visible = True
-          end>
-      end
-      object DBMemo2: TDBMemo
-        Left = 24
-        Top = 400
-        Width = 185
-        Height = 89
-        DataField = 'label'
-        DataSource = dm_form.ds_labels
-        TabOrder = 1
-      end
-    end
     object ts_programs: TTabSheet
       Caption = 'Programs'
       ImageIndex = 13
@@ -8423,48 +8365,6 @@ object f_work: Tf_work
         Width = 143
         Height = 13
         Caption = 'Work in progress. Please wait.'
-      end
-    end
-    object ts_apphandlers: TTabSheet
-      Caption = 'Application handlers'
-      ImageIndex = 15
-      object dbgrid_apphandlers: TDBGrid
-        Left = 0
-        Top = 0
-        Width = 862
-        Height = 607
-        Align = alClient
-        DataSource = dm_form.ds_apphandlers
-        PopupMenu = pop_apphandler
-        TabOrder = 0
-        TitleFont.Charset = DEFAULT_CHARSET
-        TitleFont.Color = clWindowText
-        TitleFont.Height = -11
-        TitleFont.Name = 'MS Sans Serif'
-        TitleFont.Style = []
-        OnEnter = dbgrid_apphandlersEnter
-        Columns = <
-          item
-            Expanded = False
-            FieldName = 'alias'
-            Title.Caption = 'Alias'
-            Width = 91
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'descrizione'
-            Title.Caption = 'Description'
-            Width = 529
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'key'
-            Title.Caption = 'Shortcut'
-            Width = 77
-            Visible = True
-          end>
       end
     end
   end
@@ -12338,15 +12238,6 @@ object f_work: Tf_work
     Options = [fofMultiDestFiles, fofNoConfirmation, fofNoConfirmMkDir]
     Left = 176
     Top = 128
-  end
-  object pop_apphandler: TPopupMenu
-    Left = 138
-    Top = 44
-    object Zoom26: TMenuItem
-      Caption = 'Zoom'
-      ShortCut = 116
-      OnClick = Zoom26Click
-    end
   end
   object pop_vars_action: TPopupMenu
     Left = 170
