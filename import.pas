@@ -33,7 +33,7 @@ type
     tab_rolesuser: TMemo;
     apphandlers_import: TAction;
     Memo1: TMemo;
-    procedure prg_importExecute(Sender: TObject; nomeprogramma: string;  importpath : string = '');
+    procedure prg_importExecute(Sender: TObject; nomeprogramma: string);
     procedure app_importExecute(Sender: TObject);
     procedure dbtab_importExecute(Sender: TObject);
     procedure carica_proprieta_controllo(Sender: TObject; nomecontrollo: string;
@@ -82,9 +82,7 @@ uses dm, work, start, conversioni, crossref, sceltacampiprg, export;
 {$R *.dfm}
 
 
-procedure Tf_import.prg_importExecute(Sender:        TObject;
-                                      nomeprogramma: string;
-                                      importpath:    string = '');
+procedure Tf_import.prg_importExecute(Sender: TObject; nomeprogramma: string);
 var
   selezione, selezione2, selezione3, nomeprg, nometask, nomecontrollo, tipo,
   par1, par2, par3, par4, par5, par6, par7, par8, par9, par10, par11, par12,
@@ -96,11 +94,11 @@ var
   insert_action, post_action, del_action, undo_action, detail_action,
   select_action, insert_msg, post_msg, del_msg, undo_msg, norecordmsg,
   detail_msg, select_msg, zoom_action, Expand, grid_plus : string;
-  vista_del_menga, tipologia, tipo_prg, data_prg, data_cds: string;
+  vista_del_menga, tipologia, tipo_prg: string;
   puntatore, num1, num2, num3, num4, num5, num6, submit, tooltipexp,
-  id_operazione, exp1, exp2, dataprg, datacds, pin_cols: integer;
+  id_operazione, exp1, exp2, pin_cols: integer;
   i: smallint;
-  boolean1, boolean2: boolean;
+  boolean1, boolean2, userVersion: boolean;
   SQLdef: TStringList;
 begin
   Memo1.Lines.Clear;
@@ -118,55 +116,51 @@ begin
   f_work.disabilitaprgtab.Execute;
   // ___________________________ Read from CDS if CDS are newer than scripts ___
   dircds := '';
-  if (FileExists(f_work.prgdir + nomeprg + '.prg')) and
-     (DirectoryExists(f_work.prgdir + '__source__\' + nomeprg + '\')) then
+  // ________________________________________ Script files in user directory ___
+  if FileExists(f_work.userdir + nomeprg + '.prg') and
+     FileExists(f_work.userdir + nomeprg + '.prf') then
   begin
-    dircds := f_work.prgdir + '__source__\' + nomeprg + '\';
-  end;
-  if (FileExists(f_work.userdir + nomeprg + '.prg')) and
-     (DirectoryExists(f_work.userdir + '__source__\' + nomeprg + '\')) then
-  begin
-    dircds := f_work.userdir + '__source__\' + nomeprg + '\';
-  end;
-  data_cds := '';
-  data_prg := '';
-  datacds  := 0;
-  dataprg  := 0;
-  if FileExists(dircds + 'program.cds') then
-  begin
-    datacds := FileAge(dircds + 'program.cds');
-  end;
-  if FileExists(f_work.userdir + nomeprg + '.prf') then
-  begin
-    dataprg := FileAge(f_work.userdir + nomeprg + '.prf');
+    // _____________________________________ Use user version of the program ___
+    userVersion := True;
+    // _________________________________________ CDS files in user directory ___
+    if DirectoryExists(f_work.userdir + '__source__\' + nomeprg + '\') and
+       FileExists(f_work.userdir + '__source__\' + nomeprg + '\program.cds')
+       then
+    begin
+      // _____________________________________ Use user version of CDS files ___
+      dircds := f_work.userdir + '__source__\' + nomeprg + '\';
+    end;
   end
-  else if FileExists(f_work.prgdir + nomeprg + '.prf') then
+  // ______________________________________ Script files in global directory ___
+  else if FileExists(f_work.prgdir + nomeprg + '.prg') and
+          FileExists(f_work.prgdir + nomeprg + '.prf') then
   begin
-    dataprg := FileAge(f_work.prgdir + nomeprg + '.prf');
-  end;
-  if (FileExists(f_work.userdir + nomeprg + '.prg')) and
-     (FileAge(f_work.userdir + nomeprg + '.prg') > dataprg) then
-  begin
-    dataprg := FileAge(f_work.userdir + nomeprg + '.prg');
+    // ___________________________________ Use global version of the program ___
+    userVersion := False;
+    if DirectoryExists(f_work.prgdir + '__source__\' + nomeprg + '\') and
+       FileExists(f_work.prgdir + '__source__\' + nomeprg + '\program.cds') then
+    begin
+      // ___________________________________ Use global version of CDS files ___
+      dircds := f_work.prgdir + '__source__\' + nomeprg + '\';
+    end;
   end
-  else if (FileExists(f_work.prgdir + nomeprg + '.prg')) and
-          (FileAge(f_work.prgdir + nomeprg + '.prg') > dataprg) then
+  // _______________________________________ ERROR: No program version found ___
+  else
   begin
-    dataprg := FileAge(f_work.prgdir + nomeprg + '.prg');
+    ShowMessage('Unknown program ' + nomeprg);
+    Exit;
   end;
-
+  // _________________________________________________________ Read from CDS ___
   if (dircds <> '') then
   begin
     with dm_form do
     begin
       t_programmi.LoadFromFile(dircds + 'program.cds');
- //     ShowMessage('Leggo da sources');
       t_task.LoadFromFile(dircds + 'view.cds');
       t_select.LoadFromFile(dircds + 'select.cds');
       t_usa_file.LoadFromFile(dircds + 'tab.cds');
       t_union.LoadFromFile(dircds + 'link.cds');
       t_azioni.LoadFromFile(dircds + 'action.cds');
-//      t_azionifigli.LoadFromFile(dircds + 'subaction.cds');
       t_operazioni.LoadFromFile(dircds + 'operation.cds');
       t_espressioni.LoadFromFile(dircds + 'expression.cds');
       t_aggreg.LoadFromFile(dircds + 'aggregation.cds');
@@ -181,6 +175,7 @@ begin
       id_ultima_view := t_taskid.Value;
     end;
   end    // se letto dai cds esce subito
+  // ___________________________________________________ Import from scripts ___
   else
   begin
     f_work.dbgrid_operazioni.Fields[3].ReadOnly := false;
@@ -195,26 +190,17 @@ begin
     r5                                          := TRegExpr.Create;
     r5.ModifierI                                := True;
     programma.Lines.Clear;
-    // se si tratta di un'apertura standard del prg svutota le tabelle del prg
-    // altrimenti le lascia e aggiunge
-    if importpath = '' then
+    // ____________________________________________________ Empty prg tables ___
+    svuota_tab_prg.Execute();
+    // _______________________________________ Import user version of script ___
+    if userVersion then
     begin
-      svuota_tab_prg.Execute();
-      if FileExists(f_work.userdir + nomeprg + '.prg') then
-      begin
-        programma.Lines.LoadFromFile(f_work.userdir + nomeprg + '.prg');
-      end
-      else if FileExists(f_work.prgdir + nomeprg + '.prg') then
-      begin
-        programma.Lines.LoadFromFile(f_work.prgdir + nomeprg + '.prg');
-      end;
+      programma.Lines.LoadFromFile(f_work.userdir + nomeprg + '.prg');
     end
+    // _____________________________________ Import global version of script ___
     else
     begin
-      nomeprg := ExtractFileName(importpath);
-      nomeprg := StrToken(nomeprg, '.');
-      programma.Lines.LoadFromFile(ExtractFileDir(importpath) + '\' +
-                                   nomeprg + '.prg');
+      programma.Lines.LoadFromFile(f_work.prgdir + nomeprg + '.prg');
     end;
     call_log('Inizio PRG');
     //legge dal prg i task, le azioni e le form
@@ -264,7 +250,7 @@ begin
       until not r.ExecNext();
     end;
     //identifica i tasks
-    if importpath = '' then dm_form.id_ultima_view := 1;
+    dm_form.id_ultima_view := 1;
 
   r.Expression := 'o2def::view(.*?);';
   if r.Exec(programma.Lines.Text) then
@@ -557,42 +543,36 @@ begin
   // legge il file .prf
   programma.Lines.Clear;
 
-  if nomeprg <> '_o2viewmodels' then
-  begin
-    if importpath = '' then
-    begin
-      if FileExists(f_work.userdir + nomeprg + '.prf') then
-      begin
-       programma.Lines.LoadFromFile(f_work.userdir + nomeprg + '.prf')
-      end
-      else if FileExists(f_work.prgdir + nomeprg + '.prf') then
-      begin
-       programma.Lines.LoadFromFile(f_work.prgdir + nomeprg + '.prf')
-      end;
-    end
-    else
-    begin
-       programma.Lines.LoadFromFile(ExtractFileDir(importpath) +'\'+ nomeprg + '.prf');
-    end;
-  end;
-
+  // ________________________________ TODO: View-models, code to be reviewed ___
   if nomeprg = '_o2viewmodels' then
   begin
-
     if FileExists(f_work.userdir + dm_form.t_applicazioneviews.Value) then
     begin
-      programma.Lines.LoadFromFile(f_work.userdir + dm_form.t_applicazioneviews.Value)
+      programma.Lines.LoadFromFile(f_work.userdir +
+                                   dm_form.t_applicazioneviews.Value);
     end
-    else if FileExists(f_work.prgdir +
-      dm_form.t_applicazioneviews.Value) then
+    else if FileExists(f_work.prgdir + dm_form.t_applicazioneviews.Value) then
     begin
-      programma.Lines.LoadFromFile(f_work.prgdir + dm_form.t_applicazioneviews.Value)
+      programma.Lines.LoadFromFile(f_work.prgdir +
+                                   dm_form.t_applicazioneviews.Value);
     end;
-
-    //leva costanti PHP per la gestione delle view
+    // ___________________________________________________ Remove view alias ___
     programma.Lines.Text :=
       StringReplace(programma.Lines.Text, '$_o2viewalias.', '', [rfReplaceAll]);
-
+  end
+  // _____________________________________________________ Standard programs ___
+  else
+  begin
+    // _______________________________________ Import user version of script ___
+    if userVersion then
+    begin
+      programma.Lines.LoadFromFile(f_work.userdir + nomeprg + '.prf')
+    end
+    // _____________________________________ Import global version of script ___
+    else
+    begin
+      programma.Lines.LoadFromFile(f_work.prgdir + nomeprg + '.prf')
+    end;
   end;
 
      call_log('Inizio variabili del prg');
