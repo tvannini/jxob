@@ -8475,6 +8475,12 @@ object f_work: Tf_work
         ShortCut = 16464
         OnClick = Preferences1Click
       end
+      object N1: TMenuItem
+        Caption = '-'
+      end
+      object edit_obj: TMenuItem
+        Caption = 'Editing object'
+      end
     end
     object Utility: TMenuItem
       Caption = '&Tools'

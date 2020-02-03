@@ -113,21 +113,21 @@ begin
   end;
   dm_form.in_importazione := true;
   f_work.disabilitaprgtab.Execute;
-  // ___________________________ Read from CDS if CDS are newer than scripts ___
+  // _______________________________________________ Program import criteria ___
   dircds := '';
   // ________________________________________ Script files in user directory ___
   if FileExists(f_work.userdir + nomeprg + '.prg') and
      FileExists(f_work.userdir + nomeprg + '.prf') then
   begin
     // _____________________________________ Use user version of the program ___
-    userVersion := True;
+    userVersion             := True;
+    f_work.edit_obj.Caption := 'Program ' + nomeprg + ' from user script';
     // _________________________________________ CDS files in user directory ___
-    if DirectoryExists(f_work.userdir + '__source__\' + nomeprg + '\') and
-       FileExists(f_work.userdir + '__source__\' + nomeprg + '\program.cds')
-       then
+    if f_work.CheckCache(nomeprg, '', True) then
     begin
       // _____________________________________ Use user version of CDS files ___
-      dircds := f_work.userdir + '__source__\' + nomeprg + '\';
+      dircds                  := f_work.userdir + '__source__\' + nomeprg + '\';
+      f_work.edit_obj.Caption := 'Program ' + nomeprg + ' from user cache';
     end;
   end
   // ______________________________________ Script files in global directory ___
@@ -135,12 +135,14 @@ begin
           FileExists(f_work.prgdir + nomeprg + '.prf') then
   begin
     // ___________________________________ Use global version of the program ___
-    userVersion := False;
-    if DirectoryExists(f_work.prgdir + '__source__\' + nomeprg + '\') and
-       FileExists(f_work.prgdir + '__source__\' + nomeprg + '\program.cds') then
+    userVersion             := False;
+    f_work.edit_obj.Caption := 'Program ' + nomeprg + ' from global script';
+    // _______________________________________ CDS files in global directory ___
+    if f_work.CheckCache(nomeprg, '', False) then
     begin
       // ___________________________________ Use global version of CDS files ___
-      dircds := f_work.prgdir + '__source__\' + nomeprg + '\';
+      dircds                  := f_work.prgdir + '__source__\' + nomeprg + '\';
+      f_work.edit_obj.Caption := 'Program ' + nomeprg + ' from global cache';
     end;
   end
   // _______________________________________ ERROR: No program version found ___
@@ -2937,39 +2939,43 @@ var
   withCheck : Boolean;
 begin
   da_Refresh := True;
+  // ______________________________________________ Use user version of file ___
   if FileExists(f_work.userdir + dm_form.t_applicazioneModels.Value) then
   begin
     withCheck := True;
     // ____ If cache file is up to date with repository then load from cache ___
-    if FileAge(f_work.userdir + dm_form.t_applicazioneModels.Value) >
-       FileAge(f_work.userdir + '__source__\models.cache')then
-    begin
-      programma.Lines.LoadFromFile(f_work.userdir +
-                                   dm_form.t_applicazioneModels.Value);
+    if f_work.CheckCache(dm_form.t_applicazioneModels.Value, 'models', true)
+    then begin
+      dm_form.t_modelli.LoadFromFile(f_work.userdir +
+                                     '__source__\models.cache');
+      f_work.edit_obj.Caption := 'Data-models repository from user cache';
+      da_Refresh              := False;
+      Exit;
     end
     else
     begin
-      dm_form.t_modelli.LoadFromFile(f_work.userdir +
-                                     '__source__\models.cache');
-      da_Refresh := False;
-      Exit;
+      programma.Lines.LoadFromFile(f_work.userdir +
+                                   dm_form.t_applicazioneModels.Value);
+      f_work.edit_obj.Caption := 'Data-models repository from user script';
     end;
   end
+  // ____________________________________________ Use global version of file ___
   else if FileExists(f_work.prgdir + dm_form.t_applicazionemodels.Value) then
   begin
     withCheck := False;
     // ____ If cache file is up to date with repository then load from cache ___
-    if FileAge(f_work.prgdir + dm_form.t_applicazionemodels.Value) >
-       FileAge(f_work.prgdir + '__source__\models.cache')then
-    begin
-      programma.Lines.LoadFromFile(f_work.prgdir +
-                                   dm_form.t_applicazionemodels.Value);
+    if f_work.CheckCache(dm_form.t_applicazioneModels.Value, 'models', false)
+    then begin
+      dm_form.t_modelli.LoadFromFile(f_work.prgdir + '__source__\models.cache');
+      f_work.edit_obj.Caption := 'Data-models repository from global cache';
+      da_Refresh              := False;
+      Exit;
     end
     else
     begin
-      dm_form.t_modelli.LoadFromFile(f_work.prgdir + '__source__\models.cache');
-      da_Refresh := False;
-      Exit;
+      programma.Lines.LoadFromFile(f_work.prgdir +
+                                   dm_form.t_applicazionemodels.Value);
+      f_work.edit_obj.Caption := 'Data-models repository from global script';
     end;
   end;
   // _______________________________________________________ Clear CDS table ___
@@ -3036,6 +3042,7 @@ begin
     end;
     dm_form.t_modelli.SaveToFile(f_work.userdir + '__source__\models.cache',
                                  dfXML);
+    f_work.WriteFileMD5(dm_form.t_applicazionemodels.Value, 'models', True);
   end
   else
   begin
@@ -3045,6 +3052,7 @@ begin
     end;
     dm_form.t_modelli.SaveToFile(f_work.prgdir + '__source__\models.cache',
                                  dfXML);
+    f_work.WriteFileMD5(dm_form.t_applicazionemodels.Value, 'models', False);
   end;
 end;
 
@@ -3058,11 +3066,13 @@ begin
   begin
     programma.Lines.LoadFromFile(f_work.userdir +
                                  dm_form.t_applicazionemenus.Value);
+    f_work.edit_obj.Caption := 'Menu repository from user script';
   end
   else if FileExists(f_work.prgdir + dm_form.t_applicazionemenus.Value) then
   begin
     programma.Lines.LoadFromFile(f_work.prgdir +
                                  dm_form.t_applicazionemenus.Value);
+    f_work.edit_obj.Caption := 'Menu repository from global script';
   end;
   dm_form.t_menu.EmptyDataSet;
   i            := 0;
@@ -3242,12 +3252,14 @@ begin
   //elenco server/databases
   if FileExists(f_work.userdir + dm_form.t_applicazionedbs.Value) then
   begin
-    programma.Lines.LoadFromFile(f_work.userdir + dm_form.t_applicazionedbs.Value)
+    programma.Lines.LoadFromFile(f_work.userdir + dm_form.t_applicazionedbs.Value);
+    f_work.edit_obj.Caption := 'Servers and dbs repository from user script';
   end
   else if fileexists(f_work.prgdir + dm_form.t_applicazionedbs.Value)
   then
   begin
-    programma.Lines.LoadFromFile(f_work.prgdir + dm_form.t_applicazionedbs.Value)
+    programma.Lines.LoadFromFile(f_work.prgdir + dm_form.t_applicazionedbs.Value);
+    f_work.edit_obj.Caption := 'Servers and dbs repository from global script';
   end;
 
   //importa i server
@@ -3384,15 +3396,9 @@ begin
   if FileExists(userDir + dm_form.t_applicazioneTables.Value) then
   begin
     withCheck := True;
-    // _______________ If cache file is newer then repository then use cache ___
-    if FileAge(userDir + dm_form.t_applicazioneTables.Value) >
-       FileAge(userDir + '__source__\tables.cache')then
-    begin
-      programma.Lines.LoadFromFile(userDir +
-                                   dm_form.t_applicazioneTables.Value);
-    end
-    else
-    begin
+    // _____________________________ If cache is up to date with script file ___
+    if f_work.CheckCache(dm_form.t_applicazioneTables.Value, 'tables', True)
+    then begin
       dm_form.t_tabelle.LoadFromFile(userDir + '__source__\tables.cache');
       dm_form.t_campi.LoadFromFile(userDir + '__source__\fields.cache');
       dm_form.t_indicitesta.LoadFromFile(userDir + '__source__\indexes.cache');
@@ -3400,23 +3406,24 @@ begin
       dm_form.t_indicitestanu.LoadFromFile(userDir +
                                            '__source__\nuindexes.cache');
       dm_form.t_indicinu.LoadFromFile(userDir + '__source__\nusegments.cache');
-      da_Refresh := False;
+      f_work.edit_obj.Caption := 'Tables repository from user cache';
+      da_Refresh              := False;
       Exit;
+    end
+    else
+    begin
+      programma.Lines.LoadFromFile(userDir +
+                                   dm_form.t_applicazioneTables.Value);
+      f_work.edit_obj.Caption := 'Tables repository from user script';
     end;
   end
   // _______________________________________ Check files from prgs directory ___
   else if fileexists(prgsDir + dm_form.t_applicazionetables.Value) then
   begin
     withCheck := False;
-    // _______________ If cache file is newer then repository then use cache ___
-    if FileAge(prgsDir + dm_form.t_applicazionetables.Value) >
-       FileAge(prgsDir + '__source__\tables.cache')then
-    begin
-      programma.Lines.LoadFromFile(prgsDir +
-                                   dm_form.t_applicazionetables.Value);
-    end
-    else
-    begin
+    // _____________________________ If cache is up to date with script file ___
+    if f_work.CheckCache(dm_form.t_applicazioneTables.Value, 'tables', False)
+    then begin
       dm_form.t_tabelle.LoadFromFile(prgsDir + '__source__\tables.cache');
       dm_form.t_campi.LoadFromFile(prgsDir + '__source__\fields.cache');
       dm_form.t_indicitesta.LoadFromFile(prgsDir + '__source__\indexes.cache');
@@ -3424,8 +3431,15 @@ begin
       dm_form.t_indicitestanu.LoadFromFile(prgsDir +
                                            '__source__\nuindexes.cache');
       dm_form.t_indicinu.LoadFromFile(prgsDir + '__source__\nusegments.cache');
-      da_Refresh := False;
+      f_work.edit_obj.Caption := 'Tables repository from global cache';
+      da_Refresh              := False;
       Exit;
+    end
+    else
+    begin
+      programma.Lines.LoadFromFile(prgsDir +
+                                   dm_form.t_applicazionetables.Value);
+      f_work.edit_obj.Caption := 'Tables repository from global script';
     end;
   end;
   // ___________ Hide tables grids to speed up tables loading and processing ___
@@ -3439,6 +3453,11 @@ begin
   dm_form.t_indicitesta.Open;
   dm_form.t_indici.EmptyDataset;
   dm_form.t_indici.Open;
+  dm_form.t_indicitestanu.EmptyDataSet;
+  dm_form.t_indicitestanu.Open;
+  dm_form.t_indicinu.EmptyDataset;
+  dm_form.t_indicinu.Open;
+  dm_form.attiva_disattiva_tables(True);
   // ______________________________ TODO: Change way to manage system tables ___
   programma.SelLength := 0;
   // _____________________________________________________________ o2_rights ___
@@ -3645,6 +3664,8 @@ begin
     dm_form.t_indicinu.SaveToFile(prgsDir +
                                   '__source__\nusegments.cache', dfXML);
   end;
+  // ________________________________________________________ Write MD5 file ___
+  f_work.WriteFileMD5(dm_form.t_applicazionetables.Value, 'tables', withCheck);
   // ________________________________________________________ End operations ___
   FreeAndNil(r);
   FreeAndNil(r2);
@@ -3662,6 +3683,7 @@ begin
   // ________________________________________________ Rebind grids to tables ___
   f_work.abilitaTableRep.Execute;
 end;
+
 
 {**
  * Import application variables repository.
@@ -3689,11 +3711,13 @@ begin
   if FileExists(userDir + dm_form.t_applicazioneAppVars.Value) then
   begin
     programma.Lines.LoadFromFile(userDir + dm_form.t_applicazioneAppVars.Value);
+    f_work.edit_obj.Caption := 'Application variables from user script';
   end
   else if fileexists(prgsDir + dm_form.t_applicazioneAppVars.Value)
   then
   begin
     programma.Lines.LoadFromFile(prgsDir + dm_form.t_applicazioneAppVars.Value);
+    f_work.edit_obj.Caption := 'Application variables from global script';
   end;
   // __________________________________________ Import application variables ___
   r.Expression := 'o2def::appvar(.*?);';

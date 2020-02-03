@@ -2733,6 +2733,7 @@ begin
   Memo2.Append('?>');
   // ___________________________________________ Save tables repository file ___
   Memo2.SaveToFile(f_work.userdir + dm_form.t_applicazioneTables.Value);
+  f_work.WriteFileMD5(dm_form.t_applicazioneTables.Value, 'tables', True);
   dm_form.t_tabelle.SaveToFile(f_work.userdir + '__source__\tables.cache',
                                dfXML);
   dm_form.t_campi.SaveToFile(f_work.userdir + '__source__\fields.cache',
@@ -2748,6 +2749,7 @@ begin
                                 dfXML);
   f_import.tables_import.Execute;
 end;
+
 
 procedure Tf_export.menu_exportExecute(Sender: TObject);
 var
@@ -2810,12 +2812,13 @@ begin
   // _________________________________________ Export data models repository ___
   Memo2.SaveToFile(f_work.userdir + dm_form.t_applicazioneModels.Value);
   // ____________________________________________ Save models table to cache ___
-  If not(DirectoryExists(f_work.userdir + '__source__\')) then
+  if not(DirectoryExists(f_work.userdir + '__source__\')) then
   begin
     CreateDir(f_work.userdir + '__source__\');
   end;
   dm_form.t_modelli.SaveToFile(f_work.userdir + '__source__\models.cache',
                                dfXML);
+  f_work.WriteFileMD5(dm_form.t_applicazioneModels.Value, 'models', true);
 end;
 
 
@@ -2903,42 +2906,44 @@ end;
 
 
 procedure Tf_export.prgsavcdsExecute(Sender: TObject; nomeprg: string);
-var dircds : string;
+var
+  dircds : string;
+  userVer : Boolean;
 begin
   // _________________________________________ Set target directory for CDSs ___
   dircds := '';
   if (FileExists(f_work.userdir + nomeprg + '.prg')) then
   begin
-    dircds := f_work.userdir + '__source__\' + nomeprg + '\';
+    userVer := True;
+    dircds  := f_work.userdir + '__source__\' + nomeprg + '\';
   end
   else
   begin
-    dircds := f_work.prgdir + '__source__\' + nomeprg + '\';
+    userVer := False;
+    dircds  := f_work.prgdir + '__source__\' + nomeprg + '\';
   end;
   // ____________________________________ Create CDSs directories if missing ___
-  If not(DirectoryExists(f_work.prgdir + '__source__\')) then
+  if not(DirectoryExists(f_work.prgdir + '__source__\')) then
   begin
      CreateDir(f_work.prgdir + '__source__\');
   end;
-  If not(DirectoryExists(f_work.userdir + '__source__\')) then
+  if not(DirectoryExists(f_work.userdir + '__source__\')) then
   begin
     CreateDir(f_work.userdir + '__source__\');
   end;
-  If not(DirectoryExists(dircds)) then
+  if not(DirectoryExists(dircds)) then
   begin
     CreateDir(dircds);
   end;
   // _______________________________________________________ Save CDSs files ___
   with dm_form do
   begin
-//  t_programmi.MergeChangeLog;
     t_programmi.SaveToFile(dircds + 'program.cds', dfBinary);
     t_task.SaveToFile(dircds + 'view.cds', dfBinary);
     t_select.SaveToFile(dircds + 'select.cds', dfBinary);
     t_usa_file.SaveToFile(dircds + 'tab.cds', dfBinary);
     t_union.SaveToFile(dircds + 'link.cds', dfBinary);
     t_azioni.SaveToFile(dircds + 'action.cds', dfBinary);
-//  t_azionifigli.SaveToFile(dircds + 'subaction.cds', dfBinary);
     t_operazioni.SaveToFile(dircds + 'operation.cds', dfBinary);
     t_espressioni.SaveToFile(dircds + 'expression.cds', dfBinary);
     t_aggreg.SaveToFile(dircds + 'aggregation.cds', dfBinary);
@@ -2949,9 +2954,11 @@ begin
     t_input_output.SaveToFile(dircds + 'io.cds', dfBinary);
     t_report.SaveToFile(dircds + 'report.cds', dfBinary);
     t_reportfield.SaveToFile(dircds + 'reportfield.cds', dfBinary);
-    end;
+  end;
+  // ________________________________________________________ Write MD5 file ___
+  f_work.WriteFileMD5(nomeprg, '', userVer);
 end;
-
+
 procedure Tf_export.FormCreate(Sender: TObject);
 begin
   Memo2 := TStringList.Create;

@@ -13,7 +13,7 @@ uses regexpr, DB, jbstr, inifiles,
   cxData, cxDataStorage, cxEdit, cxDBData, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses,
   cxControls, cxGridCustomView, cxGrid, WinSkinStore, VolDBGrid, JvBaseDlg,
-  JvSHFileOp, JvPlacemnt, JvMemo;
+  JvSHFileOp, JvPlacemnt, JvMemo, IdHashMessageDigest, idHash;
 
 type
   Tf_work = class(TForm)
@@ -474,6 +474,8 @@ type
     dbgrid_notunique: TDBGrid;
     dbgrid_segmentinu: TDBGrid;
     DBGrid_campi: TDBGrid;
+    N1: TMenuItem;
+    edit_obj: TMenuItem;
     procedure dbgrid_tabelle_savEnter(Sender: TObject);
     procedure DBGrid_campiEnter(Sender: TObject);
     procedure dbgrid_indiciEnter(Sender: TObject);
@@ -753,6 +755,9 @@ type
     procedure dbgrid_formColEnter(Sender: TObject);
     procedure dbgrid_notuniqueEnter(Sender: TObject);
     procedure dbgrid_segmentinuEnter(Sender: TObject);
+    function FileToMD5(FName: String): String;
+    function CheckCache(FName: String; RepName: String; userVersion: Boolean): Boolean;
+    procedure WriteFileMD5(FName: String; RepName: String; userVersion: Boolean);
 
   private
     { Private declarations }
@@ -3423,6 +3428,7 @@ begin
     begin
       checkout(self, dm_form.t_applicazionemodels.Value);
       checkout(self, '__source__\models.cache');
+      checkout(self, '__source__\models.md5');
       dm_form.attiva_disattiva_models(true);
       f_import.models_import.Execute;
     end;
@@ -3463,6 +3469,7 @@ begin
       checkout(self, '__source__\segments.cache');
       checkout(self, '__source__\nuindexes.cache');
       checkout(self, '__source__\nusegments.cache');
+      checkout(self, '__source__\tables.md5');
       dm_form.attiva_disattiva_tables(true);
       f_import.tables_import.Execute;
     end;
@@ -3490,6 +3497,7 @@ begin
       dircds_user           := f_work.userdir + '__source__\' + nomeprg + '\';
       Jvfileopera.Operation := foCopy;
       Jvfileopera.SourceFiles.Clear;
+      Jvfileopera.SourceFiles.Append(dircds + 'program.md5');
       Jvfileopera.SourceFiles.Append(dircds + 'program.cds');
       Jvfileopera.SourceFiles.Append(dircds + 'view.cds');
       Jvfileopera.SourceFiles.Append(dircds + 'select.cds');
@@ -3507,6 +3515,7 @@ begin
       Jvfileopera.SourceFiles.Append(dircds + 'report.cds');
       Jvfileopera.SourceFiles.Append(dircds + 'reportfield.cds');
       Jvfileopera.DestFiles.Clear;
+      Jvfileopera.DestFiles.Append(dircds_user + 'program.md5');
       Jvfileopera.DestFiles.Append(dircds_user + 'program.cds');
       Jvfileopera.DestFiles.Append(dircds_user + 'view.cds');
       Jvfileopera.DestFiles.Append(dircds_user + 'select.cds');
@@ -3571,7 +3580,9 @@ begin
     begin
       f_export.models_export.Execute;
       checkin(self,
-              [dm_form.t_applicazionemodels.Value, '__source__\models.cache'],
+              [dm_form.t_applicazionemodels.Value,
+               '__source__\models.cache',
+               '__source__\models.md5'],
               cvsSet);
       dm_form.datatypes_modificato := false;
     end
@@ -3600,7 +3611,8 @@ begin
                '__source__\indexes.cache',
                '__source__\segments.cache',
                '__source__\nuindexes.cache',
-               '__source__\nusegments.cache'],
+               '__source__\nusegments.cache',
+               '__source__\tables.md5'],
               cvsSet);
       dm_form.tables_modificato := false;
     end
@@ -3632,6 +3644,7 @@ begin
           dircds_user := f_work.userdir + '__source__\' + nomeprg + '\';
           Jvfileopera.Operation := foMove;
           Jvfileopera.SourceFiles.Clear;
+          Jvfileopera.SourceFiles.Append(dircds_user + 'program.md5');
           Jvfileopera.SourceFiles.Append(dircds_user + 'program.cds');
           Jvfileopera.SourceFiles.Append(dircds_user + 'view.cds');
           Jvfileopera.SourceFiles.Append(dircds_user + 'select.cds');
@@ -3649,6 +3662,7 @@ begin
           Jvfileopera.SourceFiles.Append(dircds_user + 'report.cds');
           Jvfileopera.SourceFiles.Append(dircds_user + 'reportfield.cds');
           Jvfileopera.DestFiles.Clear;
+          Jvfileopera.DestFiles.Append(dircds + 'program.md5');
           Jvfileopera.DestFiles.Append(dircds + 'program.cds');
           Jvfileopera.DestFiles.Append(dircds + 'view.cds');
           Jvfileopera.DestFiles.Append(dircds + 'select.cds');
@@ -3701,6 +3715,7 @@ begin
     begin
       uncheck(self, dm_form.t_applicazionemodels.Value);
       uncheck(self, '__source__\models.cache');
+      uncheck(self, '__source__\models.md5');
       f_import.models_import.Execute;
     end
     else if PageControl1.ActivePage = ts_menu then
@@ -3723,6 +3738,7 @@ begin
       uncheck(self, '__source__\segments.cache');
       uncheck(self, '__source__\nuindexes.cache');
       uncheck(self, '__source__\nusegments.cache');
+      uncheck(self, '__source__\tables.md5');
       f_import.tables_import.Execute;
     end
     else if PageControl1.ActivePage = ts_programmi then
@@ -3740,6 +3756,7 @@ begin
         dircds_user           := f_work.userdir + '__source__\' + nomeprg + '\';
         Jvfileopera.Operation := foDelete;
         Jvfileopera.SourceFiles.Clear;
+        Jvfileopera.SourceFiles.Append(dircds_user + 'program.md5');
         Jvfileopera.SourceFiles.Append(dircds_user + 'program.cds');
         Jvfileopera.SourceFiles.Append(dircds_user + 'view.cds');
         Jvfileopera.SourceFiles.Append(dircds_user + 'select.cds');
@@ -7180,6 +7197,177 @@ end;
 procedure Tf_work.dbgrid_segmentinuEnter(Sender: TObject);
 begin
   dbnav.DataSource := dm_form.ds_indicinu;
+end;
+
+function Tf_work.FileToMD5(FName: String): String;
+var
+  md5 : TIdHashMessageDigest5;
+  fs  : TFileStream;
+begin
+  md5 := TIdHashMessageDigest5.Create;
+  fs  := TFileStream.Create(FName, fmOpenRead OR fmShareDenyWrite) ;
+  try
+    result := md5.AsHex(md5.HashValue(fs)) ;
+  finally
+    fs.Free;
+    md5.Free;
+  end;
+end;
+
+
+{*
+ * Check cached file existance and consistency (by MD5 hashing)
+ *
+ * @param  String  FName
+ * @param  String  RepName
+ * @param  Boolean userVersion
+ * @return Boolean
+ *}
+function Tf_work.CheckCache(FName: String;
+                            RepName: String;
+                            userVersion: Boolean): Boolean;
+var
+  F: TextFile;
+  prg, prf, prgH, prfH, cf, hf: String;
+begin
+  // _______________________________________________________________ Program ___
+  if RepName = '' then
+  begin
+    // ________________________________________________________ User version ___
+    if userVersion then
+    begin
+      prg := userdir + FName + '.prg';
+      prf := userdir + FName + '.prf';
+      cf  := userdir + '__source__\' + FName + '\program.cds';
+      hf  := userdir + '__source__\' + FName + '\program.md5';
+    end
+    // ______________________________________________________ Global version ___
+    else
+    begin
+      prg := prgdir + FName + '.prg';
+      prf := prgdir + FName + '.prf';
+      cf  := prgdir + '__source__\' + FName + '\program.cds';
+      hf  := prgdir + '__source__\' + FName + '\program.md5';
+    end;
+    // ______________________________________ Cached file and MD5 hash found ___
+    if FileExists(cf) and FileExists(hf) then
+    begin
+      AssignFile(F, hf);
+      Reset(F);
+      ReadLn(F, prgH);
+      ReadLn(F, prfH);
+      CloseFile(F);
+      // ________________________________________________ Check MD5 matching ___
+      if (prgH = FileToMD5(prg)) and (prfH = FileToMD5(prf)) then
+      begin
+        Result := True;
+      end
+      else
+      begin
+        Result := False;
+      end;
+    end
+    else
+    begin
+      Result := False;
+    end;
+  end
+  // ____________________________________________________ Other repositories ___
+  else
+  begin
+    // ________________________________________________________ User version ___
+    if userVersion then
+    begin
+      prg := userdir + FName;
+      cf  := userdir + '__source__\' + RepName + '.cache';
+      hf  := userdir + '__source__\' + RepName + '.md5';
+    end
+    // ______________________________________________________ Global version ___
+    else
+    begin
+      prg := prgdir + FName;
+      cf  := prgdir + '__source__\' + RepName + '.cache';
+      hf  := prgdir + '__source__\' + RepName + '.md5';
+    end;
+    // ______________________________________ Cached file and MD5 hash found ___
+    if FileExists(cf) and FileExists(hf) then
+    begin
+      AssignFile(F, hf);
+      Reset(F);
+      ReadLn(F, prgH);
+      CloseFile(F);
+      // ________________________________________________ Check MD5 matching ___
+      if prgH = FileToMD5(prg) then
+      begin
+        Result := True;
+      end
+      else
+      begin
+        Result := False;
+      end;
+    end
+    else
+    begin
+      Result := False;
+    end;
+  end;
+
+end;
+
+
+procedure Tf_work.WriteFileMD5(FName: String;
+                               RepName: String;
+                               userVersion: Boolean);
+var
+  F: TextFile;
+  prg, prf, prgH, prfH, hf: String;
+begin
+  // _______________________________________________________________ Program ___
+  if RepName = '' then
+  begin
+    // ________________________________________________________ User version ___
+    if userVersion then
+    begin
+      prg := userdir + FName + '.prg';
+      prf := userdir + FName + '.prf';
+      hf  := userdir + '__source__\' + FName + '\program.md5';
+    end
+    // ______________________________________________________ Global version ___
+    else
+    begin
+      prg := prgdir + FName + '.prg';
+      prf := prgdir + FName + '.prf';
+      hf  := prgdir + '__source__\' + FName + '\program.md5';
+    end;
+    // _________________________________________________ Write MD5 hash file ___
+    AssignFile(F, hf);
+    Rewrite(F);
+    WriteLn(F, FileToMD5(prg));
+    WriteLn(F, FileToMD5(prf));
+    CloseFile(F);
+  end
+  // ____________________________________________________ Other repositories ___
+  else
+  begin
+    // ________________________________________________________ User version ___
+    if userVersion then
+    begin
+      prg := userdir + FName;
+      hf  := userdir + '__source__\' + RepName + '.md5';
+    end
+    // ______________________________________________________ Global version ___
+    else
+    begin
+      prg := prgdir + FName;
+      hf  := prgdir + '__source__\' + RepName + '.md5';
+    end;
+    // _________________________________________________ Write MD5 hash file ___
+    AssignFile(F, hf);
+    Rewrite(F);
+    WriteLn(F, FileToMD5(prg));
+    CloseFile(F);
+  end;
+
 end;
 
 end.
