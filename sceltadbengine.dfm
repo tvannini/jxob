@@ -29,14 +29,14 @@ object f_sceltadbengine: Tf_sceltadbengine
     Ctl3D = False
     ItemHeight = 13
     Items.Strings = (
-      'mysql'
-      'mssql'
-      'oracle'
-      'db2'
-      'postgres'
-      'sqlite'
-      'sqlite3'
       'as400'
+      'db2'
+      'jxsdb'
+      'mssql'
+      'mysql'
+      'oracle'
+      'postgres'
+      'sqlite3'
       '')
     ParentCtl3D = False
     TabOrder = 0

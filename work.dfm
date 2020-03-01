@@ -84,7 +84,7 @@ object f_work: Tf_work
     Top = 32
     Width = 870
     Height = 662
-    ActivePage = ts_cvs
+    ActivePage = ts_database
     Align = alClient
     MultiLine = True
     PopupMenu = pop_pagecontrol1
