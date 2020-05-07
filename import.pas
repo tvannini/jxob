@@ -54,6 +54,7 @@ type
     r3: TRegExpr;
     r4: TRegExpr;
     r5: TRegExpr;
+    r6: TRegExpr;
     { Private declarations }
   public
     build_1_file: integer;
@@ -190,6 +191,8 @@ begin
     r4.ModifierI                                := True;
     r5                                          := TRegExpr.Create;
     r5.ModifierI                                := True;
+    r6                                          := TRegExpr.Create;
+    r6.ModifierI                                := True;
     programma.Lines.Clear;
     // ____________________________________________________ Empty prg tables ___
     svuota_tab_prg.Execute();
@@ -1732,16 +1735,16 @@ begin
             begin
               // _______________________________________________ Combo items ___
               selezione3 := ctrl_prop('valori');
+              r6.Expression := '_exp_(\d+)\(\)';
               // ___________________________________________ Items from view ___
               if Pos('o2_view2list', selezione3) > 0 then
               begin
                 par4 := Trim(selezione3);
               end
                 // ____________________________________________ Items by exp ___
-              else if Pos('_exp_', selezione3) > 0 then
+              else if r6.exec(selezione3) then
               begin
-                par8 := Trim(Copy(selezione3, Pos('_exp_', selezione3) + 5, 8));
-                par8 := Copy(par8, 1, Length(par8) - 2);
+                par8 := r6.Match[1];
                 par4 := '[o2exp_' + par8 + ']';
               end
               // ___________________________________________ Items from list ___
@@ -2674,6 +2677,7 @@ begin
   FreeAndNil(r3);
   FreeAndNil(r4);
   FreeAndNil(r5);
+  FreeAndNil(r6);
   end;
 
   dm_form.program_modificato := False;
