@@ -131,8 +131,8 @@ object f_formula_sql: Tf_formula_sql
       object Label1: TLabel
         Left = 16
         Top = 24
-        Width = 97
-        Height = 20
+        Width = 82
+        Height = 13
         Caption = 'Code Expression:'
       end
       object Panel2: TPanel
@@ -170,7 +170,7 @@ object f_formula_sql: Tf_formula_sql
         Left = 112
         Top = 24
         Width = 57
-        Height = 20
+        Height = 19
         Ctl3D = False
         ParentCtl3D = False
         TabOrder = 1

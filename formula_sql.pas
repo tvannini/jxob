@@ -304,6 +304,7 @@ end;
 procedure Tf_formula_sql.FormCreate(Sender: TObject);
 begin
   ResParsText := TStringList.Create;
+  SQLPages.Pages[1].TabVisible := False;
 end;
 
 procedure Tf_formula_sql.Insert1Click(Sender: TObject);
