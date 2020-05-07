@@ -806,7 +806,7 @@ uses dm, area_form, start, sceltacampofile, sceltaprogramma,
   sceltaazione, copymove, sceltarecordset, sceltaform, sceltadb,
   sceltacampiprg, sceltatipodato, sceltachiavefile, scelta_tipo_select,
   sceltaserver, sceltadbengine, sceltaespressioni, sceltatabella, sceltafiletask,
-  formula_sql_concat, oggetti_form, parametri_call, parametri, editorphp, checkprg,
+  formula_sql_concat, formula_sql, oggetti_form, parametri_call, parametri, editorphp, checkprg,
   nuovoprogetto, scelta_css, import, export, cvs, cvsinfo, scelta_message, sceltamodello,
   sceltaio, sceltamenu, print, preferences, users,
   locate, go_to, about, conversioni, sceltacampiview, getdef,
@@ -1855,7 +1855,7 @@ begin
     begin
       dm_form.t_select.Post
     end;
-    if f_formula_sql_concat.ShowModal() = mrOk then
+    if f_formula_sql.ShowModal() = mrOk then
     begin
       if (dm_form.t_select.State = dsEdit) or
          (dm_form.t_select.State = dsInsert) then
@@ -1863,8 +1863,17 @@ begin
         dm_form.t_select.Post
       end;
       dm_form.t_select.Edit;
-      dm_form.t_selectsql.Value  := f_formula_sql_concat.ResParsText.Text;
-      dm_form.t_selectinit.Value := f_formula_sql_concat.ResParsCount;
+      // _______________________________________________________ Type CONCAT ___
+      if f_formula_sql.ResType = 'C' then
+      begin
+        dm_form.t_selectsql.Value := f_formula_sql.ResParsText.Text;
+      end
+      // _____________________________________________________ Type SQL code ___
+      else
+      begin
+        dm_form.t_selectsql.Value := '';
+      end;
+      dm_form.t_selectinit.Value := f_formula_sql.ResParsCount;
     end;
   end
   // ___________________________________________________________ Expressions ___
