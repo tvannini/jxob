@@ -766,37 +766,54 @@ begin
         // ______________________ Check fields and expressions in CONCAT-SQL ___
         else if t_selecttipo.Value = 'SQL' then
         begin
-          // ______________________ Check expresion use in concat text lines ___
-          ConcatText.Clear;
-          ConcatText.Text := t_selectsql.AsString;
-          for i := 0 to ConcatText.Count - 1 do
+          // ___________________________________________________ JXSQL field ___
+          if t_selectsql.AsString = '' then
           begin
-            if Copy(ConcatText.Strings[i], 1, 1) = #127 then
+            // ________________________ Check expression in JXSQL definition ___
+            if errexp(t_selectinit.AsString, True) then
             begin
-              // __________________________ Check field in CONCAT definition ___
-              if t_select.Lookup('con_nome',
-                                 Copy(ConcatText.Strings[i], 2, 200),
-                                 'con_nome') <>
-                                 Copy(ConcatText.Strings[i], 2, 200) then
-              begin
-                Memo2.Lines.Append('Field "' +
-                                   Copy(ConcatText.Strings[i], 2, 200) +
-                                   '" not found in definition of SQL-formula "'
-                                   + t_selectcon_nome.Value + '" in view "' +
-                                   nome_view + '" row ' +
-                                   t_selectidcampo.AsString);
-              end;
-            end
-            else
+              Memo2.Lines.Append('Expression ' + t_selectinit.AsString +
+                                 ' not found in definition of SQL-formula "' +
+                                 t_selectcon_nome.Value + '" in view "' +
+                                 nome_view + '" row ' +
+                                 t_selectidcampo.AsString);
+            end;
+          end
+          // _____________________________________________ CONCAT definition ___
+          else
+          begin
+            // ____________________ Check expresion use in concat text lines ___
+            ConcatText.Clear;
+            ConcatText.Text := t_selectsql.AsString;
+            for i := 0 to ConcatText.Count - 1 do
             begin
-              // _____________________ Check expression in CONCAT definition ___
-              if errexp(ConcatText.Strings[i], True) then
+              if Copy(ConcatText.Strings[i], 1, 1) = #127 then
               begin
-                Memo2.Lines.Append('Expression ' + ConcatText.Strings[i] +
-                                   ' not found in definition of SQL-formula "' +
-                                   t_selectcon_nome.Value + '" in view "' +
-                                   nome_view + '" row ' +
-                                   t_selectidcampo.AsString);
+                // ________________________ Check field in CONCAT definition ___
+                if t_select.Lookup('con_nome',
+                                   Copy(ConcatText.Strings[i], 2, 200),
+                                   'con_nome') <>
+                                   Copy(ConcatText.Strings[i], 2, 200) then
+                begin
+                  Memo2.Lines.Append('Field "' +
+                                     Copy(ConcatText.Strings[i], 2, 200) +
+                                    '" not found in definition of SQL-formula "'
+                                     + t_selectcon_nome.Value + '" in view "' +
+                                     nome_view + '" row ' +
+                                     t_selectidcampo.AsString);
+                end;
+              end
+              else
+              begin
+                // ___________________ Check expression in CONCAT definition ___
+                if errexp(ConcatText.Strings[i], True) then
+                begin
+                  Memo2.Lines.Append('Expression ' + ConcatText.Strings[i] +
+                                     ' not found in definition of SQL-formula "'
+                                     + t_selectcon_nome.Value + '" in view "' +
+                                     nome_view + '" row ' +
+                                     t_selectidcampo.AsString);
+                end;
               end;
             end;
           end;

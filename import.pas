@@ -780,31 +780,31 @@ begin
 
             if pos('->usa', selezione) > 0 then
             begin
-              tipo := 'Select'
+              tipo := 'Select';
             end
             else if pos('->match', selezione) > 0 then
             begin
-              tipo := 'Match'
+              tipo := 'Match';
             end
             else if pos('->unisci', selezione) > 0 then
             begin
-              tipo := 'Link'
+              tipo := 'Link';
             end
             else if pos('->calcola', selezione) > 0 then
             begin
-              tipo := 'Calculated'
+              tipo := 'Calculated';
             end
             else if pos('->param', selezione) > 0 then
             begin
-              tipo := 'Parameter'
+              tipo := 'Parameter';
             end
             else if pos('->aggregate', selezione) > 0 then
             begin
-              tipo := 'Aggregate'
+              tipo := 'Aggregate';
             end
             else if pos('->sql_formula', selezione) > 0 then
             begin
-              tipo := 'SQL'
+              tipo := 'SQL';
             end;
 
             if tipo <> 'Link' then
@@ -909,7 +909,7 @@ begin
               begin
                 par8 := '0'
               end
-              else if (tipo = 'Calculated') then
+              else if (tipo = 'Calculated') or (tipo = 'SQL') then
               begin
                 par8 := copy(par8, length(trim(nomeprg)) + 7, 10);
                 par8 := copy(par8, 1, length(trim(par8)) - 3);
@@ -1039,13 +1039,11 @@ begin
                   end;
 
                 end
-                // _______________________________________ No SQL definition ___
+                // ____________________________________ SQL-field definition ___
                 else
                 begin
                   par9 := '';
-                  exp1 := 0;
-
-
+                  exp1 := StrToInt(par8);
                   // ______________________________________________ rangemin ___
                   par4 := trim(extractword(4, selezione2, [',']));
                   if par4 = 'null' then

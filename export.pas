@@ -432,7 +432,7 @@ begin
             exp4 := 'null';
           end;
           // ____________________________________________ Formula expression ___
-          if (t_selectinit.Value <> 0) and (t_selecttipo.Value <> 'SQL') then
+          if (t_selectinit.Value <> 0) then
           begin
             exp5 := '"' + nomeprg + '_exp_' +
                     IntToStr(t_selectinit.Value) + '()"';
@@ -497,34 +497,48 @@ begin
           else if (t_selecttipo.Value = 'SQL') then
           begin
             tipousa        := 'sql_formula';
-            tokenlist      := TStringList.Create;
-            tokenlist.Text := t_selectsql.Text;
-            SQLdef := '';
-            for i := 0 to tokenlist.Count - 1 do
+            // _________________________________________________ JXSQL field ___
+            if t_selectsql.AsString = '' then
             begin
-              if StrLeft(tokenlist[i], 1) = #127 then
+              // ___ exp5 is the init expression, used to define JXSQL field ___
+              buffer := chr(9) + '$task_' + nometask + '->sql_formula("' +
+                        t_selectcon_nome.Value + '","' +
+                        t_selectcampo.Value + '",' + exp5 + ',' +
+                        exp1 + ',' + exp2 + ',' + exp3 + ',' + exp4 + ');';
+            end
+            // ___________________________________________ CONCAT definition ___
+            else
+            begin
+              tokenlist      := TStringList.Create;
+              tokenlist.Text := t_selectsql.Text;
+              SQLdef := '';
+              for i := 0 to tokenlist.Count - 1 do
               begin
-                SQLdef := SQLdef + '["' +
-                          StrRight(tokenlist[i], StrLength(tokenlist[i]) - 1) +
-                          '"],';
+                if StrLeft(tokenlist[i], 1) = #127 then
+                begin
+                  SQLdef := SQLdef + '["' +
+                            StrRight(tokenlist[i], StrLength(tokenlist[i]) - 1)
+                            + '"],';
+                end
+                else
+                begin
+                  SQLdef := SQLdef + nomeprg + '_exp_' + tokenlist[i] + '(),';
+                end;
+              end;
+              if SQLdef <> '' then
+              begin
+                SQLdef := '["CONCAT",' + StrLeft(SQLdef, StrLength(SQLdef) - 1)
+                          + ']';
               end
               else
               begin
-                SQLdef := SQLdef + nomeprg + '_exp_' + tokenlist[i] + '(),';
+                SQLdef := 'null';
               end;
+              buffer := chr(9) + '$task_' + nometask + '->sql_formula("' +
+                        t_selectcon_nome.Value + '","' +
+                        t_selectcampo.Value + '",' + SQLdef + ',' +
+                        exp1 + ',' + exp2 + ',' + exp3 + ',' + exp4 + ');';
             end;
-            if SQLdef <> '' then
-            begin
-              SQLdef := '["CONCAT",' + StrLeft(SQLdef, StrLength(SQLdef) - 1) + ']';
-            end
-            else
-            begin
-              SQLdef := 'null';
-            end;
-            buffer := chr(9) + '$task_' + nometask + '->sql_formula("' +
-                      t_selectcon_nome.Value + '","' +
-                      t_selectcampo.Value + '",' + SQLdef + ',' +
-                      exp1 + ',' + exp2 + ',' + exp3 + ',' + exp4 + ');';
           end; // _________________________________________ End SQL formulas ___
           if tipousa <> '' then
           begin

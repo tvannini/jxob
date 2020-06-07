@@ -159,7 +159,7 @@ begin
           ResParsText.Add(t_formulas_sqlExp.AsString);
           Inc(ResParsCount);
         end
-        // ____________________________________________ Parameter by reference ___
+        // __________________________________________ Parameter by reference ___
         else if t_formulas_sqlType.Value = 'Ref' then
         begin
           ResParsText.Add(#127 + t_formulas_sqlField.Value);
@@ -175,6 +175,7 @@ begin
     if CodeExp.Text <> '' then
     begin
       ResParsCount := StrToInt(CodeExp.Text);
+      ResParsText.Add(CodeExp.Text);
     end
     else
     begin
@@ -304,7 +305,6 @@ end;
 procedure Tf_formula_sql.FormCreate(Sender: TObject);
 begin
   ResParsText := TStringList.Create;
-  SQLPages.Pages[1].TabVisible := False;
 end;
 
 procedure Tf_formula_sql.Insert1Click(Sender: TObject);
