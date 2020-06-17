@@ -2797,7 +2797,6 @@ procedure Tf_work.view_copiaExecute(Sender: TObject);
 var
   nomenewview: string;
   temp_table, temp_table2:  TClientDataSet;
-  tmp_stream : TStream;
   nodotemp, nodotemp2 : TTreeNode;
 begin
   // _______________________________________________ Ask for a new view name ___
@@ -2811,7 +2810,6 @@ begin
       temp_table.CloneCursor(t_usa_file, True, False);
       //union
       t_union.MasterSource := nil;
-      tmp_stream := TStream.Create;
       t_union.SaveToFile(tempdir + 'tmpclone');
       temp_table2 := TClientDataSet.Create(nil);
       temp_table2.LoadFromFile(tempdir + 'tmpclone');
@@ -2849,7 +2847,8 @@ begin
                                temp_table.FieldValues['rangemin'],
                                temp_table.FieldValues['rangemax'],
                                temp_table.FieldValues['not'],
-                               temp_table.FieldValues['like']]);
+                               temp_table.FieldValues['like'],
+                               temp_table.FieldValues['sql']]);
         temp_table.Next;
       end;
       temp_table.Free;   //fine select
@@ -2867,7 +2866,8 @@ begin
                               temp_table2.FieldValues['rangemin'],
                               temp_table2.FieldValues['rangemax'],
                               temp_table2.FieldValues['not'],
-                              temp_table2.FieldValues['like']]);
+                              temp_table2.FieldValues['like'],
+                              temp_table2.FieldValues['sql']]);
         temp_table2.Next;
       end;
       temp_table2.Free;   //fine union

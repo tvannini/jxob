@@ -2887,7 +2887,7 @@ object dm_form: Tdm_form
       item
         Name = 'prg'
         DataType = ftString
-        Size = 100
+        Size = 40
       end
       item
         Name = 'idtask'
@@ -2925,6 +2925,11 @@ object dm_form: Tdm_form
       item
         Name = 'init'
         DataType = ftInteger
+      end
+      item
+        Name = 'sql'
+        DataType = ftString
+        Size = 500
       end>
     IndexDefs = <
       item
@@ -2982,6 +2987,10 @@ object dm_form: Tdm_form
     object t_unioninit: TIntegerField
       DisplayWidth = 12
       FieldName = 'init'
+    end
+    object t_unionsql: TStringField
+      FieldName = 'sql'
+      Size = 500
     end
   end
   object ds_union: TDataSource
