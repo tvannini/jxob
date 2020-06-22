@@ -476,6 +476,8 @@ type
     DBGrid_campi: TDBGrid;
     N1: TMenuItem;
     edit_obj: TMenuItem;
+    Label6: TLabel;
+    dbe_CustomWhereExp: TDBEdit;
     procedure dbgrid_tabelle_savEnter(Sender: TObject);
     procedure DBGrid_campiEnter(Sender: TObject);
     procedure dbgrid_indiciEnter(Sender: TObject);
@@ -2730,65 +2732,76 @@ begin
   end;
 end;
 
+
 procedure Tf_work.Zoom11Click(Sender: TObject);
 var
  azione_local : string;
  expr_local : integer;
 begin
+  // ______________________________________________ View righe-vis expresion ___
   if dbe_righevisexp.Focused then
   begin
-      expr_local := call_scelta_exp(dbe_righevisexp.Field.AsInteger);
-      if expr_local > 0 then
-      begin
-           dm_form.t_task.Edit;
-           dm_form.t_taskrighevisexp.Value:=expr_local;
-           dm_form.t_task.post;
-      end;
-
+    expr_local := call_scelta_exp(dbe_righevisexp.Field.AsInteger);
+    if expr_local > 0 then
+    begin
+      dm_form.t_task.Edit;
+      dm_form.t_taskrighevisexp.Value := expr_local;
+      dm_form.t_task.post;
+    end;
+  end
+  // ___________________________________________ View custom-where expresion ___
+  else if dbe_CustomWhereExp.Focused then
+  begin
+    expr_local := call_scelta_exp(dbe_CustomWhereExp.Field.AsInteger);
+    if expr_local > 0 then
+    begin
+      dm_form.t_task.Edit;
+      dm_form.t_taskcustomwhereexp.Value := expr_local;
+      dm_form.t_task.post;
+    end;
   end
   else
   begin
-
-    if dbe_init_act.Focused then
-   begin
-
-    azione_local := dm_form.t_programmiref.Value
-    end;
-
-   if dbe_recprefix.Focused then
-   begin
-    azione_local := dm_form.t_taskrecordprefix.Value
-   end;
-   if dbe_recsufix.Focused then
-   begin
-    azione_local := dm_form.t_taskrecordsufix.Value
-    end;
-
-
-
-  azione_local := call_scelta_azione(azione_local);
-  if azione_local <> '' then
-  begin
-
-
+    // ________________________________________________ Program start action ___
     if dbe_init_act.Focused then
     begin
-      dm_form.t_programmi.Edit;
-      dm_form.t_programmiref.Value := azione_local
+      azione_local := dm_form.t_programmiref.Value
     end;
+    // ___________________________________________ View record prefix action ___
     if dbe_recprefix.Focused then
     begin
-      dm_form.t_task.Edit;
-      dm_form.t_taskrecordprefix.Value := azione_local;
-      dm_form.t_task.Post;
+      azione_local := dm_form.t_taskrecordprefix.Value
     end;
+    // ___________________________________________ View record suffix action ___
     if dbe_recsufix.Focused then
     begin
-      dm_form.t_task.Edit;
-      dm_form.t_taskrecordsufix.Value := azione_local;
-      dm_form.t_task.Post;
+      azione_local := dm_form.t_taskrecordsufix.Value
     end;
-  end;
+    // _______________________________________________________ Select action ___
+    azione_local := call_scelta_azione(azione_local);
+    if azione_local <> '' then
+    begin
+      // ______________________________________________ Program start action ___
+      if dbe_init_act.Focused then
+      begin
+        dm_form.t_programmi.Edit;
+        dm_form.t_programmiref.Value := azione_local
+      end;
+      // _________________________________________ View record prefix action ___
+      if dbe_recprefix.Focused then
+      begin
+        dm_form.t_task.Edit;
+        dm_form.t_taskrecordprefix.Value := azione_local;
+        dm_form.t_task.Post;
+      end;
+      // _________________________________________ View record suffix action ___
+      if dbe_recsufix.Focused then
+      begin
+        dm_form.t_task.Edit;
+        dm_form.t_taskrecordsufix.Value := azione_local;
+        dm_form.t_task.Post;
+      end;
+    end;
   end;
 end;
 

@@ -651,6 +651,18 @@ begin
         end;
       end;
 
+      // ___________________________________________ Custom-WHERE expression ___
+      r.Expression := 'task_' + trim(t_tasknome.Value) +
+                      '->custom_where\("(.+?)"\);';
+      if r.Exec(programma.Lines.Text) then
+      begin
+        par1 := r.Match[1];
+        par1 := decodifica_exp(par1, nomeprogramma);
+        t_task.Edit;
+        t_taskcustomwhereexp.Value := StrToInt(par1);
+        t_task.Post;
+      end;
+
       //usa file del task  task_marche->usa_file('marche','marche','marca');
       r.Expression := 'task_' + trim(t_tasknome.Value) + '->usa_file(.*?);';
 

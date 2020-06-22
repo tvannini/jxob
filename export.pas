@@ -546,6 +546,13 @@ begin
           end;
           t_select.Next;
         until t_select.EOF; // _________________________ End loop on selects ___
+        // _________________________________________ Custom-where expression ___
+        if (t_taskcustomwhereexp.Value > 0) then
+        begin
+          exp1   := nomeprg + '_exp_' + t_taskcustomwhereexp.AsString + '()';
+          buffer := #9 + '$task_' + nometask + '->custom_where("' + exp1+ '");';
+          Memo3.Add(buffer);
+        end;
         // _________________________________________ Aggregation expressions ___
         t_aggreg.First;
         // _________________________________ Loop on aggregation expressions ___

@@ -837,7 +837,7 @@ object f_work: Tf_work
         Top = 0
         Width = 862
         Height = 607
-        ActivePage = ts_taskprop
+        ActivePage = ts_prg_prop
         Align = alClient
         Style = tsButtons
         TabOrder = 1
@@ -1278,6 +1278,33 @@ object f_work: Tf_work
               Font.Pitch = fpVariable
               Font.Style = [fsBold]
               ParentFont = False
+            end
+            object Label6: TLabel
+              Left = 576
+              Top = 8
+              Width = 160
+              Height = 13
+              Caption = 'Custom WHERE expression:'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'MS Sans Serif'
+              Font.Style = [fsBold]
+              ParentFont = False
+            end
+            object dbe_CustomWhereExp: TDBEdit
+              Left = 752
+              Top = 4
+              Width = 49
+              Height = 19
+              BevelInner = bvNone
+              BevelOuter = bvNone
+              Ctl3D = False
+              DataField = 'customwhereexp'
+              DataSource = dm_form.ds_task
+              ParentCtl3D = False
+              PopupMenu = pop_prg_property
+              TabOrder = 0
             end
           end
           object DBGrid_select: TVolgaDBGrid

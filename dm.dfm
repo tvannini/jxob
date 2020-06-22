@@ -474,6 +474,10 @@ object dm_form: Tdm_form
       item
         Name = 'autoaggregate'
         DataType = ftBoolean
+      end
+      item
+        Name = 'customwhereexp'
+        DataType = ftInteger
       end>
     IndexDefs = <
       item
@@ -555,6 +559,9 @@ object dm_form: Tdm_form
     end
     object t_taskautoaggregate: TBooleanField
       FieldName = 'autoaggregate'
+    end
+    object t_taskcustomwhereexp: TIntegerField
+      FieldName = 'customwhereexp'
     end
   end
   object t_usa_file: TClientDataSet
