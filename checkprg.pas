@@ -770,7 +770,8 @@ begin
           if t_selectsql.AsString = '' then
           begin
             // ________________________ Check expression in JXSQL definition ___
-            if (t_selectinit.AsString <> '') and
+            if ((t_selectinit.AsString <> '') and
+                (t_selectinit.AsString <> '0')) and
                errexp(t_selectinit.AsString, True) then
             begin
               Memo2.Lines.Append('Expression ' + t_selectinit.AsString +
