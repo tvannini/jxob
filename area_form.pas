@@ -86,6 +86,7 @@ type
     o2flowbox1: To2flowbox;
     o2frame1: To2frame;
     Selectchildren1: TMenuItem;
+    Arrangechildren1: TMenuItem;
 
     procedure FormShow(Sender: TObject);
     procedure DsnInspector1BtnClick(Sender: TObject; Targets: TSelectedComponents;
@@ -138,6 +139,7 @@ type
     procedure Selectchildren1Click(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure Arrangechildren1Click(Sender: TObject);
 
   private
     tmp_edit: To2edit;
@@ -3997,10 +3999,11 @@ begin
   // _____________________________________________________________ Design ON ___
   if DsnSwitch1.Down then
   begin
-    Copy1.Visible     := True;
-    Cut1.Visible      := True;
-    Paste1.Visible    := True;
-    DesignON1.Visible := False;
+    Copy1.Visible            := True;
+    Cut1.Visible             := True;
+    Paste1.Visible           := True;
+    DesignON1.Visible        := False;
+    Arrangechildren1.Visible := False;
     // ____________________________________ At least one control is selected ___
     if Dsn8Register1.DsnStage.TargetsCount > 0 then
     begin
@@ -4031,8 +4034,9 @@ begin
       // ______________________________________________________________ Grid ___
       if Dsn8Register1.DsnStage.Targets[0].ClassName = 'To2table' then
       begin
-        Selectchildren1.Visible := True;
-        sepmenuTab.Visible      := True;
+        Selectchildren1.Visible  := True;
+        Arrangechildren1.Visible := True;
+        sepmenuTab.Visible       := True;
         if To2table(Dsn8Register1.DsnStage.Targets[0]).HorzScrollBar.IsScrollBarVisible then
         begin
           scrollLeft1.Visible  := True;
@@ -4159,7 +4163,6 @@ var
   i: Integer;
   ctrlObj: TControl;
   ctrlCont: TWinControl;
-  Paged: Boolean;
   List: TList;
 begin
   if Dsn8Register1.DsnStage.TargetsCount > 0 then
@@ -4224,7 +4227,7 @@ end;
 procedure Tf_areaform.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  // ___________________________________ CTRL + A to select control children ___ 
+  // ___________________________________ CTRL + A to select control children ___
   if (ssCtrl in Shift) and (Key = 65) then
   begin
     // _____________________________________ If fired on a container or form ___
@@ -4237,6 +4240,86 @@ begin
       Selectchildren1Click(Self);
     end;
   end;
+end;
+
+procedure Tf_areaform.Arrangechildren1Click(Sender: TObject);
+var
+  i: Integer;
+  ctrlCont: TWinControl;
+  ctrlObj, ctrlAdd: TControl;
+  uList, oList: TList;
+  lineX : Integer;
+  nav : To2dbnavigator;
+begin
+  if Dsn8Register1.DsnStage.TargetsCount > 0 then
+  begin
+    ctrlCont := Dsn8Register1.DsnStage.Targets[0] as TWinControl;
+    // __________________________________ Grid: select all children controls ___
+    if ctrlCont.ClassName = 'To2table' then
+    begin
+      uList := TList.Create;
+      oList := TList.Create;
+      for i := 0 to ctrlCont.ControlCount - 1 do
+      begin
+        ctrlObj := ctrlCont.Controls[i];
+        // ______ Navigator: manage position and size according to container ___
+        if ctrlObj.ClassName = 'To2dbnavigator' then
+        begin
+          nav := ctrlObj as To2dbnavigator;
+          if (nav.Kind = sbHorizontal) then
+          begin
+            if nav.Width > (ctrlCont.Width - 10) then
+            begin
+              nav.Width := ctrlCont.Width - 10;
+            end;
+          ctrlObj.Top  := ctrlCont.Height - 30 - nav.Height;
+          ctrlObj.Left := 0;
+          end
+          else
+          begin
+            if nav.Height > (ctrlCont.Height - 70) then
+            begin
+              nav.Height := ctrlCont.Height - 70;
+            end;
+          ctrlObj.Top  := 40;
+          ctrlObj.Left := ctrlCont.Width - ctrlObj.Width - 10;
+          end;
+        end
+        // ______________________ Add other controls to list to be processed ___
+        else
+        begin
+          uList.Add(ctrlObj);
+        end;
+      end;
+      // ____________________ Sort controls in a new list from left to right ___
+      while uList.Count > 0 do
+      begin
+        ctrlAdd := nil;
+        for i := 0 to uList.Count - 1 do
+        begin
+          ctrlObj := uList[i];
+          if (ctrlAdd = nil) or (ctrlObj.Left < ctrlAdd.Left) then
+          begin
+            ctrlAdd := ctrlObj;
+          end;
+        end;
+        oList.Add(ctrlAdd);
+        uList.Remove(ctrlAdd);
+      end;
+      // ______________________________________ Move controls in sorted list ___
+      lineX := 0;
+      for i := 0 to oList.Count - 1 do
+      begin
+        ctrlObj      := oList[i];
+        ctrlObj.Top  := 10;
+        ctrlObj.Left := lineX;
+        lineX        := lineX + ctrlObj.Width;
+      end;
+      // _________________________________ Select all controls but navigator ___
+      DsnSelect1.MultipleSelect(oList);
+    end;
+  end;
+
 end;
 
 end.
