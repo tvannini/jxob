@@ -3178,8 +3178,8 @@ begin
         Sender.Value := oldName;
         Abort;
       end
-      // __________________________________________ New name is a valid name ___
-      else
+      // ______ New name is a valid name and we are editing an existing form ___
+      else if t_form.State <> dsInsert then
       begin
         t_controlliform.MasterSource := nil;
         t_controlliform.First;
@@ -3188,16 +3188,21 @@ begin
           // __________________________________ Change form name in controls ___
           if t_controlliformnomeform.Value = oldName then
           begin
-            t_controlliform.Edit;
-            t_controlliformnomeform.Value := newName;
-            if t_controlliformparent.Value = '_stage_' + oldName then
+            if (t_controlliformnomeform.Value <> newName) or
+               (t_controlliformparent.Value = '_stage_' + oldName) then
             begin
-              t_controlliformparent.Value := '_stage_' + newName;
+              t_controlliform.Edit;
+              t_controlliformnomeform.Value := newName;
+              if t_controlliformparent.Value = '_stage_' + oldName then
+              begin
+                t_controlliformparent.Value := '_stage_' + newName;
+              end;
+              t_controlliform.Post;
             end;
-            t_controlliform.Post;
           end;
           t_controlliform.Next;
         end;
+        t_controlliform.MasterSource := ds_form;
         // __________________________________ Check form name in expressions ___
         t_espressioni.First;
         r := TRegExpr.Create;
