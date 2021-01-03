@@ -1076,19 +1076,18 @@ begin
 end;
 
 
-
 procedure Tf_work.prg_sceltachiaveExecute(Sender: TObject);
 begin
   dm_form.t_tabelle.Locate('nome', dm_form.t_usa_filetabella.Value, []);
+  f_sceltachiave.ActualKey := dm_form.t_usa_filechiave.Value;
   f_sceltachiave.showModal;
   if f_sceltachiave.ModalResult = mrOk then
   begin
     dm_form.t_usa_file.Edit;
-    //      dm_form.t_usa_filechiave.Value:=f_sceltachiave.t_indicitestalocalnomekey.Value;
-    dm_form.t_usa_filechiave.Value := dm_form.t_indicitestanomekey.Value;
-
+    dm_form.t_usa_filechiave.Value := f_sceltachiave.ResultKey;
   end;
 end;
+
 
 procedure Tf_work.prg_sceltafiletaskExecute(Sender: TObject);
 begin
@@ -1228,11 +1227,12 @@ end;
 
 procedure Tf_work.zoom_defkeyClick(Sender: TObject);
 begin
+  f_sceltachiave.ActualKey := dm_form.t_tabellechiaveprimaria.Value;
   f_sceltachiave.ShowModal;
   if f_sceltachiave.ModalResult = mrOk then
   begin
     dm_form.t_tabelle.Edit;
-    dm_form.t_tabellechiaveprimaria.Value := dm_form.t_indicitestanomekey.Value;
+    dm_form.t_tabellechiaveprimaria.Value := f_sceltachiave.ResultKey;
   end;
 end;
 
@@ -1399,11 +1399,12 @@ begin
 
   if campo_in_grid_tabelle = 'chiaveprimaria' then
   begin
+    f_sceltachiave.ActualKey := dm_form.t_tabellechiaveprimaria.Value;
     f_sceltachiave.ShowModal;
     if f_sceltachiave.ModalResult = mrOk then
     begin
       dm_form.t_tabelle.Edit;
-      dm_form.t_tabellechiaveprimaria.Value := dm_form.t_indicitestanomekey.Value;
+      dm_form.t_tabellechiaveprimaria.Value := f_sceltachiave.ResultKey;
     end;
 
   end; //fine chiave primaria
@@ -1670,6 +1671,7 @@ begin
       dm_form.t_tabelle.Locate('nome', dm_form.t_usa_filetabella.Value, [])
     end;
 
+    f_sceltachiave.ActualKey := dm_form.t_usa_filechiave.Value;
     f_sceltachiave.showModal;
     if f_sceltachiave.ModalResult = mrOk then
     begin
@@ -1677,7 +1679,7 @@ begin
       if f_sceltachiave.e_expr.Text <> '' then
       dm_form.t_usa_filechiave.Value := '[o2exp_'+trim(f_sceltachiave.e_expr.Text)+']'
       else
-      dm_form.t_usa_filechiave.Value := dm_form.t_indicitestanomekey.Value;
+      dm_form.t_usa_filechiave.Value := f_sceltachiave.ResultKey;
     end;
 
   end;

@@ -40,7 +40,7 @@ type
     function err_o2par(testo: string): boolean;
     function errmodello(testo: string): boolean;
     function errtabella(testo: string): boolean;
-    function errchiave(testo: string): boolean;
+    function errchiave(IdxName: string): boolean;
     function errcampo(tabella: string; campo: string): boolean;
     function errexp(testo: string; necessaria : boolean = false): boolean;
     function errcss(testo: string): boolean;
@@ -932,18 +932,34 @@ begin
 end;
 
 
-function Tf_checkprg.errchiave(testo: string): boolean;
+function Tf_checkprg.errchiave(IdxName: string): boolean;
 var expr_local: string;
 begin
-
-  if (pos('[o2exp_', testo) > 0) then
+  // __________________________________ Index name is provided by expression ___
+  if (pos('[o2exp_', IdxName) > 0) then
   begin
-   expr_local := leftstr(trim(copy(testo, 8, 8)), length(trim(copy(testo, 8, 8))) - 1);
-   Result := errexp(expr_local, true);
+    expr_local := leftstr(trim(copy(IdxName, 8, 8)),
+                          length(trim(copy(IdxName, 8, 8))) - 1);
+    Result := errexp(expr_local, true);
   end
   else
-  Result := (testo <> dm_form.t_indicitesta.Lookup('nomekey', testo, 'nomekey'));
+  begin
+    // _____________________________________ Check index name in unique keys ___
+    if (IdxName = dm_form.t_indicitesta.Lookup('nomekey', IdxName, 'nomekey'))
+    then
+    begin
+      Result := False;
+    end
+    // _________________________________ Check index name in not unique keys ___
+    else
+    begin
+      Result := (IdxName <> dm_form.t_indicitestanu.Lookup('nomekey',
+                                                           IdxName,
+                                                           'nomekey'));
+    end;
+  end;
 end;
+
 
 function Tf_checkprg.errcampo(tabella, campo: string): boolean;
 begin

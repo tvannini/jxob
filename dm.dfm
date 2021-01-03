@@ -4140,4 +4140,119 @@ object dm_form: Tdm_form
       Size = 1
     end
   end
+  object t_indicitesta_all: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <
+      item
+        Name = 'id_tabella'
+        DataType = ftInteger
+      end
+      item
+        Name = 'id_indice'
+        DataType = ftInteger
+      end
+      item
+        Name = 'nomekey'
+        DataType = ftString
+        Size = 30
+      end
+      item
+        Name = 'unique'
+        DataType = ftBoolean
+      end>
+    IndexDefs = <
+      item
+        Name = 't_indicitestaIndex3'
+        Fields = 'id_tabella;id_indice'
+      end>
+    IndexFieldNames = 'id_tabella;id_indice'
+    MasterFields = 'Id'
+    MasterSource = ds_tabelle
+    Params = <>
+    StoreDefs = True
+    Left = 328
+    Top = 368
+    object t_indicitesta_allid_tabella: TIntegerField
+      FieldName = 'id_tabella'
+    end
+    object t_indicitesta_allid_indice: TIntegerField
+      FieldName = 'id_indice'
+    end
+    object t_indicitesta_allnomekey: TStringField
+      FieldName = 'nomekey'
+      OnSetText = t_indicitestanomekeySetText
+      Size = 30
+    end
+    object t_indicitesta_allunique: TBooleanField
+      FieldName = 'unique'
+    end
+  end
+  object t_indici_all: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <
+      item
+        Name = 'id_tabella'
+        DataType = ftInteger
+      end
+      item
+        Name = 'id_indice'
+        DataType = ftInteger
+      end
+      item
+        Name = 'id_segmento'
+        DataType = ftInteger
+      end
+      item
+        Name = 'segmento'
+        DataType = ftString
+        Size = 30
+      end
+      item
+        Name = 'direzione'
+        DataType = ftString
+        Size = 1
+      end>
+    IndexDefs = <
+      item
+        Name = 't_indiciIndex1'
+        Fields = 'id_tabella;id_indice;id_segmento'
+      end>
+    IndexFieldNames = 'id_tabella;id_indice;id_segmento'
+    MasterFields = 'id_tabella;id_indice'
+    MasterSource = ds_indicitesta_all
+    Params = <>
+    StoreDefs = True
+    Left = 400
+    Top = 368
+    object t_indici_allid_tabella: TIntegerField
+      FieldName = 'id_tabella'
+    end
+    object t_indici_allid_indice: TIntegerField
+      FieldName = 'id_indice'
+    end
+    object t_indici_allid_segmento: TIntegerField
+      FieldName = 'id_segmento'
+    end
+    object t_indici_allsegmento: TStringField
+      FieldName = 'segmento'
+      Size = 30
+    end
+    object t_indici_alldirezione: TStringField
+      DefaultExpression = #39'A'#39
+      FieldName = 'direzione'
+      Required = True
+      EditMask = '>L'
+      Size = 1
+    end
+  end
+  object ds_indicitesta_all: TDataSource
+    DataSet = t_indicitesta_all
+    Left = 328
+    Top = 416
+  end
+  object ds_indici_all: TDataSource
+    DataSet = t_indici_all
+    Left = 400
+    Top = 416
+  end
 end
