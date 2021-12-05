@@ -55,6 +55,8 @@ object f_import: Tf_import
         'l");'
       #9'o2def::field("pwds_history", "pwds_history", "o2sys_long_str");'
       #9'o2def::field("no_pwd_change", "no_pwd_change", "_o2logical");'
+      #9'o2def::field("creation_date", "creation_date", "_o2date");'
+      #9'o2def::field("admin", "admin", "_o2logical");'
       ''
       #9'o2def::index("o2user", "o2user","A");'
       #9'o2def::index("asp_area", "area","A", "o2user","A");')
