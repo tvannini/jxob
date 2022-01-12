@@ -2746,19 +2746,18 @@ var
   appoggio: string;
 begin
   stringa := trim(stringa);
-  if (pos('()', stringa) <> 0) and (pos('_exp_', stringa) <> 0) then
-    // espressione
+  if ((stringa = '') or (stringa = 'null')) then
   begin
-    appoggio := copy(stringa, pos('_exp_', stringa) + 5, 20);
-    appoggio := leftstr(appoggio, length(trim(appoggio)) - 2);
-    Result   := '[o2exp_' + appoggio + ']';
-    Exit;
-  end;
-  if trim(stringa) = 'null' then
-  begin
-    Result := ''
+    Result := '';
   end
-  else begin
+  else if (StrRight(stringa, 2) = '()') then
+  begin
+    appoggio := StrRight(stringa, pos('_pxe_', ReverseString(stringa)) - 1);
+    appoggio := leftstr(appoggio, length(appoggio) - 2);
+    Result   := '[o2exp_' + appoggio + ']';
+  end
+  else
+  begin
     Result := copy(stringa, 2, length(stringa) - 2)
   end;
 end;
