@@ -6,12 +6,12 @@
  *
  * @name      jxconv
  * @package   janox/bin/jxconv.php
- * @version   2.6
+ * @version   2.7
  * @copyright Tommaso Vannini (tvannini@janox.it) 2007
  * @author    Tommaso Vannini (tvannini@janox.it)
  */
 
-$jxrel = "2.6";
+$jxrel = "2.7";
 $info  = <<<JANOX_SCRIPT_HEAD
 
                       Janox Upgrade Tool
@@ -300,7 +300,6 @@ function add_tab_field($code, $table, $field, $name, $model) {
     $res   = preg_match_all('/o2def::tab\("'.$table.
                             '",[^;]*\);\s+(o2def::field\([^;]+\);\s+)++o2def::index/',
                             $code, $parts, PREG_OFFSET_CAPTURE);
-
     // _____________________________________ Check for field already existing in table ___
     if (preg_match('/o2def::field\(\s*[\'"]'.$field.'[\'"]\s*,/', $parts[0][0][0]) ===0) {
         // ________________________________________________ Last field definition code ___
@@ -894,9 +893,11 @@ class upgrades_collection {
      *
      * Add fields to system tables:
      *  - jx_running_jobs
-     *     - run_sessid   Session ID of process
+     *     - run_sessid        Session ID of process
      *  - o2_sessions:
-     *     - run_mode   Session execution mode [WEB | JOB | CMD | RPC]
+     *     - run_mode          Session execution mode [WEB | JOB | CMD | RPC]
+     *  - jx_scheduler:
+     *     - sched_all_hosts   Flag to schedule task for all active hosts
      *
      * @param string $app_name Application name
      * @param jxdir  $app_dir  Application root directory
@@ -912,6 +913,15 @@ class upgrades_collection {
             }
         else {
             $tables = 'file_repository.inc';
+            }
+        // _______________ Read viewmodels-repository file from INI or use default one ___
+        $parts = array();
+        preg_match('/viewmodels\s*=\s*"([^"]*)"/', $ini_content, $parts);
+        if ($parts[1]) {
+            $viewmodels = $parts[1];
+            }
+        else {
+            $viewmodels = '_o2viewmodels.inc';
             }
         // ________________________________________________ Get tables definition code ___
         $code = file_get_contents($app_dir.'prgs'.DIRECTORY_SEPARATOR.$tables);
@@ -940,6 +950,92 @@ class upgrades_collection {
                               'host',
                               'host',
                               'jxhost');
+        $code = add_tab_field($code,
+                              'jx_scheduler',
+                              'sched_all_hosts',
+                              'sched_all_hosts',
+                              '_o2logical');
+        // ____________________________________________ Write down new repository code ___
+        file_put_contents($app_dir.'prgs'.DIRECTORY_SEPARATOR.$tables, $code);
+        // _______________________________ Add data-model to formulas and SQL-formulas ___
+        $dir   = new dir_descriptor($app_dir."prgs/");
+        $files = $dir->get_elements();
+        $prgs  = array();
+        // _________________________________________________ Loop on folder files list ___
+        while ($file = array_shift($files)) {
+            // ___________________________________________________ Make all stuff here ___
+            if ($file->ext == "prf" || $file->short_name == $viewmodels) {
+                $prf = $file->full_name;
+                if (file_exists($prf)) {
+                    // _________________________________ Convert viewmodels-repository ___
+                    if ($file->name == '_o2viewmodels' ||
+                        $file->short_name == $viewmodels) {
+                        $prf_txt = file_get_contents($prf);
+                        if (strpos($prf_txt, '->calcola(') ||
+                            strpos($prf_txt, '->sql_formula(')) {
+                            // __________________________ Add data-model in definition ___
+                            $prf_txt = preg_replace('/->(calcola|sql_formula)\('.
+                                                    '(\$\w+->nome\.[\'"]_[\'"]\.'.
+                                                    '[\'"]\w+[\'"]),\s*([^;]*)\);/',
+                                                    '->$1($2,"o2sys_long_str",$3);',
+                                                    $prf_txt);
+                            file_put_contents($prf, $prf_txt);
+                            }
+                        }
+                    // _____________________________________ Covert standard prf files ___
+                    else {
+                        $prf_txt = file_get_contents($prf);
+                        if (strpos($prf_txt, '->calcola(') ||
+                            strpos($prf_txt, '->sql_formula(')) {
+                            // __________________________ Add data-model in definition ___
+                            $prf_txt = preg_replace('/->(calcola|sql_formula)\('.
+                                                    '[\'"](\w+)[\'"],\s*([^;]*)\);/',
+                                                    '->$1("$2","o2sys_long_str",$3);',
+                                                    $prf_txt);
+                            file_put_contents($prf, $prf_txt);
+                            }
+                        }
+                    }
+                }
+            // _________________________________________ Add sub folders files to list ___
+            elseif ($file->type == "D") {
+                $files+= $file->get_elements();
+                }
+            }
+
+        }
+
+
+    /**
+     * Upgrades application to release 2.7
+     *
+     * Add fields to system tables:
+     *  - o2_users:
+     *     - admin   User administrator flag
+     *
+     * @param string $app_name Application name
+     * @param jxdir  $app_dir  Application root directory
+     */
+    static function to2_7($app_name, $app_dir) {
+
+        // ______________________ Read tab-repository file from INI or use default one ___
+        $ini_content = file_get_contents($app_dir.$app_name.".ini");
+        $parts       = array();
+        preg_match('/tables\s*=\s*"([^"]*)"/', $ini_content, $parts);
+        if ($parts[1]) {
+            $tables = $parts[1];
+            }
+        else {
+            $tables = 'file_repository.inc';
+            }
+        // ________________________________________________ Get tables definition code ___
+        $code = file_get_contents($app_dir.'prgs'.DIRECTORY_SEPARATOR.$tables);
+        // ____________________________________________________________ Add new fields ___
+        $code = add_tab_field($code,
+                              'o2_users',
+                              'admin',
+                              'admin',
+                              '_o2logical');
         // ____________________________________________ Write down new repository code ___
         file_put_contents($app_dir.'prgs'.DIRECTORY_SEPARATOR.$tables, $code);
 
