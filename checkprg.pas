@@ -1435,18 +1435,14 @@ begin
   begin
     Result := False
   end
-  else begin
-    if Pos('[o2exp_', testo) = 0 then
-    begin
-      Result := f_scelta_css.ListView1.FindCaption(-1, testo, False, False, False) = nil
-    end;
-
-    if Pos('[o2exp_', testo) <> 0 then
-    begin
-      Result := errexp(copy(ExtractWord(2, testo, ['_']), 1,
-        length(ExtractWord(2, testo, ['_'])) - 1))
-    end;
-
+  else if StrLeft(testo, 7) = '[o2exp_' then
+  begin
+    Result := errexp(copy(ExtractWord(2, testo, ['_']), 1,
+                          length(ExtractWord(2, testo, ['_'])) - 1))
+  end
+  else
+  begin
+    Result := f_scelta_css.ListView1.FindCaption(-1, testo, False, False, False) = nil
   end;
 
 end;
