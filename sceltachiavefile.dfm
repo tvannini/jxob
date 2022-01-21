@@ -39,6 +39,7 @@ object f_sceltachiave: Tf_sceltachiave
     Caption = '&Ok'
     ModalResult = 1
     TabOrder = 1
+    OnClick = selectOk
   end
   object e_expr: TEdit
     Left = 160
