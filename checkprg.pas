@@ -1513,14 +1513,24 @@ begin
             '. Expression "'+ t_operazioniexp2.AsString +'" not found')
         end;
 
-        // operatore RECORDSET (Controllo la view)
+        // _________________________ operatore RECORDSET (Controllo la view) ___
         if t_operazionioperazione.Value = 'Recordset' then
         begin
-
-          IF errview(t_operazioniview_calc.Value)  then
+          if errview(t_operazioniview_calc.Value) then
           begin
-            Memo2.Lines.Append('Action: ' + nome_azione + ' Line: ' + t_operazioniid.AsString +
-            '. View "'+ t_operazioniview_calc.Value +'" not found.');
+            Memo2.Lines.Append('Action: ' + nome_azione +
+                               ' Line: ' + t_operazioniid.AsString +
+                               '. View "'+ t_operazioniview_calc.Value +
+                               '" not found.');
+          end;
+          if ((t_operazionio2ref_wide.Value =
+               t_operazioniview_calc.Value + ' :: Locate') and
+              (trim(t_operazionicallparam.Value) = '')) then
+          begin
+            Memo2.Lines.Append('Action: ' + nome_azione +
+                               ' Line: ' + t_operazioniid.AsString +
+                               '. View "'+ t_operazioniview_calc.Value +
+                               '": missing parameters in locate.');
           end;
         end;
 

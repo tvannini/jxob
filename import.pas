@@ -2525,7 +2525,15 @@ begin
                   par5 := copy(par5, 7, 2000);
                   par5 := copy(trim(par5), 1, length(trim(par5)) - 1);
                   num1 := StrStrCount(par5, '=>');
-                  par6 := IntToStr(num1);
+                  if (num1 < 1) then
+                  begin
+                    par5 := '';
+                    par6 := '0';
+                  end
+                  else
+                  begin
+                    par6 := IntToStr(num1);
+                  end;
                 end;
 
               end;   //fine recordset
