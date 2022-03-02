@@ -195,26 +195,19 @@ var
   parent_orizzontalAlign, parent_verticalAlign : string;
 begin
   DsnSwitch1.DesignOff;
-  DsnInspector1.Position.Left := f_work.settings.ReadInteger('Forms',
-                                                            'ObjectInspector_x',
-                                                             100);
-  DsnInspector1.Position.Top := f_work.settings.ReadInteger('Forms',
-                                                            'ObjectInspector_y',
-                                                            100);
   // ______________________________________________________ Design area size ___
-  SidePanelWidth    := f_oggettiform.Width;
-  ContentDock.Width := SidePanelWidth;
+  SidePanelWidth    := ContentDock.Width;
   Self.Width        := StrToInt(f_work.e_res_x.Text) + SidePanelWidth;
   Self.Height       := StrToInt(f_work.e_res_y.Text);
   larghezza_form    := Self.Width;
   altezza_form      := Self.Height;
-  // _________________________________________________ Project images folder ___
-  OpenPictureDialog1.InitialDir := f_work.workdir + 'htdocs\img';
   // ______________________________________________ Prepare controls palette ___
   f_oggettiForm.ComboBox1.Items.Clear;
   f_oggettiForm.ComboBox1.Text := '';
   f_oggettiForm.ManualDock(f_areaform.PaletteDock);
   DsnInspector1.DockTo(f_areaform.InspectorDock);
+  // _________________________________________________ Project images folder ___
+  OpenPictureDialog1.InitialDir := f_work.workdir + 'htdocs\img';
   // ____________________________________________________________ Load forms ___
   dm_form.t_form.First;
   repeat
@@ -3884,9 +3877,10 @@ procedure Tf_areaform.Splitter1Moved(Sender: TObject);
 var
   i, delta : integer;
 begin
-  delta            := Splitter1.Left - SidePanelWidth;
-  SidePanelWidth   := Splitter1.Left;
+  delta            := ContentDock.Width - SidePanelWidth;
+  SidePanelWidth   := ContentDock.Width;
   f_areaform.Width := f_areaform.Width + delta;
+  larghezza_form   := f_areaform.Width;
   for i := 0 to f_areaform.ControlCount - 1 do
   begin
     if f_areaform.Controls[i].ClassName = 'TJvCaptionPanel' then

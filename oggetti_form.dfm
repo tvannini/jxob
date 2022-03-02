@@ -1,6 +1,6 @@
 object f_oggettiform: Tf_oggettiform
   Left = 1404
-  Top = 127
+  Top = 130
   Width = 275
   Height = 570
   Caption = 'Controls'

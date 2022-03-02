@@ -1,6 +1,6 @@
 object f_areaform: Tf_areaform
   Left = 360
-  Top = 125
+  Top = 128
   Width = 1024
   Height = 730
   BorderIcons = [biSystemMenu]
