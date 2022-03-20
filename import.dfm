@@ -1,6 +1,6 @@
 object f_import: Tf_import
   Left = 356
-  Top = 106
+  Top = 114
   Width = 779
   Height = 675
   Caption = 'f_import'

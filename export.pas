@@ -2398,9 +2398,29 @@ begin
               if t_operazionicallparam.Value <> '' then
               begin
                 exp4 := 'array(' + t_operazionicallparam.Value + ')';
-                // sostituisce nome prg in caso di copia prg
-                if newnomeprg <> '' then exp4:=StringReplace(exp4, trim(dm_form.t_programminome.Value) +'_exp', trim(newnomeprg) + '_exp', [rfReplaceAll]);
-
+                // _______________ Sostituisce nome prg in caso di copia prg ___
+                if newnomeprg <> '' then
+                begin
+                  exp4 := StringReplace(exp4,
+                                        trim(dm_form.t_programminome.Value) +
+                                        '_exp',
+                                        trim(newnomeprg) + '_exp',
+                                        [rfReplaceAll]);
+                end
+              end
+              // ____________ expression of snapshot name for Snapshot start ___
+              else if (exp3 = 'SS') and (t_operazioniexp1.Value > 0) then
+              begin
+                exp4 := nomeprg + '_exp_' + t_operazioniexp1.AsString + '()';
+                // _______________ Sostituisce nome prg in caso di copia prg ___
+                if newnomeprg <> '' then
+                begin
+                  exp4 := StringReplace(exp4,
+                                        trim(dm_form.t_programminome.Value) +
+                                        '_exp',
+                                        trim(newnomeprg) + '_exp',
+                                        [rfReplaceAll]);
+                end
               end
               else begin
                 exp4 := '""'

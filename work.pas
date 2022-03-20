@@ -5361,7 +5361,9 @@ begin
     if (grid.SelectedField.Value > 0) and
        (((grid.SelectedField.FieldName = 'exp1') and
          (dm_form.t_operazionioperazione.Value <> 'Call program') and
-         (dm_form.t_operazionioperazione.Value <> 'Go to program')) or
+         (dm_form.t_operazionioperazione.Value <> 'Go to') and
+         ((dm_form.t_operazionioperazione.Value <> 'Recordset') or
+          (posEx('Snapshot start', dm_form.t_operazionio2ref_wide.Value, 1) > 0))) or
         (grid.SelectedField.FieldName = 'exp2')) then
     begin
       dm_form.t_espressioni.Locate('idexp', grid.SelectedField.Value, []);
@@ -7097,7 +7099,8 @@ begin
     end;  //fine recordset
 
     //per gli altri chiama scelta espressioni
-    if (dm_form.t_operazionioperazione.Value <> 'Recordset') and
+    if ((dm_form.t_operazionioperazione.Value <> 'Recordset') or
+        (PosEx('::Snapshot start', dm_form.t_operazionio2ref.Value, 1) > 0)) and
        (dm_form.t_operazionioperazione.Value <> 'Call program') and
        ((dm_form.t_operazionioperazione.Value <> 'Go to') or
         (dm_form.t_operazionitipologia.Value = 'url')) then

@@ -2519,6 +2519,7 @@ begin
                 end;
 
                 par3 := trim(par3) + par8;
+                // __________________________________ Read params for Locate ___
                 if par8 = 'Locate' then
                 begin
                   par5 := copy(selezione3, PosEx('array(', selezione3), 2000);
@@ -2533,6 +2534,18 @@ begin
                   else
                   begin
                     par6 := IntToStr(num1);
+                  end;
+                end
+                // ___________________________ Read param for Snapshot start ___
+                else if par8 = 'Snapshot start' then
+                begin
+                  // ____________________________________________ exp1 value ___
+                  par6 := trim(extractword(3, selezione3, [',']));
+                  par6 := trim(copy(par6, length(trim(nomeprg)) + 6, 10));
+                  par6 := (copy(trim(par6), 1, length(trim(par6)) - 2));
+                  if par6 = '' then
+                  begin
+                    par6 := '0';
                   end;
                 end;
 
