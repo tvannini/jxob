@@ -1130,9 +1130,9 @@ begin
           // _______ Replace in o2val(), o2pre() and o2zero() in expressions ___
           r.Expression := 'o2(\w+)\s*\(\s*["' + #39 + ']' + t_tasknome.Value +
                                          '["' + #39 + ']\s*,\s*["' + #39 + ']' +
-                                        Sender.AsString + '["' + #39 + ']\s*\)';
+                                        Sender.AsString + '["' + #39 + ']\s*';
           str_new      := 'o2$1(' + #39 + t_tasknome.Value + #39 + ', ' +
-                                    #39 + newName + #39 + ')';
+                                    #39 + newName + #39;
           t_espressioni.First;
           while not t_espressioni.EOF do
           begin
@@ -1498,9 +1498,9 @@ begin
       r.Expression              := 'o2(\w+)\s*\(\s*["' + #39 + ']' +
                                    'prg§_§var["' + #39 + ']\s*,\s*["' + #39 +
                                    ']' + Sender.AsString +
-                                   '["' + #39 + ']\s*\)';
+                                   '["' + #39 + ']\s*';
       str_new                   := 'o2$1(' + #39 + 'prg§_§var' + #39 + ',' +
-                                             #39 + newName + #39 + ')';
+                                             #39 + newName + #39;
       t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
                                              str_new,
                                              True);
