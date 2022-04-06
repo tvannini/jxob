@@ -1,6 +1,6 @@
 object f_sceltaexpr: Tf_sceltaexpr
   Left = 345
-  Top = 164
+  Top = 179
   Width = 810
   Height = 615
   Caption = 'Expression selection'

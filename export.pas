@@ -2385,6 +2385,10 @@ begin
               begin
                 exp3 := 'SS';
               end
+              else if exp2 = 'Snapshot attach' then
+              begin
+                exp3 := 'SA';
+              end
               else if exp2 = 'Snapshot sync' then
               begin
                 exp3 := 'SM';
@@ -2408,8 +2412,9 @@ begin
                                         [rfReplaceAll]);
                 end
               end
-              // ____________ expression of snapshot name for Snapshot start ___
-              else if (exp3 = 'SS') and (t_operazioniexp1.Value > 0) then
+              // ____ Snapshot name exp for Snapshot start & Snapshot attach ___
+              else if ((exp3 = 'SS') or (exp3 = 'SA')) and
+                      (t_operazioniexp1.Value > 0) then
               begin
                 exp4 := nomeprg + '_exp_' + t_operazioniexp1.AsString + '()';
                 // _______________ Sostituisce nome prg in caso di copia prg ___

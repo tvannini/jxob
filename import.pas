@@ -2505,6 +2505,10 @@ begin
                 begin
                   par8 := 'Snapshot start';
                 end
+                else if par8 = 'SA' then
+                begin
+                  par8 := 'Snapshot attach';
+                end
                 else if par8 = 'SM' then
                 begin
                   par8 := 'Snapshot sync';
@@ -2536,8 +2540,9 @@ begin
                     par6 := IntToStr(num1);
                   end;
                 end
-                // ___________________________ Read param for Snapshot start ___
-                else if par8 = 'Snapshot start' then
+                // _________ Read param for Snapshot start & Snapshot attach ___
+                else if ((par8 = 'Snapshot start') or
+                         (par8 = 'Snapshot attach')) then
                 begin
                   // ____________________________________________ exp1 value ___
                   par6 := trim(extractword(3, selezione3, [',']));

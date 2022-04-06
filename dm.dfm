@@ -1,7 +1,7 @@
 object dm_form: Tdm_form
   OldCreateOrder = False
   Left = 362
-  Top = 156
+  Top = 167
   Height = 805
   Width = 1050
   object ds_tabelle: TDataSource

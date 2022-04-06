@@ -1,6 +1,6 @@
 object f_work: Tf_work
   Left = 352
-  Top = 148
+  Top = 163
   Width = 1100
   Height = 760
   Caption = 'Janox Open Builder'

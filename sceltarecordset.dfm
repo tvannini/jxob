@@ -1,8 +1,8 @@
 object f_sceltarecordset: Tf_sceltarecordset
   Left = 423
   Top = 242
-  Width = 400
-  Height = 433
+  Width = 402
+  Height = 467
   Caption = 'Recordset options'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,7 +21,7 @@ object f_sceltarecordset: Tf_sceltarecordset
     Left = 0
     Top = 0
     Width = 240
-    Height = 345
+    Height = 377
     Ctl3D = False
     DataSource = dm_form.ds_task
     Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgCancelOnExit]
@@ -47,7 +47,7 @@ object f_sceltarecordset: Tf_sceltarecordset
     Left = 241
     Top = 0
     Width = 151
-    Height = 345
+    Height = 377
     Columns = <
       item
         Caption = 'Action on recordset'
@@ -60,7 +60,7 @@ object f_sceltarecordset: Tf_sceltarecordset
     Font.Name = 'MS Sans Serif'
     Font.Style = []
     Items.Data = {
-      9F0200001600000000000000FFFFFFFFFFFFFFFF000000000000000005466972
+      C30200001700000000000000FFFFFFFFFFFFFFFF000000000000000005466972
       737400000000FFFFFFFFFFFFFFFF00000000000000000D50726576696F757320
       7061676500000000FFFFFFFFFFFFFFFF00000000000000000C50726576696F75
       7320726F7700000000FFFFFFFFFFFFFFFF0000000000000000084E6578742072
@@ -79,8 +79,10 @@ object f_sceltarecordset: Tf_sceltarecordset
       00000000000013507265706172652062756C6B20696E7365727400000000FFFF
       FFFFFFFFFFFF00000000000000000842756C6B20656E6400000000FFFFFFFFFF
       FFFFFF00000000000000000E536E617073686F7420737461727400000000FFFF
-      FFFFFFFFFFFF00000000000000000D536E617073686F742073796E6300000000
-      FFFFFFFFFFFFFFFF00000000000000000E536E617073686F7420636C656172}
+      FFFFFFFFFFFF00000000000000000F536E617073686F74206174746163680000
+      0000FFFFFFFFFFFFFFFF00000000000000000D536E617073686F742073796E63
+      00000000FFFFFFFFFFFFFFFF00000000000000000E536E617073686F7420636C
+      656172}
     ReadOnly = True
     ParentFont = False
     TabOrder = 1
@@ -89,7 +91,7 @@ object f_sceltarecordset: Tf_sceltarecordset
   end
   object BitBtn1: TBitBtn
     Left = 160
-    Top = 368
+    Top = 400
     Width = 75
     Height = 25
     Caption = '&Select'
@@ -98,7 +100,7 @@ object f_sceltarecordset: Tf_sceltarecordset
   end
   object pop: TPopupMenu
     Left = 32
-    Top = 360
+    Top = 384
     object Actions1: TMenuItem
       Caption = 'Change list'
       ShortCut = 16393
