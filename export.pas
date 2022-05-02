@@ -2151,12 +2151,15 @@ begin
               begin
                 exp1 := '0'
               end
-              else
-              if t_operazionio2ref.Value = 'Status bar' then
+              else if t_operazionio2ref.Value = 'Status bar' then
               begin
                 exp1 := '1'
               end
-              else exp1 := '2';
+              else if t_operazionio2ref.Value = 'Popup' then
+              begin
+                exp1 := '2'
+              end
+              else exp1 := '3';
 
               buffer := inizioact + 'o2act::' + istruzione + '(' +
                 nomeprg + '_exp_' + t_operazioniexp1.AsString + '()' + ', ' +

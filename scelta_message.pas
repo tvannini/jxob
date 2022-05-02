@@ -13,7 +13,9 @@ type
     PopupMenu1: TPopupMenu;
     Exit1: TMenuItem;
     BitBtn2: TBitBtn;
+    btn_report: TBitBtn;
     procedure btn_barClick(Sender: TObject);
+    procedure btn_reportClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
@@ -34,6 +36,12 @@ implementation
 procedure Tf_message.btn_barClick(Sender: TObject);
 begin
   scelta      := 'Status bar';
+  ModalResult := mrOk;
+end;
+
+procedure Tf_message.btn_reportClick(Sender: TObject);
+begin
+  scelta      := 'Report';
   ModalResult := mrOk;
 end;
 

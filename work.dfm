@@ -1,6 +1,6 @@
 object f_work: Tf_work
-  Left = 352
-  Top = 163
+  Left = 426
+  Top = 145
   Width = 1100
   Height = 760
   Caption = 'Janox Open Builder'
@@ -837,7 +837,7 @@ object f_work: Tf_work
         Top = 0
         Width = 862
         Height = 607
-        ActivePage = ts_variabili_prg
+        ActivePage = ts_azioni
         Align = alClient
         Style = tsButtons
         TabOrder = 1

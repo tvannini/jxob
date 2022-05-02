@@ -2574,10 +2574,13 @@ begin
                 begin
                   par3 := 'Box'
                 end
-                else
-                if trim(par3) = '1' then
+                else if trim(par3) = '1' then
                 begin
                   par3 := 'Status bar'
+                end
+                else if trim(par3) = '3' then
+                begin
+                  par3 := 'Report'
                 end
                 else par3:='Popup';
 

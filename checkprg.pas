@@ -1683,9 +1683,12 @@ begin
             if errexp(t_operazioniexp1.AsString, true) then Memo2.Lines.Append('Action: ' + nome_azione + ' Line: ' + t_operazioniid.AsString +
                                   '. Expression "'+ t_operazioniexp1.AsString +'" not found') ;
 
-            if (t_operazionio2ref.Value <> 'Status bar') and (t_operazionio2ref.Value <> 'Box')  and (t_operazionio2ref.Value <> 'Popup')  then
-                                  Memo2.Lines.Append('Action: ' + nome_azione + ' Line: ' + t_operazioniid.AsString +
-                                  '. Message can be only in "Box" or "Status bar" mode');
+            if (t_operazionio2ref.Value <> 'Status bar') and
+               (t_operazionio2ref.Value <> 'Box') and
+               (t_operazionio2ref.Value <> 'Popup') and
+               (t_operazionio2ref.Value <> 'Report') then
+                 Memo2.Lines.Append('Action: ' + nome_azione + ' Line: ' + t_operazioniid.AsString +
+                                    '. Wrong media for message.');
 
         end;
 

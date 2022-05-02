@@ -2,7 +2,7 @@ object f_message: Tf_message
   Left = 409
   Top = 301
   Width = 148
-  Height = 158
+  Height = 184
   Caption = 'Select'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,31 +20,40 @@ object f_message: Tf_message
     Top = 16
     Width = 105
     Height = 25
-    Caption = 'Message box'
+    Caption = 'Message &box'
     TabOrder = 0
     OnClick = BitBtn1Click
   end
   object btn_bar: TBitBtn
     Left = 16
-    Top = 48
+    Top = 112
     Width = 105
     Height = 25
-    Caption = 'Status bar'
-    TabOrder = 1
+    Caption = '&Status bar'
+    TabOrder = 3
     OnClick = btn_barClick
   end
   object BitBtn2: TBitBtn
     Left = 16
+    Top = 48
+    Width = 105
+    Height = 25
+    Caption = '&Popup'
+    TabOrder = 1
+    OnClick = BitBtn2Click
+  end
+  object btn_report: TBitBtn
+    Left = 16
     Top = 80
     Width = 105
     Height = 25
-    Caption = 'Popup'
+    Caption = '&Report'
     TabOrder = 2
-    OnClick = BitBtn2Click
+    OnClick = btn_reportClick
   end
   object PopupMenu1: TPopupMenu
-    Left = 8
-    Top = 80
+    Left = 104
+    Top = 120
     object Exit1: TMenuItem
       Caption = 'Exit'
       ShortCut = 27
