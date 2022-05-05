@@ -2638,38 +2638,46 @@ end;
 
 procedure Tdm_form.t_tabelleIdSetText(Sender: TField; const Text: String);
 begin
-  // cambia i collegati
+  // __________________________________________________ Change linked tables ___
   if (Sender.Value <> null) and (t_tabelle.State <> dsInsert) then
   begin
-//    t_campi.Filter:='id_tabella = '+t_tabelleId.AsString;
-//    t_campi.Filtered:=true;
+    // _________________________________________________ Change table fields ___
     t_campi.First;
     while not (t_campi.Eof) do
     begin
       t_campi.Edit;
-      t_campiid_tabella.Value:= StrToInt(Text);
+      t_campiid_tabella.Value := StrToInt(Text);
       t_campi.Post;
     end;
-
-//    t_indicitesta.Filter:='id_tabella = '+t_tabelleId.AsString;
-//    t_indicitesta.Filtered:=true;
+    // ________________________________________________ Change table indexes ___
     t_indicitesta.First;
     while not (t_indicitesta.Eof) do
     begin
-//      t_indici.Filter:='id_tabella = '+t_tabelleId.AsString +' and id_indice = '+ t_indicitestaid_indice.AsString ;
-//      t_indici.Filtered:=true;
       t_indici.First;
       while not (t_indici.Eof) do
       begin
         t_indici.Edit;
-        t_indiciid_tabella.Value:=strtoint(Text);
+        t_indiciid_tabella.Value := strtoint(Text);
         t_indici.Post;
       end;
       t_indicitesta.Edit;
-      t_indicitestaid_tabella.Value:=StrToInt(Text);
-
+      t_indicitestaid_tabella.Value := StrToInt(Text);
       t_indicitesta.Post;
-
+    end;
+    // _____________________________________ Change table not unique indexes ___
+    t_indicitestanu.First;
+    while not (t_indicitestanu.Eof) do
+    begin
+      t_indicinu.First;
+      while not (t_indicinu.Eof) do
+      begin
+        t_indicinu.Edit;
+        t_indicinuid_tabella.Value := strtoint(Text);
+        t_indicinu.Post;
+      end;
+      t_indicitestanu.Edit;
+      t_indicitestanuid_tabella.Value := StrToInt(Text);
+      t_indicitestanu.Post;
     end;
   end;
   Sender.Value := Text;
