@@ -69,7 +69,7 @@ object f_sceltaexpr: Tf_sceltaexpr
     Top = 358
     Width = 802
     Height = 189
-    ActivePage = ts_script
+    ActivePage = ts_checkresult
     Align = alBottom
     TabOrder = 1
     OnChange = PageControl1Change

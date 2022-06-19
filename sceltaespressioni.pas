@@ -151,9 +151,14 @@ end;
 
 procedure Tf_sceltaexpr.comandoTerminated(Sender: TObject);
 begin
-  if (leftstr(Memo1.Lines.Text, 25) <> 'No syntax errors detected') then
+  if (leftstr(Memo1.Lines.Text, 16) <> 'No syntax errors') then
   begin
     PageControl1.ActivePage := ts_checkresult;
+    Memo1.Color             := $324BF3;
+  end
+  else
+  begin
+    Memo1.Color := $FFFFFF;
   end;
 end;
 
@@ -163,13 +168,21 @@ var
   buffer: string;
 begin
   Memo1.Lines.Clear;
+  // __________________________ Check for RETURN statement inside expression ___
+  if Pos('return', StrLower(PChar(dm_form.t_espressionireturn.AsString + ' ' +
+                                  dm_form.t_espressioniexpr.AsString))) > 0 then
+  begin
+    Memo1.Lines.add('ERROR: the RETURN statement is not allowed in expressions!');
+    comandoTerminated(Sender);
+    Exit;
+  end;
   buffer := '<?php function jxcheckexp() {' + dm_form.t_espressioniexpr.AsString +
             ' return (' + dm_form.t_espressionireturn.Value + ');} ?>';
   Memo1.Lines.add(buffer);
   Memo1.Lines.SaveToFile(f_work.tempdir + 'check_exp.tmp');
   Memo1.Lines.Clear;
 
-  // chiama php.exe per controllo sintattico
+  // _______________________________ chiama php.exe per controllo sintattico ___
   comando.OutputLines := Memo1.Lines;
   comando.CommandLine := ExtractFileDir(Application.ExeName) + '\php.exe -l ' +
                          f_work.tempdir + 'check_exp.tmp';
