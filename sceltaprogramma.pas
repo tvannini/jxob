@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Menus, StdCtrls, Grids, DBGrids, DBCtrls, DB, DBClient,
-  ComCtrls, StrUtils, JvComponent, JvSearchFiles, Jclstrings;
+  ComCtrls, StrUtils;
 
 type
   Tf_sceltaprogramma = class(TForm)
@@ -13,15 +13,13 @@ type
     PopupMenu1: TPopupMenu;
     scelta1: TMenuItem;
     Uscita: TMenuItem;
-    ListView1: TListView;
-    JvSearchFile1: TJvSearchFiles;
     e_expr: TEdit;
     Label1: TLabel;
     Expr1: TMenuItem;
     cb_persistent: TCheckBox;
+    prgs: TListBox;
     procedure UscitaClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure JvSearchFile1FindFile(Sender: TObject; const AName: string);
     procedure e_exprDblClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
   private
@@ -49,40 +47,29 @@ end;
 
 
 procedure Tf_sceltaprogramma.FormShow(Sender: TObject);
+var
+  SR: TSearchRec;
 begin
-  ListView1.Clear;
-  JvSearchFile1.RootDirectory       := f_work.prgdir;
-  JvSearchFile1.FileParams.FileMask := '*.prg';
-  JvSearchFile1.Search();
+  prgs.Clear;
+  if FindFirst(f_work.prgdir + '*.prg', faAnyFile, SR) = 0 then
+  begin
+    repeat
+      if SR.Name <> '_o2viewmodels.prg' then
+      begin
+        prgs.AddItem(LeftStr(SR.Name, Length(SR.Name) - 4), nil);
+      end;
+    until FindNext(SR) <> 0;
+    FindClose(SR);
+  end;
+  // __________________________________________________ Set selection if any ___
   if scelta <> '' then
   begin
-    ListView1.Selected := ListView1.FindCaption(-1,
-                                                scelta,
-                                                false,
-                                                false,
-                                                false);
+    prgs.ItemIndex := prgs.Items.IndexOf(scelta);
+  end
+  else begin
+    prgs.ItemIndex := 0;
   end;
-  if ListView1.Selected = nil then
-  begin
-    ListView1.Selected := ListView1.TopItem;
-  end;
-  ListView1.Scroll(0, ListView1.Selected.GetPosition.Y - 100);
-  ListView1.ItemFocused := ListView1.Selected;
-
-end;
-
-
-procedure Tf_sceltaprogramma.JvSearchFile1FindFile(Sender: TObject;
-                                                   const AName: string);
-var
-  nomeprg: string;
-begin
-  nomeprg := trim(copy(AName, length(f_work.prgdir) + 1, 300));
-  nomeprg := strtoken(nomeprg, '.');
-  if nomeprg <> '_o2viewmodels' then
-  begin
-    ListView1.AddItem(nomeprg, nil);
-  end;
+  prgs.SetFocus;
 
 end;
 
@@ -98,15 +85,18 @@ begin
   end;
 end;
 
+
 procedure Tf_sceltaprogramma.Button1Click(Sender: TObject);
 begin
-  // aggiorna scelta
   if e_expr.Text <> '' then
-   scelta:='[o2exp_'+trim(e_expr.Text) +']'
-   else
-   scelta:=ListView1.Selected.Caption;
-
-  ModalResult:=mrOk;
+  begin
+    scelta:='[o2exp_' + trim(e_expr.Text) + ']';
+  end
+  else
+  begin
+    scelta := prgs.Items[prgs.ItemIndex];
+  end;
+  ModalResult := mrOk;
 end;
 
 end.

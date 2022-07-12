@@ -3,7 +3,6 @@ object f_sceltaprogramma: Tf_sceltaprogramma
   Top = 134
   Width = 338
   Height = 638
-  ActiveControl = ListView1
   Caption = 'Program selection'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -30,27 +29,8 @@ object f_sceltaprogramma: Tf_sceltaprogramma
     Width = 75
     Height = 25
     Caption = '&Select'
-    TabOrder = 1
+    TabOrder = 2
     OnClick = Button1Click
-  end
-  object ListView1: TListView
-    Left = 0
-    Top = 0
-    Width = 330
-    Height = 520
-    Align = alTop
-    Columns = <
-      item
-        Caption = 'Program Name'
-        Width = 280
-      end>
-    ColumnClick = False
-    Ctl3D = False
-    ReadOnly = True
-    PopupMenu = PopupMenu1
-    SortType = stText
-    TabOrder = 0
-    ViewStyle = vsReport
   end
   object e_expr: TEdit
     Left = 88
@@ -59,7 +39,7 @@ object f_sceltaprogramma: Tf_sceltaprogramma
     Height = 19
     Ctl3D = False
     ParentCtl3D = False
-    TabOrder = 2
+    TabOrder = 1
     OnDblClick = e_exprDblClick
   end
   object cb_persistent: TCheckBox
@@ -70,6 +50,14 @@ object f_sceltaprogramma: Tf_sceltaprogramma
     Caption = 'Cached'
     TabOrder = 3
     Visible = False
+  end
+  object prgs: TListBox
+    Left = 0
+    Top = 0
+    Width = 329
+    Height = 521
+    ItemHeight = 13
+    TabOrder = 0
   end
   object PopupMenu1: TPopupMenu
     Left = 256
@@ -89,16 +77,5 @@ object f_sceltaprogramma: Tf_sceltaprogramma
       ShortCut = 116
       OnClick = e_exprDblClick
     end
-  end
-  object JvSearchFile1: TJvSearchFiles
-    DirOption = doExcludeSubDirs
-    Options = [soOwnerData, soSearchFiles, soSorted]
-    DirParams.SearchTypes = [stFileMask]
-    FileParams.SearchTypes = [stFileMask]
-    FileParams.FileMasks.Strings = (
-      '*.prg')
-    OnFindFile = JvSearchFile1FindFile
-    Left = 548
-    Top = 448
   end
 end
