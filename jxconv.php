@@ -6,12 +6,12 @@
  *
  * @name      jxconv
  * @package   janox/bin/jxconv.php
- * @version   2.7
+ * @version   2.8
  * @copyright Tommaso Vannini (tvannini@janox.it) 2007
  * @author    Tommaso Vannini (tvannini@janox.it)
  */
 
-$jxrel = "2.7";
+$jxrel = "2.8";
 $info  = <<<JANOX_SCRIPT_HEAD
 
                       Janox Upgrade Tool
@@ -305,7 +305,7 @@ function add_tab_field($code, $table, $field, $name, $model) {
         // ________________________________________________ Last field definition code ___
         $f_code = $parts[1][0][0];
         if ($f_code) {
-            // _____________________________________ last field definition code lenght ___
+            // _____________________________________ last field definition code length ___
             $f_len  = strlen($f_code);
             // __________________________________ Last field definition code last char ___
             $f_char = $parts[1][0][1] + $f_len;
@@ -341,7 +341,7 @@ function add_tab_index($code, $table, $index, $segms) {
         // ________________________________________________ Last index definition code ___
         $i_code = $parts[2][0][0];
         if ($i_code) {
-            // _____________________________________ last index definition code lenght ___
+            // _____________________________________ last index definition code length ___
             $i_len  = strlen($i_code);
             // __________________________________ Last index definition code last char ___
             $i_char = $parts[2][0][1] + $i_len;
@@ -1038,6 +1038,20 @@ class upgrades_collection {
                               '_o2logical');
         // ____________________________________________ Write down new repository code ___
         file_put_contents($app_dir.'prgs'.DIRECTORY_SEPARATOR.$tables, $code);
+
+        }
+
+
+    /**
+     * Upgrades application to release 2.8
+     *
+     * Nothing to do: conversion is needed only to force CDS deletion in JXOB
+     *
+     * @param string $app_name Application name
+     * @param jxdir  $app_dir  Application root directory
+     */
+    static function to2_8($app_name, $app_dir) {
+
 
         }
 
