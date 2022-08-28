@@ -118,10 +118,32 @@ begin
       nometask := t_tasknome.Value;
       if nometask <> '' then
       begin
-        Memo2.Add('o2def::view("' + nometask + '", False, "' +
+        // ___________________________________ Prepared statements parameter ___
+        if t_taskprepared_read.Value and t_taskprepared_write.Value then
+        begin
+          // __________________________________________________ Read & write ___
+          exp1 := '3';
+        end
+        else if t_taskprepared_read.Value then
+        begin
+          // _____________________________________________________ Only read ___
+          exp1 := '1';
+        end
+        else if t_taskprepared_write.Value then
+        begin
+          // ____________________________________________________ Only write ___
+          exp1 := '2';
+        end
+        else
+        begin
+          // __________________________________________________________ None ___
+          exp1 := '0';
+        end;
+        Memo2.Add('o2def::view("' + nometask + '", false, "' +
                   t_taskrecordprefix.Value + '", "' +
                   t_taskrecordsufix.Value + '", ' +
-                  IfThen(t_taskautoaggregate.Value, '1', '0') + ');');
+                  IfThen(t_taskautoaggregate.Value, '1', '0') + ', ' +
+                  exp1 + ');');
       end;
       t_task.Next
     until (t_task.EOF); // _______________________________ End loop on views ___

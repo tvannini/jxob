@@ -27,7 +27,6 @@ uses
   sceltaprogramma in 'sceltaprogramma.pas' {f_sceltaprogramma},
   sceltarecordset in 'sceltarecordset.pas' {f_sceltarecordset},
   sceltaserver in 'sceltaserver.pas' {f_sceltaserver},
-  sceltastatiview in 'sceltastatiview.pas' {f_sceltastatiview},
   sceltatabella in 'sceltatabella.pas' {f_sceltatabella},
   sceltatipodato in 'sceltatipodato.pas' {f_selecttype},
   sceltaview in 'sceltaview.pas' {f_sceltaview},
@@ -114,7 +113,6 @@ begin
     Application.CreateForm(Tf_sceltaprogramma, f_sceltaprogramma);
     Application.CreateForm(Tf_sceltarecordset, f_sceltarecordset);
     Application.CreateForm(Tf_sceltaserver, f_sceltaserver);
-    Application.CreateForm(Tf_sceltastatiview, f_sceltastatiview);
     Application.CreateForm(Tf_sceltatabella, f_sceltatabella);
     Application.CreateForm(Tf_selecttype, f_selecttype);
     Application.CreateForm(Tf_sceltaview, f_sceltaview);

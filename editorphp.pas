@@ -62,7 +62,7 @@ var
 
 implementation
 
-uses work, sceltastatiview, sceltacampiprg, dm, Math, StrUtils;
+uses work, sceltacampiprg, dm, Math, StrUtils;
 
 {$R *.DFM}
 

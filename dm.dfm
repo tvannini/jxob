@@ -478,6 +478,14 @@ object dm_form: Tdm_form
       item
         Name = 'customwhereexp'
         DataType = ftInteger
+      end
+      item
+        Name = 'prepared_read'
+        DataType = ftBoolean
+      end
+      item
+        Name = 'prepared_write'
+        DataType = ftBoolean
       end>
     IndexDefs = <
       item
@@ -562,6 +570,12 @@ object dm_form: Tdm_form
     end
     object t_taskcustomwhereexp: TIntegerField
       FieldName = 'customwhereexp'
+    end
+    object t_taskprepared_read: TBooleanField
+      FieldName = 'prepared_read'
+    end
+    object t_taskprepared_write: TBooleanField
+      FieldName = 'prepared_write'
     end
   end
   object t_usa_file: TClientDataSet

@@ -478,6 +478,8 @@ type
     ds_indicitesta_all: TDataSource;
     ds_indici_all: TDataSource;
     t_indicitesta_allunique: TBooleanField;
+    t_taskprepared_read: TBooleanField;
+    t_taskprepared_write: TBooleanField;
     procedure t_tabelleBeforeInsert(DataSet: TDataSet);
     procedure t_tabelleSaveRecord(DataSet: TDataSet; var Accept: boolean);
     procedure t_indici_savNewRecord(DataSet: TDataSet);

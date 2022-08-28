@@ -342,7 +342,6 @@ type
     dbgrid_union: TVolgaDBGrid;
     DBGrid_select: TVolgaDBGrid;
     Panel1: TPanel;
-    lab_nomeview: TLabel;
     Label25: TLabel;
     pop_appevent: TPopupMenu;
     Zoom23: TMenuItem;
@@ -478,6 +477,12 @@ type
     edit_obj: TMenuItem;
     Label6: TLabel;
     dbe_CustomWhereExp: TDBEdit;
+    Label8: TLabel;
+    Label13: TLabel;
+    prepared_read: TDBCheckBox;
+    prepared_write: TDBCheckBox;
+    lab_nomeview: TLabel;
+    lab_prepared: TLabel;
     procedure dbgrid_tabelle_savEnter(Sender: TObject);
     procedure DBGrid_campiEnter(Sender: TObject);
     procedure dbgrid_indiciEnter(Sender: TObject);
@@ -760,6 +765,7 @@ type
     function FileToMD5(FName: String): String;
     function CheckCache(FName: String; RepName: String; userVersion: Boolean): Boolean;
     procedure WriteFileMD5(FName: String; RepName: String; userVersion: Boolean);
+    procedure preparedClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -2367,6 +2373,27 @@ begin
           dm_form.t_task.Locate('nome', supertree.Selected.Text, []);
           lab_nomeview.Caption    := 'Tables in view ' +
                                      supertree.Selected.Text;
+          if prepared_read.Checked and prepared_write.Checked then
+          begin
+            lab_prepared.Caption := ' Optimized for multiple reading &&' +
+                                    ' writing ';
+            lab_prepared.Visible := true;
+          end
+          else if prepared_read.Checked then
+          begin
+            lab_prepared.Caption := ' Optimized for multiple reading ';
+            lab_prepared.Visible := true;
+          end
+          else if prepared_write.Checked then
+          begin
+            lab_prepared.Caption := ' Optimized for multiple writing ';
+            lab_prepared.Visible := true;
+          end
+          else
+          begin
+            lab_prepared.Caption := '';
+            lab_prepared.Visible := false;
+          end;
           dbnav.DataSource        := dm_form.ds_task;
           Pagecontrol2.ActivePage := ts_main;
         end
@@ -2376,6 +2403,7 @@ begin
           dm_form.t_task.Locate('nome', supertree.Selected.Parent.Text, []);
           dbnav.DataSource        := dm_form.ds_task;
           PageControl2.ActivePage := ts_taskprop;
+          nodo_ultimo_selezionato := supertree.Selected.Parent;
         end
         else if supertree.Selected.Text = 'Program properties' then
         begin
@@ -2620,8 +2648,10 @@ begin
     else
     begin
       dm_form.t_task.Insert;
-      dm_form.t_tasknome.Value := nome_view;
-      dm_form.t_taskautoaggregate.Value := False;
+      dm_form.t_tasknome.Value           := nome_view;
+      dm_form.t_taskautoaggregate.Value  := false;
+      dm_form.t_taskprepared_read.Value  := false;
+      dm_form.t_taskprepared_write.Value := false;
       dm_form.t_task.Post;
       nodotemp := supertree.Items.AddChild(supertree.Selected, nome_view);
       nodotemp.ImageIndex := 2;
@@ -2912,13 +2942,18 @@ begin
                            t_taskrecordsufix.Value,
                            t_taskpost_auto.Value,
                            t_taskrighevisexp.Value,
-                           t_taskautoaggregate.Value]);
+                           t_taskautoaggregate.Value,
+                           t_taskcustomwhereexp.Value,
+                           t_taskprepared_read.Value,
+                           t_taskprepared_write.Value]);
     end;
     // _______________________________________ Add view to program tree-view ___
     nodotemp                := supertree.Items.Add(supertree.Selected.Parent,
                                                    nomenewview);
-    nodotemp.ImageIndex     := 2;
-    nodotemp.SelectedIndex  := 2;
+    nodotemp.ImageIndex     := IfThen(dm_form.t_taskprepared_read.Value or
+                                      dm_form.t_taskprepared_write.Value,
+                                      34, 2);
+    nodotemp.SelectedIndex  := nodotemp.ImageIndex;
     nodotemp2               := supertree.Items.AddChild(nodotemp,
                                                         'View properties');
     nodotemp2.ImageIndex    := 1;
@@ -6235,8 +6270,9 @@ begin
       while not dm_form.t_task.EOF do
       begin
         temp2 := supertree.Items.AddChild(temp, dm_form.t_tasknome.Value);
-        temp2.ImageIndex := 2;
-        temp2.SelectedIndex := 2;
+        temp2.ImageIndex := IfThen(dm_form.t_taskprepared_read.Value or
+                                   dm_form.t_taskprepared_write.Value, 34, 2);
+        temp2.SelectedIndex := temp2.ImageIndex;
         temp3:=supertree.Items.AddChild(temp2, 'View properties');
         temp3.ImageIndex := 1;
         temp3.SelectedIndex := 1;
@@ -7397,6 +7433,28 @@ begin
     CloseFile(F);
   end;
 
+end;
+
+procedure Tf_work.preparedClick(Sender: TObject);
+begin
+  if (nodo_ultimo_selezionato <> nil) then
+  begin
+    // ____________________________________________ If last node is the view ___
+    if (nodo_ultimo_selezionato.ImageIndex = 2) or
+       (nodo_ultimo_selezionato.ImageIndex = 34) then
+    begin
+      if prepared_read.Checked or prepared_write.Checked then
+      begin
+        nodo_ultimo_selezionato.ImageIndex    := 34;
+        nodo_ultimo_selezionato.SelectedIndex := 34;
+      end
+      else
+      begin
+        nodo_ultimo_selezionato.ImageIndex    := 2;
+        nodo_ultimo_selezionato.SelectedIndex := 2;
+      end;
+    end;
+  end;
 end;
 
 end.

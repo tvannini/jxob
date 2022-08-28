@@ -21,6 +21,8 @@ type
     procedure Zoom1Click(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: char);
     procedure FormShow(Sender: TObject);
+    procedure DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
   private
     { Private declarations }
   public
@@ -138,6 +140,19 @@ begin
     DBGrid1.SetFocus
   end;
 
+end;
+
+procedure Tf_sceltarecordset.DBGrid1DrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  // ______________________ Change color for views with prepaered statements ___
+  if dm_form.t_taskprepared_read.Value or
+     dm_form.t_taskprepared_write.Value then
+  begin
+    DBGrid1.Canvas.Font.Color := clRed;
+  end;
+  DBGrid1.DefaultDrawColumnCell(Rect, DataCol, Column, State);
 end;
 
 end.

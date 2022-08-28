@@ -98,7 +98,7 @@ var
   puntatore, num1, num2, num3, num4, num5, num6, submit, tooltipexp,
   id_operazione, exp1, exp2, pin_cols: integer;
   i: smallint;
-  boolean1, boolean2, userVersion: boolean;
+  boolean1, boolean2, userVersion, prepared_read, prepared_write: boolean;
   SQLdef: TStringList;
 begin
   Memo1.Lines.Clear;
@@ -260,49 +260,69 @@ begin
   if r.Exec(programma.Lines.Text) then
   begin
     repeat
-
-      programma.SelStart := r.MatchPos[0] - 1;
+      programma.SelStart  := r.MatchPos[0] - 1;
       programma.SelLength := r.MatchLen[0];
-      selezione := programma.SelText;
-
-      r2.Expression := '\(.*\)';
-
+      selezione           := programma.SelText;
+      r2.Expression       := '\(.*\)';
       if r2.exec(selezione) then
       begin
+        // _______________________________________________________ View name ___
         selezione2 := copy(r2.match[0], 2, r2.MatchLen[0] - 2);
         nometask   := extractword(1, selezione2, [',']);
         nometask   := copy(trim(nometask), 2, length(trim(nometask)) - 2);
-
-        par3 := extractword(2, selezione2, [',']);
-        if StrLoCase(trim(par3)) = 'true' then
-        begin
-          boolean1 := True
-        end
-        else
-        begin
-          boolean1 := False
-        end;
-
-        //record prefix
-        par1 := extractword(3, selezione2, [',']);
-        par1 := copy(trim(par1), 2, length(trim(par1)) - 2);
-        //record suffix
-        par2 := extractword(4, selezione2, [',']);
-        par2 := copy(trim(par2), 2, length(trim(par2)) - 2);
-
-        // ___________________________________________________ Autoaggregate ___
-        par4 := StrLoCase(trim(extractword(5, selezione2, [','])));
-        if (par4 = '0') or (par4 = 'false') then
-        begin
-          boolean2 := False;
-        end
-        else
-        begin
-          boolean2 := True;
-        end;
-
         if nometask <> 'prg§_§var' then
         begin
+          par3 := extractword(2, selezione2, [',']);
+          if StrLoCase(trim(par3)) = 'true' then
+          begin
+            boolean1 := True
+          end
+          else
+          begin
+            boolean1 := False
+          end;
+          // _________________________________________________ record prefix ___
+          par1 := extractword(3, selezione2, [',']);
+          par1 := copy(trim(par1), 2, length(trim(par1)) - 2);
+          // _________________________________________________ record suffix ___
+          par2 := extractword(4, selezione2, [',']);
+          par2 := copy(trim(par2), 2, length(trim(par2)) - 2);
+          // _________________________________________________ Autoaggregate ___
+          par4 := StrLoCase(trim(extractword(5, selezione2, [','])));
+          if (par4 = '0') or (par4 = 'false') then
+          begin
+            boolean2 := False;
+          end
+          else
+          begin
+            boolean2 := True;
+          end;
+          // ___________________________________________ Prepared statements ___
+          par5 := StrLoCase(trim(extractword(6, selezione2, [','])));
+          // __________________________________________________ Read & write ___
+          if par5 = '3' then
+          begin
+            prepared_read  := true;
+            prepared_write := true;
+          end
+          // ____________________________________________________ Only write ___
+          else if par5 = '2' then
+          begin
+            prepared_read  := false;
+            prepared_write := true;
+          end
+          // _____________________________________________________ Only read ___
+          else if par5 = '1' then
+          begin
+            prepared_read  := true;
+            prepared_write := false;
+          end
+          // __________________________________________________________ None ___
+          else
+          begin
+            prepared_read  := false;
+            prepared_write := false;
+          end;
           //  Inc(dm_form.id_ultima_view);
           dm_form.t_task.InsertRecord([nomeprg,
                                        dm_form.id_ultima_view,
@@ -315,14 +335,15 @@ begin
                                        par2,
                                        boolean1,
                                        0,
-                                       boolean2]);
+                                       boolean2,
+                                       '',
+                                       prepared_read,
+                                       prepared_write]);
         end;
       end;
-
     until not r.ExecNext
   end;
   // fine task
-
 
   //definizione azioni
   r.Expression := 'o2def::act(.*?);';
@@ -630,15 +651,14 @@ begin
     t_task.First;
 
     repeat
-      // righe vis
+      // _________________________________________________________ righe vis ___
       r.Expression := 'task_' + trim(t_tasknome.Value) + '->righe_vis\s=\s(.*?);';
       if r.Exec(programma.Lines.Text) then
-
       begin
-        par1:=r.Match[1];
+        par1 := r.Match[1];
         if Pos('_exp_', par1) > 0 then
         begin
-         par1:=decodifica_exp(r.Match[1], nomeprogramma);
+         par1 := decodifica_exp(r.Match[1], nomeprogramma);
          t_task.Edit;
          t_taskrighevisexp.Value := StrToInt(par1);
          t_task.Post;

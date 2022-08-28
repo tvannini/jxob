@@ -33,6 +33,7 @@ object f_sceltarecordset: Tf_sceltarecordset
     TitleFont.Height = -11
     TitleFont.Name = 'MS Sans Serif'
     TitleFont.Style = []
+    OnDrawColumnCell = DBGrid1DrawColumnCell
     OnKeyPress = FormKeyPress
     Columns = <
       item

@@ -19,7 +19,7 @@ object f_phpeditor: Tf_phpeditor
     Left = 0
     Top = 0
     Width = 791
-    Height = 518
+    Height = 525
     Cursor = crIBeam
     GutterWidth = 0
     RightMarginColor = clSilver
@@ -4513,7 +4513,7 @@ object f_phpeditor: Tf_phpeditor
   end
   object Panel1: TPanel
     Left = 0
-    Top = 518
+    Top = 525
     Width = 791
     Height = 41
     Align = alBottom
@@ -4544,7 +4544,6 @@ object f_phpeditor: Tf_phpeditor
     object Viewsstate1: TMenuItem
       Caption = 'Views state'
       ShortCut = 117
-      OnClick = Viewsstate1Click
     end
   end
   object PopupMenu2: TPopupMenu

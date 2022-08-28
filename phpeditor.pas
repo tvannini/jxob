@@ -23,7 +23,6 @@ type
     procedure Sceltacampi1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
-    procedure Viewsstate1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
     { Private declarations }
@@ -36,7 +35,7 @@ var
 
 implementation
 
-uses work, sceltastatiview, sceltacampiprg, dm;
+uses work, sceltacampiprg, dm;
 
 {$R *.dfm}
 
@@ -97,23 +96,11 @@ begin
 end;
 
 
-
 procedure Tf_phpeditor.Exit1Click(Sender: TObject);
 begin
   ModalResult := mrCancel;
 end;
 
-procedure Tf_phpeditor.Viewsstate1Click(Sender: TObject);
-begin
-  f_sceltastatiview.ShowModal;
-  if f_sceltastatiview.ModalResult = mrOk then
-  begin
-    phpeditor.InsertText('o2exp::vista(' + chr(39) + dm_form.t_tasknome.Value + chr(39) + ',' +
-      chr(39) + f_sceltastatiview.funzione + chr(39) + ')');
-
-  end;
-
-end;
 
 procedure Tf_phpeditor.FormShow(Sender: TObject);
 begin
