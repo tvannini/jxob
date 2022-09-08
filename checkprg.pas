@@ -2023,7 +2023,9 @@ try
         while not temp_table.Eof do
         begin
           if (temp_table.FieldValues['righevisexp'] =
-              t_espressioniidexp.Value) then
+               t_espressioniidexp.Value) or
+             (temp_table.FieldValues['customwhereexp'] =
+               t_espressioniidexp.Value) then
           begin
             exp_usata := true;
             Break;
