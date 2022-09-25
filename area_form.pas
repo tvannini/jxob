@@ -237,13 +237,19 @@ begin
         parent_verticalalign := dm_form.t_form.Lookup('nomeform',
                                               dm_form.t_formParentForm.AsString,
                                                       'vertalign');
-        if parent_orizzontalAlign = 'Centered' then
+        altezza_form_parent   := dm_form.t_form.Lookup('nomeform',
+                                              dm_form.t_formParentForm.AsString,
+                                                       'altezza');
+        larghezza_form_parent := dm_form.t_form.Lookup('nomeform',
+                                              dm_form.t_formParentForm.AsString,
+                                                       'larghezza');
+        if parent_orizzontalAlign = 'Center' then
         begin
-          parent_left := (larghezza_form div 2) - parent_left;
+          parent_left := ((larghezza_form + SidePanelWidth) div 2) -parent_left;
         end;
         if parent_orizzontalAlign = 'Right' then
         begin
-          parent_left := larghezza_form  - parent_left;
+          parent_left := larghezza_form - parent_left - larghezza_form_parent;
         end;
         if parent_verticalAlign = 'Middle' then
         begin
@@ -251,46 +257,34 @@ begin
         end;
         if parent_verticalAlign = 'Bottom' then
         begin
-          parent_top := altezza_form  - parent_top;
+          parent_top := altezza_form - parent_top - altezza_form_parent;
         end;
-        altezza_form_parent   := dm_form.t_form.Lookup('nomeform',
-                                              dm_form.t_formParentForm.AsString,
-                                                       'altezza');
-        larghezza_form_parent := dm_form.t_form.Lookup('nomeform',
-                                              dm_form.t_formParentForm.AsString,
-                                                       'larghezza');
       end;
       // _________________________________________________________ Align TOP ___
       if dm_form.t_formVertAlign.Value = 'Top' then
       begin
-        xform.Top := dm_form.t_formTop.Value + parent_top;
+        if altezza_form_parent <> 0 then
+        begin
+          xform.Top := dm_form.t_formTop.Value +
+                       parent_top +
+                       altezza_form_parent;
+        end
+        else
+        begin
+          xform.Top := dm_form.t_formTop.Value;
+        end;
       end;
       // ______________________________________________________ Align BOTTOM ___
       if dm_form.t_formVertAlign.Value = 'Bottom' then
       begin
-        if altezza_form_parent <> 0 then
-        begin
-          xform.Top := altezza_form_parent -
-                       dm_form.t_formTop.Value -
-                       dm_form.t_formAltezza.Value
-        end
-        else
-        begin
-          xform.Top := altezza_form -
-                       dm_form.t_formtop.Value - dm_form.t_formaltezza.Value
-        end;
+        xform.Top := altezza_form -
+                     dm_form.t_formtop.Value -
+                     dm_form.t_formaltezza.Value
       end;
       // ______________________________________________________ Align MIDDLE ___
       if dm_form.t_formVertAlign.Value = 'Middle' then
       begin
-        if altezza_form_parent <> 0 then
-        begin
-          xform.Top := (altezza_form_parent div 2) - dm_form.t_formTop.Value
-        end
-        else
-        begin
-          xform.Top := (altezza_form div 2) - dm_form.t_formTop.Value
-        end;
+        xform.Top := (altezza_form div 2) - dm_form.t_formTop.Value
       end;
       // determina il posizionamento left del form in base al tipo di
       // allineamento:
@@ -301,39 +295,27 @@ begin
       // ________________________________________________________ Align LEFT ___
       if dm_form.t_formOrizzAlign.Value = 'Left' then
       begin
-        xform.Left := dm_form.t_formLeft.Value +
-                      parent_left +
-                      SidePanelWidth;
+        if larghezza_form_parent <> 0 then
+        begin
+          xform.Left := dm_form.t_formLeft.Value + parent_left;
+        end
+        else
+        begin
+          xform.Left := dm_form.t_formLeft.Value + SidePanelWidth;
+        end;
       end;
       // _______________________________________________________ Align RIGHT ___
       if dm_form.t_formOrizzAlign.Value = 'Right' then
       begin
-        if larghezza_form_parent <> 0 then
-        begin
-          xform.Left := larghezza_form_parent -
-                        dm_form.t_formLeft.Value -
-                        dm_form.t_formLarghezza.Value;
-        end
-        else
-        begin
-          xform.Left := larghezza_form -
-                        dm_form.t_formLeft.Value -
-                        dm_form.t_formLarghezza.Value;
-        end;
+        xform.Left := larghezza_form -
+                      dm_form.t_formLeft.Value -
+                      dm_form.t_formLarghezza.Value;
       end;
       // ______________________________________________________ Align CENTER ___
       if dm_form.t_formOrizzAlign.Value = 'Center' then
       begin
-        if larghezza_form_parent <> 0 then
-        begin
-          xform.Left := ((larghezza_form_parent + SidePanelWidth) div 2) -
-                        dm_form.t_formLeft.Value;
-        end
-        else
-        begin
-          xform.Left := ((larghezza_form + SidePanelWidth) div 2) -
-                        dm_form.t_formLeft.Value;
-        end;
+        xform.Left := ((larghezza_form + SidePanelWidth) div 2) -
+                      dm_form.t_formLeft.Value;
       end;
       xform.Height          := dm_form.t_formAltezza.Value;
       xform.Width           := dm_form.t_formLarghezza.Value;
@@ -3340,6 +3322,7 @@ begin
         parent_left           := 0;
         altezza_form_parent   := 0;
         larghezza_form_parent := 0;
+        // _____________ Child form -position Top/Left is relative to parent ___
         if dm_form.t_formparentform.Value <> '' then
         begin
           parent_top             := dm_form.t_form.Lookup('nomeform',
@@ -3354,7 +3337,13 @@ begin
           parent_verticalalign   := dm_form.t_form.Lookup('nomeform',
                                               dm_form.t_formparentform.AsString,
                                                           'vertalign');
-          if parent_orizzontalalign = 'Centered' then
+          altezza_form_parent   := dm_form.t_form.Lookup('nomeform',
+                                              dm_form.t_formparentform.AsString,
+                                                         'altezza');
+          larghezza_form_parent := dm_form.t_form.Lookup('nomeform',
+                                              dm_form.t_formparentform.AsString,
+                                                         'larghezza');
+          if parent_orizzontalalign = 'Center' then
           begin
             parent_left := ((larghezza_form + SidePanelWidth) div 2) -
                            parent_left;
@@ -3371,74 +3360,54 @@ begin
           begin
             parent_top := altezza_form - parent_top;
           end;
-          altezza_form_parent   := dm_form.t_form.Lookup('nomeform',
-                                              dm_form.t_formparentform.AsString,
-                                                         'altezza');
-          larghezza_form_parent := dm_form.t_form.Lookup('nomeform',
-                                              dm_form.t_formparentform.AsString,
-                                                         'larghezza');
         end;
         dm_form.t_form.Edit;
+        // _________________________ Set form vertical position by alignment ___
         if dm_form.t_formvertalign.Value = 'Top' then
         begin
-           dm_form.t_formtop.Value := xform.Top - parent_top;
+          if altezza_form_parent <> 0 then
+          begin
+           dm_form.t_formtop.Value := xform.Top -
+                                      parent_top -
+                                      altezza_form_parent;
+          end
+          else
+          begin
+           dm_form.t_formtop.Value := xform.Top;
+          end;
         end
         else if dm_form.t_formvertalign.Value = 'Bottom' then
         begin
-          if altezza_form_parent <> 0 then
-          begin
-            dm_form.t_formtop.Value := altezza_form_parent -
-                                       (xform.Top + xform.Height);
-          end
-          else
-          begin
-            dm_form.t_formtop.Value := altezza_form -
-                                       (xform.Top + xform.Height);
-          end;
+          dm_form.t_formtop.Value := altezza_form -
+                                     (xform.Top + xform.Height);
         end
         else if dm_form.t_formvertalign.Value = 'Middle' then
         begin
-          if altezza_form_parent <> 0 then
+          dm_form.t_formtop.Value := (altezza_form div 2) - xform.Top;
+        end;
+        // _____________________________________________ Top < 0 not allowed ___
+        dm_form.t_formtop.Value:= max(0, dm_form.t_formtop.Value);
+        // _______________________ Set form horizontal position by alignment ___
+        if dm_form.t_formorizzalign.Value = 'Left' then
+        begin
+          if larghezza_form_parent <> 0 then
           begin
-            dm_form.t_formtop.Value := (altezza_form_parent div 2) - xform.Top;
+            dm_form.t_formleft.Value := xform.Left - parent_left;
           end
           else
           begin
-            dm_form.t_formtop.Value := (altezza_form div 2) - xform.Top;
+            dm_form.t_formleft.Value := xform.Left - SidePanelWidth;
           end;
-        end;
-
-        dm_form.t_formtop.Value:= max(0, dm_form.t_formtop.Value);
-
-        if dm_form.t_formorizzalign.Value = 'Left' then
-        begin
-          dm_form.t_formleft.Value := xform.Left - parent_left - SidePanelWidth;
         end
         else if dm_form.t_formorizzalign.Value = 'Right' then
         begin
-          if larghezza_form_parent <> 0 then
-          begin
-            dm_form.t_formleft.Value := larghezza_form_parent -
-                                        (xform.Left + xform.Width);
-          end
-          else
-          begin
-            dm_form.t_formleft.Value := larghezza_form -
-                                        (xform.Left + xform.Width);
-          end;
+          dm_form.t_formleft.Value := larghezza_form -
+                                      (xform.Left + xform.Width);
         end
         else if dm_form.t_formorizzalign.Value = 'Center' then
         begin
-          if larghezza_form_parent <> 0 then
-          begin
-            dm_form.t_formleft.Value := ((larghezza_form_parent +
-                                          SidePanelWidth) div 2) - xform.Left;
-          end
-          else
-          begin
-            dm_form.t_formleft.Value := ((larghezza_form +
-                                          SidePanelWidth) div 2) - xform.Left;
-          end;
+          dm_form.t_formleft.Value := ((larghezza_form + SidePanelWidth) div 2)
+                                      - xform.Left;
         end;
 
         dm_form.t_formaltezza.Value   := xform.Height;

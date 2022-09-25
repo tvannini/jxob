@@ -766,6 +766,7 @@ type
     function CheckCache(FName: String; RepName: String; userVersion: Boolean): Boolean;
     procedure WriteFileMD5(FName: String; RepName: String; userVersion: Boolean);
     procedure preparedClick(Sender: TObject);
+    procedure DBEdit24Change(Sender: TObject);
 
   private
     { Private declarations }
@@ -7455,6 +7456,28 @@ begin
       end;
     end;
   end;
+end;
+
+
+procedure Tf_work.DBEdit24Change(Sender: TObject);
+var parent_form: TDBEdit;
+begin
+  parent_form := Sender as TDBEdit;
+  if parent_form.Text <> '' then
+  begin
+    dm_form.t_form.Edit;
+    dm_form.t_formvertalign.Value  := 'Top';
+    dbcombo_vertalign.Enabled      := false;
+    dm_form.t_formorizzalign.Value := 'Left';
+    DBComboBox1.Enabled            := false;
+    dm_form.t_form.Post;
+  end
+  else
+  begin
+    dbcombo_vertalign.Enabled  := true;
+    DBComboBox1.Enabled        := true;
+  end;
+
 end;
 
 end.

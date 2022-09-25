@@ -837,7 +837,7 @@ object f_work: Tf_work
         Top = 0
         Width = 862
         Height = 607
-        ActivePage = ts_main
+        ActivePage = ts_form
         Align = alClient
         Style = tsButtons
         TabOrder = 1
@@ -2238,6 +2238,7 @@ object f_work: Tf_work
                   DataField = 'parentform'
                   DataSource = dm_form.ds_form
                   TabOrder = 10
+                  OnChange = DBEdit24Change
                 end
               end
             end

@@ -1381,17 +1381,25 @@ begin
       else begin
         t_formbarra_stato.Value := StrToInt(decodifica_exp(tmp1, nomeprg))
       end;
-      //------------------------------------------
 
-      t_formvertalign.Value  :=
-        form_val_prop('align_v', t_formnomeform.Value, selezione3, r3, programma, True);
-      t_formorizzalign.Value :=
-        form_val_prop('align_o', t_formnomeform.Value, selezione3, r3, programma, True);
-      if (t_formorizzalign.Value = '') then
+      // _______________________________ Form alignment (fixed for subforms) ___
+      t_formvertalign.Value  := form_val_prop('align_v',
+                                              t_formnomeform.Value,
+                                              selezione3,
+                                              r3,
+                                              programma,
+                                              true);
+      t_formorizzalign.Value := form_val_prop('align_o',
+                                              t_formnomeform.Value,
+                                              selezione3,
+                                              r3,
+                                              programma,
+                                              true);
+      if (t_formorizzalign.Value = '') or (t_formparentform.Value <> '') then
       begin
         t_formorizzalign.Value := 'Left'
       end;
-      if (t_formvertalign.Value = '') then
+      if (t_formvertalign.Value = '') or (t_formparentform.Value <> '') then
       begin
         t_formvertalign.Value := 'Top'
       end;
