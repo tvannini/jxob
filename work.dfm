@@ -837,7 +837,7 @@ object f_work: Tf_work
         Top = 0
         Width = 862
         Height = 607
-        ActivePage = ts_form
+        ActivePage = ts_main
         Align = alClient
         Style = tsButtons
         TabOrder = 1
@@ -1288,6 +1288,7 @@ object f_work: Tf_work
                 Font.Style = [fsBold]
                 ParentColor = False
                 ParentFont = False
+                Visible = False
               end
             end
           end
