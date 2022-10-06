@@ -263,16 +263,7 @@ begin
       // _________________________________________________________ Align TOP ___
       if dm_form.t_formVertAlign.Value = 'Top' then
       begin
-        if altezza_form_parent <> 0 then
-        begin
-          xform.Top := dm_form.t_formTop.Value +
-                       parent_top +
-                       altezza_form_parent;
-        end
-        else
-        begin
-          xform.Top := dm_form.t_formTop.Value;
-        end;
+        xform.Top := dm_form.t_formTop.Value + parent_top;
       end;
       // ______________________________________________________ Align BOTTOM ___
       if dm_form.t_formVertAlign.Value = 'Bottom' then
@@ -286,12 +277,6 @@ begin
       begin
         xform.Top := (altezza_form div 2) - dm_form.t_formTop.Value
       end;
-      // determina il posizionamento left del form in base al tipo di
-      // allineamento:
-      // left = comportamento standard
-      // right = il valore left determina lo scostamento dal bordo destro
-      // center = il valore left determina la distanza del lato sinistro della
-      // form rispetto al centro delllo spazio totale
       // ________________________________________________________ Align LEFT ___
       if dm_form.t_formOrizzAlign.Value = 'Left' then
       begin
@@ -3365,16 +3350,7 @@ begin
         // _________________________ Set form vertical position by alignment ___
         if dm_form.t_formvertalign.Value = 'Top' then
         begin
-          if altezza_form_parent <> 0 then
-          begin
-           dm_form.t_formtop.Value := xform.Top -
-                                      parent_top -
-                                      altezza_form_parent;
-          end
-          else
-          begin
-           dm_form.t_formtop.Value := xform.Top;
-          end;
+           dm_form.t_formtop.Value := xform.Top - parent_top;
         end
         else if dm_form.t_formvertalign.Value = 'Bottom' then
         begin
