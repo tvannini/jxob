@@ -9,7 +9,7 @@ uses
   DosCommand, strutils, ComCtrls, cxStyles, cxCustomData, cxGraphics,
   cxFilter, cxData, cxDataStorage, cxEdit, cxDBData, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridLevel, cxClasses, cxControls,
-  cxGridCustomView, cxGrid, cxSplitter;
+  cxGridCustomView, cxGrid, cxSplitter, regexpr;
 
 type
   Tf_sceltaexpr = class(TForm)
@@ -166,11 +166,14 @@ end;
 procedure Tf_sceltaexpr.check_expExecute(Sender: TObject);
 var
   buffer: string;
+  r: TRegExpr;
 begin
   Memo1.Lines.Clear;
   // __________________________ Check for RETURN statement inside expression ___
-  if Pos('return', StrLower(PChar(dm_form.t_espressionireturn.AsString + ' ' +
-                                  dm_form.t_espressioniexpr.AsString))) > 0 then
+  r            := TRegExpr.Create;
+  r.Expression := '\breturn\b';
+  if r.Exec(StrLower(PChar(dm_form.t_espressionireturn.AsString + ' ' +
+                           dm_form.t_espressioniexpr.AsString))) then
   begin
     Memo1.Lines.add('ERROR: the RETURN statement is not allowed in expressions!');
     comandoTerminated(Sender);
