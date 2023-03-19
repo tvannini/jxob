@@ -1,6 +1,6 @@
 object f_nuovoprogetto: Tf_nuovoprogetto
-  Left = 531
-  Top = 207
+  Left = 772
+  Top = 225
   Width = 541
   Height = 303
   Caption = 'New Project'

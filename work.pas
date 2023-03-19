@@ -785,6 +785,7 @@ type
     tempdir: string;
     user: string;
     progetto: string;
+    layer: Shortint;
     memophp: TMemoField;
     campo_in_grid_operazioni, campo_in_grid_azioni, campo_in_grid_programmi,
     campo_in_grid_server, campo_in_grid_databases, campo_in_grid_tabelle,
@@ -982,7 +983,7 @@ begin
   // _______________________________________________________________ Version ___
   build_1 := 2;
   // _______________________________________________________________ Release ___
-  build_2 := 8;
+  build_2 := 9;
   // ______________________________________________ Build release - NOT USED ___
   build_3 := 0;
   build   := IntToStr(build_1) + '.' + IntToStr(build_2);

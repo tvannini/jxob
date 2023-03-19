@@ -78,6 +78,8 @@ begin
   e_user.Text     := LowerCase(f_work.settings.ReadString('O2_ENV',
                                                           'default_user',
                                                           'supervisor'));
+  // _________________________________________________ Set Development Layer ___
+  f_work.layer := f_work.settings.ReadInteger('O2_ENV', 'layer', 0);
   // ____________________________________________________ Set temp directory ___
   if f_work.tempdir = '' then
   begin

@@ -34,35 +34,43 @@ object f_config: Tf_config
       Caption = 'General'
       object Label1: TLabel
         Left = 20
-        Top = 16
+        Top = 20
         Width = 87
         Height = 13
         Caption = 'Default developer:'
       end
       object Label18: TLabel
         Left = 20
-        Top = 192
+        Top = 220
         Width = 121
         Height = 13
         Caption = 'Design report executable:'
       end
       object Label19: TLabel
         Left = 20
-        Top = 80
+        Top = 60
         Width = 68
         Height = 13
         Caption = 'Janox runtime:'
       end
       object Label20: TLabel
         Left = 20
-        Top = 136
+        Top = 160
         Width = 82
         Height = 13
         Caption = 'Temporary folder:'
       end
-      object e_def_user: TEdit
+      object Label22: TLabel
         Left = 20
-        Top = 32
+        Top = 120
+        Width = 91
+        Height = 13
+        Caption = 'Development layer:'
+        Visible = False
+      end
+      object e_def_user: TEdit
+        Left = 170
+        Top = 20
         Width = 200
         Height = 19
         Ctl3D = False
@@ -71,70 +79,83 @@ object f_config: Tf_config
       end
       object e_reppath: TEdit
         Left = 20
-        Top = 208
+        Top = 240
+        Width = 330
+        Height = 19
+        Ctl3D = False
+        ParentCtl3D = False
+        TabOrder = 6
+        Text = 'e_reppath'
+      end
+      object e_jxrntpath: TEdit
+        Left = 20
+        Top = 80
         Width = 330
         Height = 19
         Ctl3D = False
         ParentCtl3D = False
         TabOrder = 1
-        Text = 'e_reppath'
-      end
-      object e_jxrntpath: TEdit
-        Left = 20
-        Top = 96
-        Width = 330
-        Height = 19
-        Ctl3D = False
-        ParentCtl3D = False
-        TabOrder = 2
         Text = 'e_jxrntpath'
       end
       object e_temppath: TEdit
         Left = 20
-        Top = 152
+        Top = 180
         Width = 330
         Height = 19
         Ctl3D = False
         ParentCtl3D = False
-        TabOrder = 3
+        TabOrder = 4
         Text = 'e_temppath'
       end
       object PathButton1: TButton
         Left = 350
-        Top = 208
-        Width = 21
-        Height = 21
+        Top = 240
+        Width = 20
+        Height = 20
         Caption = '...'
-        TabOrder = 4
+        TabOrder = 7
         OnClick = PathButton1Click
       end
       object PathButton2: TButton
         Left = 350
-        Top = 96
-        Width = 21
-        Height = 21
+        Top = 80
+        Width = 20
+        Height = 20
         Caption = '...'
-        TabOrder = 5
+        TabOrder = 2
         OnClick = PathButton2Click
       end
       object PathButton3: TButton
         Left = 350
-        Top = 152
-        Width = 21
-        Height = 21
+        Top = 180
+        Width = 20
+        Height = 20
         Caption = '...'
-        TabOrder = 6
+        TabOrder = 5
         OnClick = PathButton3Click
       end
       object e_cvs: TCheckBox
-        Left = 24
-        Top = 256
+        Left = 20
+        Top = 280
         Width = 337
         Height = 21
         Caption = 'Integrate external CVS'
         Ctl3D = False
         ParentCtl3D = False
-        TabOrder = 7
+        TabOrder = 8
+      end
+      object e_layer: TComboBox
+        Left = 170
+        Top = 120
+        Width = 200
+        Height = 21
+        ItemHeight = 13
+        TabOrder = 3
+        Text = 'e_layer'
+        Visible = False
+        Items.Strings = (
+          'Application core'
+          'Overriding layer')
       end
     end
     object ts_actions: TTabSheet
@@ -1186,8 +1207,8 @@ object f_config: Tf_config
       object Label21: TLabel
         Left = 20
         Top = 48
-        Width = 185
-        Height = 20
+        Width = 164
+        Height = 13
         Caption = 'Functions proposal insert brackets:'
       end
       object e_brackets: TComboBox

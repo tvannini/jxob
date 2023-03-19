@@ -1,8 +1,8 @@
 object f_import: Tf_import
-  Left = 356
-  Top = 129
-  Width = 779
-  Height = 675
+  Left = 719
+  Top = 238
+  Width = 638
+  Height = 448
   Caption = 'f_import'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -49,7 +49,6 @@ object f_import: Tf_import
       #9'o2def::field("last_time", "last_time", "_o2time");'
       #9'o2def::field("login_type", "login_type", "o2sys_login_type");'
       #9'o2def::field("last_pwd_date", "last_pwd_date", "_o2date");'
-      #9'o2def::field("creation_date", "creation_date", "_o2date");'
       
         #9'o2def::field("force_pwd_change", "force_pwd_change", "_o2logica' +
         'l");'
@@ -57,6 +56,8 @@ object f_import: Tf_import
       #9'o2def::field("no_pwd_change", "no_pwd_change", "_o2logical");'
       #9'o2def::field("creation_date", "creation_date", "_o2date");'
       #9'o2def::field("admin", "admin", "_o2logical");'
+      #9'o2def::field("poweruser", "poweruser", "_o2logical");'
+      #9'o2def::field("hidden", "hidden", "_o2logical");'
       ''
       #9'o2def::index("o2user", "o2user","A");'
       #9'o2def::index("asp_area", "area","A", "o2user","A");')

@@ -1,8 +1,8 @@
 object f_work: Tf_work
-  Left = 426
-  Top = 145
+  Left = 400
+  Top = 100
   Width = 1100
-  Height = 760
+  Height = 700
   Caption = 'Janox Open Builder'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -23,7 +23,7 @@ object f_work: Tf_work
     Left = 217
     Top = 32
     Width = 5
-    Height = 662
+    Height = 602
     Beveled = True
     Visible = False
   end
@@ -31,7 +31,7 @@ object f_work: Tf_work
     Left = 0
     Top = 32
     Width = 217
-    Height = 662
+    Height = 602
     Align = alLeft
     BevelEdges = []
     BevelInner = bvNone
@@ -59,7 +59,7 @@ object f_work: Tf_work
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 694
+    Top = 634
     Width = 1092
     Height = 20
     Panels = <
@@ -83,7 +83,7 @@ object f_work: Tf_work
     Left = 222
     Top = 32
     Width = 870
-    Height = 662
+    Height = 602
     ActivePage = ts_programmi
     Align = alClient
     MultiLine = True
@@ -509,7 +509,7 @@ object f_work: Tf_work
         Left = 491
         Top = 0
         Width = 5
-        Height = 607
+        Height = 547
       end
       object DBNavigator_tabelle: TDBNavigator
         Left = 8
@@ -523,13 +523,13 @@ object f_work: Tf_work
         Left = 0
         Top = 0
         Width = 491
-        Height = 607
+        Height = 547
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
         object Splitter3: TSplitter
           Left = 0
-          Top = 426
+          Top = 366
           Width = 491
           Height = 5
           Cursor = crVSplit
@@ -539,7 +539,7 @@ object f_work: Tf_work
           Left = 0
           Top = 0
           Width = 491
-          Height = 426
+          Height = 366
           Align = alClient
           BevelEdges = []
           BevelInner = bvNone
@@ -599,7 +599,7 @@ object f_work: Tf_work
         end
         object IndexesPages: TPageControl
           Left = 0
-          Top = 431
+          Top = 371
           Width = 491
           Height = 176
           ActivePage = pageUnique
@@ -773,7 +773,7 @@ object f_work: Tf_work
         Left = 496
         Top = 0
         Width = 366
-        Height = 607
+        Height = 547
         Align = alClient
         BorderStyle = bsNone
         Ctl3D = False
@@ -836,7 +836,7 @@ object f_work: Tf_work
         Left = 0
         Top = 0
         Width = 862
-        Height = 607
+        Height = 547
         ActivePage = ts_main
         Align = alClient
         Style = tsButtons
@@ -1294,7 +1294,7 @@ object f_work: Tf_work
           end
           object panel_expression_view: TPanel
             Left = 0
-            Top = 479
+            Top = 419
             Width = 854
             Height = 97
             Align = alBottom
@@ -1370,7 +1370,7 @@ object f_work: Tf_work
             Left = 0
             Top = 162
             Width = 854
-            Height = 317
+            Height = 257
             Align = alClient
             Ctl3D = False
             DataSource = dm_form.ds_select
@@ -1599,7 +1599,7 @@ object f_work: Tf_work
             Left = 0
             Top = 33
             Width = 854
-            Height = 446
+            Height = 386
             Align = alClient
             Ctl3D = False
             DataSource = dm_form.ds_operazioni
@@ -1667,7 +1667,7 @@ object f_work: Tf_work
           end
           object Panel_expression: TPanel
             Left = 0
-            Top = 479
+            Top = 419
             Width = 854
             Height = 97
             Align = alBottom
@@ -2505,7 +2505,7 @@ object f_work: Tf_work
           ImageIndex = 7
           DesignSize = (
             854
-            576)
+            516)
           object Label40: TLabel
             Left = 16
             Top = 60
@@ -2603,7 +2603,7 @@ object f_work: Tf_work
             Left = 104
             Top = 100
             Width = 733
-            Height = 457
+            Height = 397
             Anchors = [akLeft, akTop, akRight, akBottom]
             Ctl3D = False
             DataField = 'note'
@@ -2895,7 +2895,7 @@ object f_work: Tf_work
         Left = 0
         Top = 0
         Width = 417
-        Height = 607
+        Height = 547
         Align = alLeft
         BevelInner = bvNone
         BevelOuter = bvNone
@@ -8138,7 +8138,7 @@ object f_work: Tf_work
         Left = 0
         Top = 0
         Width = 862
-        Height = 607
+        Height = 547
         Align = alClient
         BevelInner = bvNone
         BevelOuter = bvNone
@@ -8196,7 +8196,7 @@ object f_work: Tf_work
         Left = 0
         Top = 0
         Width = 862
-        Height = 567
+        Height = 507
         Align = alClient
         BevelInner = bvNone
         BevelOuter = bvNone
@@ -8214,7 +8214,7 @@ object f_work: Tf_work
       end
       object Panel7: TPanel
         Left = 0
-        Top = 567
+        Top = 507
         Width = 862
         Height = 40
         Align = alBottom
@@ -8276,7 +8276,7 @@ object f_work: Tf_work
         Left = 0
         Top = 0
         Width = 862
-        Height = 607
+        Height = 547
         Align = alClient
         Caption = ' Recent projects '
         Ctl3D = False
@@ -8284,7 +8284,7 @@ object f_work: Tf_work
         TabOrder = 0
         object Panel2: TPanel
           Left = 1
-          Top = 549
+          Top = 489
           Width = 860
           Height = 57
           Align = alBottom
@@ -8308,7 +8308,7 @@ object f_work: Tf_work
           Left = 1
           Top = 14
           Width = 860
-          Height = 485
+          Height = 425
           Align = alClient
           BevelOuter = bvNone
           BevelWidth = 20
@@ -8316,12 +8316,12 @@ object f_work: Tf_work
           TabOrder = 1
           DesignSize = (
             860
-            485)
+            425)
           object list_recent: TListView
             Left = 16
             Top = 16
             Width = 825
-            Height = 465
+            Height = 405
             Anchors = [akLeft, akTop, akRight, akBottom]
             BevelInner = bvNone
             BevelOuter = bvNone
@@ -8343,7 +8343,7 @@ object f_work: Tf_work
         end
         object LogPanel: TPanel
           Left = 1
-          Top = 499
+          Top = 439
           Width = 860
           Height = 50
           Align = alBottom
@@ -8371,7 +8371,7 @@ object f_work: Tf_work
         Left = 0
         Top = 0
         Width = 862
-        Height = 567
+        Height = 507
         Align = alClient
         BevelEdges = []
         BevelInner = bvNone
@@ -8426,7 +8426,7 @@ object f_work: Tf_work
       end
       object Panel6: TPanel
         Left = 0
-        Top = 567
+        Top = 507
         Width = 862
         Height = 40
         Align = alBottom

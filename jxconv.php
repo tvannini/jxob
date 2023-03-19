@@ -11,7 +11,7 @@
  * @author    Tommaso Vannini (tvannini@janox.it)
  */
 
-$jxrel = "2.8";
+$jxrel = "2.9";
 $info  = <<<JANOX_SCRIPT_HEAD
 
                       Janox Upgrade Tool
@@ -1054,6 +1054,48 @@ class upgrades_collection {
 
 
         }
+
+    /**
+     * Upgrades application to release 2.9
+     *
+     * Add fields to system tables:
+     *  - o2_users:
+     *     - poweruser   User poweruser flag
+     *     - hidden      User hidden flag
+     *
+     * @param string $app_name Application name
+     * @param jxdir  $app_dir  Application root directory
+     */
+    static function to2_9($app_name, $app_dir) {
+
+        // ______________________ Read tab-repository file from INI or use default one ___
+        $ini_content = file_get_contents($app_dir.$app_name.".ini");
+        $parts       = array();
+        preg_match('/tables\s*=\s*"([^"]*)"/', $ini_content, $parts);
+        if ($parts[1]) {
+            $tables = $parts[1];
+            }
+        else {
+            $tables = 'file_repository.inc';
+            }
+        // ________________________________________________ Get tables definition code ___
+        $code = file_get_contents($app_dir.'prgs'.DIRECTORY_SEPARATOR.$tables);
+        // ____________________________________________________________ Add new fields ___
+        $code = add_tab_field($code,
+                              'o2_users',
+                              'poweruser',
+                              'poweruser',
+                              '_o2logical');
+        $code = add_tab_field($code,
+                              'o2_users',
+                              'hidden',
+                              'hidden',
+                              '_o2logical');
+        // ____________________________________________ Write down new repository code ___
+        file_put_contents($app_dir.'prgs'.DIRECTORY_SEPARATOR.$tables, $code);
+
+        }
+
 
     }
 

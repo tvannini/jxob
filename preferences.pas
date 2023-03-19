@@ -68,6 +68,8 @@ type
     TabSheet1: TTabSheet;
     Label21: TLabel;
     e_brackets: TComboBox;
+    e_layer: TComboBox;
+    Label22: TLabel;
     procedure FormShow(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -107,6 +109,7 @@ var
 begin
   f_work.settings.WriteString('O2_ENV', 'default_user', e_def_user.Text);
   f_work.settings.WriteString('O2_ENV', 'jxrnt', e_jxrntpath.Text);
+  f_work.settings.WriteInteger('O2_ENV', 'layer', e_layer.ItemIndex);
   f_work.settings.WriteString('O2_ENV', 'design_report', e_reppath.Text);
   f_work.settings.WriteBool('O2_ENV', 'cvs_versioning', e_cvs.Checked);
   // __________________________________________ Save brackets mode in editor ___
@@ -176,16 +179,19 @@ var
   iniColor, brackets : String;
   i : Integer;
 begin
-  e_def_user.Text  := f_work.settings.ReadString('O2_ENV',
-                                                 'default_user',
-                                                 'supervisor');
-  e_reppath.Text   := f_work.settings.ReadString('O2_ENV', 'design_report', '');
-  e_jxrntpath.Text := f_work.settings.ReadString('O2_ENV', 'jxrnt', '');
-  e_temppath.Text  := f_work.settings.ReadString('O2_ENV', 'temp_dir', '');
-  e_cvs.Checked    := f_work.settings.ReadBool('O2_ENV',
-                                               'cvs_versioning',
-                                               false);
-  brackets := f_work.settings.ReadString('Editor', 'brackets', 'N');
+  e_def_user.Text   := f_work.settings.ReadString('O2_ENV',
+                                                  'default_user',
+                                                  'supervisor');
+  e_reppath.Text    := f_work.settings.ReadString('O2_ENV',
+                                                  'design_report',
+                                                  '');
+  e_jxrntpath.Text  := f_work.settings.ReadString('O2_ENV', 'jxrnt', '');
+  e_layer.ItemIndex := f_work.settings.ReadInteger('O2_ENV', 'layer', 0);
+  e_temppath.Text   := f_work.settings.ReadString('O2_ENV', 'temp_dir', '');
+  e_cvs.Checked     := f_work.settings.ReadBool('O2_ENV',
+                                                'cvs_versioning',
+                                                false);
+  brackets          := f_work.settings.ReadString('Editor', 'brackets', 'N');
   // _____________________________________________________ Only open bracket ___
   if brackets = 'O' then
   begin

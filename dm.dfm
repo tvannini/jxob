@@ -1,9 +1,9 @@
 object dm_form: Tdm_form
   OldCreateOrder = False
-  Left = 362
-  Top = 167
-  Height = 805
-  Width = 1050
+  Left = 407
+  Top = 116
+  Height = 822
+  Width = 1224
   object ds_tabelle: TDataSource
     DataSet = t_tabelle
     Left = 184
@@ -83,6 +83,10 @@ object dm_form: Tdm_form
         Name = 'folder'
         DataType = ftString
         Size = 200
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -136,6 +140,9 @@ object dm_form: Tdm_form
       FieldName = 'folder'
       Size = 200
     end
+    object t_tabelleLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object t_campi: TClientDataSet
     Aggregates = <>
@@ -180,6 +187,10 @@ object dm_form: Tdm_form
         Name = 'picture'
         DataType = ftString
         Size = 30
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -237,6 +248,9 @@ object dm_form: Tdm_form
       FieldName = 'picture'
       Size = 30
     end
+    object t_campiLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object t_indicitesta: TClientDataSet
     Aggregates = <>
@@ -253,6 +267,10 @@ object dm_form: Tdm_form
         Name = 'nomekey'
         DataType = ftString
         Size = 30
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -281,6 +299,9 @@ object dm_form: Tdm_form
       OnSetText = t_indicitestanomekeySetText
       Size = 30
     end
+    object t_indicitestaLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object t_indici: TClientDataSet
     Aggregates = <>
@@ -307,6 +328,10 @@ object dm_form: Tdm_form
         Name = 'direzione'
         DataType = ftString
         Size = 1
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -344,6 +369,9 @@ object dm_form: Tdm_form
       EditMask = '>L'
       Size = 1
     end
+    object t_indiciLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object t_databases: TClientDataSet
     Aggregates = <>
@@ -377,6 +405,10 @@ object dm_form: Tdm_form
       item
         Name = 'check_esist_tab'
         DataType = ftBoolean
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -416,6 +448,9 @@ object dm_form: Tdm_form
     end
     object t_databasescheck_esist_tab: TBooleanField
       FieldName = 'check_esist_tab'
+    end
+    object t_databasesLayer: TSmallintField
+      FieldName = 'Layer'
     end
   end
   object t_task: TClientDataSet
@@ -486,6 +521,10 @@ object dm_form: Tdm_form
       item
         Name = 'prepared_write'
         DataType = ftBoolean
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -577,6 +616,9 @@ object dm_form: Tdm_form
     object t_taskprepared_write: TBooleanField
       FieldName = 'prepared_write'
     end
+    object t_taskLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object t_usa_file: TClientDataSet
     Aggregates = <>
@@ -627,6 +669,10 @@ object dm_form: Tdm_form
       item
         Name = 'tablename_exp'
         DataType = ftInteger
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -693,6 +739,9 @@ object dm_form: Tdm_form
     object t_usa_filetablename_exp: TIntegerField
       FieldName = 'tablename_exp'
     end
+    object t_usa_fileLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object t_select: TClientDataSet
     Aggregates = <>
@@ -756,6 +805,10 @@ object dm_form: Tdm_form
         Name = 'sql'
         DataType = ftString
         Size = 500
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -842,6 +895,9 @@ object dm_form: Tdm_form
       FieldName = 'sql'
       Size = 500
     end
+    object t_selectLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object t_servers: TClientDataSet
     Aggregates = <>
@@ -875,6 +931,10 @@ object dm_form: Tdm_form
       item
         Name = 'chunksize'
         DataType = ftLargeint
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -919,6 +979,9 @@ object dm_form: Tdm_form
     end
     object t_serverschunksize: TLargeintField
       FieldName = 'chunksize'
+    end
+    object t_serversLayer: TSmallintField
+      FieldName = 'Layer'
     end
   end
   object ds_servers: TDataSource
@@ -1092,6 +1155,10 @@ object dm_form: Tdm_form
         Name = 'css_corner'
         DataType = ftString
         Size = 40
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -1256,6 +1323,9 @@ object dm_form: Tdm_form
     object t_formcss_corner: TStringField
       FieldName = 'css_corner'
       Size = 40
+    end
+    object t_formLayer: TSmallintField
+      FieldName = 'Layer'
     end
   end
   object ds_form: TDataSource
@@ -1600,6 +1670,10 @@ object dm_form: Tdm_form
       item
         Name = 'PinCols'
         DataType = ftSmallint
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -1911,6 +1985,9 @@ object dm_form: Tdm_form
     object t_controlliformPinCols: TSmallintField
       FieldName = 'PinCols'
     end
+    object t_controlliformLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object ds_controlliform: TDataSource
     DataSet = t_controlliform
@@ -1938,6 +2015,10 @@ object dm_form: Tdm_form
         Name = 'return'
         DataType = ftString
         Size = 255
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -1982,6 +2063,9 @@ object dm_form: Tdm_form
       Size = 8000
       Calculated = True
     end
+    object t_espressioniLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object ds_espressioni: TDataSource
     DataSet = t_espressioni
@@ -2025,6 +2109,10 @@ object dm_form: Tdm_form
         Name = 'note'
         DataType = ftString
         Size = 2048
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -2069,6 +2157,9 @@ object dm_form: Tdm_form
       FieldName = 'note'
       Size = 2048
     end
+    object t_programmiLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object ds_programmi: TDataSource
     DataSet = t_programmi
@@ -2101,6 +2192,10 @@ object dm_form: Tdm_form
       item
         Name = 'chunk_size'
         DataType = ftInteger
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -2139,6 +2234,9 @@ object dm_form: Tdm_form
     end
     object t_azionichunk_size: TIntegerField
       FieldName = 'chunk_size'
+    end
+    object t_azioniLayer: TSmallintField
+      FieldName = 'Layer'
     end
   end
   object ds_azioni: TDataSource
@@ -2224,6 +2322,10 @@ object dm_form: Tdm_form
       item
         Name = 'exp8'
         DataType = ftInteger
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -2352,6 +2454,9 @@ object dm_form: Tdm_form
       FieldName = 'field_calc'
       Size = 50
       Calculated = True
+    end
+    object t_operazioniLayer: TSmallintField
+      FieldName = 'Layer'
     end
   end
   object ds_operazioni: TDataSource
@@ -2735,6 +2840,10 @@ object dm_form: Tdm_form
         Name = 'icona'
         DataType = ftString
         Size = 240
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -2785,6 +2894,9 @@ object dm_form: Tdm_form
       FieldName = 'icona'
       Size = 200
     end
+    object t_menuLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object ds_menu: TDataSource
     DataSet = t_menu
@@ -2824,6 +2936,10 @@ object dm_form: Tdm_form
         Name = 'action'
         DataType = ftString
         Size = 40
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -2872,6 +2988,10 @@ object dm_form: Tdm_form
         Name = 'valore'
         DataType = ftString
         Size = 200
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -2899,6 +3019,9 @@ object dm_form: Tdm_form
     object t_variabili_appvalore: TStringField
       FieldName = 'valore'
       Size = 200
+    end
+    object t_variabili_appLayer: TSmallintField
+      FieldName = 'Layer'
     end
   end
   object t_union: TClientDataSet
@@ -2951,6 +3074,10 @@ object dm_form: Tdm_form
         Name = 'sql'
         DataType = ftString
         Size = 500
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -3013,6 +3140,9 @@ object dm_form: Tdm_form
       FieldName = 'sql'
       Size = 500
     end
+    object t_unionLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object ds_union: TDataSource
     DataSet = t_union
@@ -3041,6 +3171,10 @@ object dm_form: Tdm_form
         Name = 'nomeprgscelta'
         DataType = ftString
         Size = 50
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -3073,6 +3207,9 @@ object dm_form: Tdm_form
       FieldName = 'nomeprgscelta'
       Size = 100
     end
+    object t_modelliLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object ds_modelli: TDataSource
     DataSet = t_modelli
@@ -3101,6 +3238,10 @@ object dm_form: Tdm_form
         Name = 'modello'
         DataType = ftString
         Size = 50
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -3135,6 +3276,9 @@ object dm_form: Tdm_form
       FieldName = 'modello'
       Size = 50
     end
+    object t_parametriLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object ds_parametri: TDataSource
     DataSet = t_parametri
@@ -3159,6 +3303,10 @@ object dm_form: Tdm_form
         Name = 'tipo'
         DataType = ftString
         Size = 20
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -3187,6 +3335,9 @@ object dm_form: Tdm_form
     object t_reporttipo: TStringField
       DefaultExpression = #39'XML'#39
       FieldName = 'tipo'
+    end
+    object t_reportLayer: TSmallintField
+      FieldName = 'Layer'
     end
   end
   object ds_report: TDataSource
@@ -3226,6 +3377,10 @@ object dm_form: Tdm_form
         Name = 'alias'
         DataType = ftString
         Size = 50
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -3275,6 +3430,9 @@ object dm_form: Tdm_form
       Size = 100
       Calculated = True
     end
+    object t_reportfieldLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object ds_reportfield: TDataSource
     DataSet = t_reportfield
@@ -3308,6 +3466,10 @@ object dm_form: Tdm_form
       item
         Name = 'outputfile'
         DataType = ftInteger
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -3350,6 +3512,9 @@ object dm_form: Tdm_form
       FieldName = 'decode_exp'
       Size = 100
       Calculated = True
+    end
+    object t_input_outputLayer: TSmallintField
+      FieldName = 'Layer'
     end
   end
   object ds_input_output: TDataSource
@@ -3395,6 +3560,10 @@ object dm_form: Tdm_form
         Name = 'temp_xml'
         DataType = ftString
         Size = 255
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -3434,6 +3603,9 @@ object dm_form: Tdm_form
       FieldName = 'temp_xml'
       Size = 255
     end
+    object t_printdefLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object ds_printdef: TDataSource
     DataSet = t_printdef
@@ -3471,6 +3643,9 @@ object dm_form: Tdm_form
       BlobType = ftMemo
       Size = 2048
     end
+    object t_proprieta_controlliLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object ds_proprieta_controlli: TDataSource
     DataSet = t_proprieta_controlli
@@ -3490,6 +3665,10 @@ object dm_form: Tdm_form
         Name = 'valore'
         DataType = ftString
         Size = 250
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -3508,6 +3687,9 @@ object dm_form: Tdm_form
     object t_value_listvalore: TStringField
       FieldName = 'valore'
       Size = 250
+    end
+    object t_value_listLayer: TSmallintField
+      FieldName = 'Layer'
     end
   end
   object ds_value_list: TDataSource
@@ -3541,8 +3723,7 @@ object dm_form: Tdm_form
     DataSet = tab_ope
     Left = 872
     Top = 448
-  end
-  object tab_tipi_file: TClientDataSet
+  end  object tab_tipi_file: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 952
@@ -3589,6 +3770,10 @@ object dm_form: Tdm_form
         Name = 'result_var'
         DataType = ftString
         Size = 80
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -3628,6 +3813,9 @@ object dm_form: Tdm_form
       FieldName = 'result_var'
       Size = 80
     end
+    object t_aggregLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object ds_aggreg: TDataSource
     DataSet = t_aggreg
@@ -3655,6 +3843,10 @@ object dm_form: Tdm_form
         Name = 'return'
         DataType = ftString
         Size = 255
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -3686,6 +3878,9 @@ object dm_form: Tdm_form
       FieldName = 'return'
       Size = 255
     end
+    object tmp_expLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object tmp_parametri: TClientDataSet
     Aggregates = <>
@@ -3703,6 +3898,10 @@ object dm_form: Tdm_form
         Name = 'testo'
         DataType = ftString
         Size = 80
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -3724,6 +3923,9 @@ object dm_form: Tdm_form
     object tmp_parametritesto: TStringField
       FieldName = 'testo'
       Size = 80
+    end
+    object tmp_parametriLayer: TSmallintField
+      FieldName = 'Layer'
     end
   end
   object ds_tmp_parametri: TDataSource
@@ -3768,6 +3970,9 @@ object dm_form: Tdm_form
     object tmp_postableftwidth: TIntegerField
       FieldName = 'left+width'
     end
+    object tmp_postabLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object ds_tmp_postab: TDataSource
     DataSet = tmp_postab
@@ -3811,6 +4016,10 @@ object dm_form: Tdm_form
         Name = 'note'
         DataType = ftString
         Size = 2048
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -3854,6 +4063,9 @@ object dm_form: Tdm_form
     object elenco_prgnote: TStringField
       FieldName = 'note'
       Size = 2048
+    end
+    object elenco_prgLayer: TSmallintField
+      FieldName = 'Layer'
     end
   end
   object ds_elenco_prg: TDataSource
@@ -3910,6 +4122,9 @@ object dm_form: Tdm_form
       FieldName = 'service'
       Size = 50
     end
+    object t_ope_x_copiaLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object tmp_callparams: TClientDataSet
     Aggregates = <>
@@ -3941,6 +4156,10 @@ object dm_form: Tdm_form
         Name = 'Field'
         DataType = ftString
         Size = 200
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -3976,6 +4195,9 @@ object dm_form: Tdm_form
       FieldName = 'Field'
       Size = 200
     end
+    object tmp_callparamsLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object ds_tmp_callparams: TDataSource
     DataSet = tmp_callparams
@@ -4002,6 +4224,10 @@ object dm_form: Tdm_form
         Name = 'Field'
         DataType = ftString
         Size = 200
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -4030,6 +4256,9 @@ object dm_form: Tdm_form
     object t_formulas_sqlField: TStringField
       FieldName = 'Field'
       Size = 200
+    end
+    object t_formulas_sqlLayer: TSmallintField
+      FieldName = 'Layer'
     end
   end
   object ds_formulas_sql: TDataSource
@@ -4062,6 +4291,10 @@ object dm_form: Tdm_form
         Name = 'nomekey'
         DataType = ftString
         Size = 30
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -4090,6 +4323,9 @@ object dm_form: Tdm_form
       OnSetText = t_indicitestanomekeySetText
       Size = 30
     end
+    object t_indicitestanuLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object t_indicinu: TClientDataSet
     Aggregates = <>
@@ -4116,6 +4352,10 @@ object dm_form: Tdm_form
         Name = 'direzione'
         DataType = ftString
         Size = 1
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -4153,6 +4393,9 @@ object dm_form: Tdm_form
       EditMask = '>L'
       Size = 1
     end
+    object t_indicinuLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object t_indicitesta_all: TClientDataSet
     Aggregates = <>
@@ -4173,6 +4416,10 @@ object dm_form: Tdm_form
       item
         Name = 'unique'
         DataType = ftBoolean
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -4200,6 +4447,9 @@ object dm_form: Tdm_form
     object t_indicitesta_allunique: TBooleanField
       FieldName = 'unique'
     end
+    object t_indicitesta_allLayer: TSmallintField
+      FieldName = 'Layer'
+    end
   end
   object t_indici_all: TClientDataSet
     Aggregates = <>
@@ -4225,6 +4475,10 @@ object dm_form: Tdm_form
         Name = 'direzione'
         DataType = ftString
         Size = 1
+      end
+      item
+        Name = 'Layer'
+        DataType = ftSmallint
       end>
     IndexDefs = <
       item
@@ -4257,6 +4511,9 @@ object dm_form: Tdm_form
       Required = True
       EditMask = '>L'
       Size = 1
+    end
+    object t_indici_allLayer: TSmallintField
+      FieldName = 'Layer'
     end
   end
   object ds_indicitesta_all: TDataSource

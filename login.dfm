@@ -15090,6 +15090,10 @@ object f_login: Tf_login
         'absolute'
       ';   paths.'
       'temp_dir='
+      ';   --- Development Layer'
+      ';   Use 0 (zero) to develop the application core layer.'
+      ';   Use 1 to develop a reselling/verticalization layer. '
+      'layer=0'
       ';   --- Report Designer executable'
       
         ';   This is the path to the Report Manager Disigner  executeble.' +
