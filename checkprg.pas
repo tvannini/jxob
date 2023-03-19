@@ -324,9 +324,9 @@ begin
   cmdOut := TStringList.Create;
   cmdOut.Clear;
   dosCMD.OutputLines := cmdOut;
-  dosCMD.CommandLine := ExtractFileDir(Application.ExeName) +
-                        '\php.exe -c ' + ExtractFileDir(Application.ExeName) +
-                        ' -l ' + f_work.tempdir + 'check_exps.tmp';
+  dosCMD.CommandLine := '"' + ExtractFileDir(Application.ExeName) +
+                        '\php.exe" -c "' + ExtractFileDir(Application.ExeName) +
+                        '" -l "' + f_work.tempdir + 'check_exps.tmp"';
   dosCMD.Execute;
   tooLate := 0;
   while ((cmdOut.Text = '') and (tooLate < 100)) do
