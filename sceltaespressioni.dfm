@@ -1,8 +1,8 @@
 object f_sceltaexpr: Tf_sceltaexpr
-  Left = 4
-  Top = 63
-  Width = 638
-  Height = 448
+  Left = 495
+  Top = 172
+  Width = 837
+  Height = 674
   Caption = 'Expression selection'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,8 +19,8 @@ object f_sceltaexpr: Tf_sceltaexpr
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 380
-    Width = 630
+    Top = 606
+    Width = 829
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
@@ -66,8 +66,8 @@ object f_sceltaexpr: Tf_sceltaexpr
   end
   object PageControl1: TPageControl
     Left = 0
-    Top = 191
-    Width = 630
+    Top = 417
+    Width = 829
     Height = 189
     ActivePage = ts_checkresult
     Align = alBottom
@@ -99,7 +99,7 @@ object f_sceltaexpr: Tf_sceltaexpr
       object Memo1: TMemo
         Left = 0
         Top = 0
-        Width = 622
+        Width = 821
         Height = 161
         Align = alClient
         Ctl3D = False
@@ -114,8 +114,8 @@ object f_sceltaexpr: Tf_sceltaexpr
   object dbgrid1: TcxGrid
     Left = 0
     Top = 0
-    Width = 630
-    Height = 182
+    Width = 829
+    Height = 408
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
@@ -147,8 +147,8 @@ object f_sceltaexpr: Tf_sceltaexpr
   end
   object cxSplitter1: TcxSplitter
     Left = 0
-    Top = 182
-    Width = 630
+    Top = 408
+    Width = 829
     Height = 9
     AlignSplitter = salBottom
     Control = PageControl1
