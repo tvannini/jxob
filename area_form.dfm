@@ -494,6 +494,7 @@ object f_areaform: Tf_areaform
       'Html|Html'
       'Path|Path'
       'Htmlarea|Html area'
+      'Multiple'
       'Save_as|Save as'
       'NoRecordMessage|No records message'
       'NavigationBlockVisible|Show navigation buttons'

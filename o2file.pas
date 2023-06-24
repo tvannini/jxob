@@ -19,6 +19,7 @@ type
     ffield: string;
     fview: string;
     fexpand: TCtrlExpand;
+    fmultiple: Boolean;
 
     procedure sabilitato(const Value: integer);
     procedure scss(const Value: string);
@@ -30,6 +31,7 @@ type
     procedure sfield(const Value: string);
     procedure sview(const Value: string);
     procedure sexpand(const Value: TCtrlExpand);
+    procedure smultiple(const Value: Boolean);
 
     { Private declarations }
   protected
@@ -49,6 +51,7 @@ type
     property View: string Read fview Write sview;
     property Field: string Read ffield Write sfield;
     property Expand: TCtrlExpand Read fexpand Write sexpand;
+    property Multiple: Boolean Read fmultiple Write smultiple;
 
     { Published declarations }
   end;
@@ -76,6 +79,7 @@ begin
   fabilitato := Value;
 end;
 
+
 procedure To2file.scss(const Value: string);
 begin
   fcss := Value;
@@ -86,20 +90,24 @@ begin
   ffield := Value;
 end;
 
+
 procedure To2file.sparentinfo(const Value: string);
 begin
   fparentinfo := Value;
 end;
+
 
 procedure To2file.sparentname(const Value: string);
 begin
   fparentname := Value;
 end;
 
+
 procedure To2file.ssave_as(const Value: integer);
 begin
   fsave_as := Value;
 end;
+
 
 procedure To2file.ssubmitonchange(const Value: integer);
 begin
@@ -123,4 +131,12 @@ begin
   fexpand := Value;
 end;
 
+
+procedure To2file.smultiple(const Value: Boolean);
+begin
+  fmultiple := Value;
+end;
+
 end.
+
+

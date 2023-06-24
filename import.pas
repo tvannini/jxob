@@ -1826,13 +1826,14 @@ begin
               par13 := decodifica_exp_stringa(ctrl_prop('confirm_message'), nomeprogramma);
             end; //fine image
 
-            // controllo file
+            // controllo file upload
             if tipo = 'file' then
             begin
               // VOCE CSS
               par5 := decodifica_css(ctrl_prop('css'));
               par12 := decodifica_exp(ctrl_prop('save_as'), nomeprg);
-            end; //fine file
+              boolean1 := (ctrl_prop('multiple') <> '');
+            end; //fine file upload
 
             // controllo multipage
             if tipo = 'multipage' then

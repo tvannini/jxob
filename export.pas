@@ -1362,6 +1362,12 @@ begin
                             t_controlliformextra1.Value + '());';
                   Memo3.Add(buffer);
                 end;
+                if t_controlliformboolean1.Value then
+                begin
+                  buffer := chr(9) + chr(9) + '$ctrl_' + nomecontrollo +
+                            '->multiple();';
+                  Memo3.Add(buffer);
+                end;
               end;
               // _________________________________________ Multipage control ___
               if t_controlliformtipo.Value = 'multipage' then

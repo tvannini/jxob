@@ -1962,6 +1962,7 @@ begin
         extra1        := IntToStr(control_file.Save_as);
         Expand        := ExpandAsString(control_file.Expand);
         parentinfo    := control_file.Parentinfo;
+        boolean1      := control_file.Multiple;
         if control_file.Parent.ClassName = 'To2table' then
         begin
           parentinfo := calcola_parent_info(control_file, parentinfo);
@@ -2649,6 +2650,7 @@ begin
       begin
         control_file.Save_as := dm_form.t_controlliformextra1.AsInteger;
       end;
+      control_file.Multiple := dm_form.t_controlliformboolean1.Value;
     end
     // ___________________________________________________ Control MULTIPAGE ___
     else if dm_form.t_controlliformtipo.Value = 'multipage' then
