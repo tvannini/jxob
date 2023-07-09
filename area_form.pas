@@ -1959,6 +1959,7 @@ begin
         vocecss       := control_file.Vocecss;
         taborder      := control_file.TabOrder;
         submit        := control_file.Submitonchange;
+        azione        := control_file.Azione;
         extra1        := IntToStr(control_file.Save_as);
         Expand        := ExpandAsString(control_file.Expand);
         parentinfo    := control_file.Parentinfo;
@@ -2643,6 +2644,7 @@ begin
       control_file.TabOrder      := dm_form.t_controlliformtaborder.Value;
       control_file.Parentinfo    := dm_form.t_controlliformparent_info.Value;
       control_file.Submitonchange:= dm_form.t_controlliformsubmitonchange.Value;
+      control_file.Azione        := dm_form.t_controlliformazione.Value;
       control_file.Expand        :=
                             StringAsExpand(dm_form.t_controlliformExpand.Value);
       // __________________________ Set "Save as" expression (for file name) ___

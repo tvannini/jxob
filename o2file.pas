@@ -15,6 +15,7 @@ type
     fcss: string;
     fparentname: string;
     fsubmitonchange: integer;
+    fazione: string;
     fsave_as: integer;
     ffield: string;
     fview: string;
@@ -27,6 +28,7 @@ type
     procedure sparentname(const Value: string);
     procedure svisibile(const Value: integer);
     procedure ssubmitonchange(const Value: integer);
+    procedure sazione(const Value: string);
     procedure ssave_as(const Value: integer);
     procedure sfield(const Value: string);
     procedure sview(const Value: string);
@@ -47,6 +49,7 @@ type
     property Parentname: string Read fparentname Write sparentname;
     property Parentinfo: string Read fparentinfo Write sparentinfo;
     property Submitonchange: integer Read fsubmitonchange Write ssubmitonchange;
+    property Azione: string Read fazione Write sazione;
     property Save_as: integer Read fsave_as Write ssave_as;
     property View: string Read fview Write sview;
     property Field: string Read ffield Write sfield;
@@ -112,6 +115,12 @@ end;
 procedure To2file.ssubmitonchange(const Value: integer);
 begin
   fsubmitonchange := Value;
+end;
+
+
+procedure To2file.sazione(const Value: string);
+begin
+  fazione := Value;
 end;
 
 
