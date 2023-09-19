@@ -84,7 +84,7 @@ object f_work: Tf_work
     Top = 32
     Width = 870
     Height = 602
-    ActivePage = ts_programmi
+    ActivePage = ts_openapp
     Align = alClient
     MultiLine = True
     PopupMenu = pop_pagecontrol1
@@ -837,7 +837,7 @@ object f_work: Tf_work
         Top = 0
         Width = 862
         Height = 547
-        ActivePage = ts_form
+        ActivePage = ts_prg_prop
         Align = alClient
         Style = tsButtons
         TabOrder = 1
@@ -2568,7 +2568,7 @@ object f_work: Tf_work
             OnDblClick = Zoom11Click
           end
           object BitBtn5: TBitBtn
-            Left = 748
+            Left = 668
             Top = 40
             Width = 90
             Height = 25

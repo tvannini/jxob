@@ -595,7 +595,7 @@ type
     function albero_folder(nodo: TTreeNode): string;
 
     procedure checkout(Sender: TObject; oggetto: string);
-    procedure checkin(Sender: TObject; const oggetti: array of string; cvsSet: Boolean);
+    procedure checkin(Sender: TObject; const oggetti: array of string; cvsSet: Boolean; gitSet: Boolean);
     procedure uncheck(Sender: TObject; oggetto: string);
     procedure copia_file(Sender: TObject; origine, destinazione: string);
 
@@ -776,6 +776,7 @@ type
     nodo_temp1: TTreeNode;
     treemenu_incarica: boolean;
     elenco_prg_caricato: Boolean;
+    cmdObj: TDosCommand;
   public
     { Public declarations }
     settings: TIniFile;
@@ -800,7 +801,7 @@ type
     nodo_ultimo_selezionato: TTreeNode;
     ultimo_tabsheet : TTabSheet;
     CVSCheckInData : string;
-
+    gitIntegrated : Boolean;
   end;
 
 var
@@ -896,6 +897,7 @@ begin
     Screen.Cursor    := crHourGlass;
     LogProjectLoad('Starting up');
     try
+    begin
       // __________________________________________________ Logged developer ___
       user     := e_user.Text;
       // ___________________________________ Get project name from file name ___
@@ -929,6 +931,16 @@ begin
       userdir := prgdir + user + '\';
       // ________________________ Load colors from INI file to configuration ___
       f_config.carica_ini.Execute();
+      // ____________________________________________ Manage Git integration ___
+      if (settings.ReadBool('O2_ENV', 'git', false) and
+          DirectoryExists(workdir + '.git')) then
+      begin
+        gitIntegrated := true;
+      end
+      else
+      begin
+        gitIntegrated := false;
+      end;
       // _________________________________________________ Update status bar ___
       StatusBar1.Panels[0].Text := '   Project: ' + progetto;
       StatusBar1.Panels[1].Text := '|   Home dir: ' + workdir +
@@ -958,12 +970,15 @@ begin
       HeaderControl1.Visible  := True;
       supertree.Visible       := True;
       Splitter5.Visible       := True;
+    end
     finally
-    LogProjectLoad();
-    Screen.Cursor         := crDefault;
-    f_work.create.Enabled := True;
-    f_work.delete.Enabled := True;
-    f_work.cancel.Enabled := True;
+    begin
+      LogProjectLoad();
+      Screen.Cursor         := crDefault;
+      f_work.create.Enabled := True;
+      f_work.delete.Enabled := True;
+      f_work.cancel.Enabled := True;
+    end;
   end;
 
 end;
@@ -3315,24 +3330,68 @@ end;
 
 function Tf_work.cvs_checkin(ObjFile, TmpFile: String): Boolean;
 var
-  checkinBat, Params: string;
-  ResCode: Boolean;
+  checkinBat, Params, gitBat: string;
+  cvsSet, ResCode: Boolean;
+  gitCmd: TStringList;
 begin
-  checkinBat := 'check-in.bat';
-  Params     := f_work.user +
-                ' ' + f_work.prgdir +
-                ' ' + ObjFile +
-                ' ' + TmpFile;
-  ResCode    := ExecAndWait(checkinBat + ' ' + Params);
-  if ResCode then
+  cvsSet := f_work.settings.ReadBool('O2_ENV', 'cvs_versioning', false);
+  if cvsSet then
   begin
-    Result := true;
-  end
-  else
+    checkinBat := 'check-in.bat';
+    Params     := f_work.user +
+                  ' ' + f_work.prgdir +
+                  ' ' + ObjFile +
+                  ' ' + TmpFile;
+    ResCode    := ExecAndWait(checkinBat + ' ' + Params);
+    if ResCode then
+    begin
+      Result := true;
+    end
+    else
+    begin
+      ShowMessage('Error from external CVS.' + chr(10) +
+                  'Can' + chr(39) + 't check-in element.');
+      Result := false;
+    end;
+  end;
+  // ____________________________________________________ Use integrated Git ___
+  if gitIntegrated then
   begin
-    ShowMessage('Error from external CVS.' + chr(10) +
-                'Can' + chr(39) + 't check-in element.');
-    Result := false;
+    if (RightStr(ObjFile, 4) = '.prf') or (RightStr(ObjFile, 4) = '.prg') then
+    begin
+      ObjFile := Copy(ObjFile, 1, length(ObjFile) - 1) + '*';
+    end;
+    gitCmd := TStringList.Create;
+    gitCmd.Add('cd ' + f_work.prgdir);
+    gitCmd.Add('git add ' + f_work.prgdir + ObjFile);
+    gitCmd.Add('git commit ' + f_work.prgdir + ObjFile +
+               ' --file=' + TmpFile +
+               ' --author="' + f_work.user + '<' + f_work.user + '@janox.it>"');
+    gitBat := f_work.tempdir + 'jxgit' + f_work.user + '.bat';
+    gitCmd.SaveToFile(gitBat);
+      // ___________________________________________________ Execute command ___
+    try
+    begin
+      ExecAndWait(gitBat);
+      ResCode := true;
+    end
+    except on E : Exception do
+      begin
+        ShowMessage(E.Message);
+        ResCode := false;
+      end;
+    end;
+    if ResCode then
+    begin
+      Result := true;
+    end
+    else
+    begin
+      ShowMessage('Error from Git integration.' + chr(10) +
+                  'BAT:' + chr(10) + gitBat + chr(10) +
+                  'Can' + chr(39) + 't check-in ' + ObjFile + '.');
+      Result := false;
+    end;
   end;
 end;
 
@@ -3382,7 +3441,8 @@ end;
 
 procedure Tf_work.checkin(Sender: TObject;
                           const oggetti: array of string;
-                          cvsSet: Boolean);
+                          cvsSet: Boolean;
+                          gitSet: Boolean);
 var
   ori, nuovo: TFileStream;
   anyError: Boolean;
@@ -3414,6 +3474,10 @@ begin
       FreeAndNil(ori);
       FreeAndNil(nuovo);
     end;
+  end;
+  if (gitSet and (not(cvs_checkin(oggetti[0], TmpFile)))) then
+  begin
+    anyError := True;
   end;
   // _______________________________ If not error delete files from user dir ___
   if not(anyError) then
@@ -3604,16 +3668,18 @@ end;
 procedure Tf_work.check_inExecute(Sender: TObject);
 var
   dircds, dircds_user, nomeprg, TmpFile: string;
-  cvsSet, forzacheckin: Boolean;
+  cvsSet, gitSet, forzacheckin: Boolean;
   CVSTempTxt: TStringList;
 begin
+  // ________________________________________ Generic CVS and Git versioning ___
   cvsSet := f_work.settings.ReadBool('O2_ENV', 'cvs_versioning', false);
+  gitSet := gitIntegrated;
   if (MessageDlg('Confirm object check-in?',
                  mtConfirmation,
                  mbOKCancel,
                  1) = mrOk) then
   begin
-    if cvsSet then
+    if cvsSet or gitIntegrated then
     begin
       CVSCheckInData := '';
       f_CVSInfo.ShowModal;
@@ -3633,7 +3699,10 @@ begin
     if PageControl1.ActivePage = ts_appvars then
     begin
       f_export.appvars_export.Execute;
-      checkin(self, [dm_form.t_applicazioneappvars.Value], cvsSet);
+      checkin(self,
+              [dm_form.t_applicazioneappvars.Value],
+              cvsSet,
+              gitIntegrated);
       dm_form.appvar_modificato := false;
     end
     // ______________________________________________________________ Models ___
@@ -3644,21 +3713,22 @@ begin
               [dm_form.t_applicazionemodels.Value,
                '__source__\models.cache',
                '__source__\models.md5'],
-              cvsSet);
+              cvsSet,
+              gitIntegrated);
       dm_form.datatypes_modificato := false;
     end
     // ________________________________________________________________ Menu ___
     else if PageControl1.ActivePage = ts_menu then
     begin
       f_export.menu_export.Execute;
-      checkin(self, [dm_form.t_applicazionemenus.Value], cvsSet);
+      checkin(self, [dm_form.t_applicazionemenus.Value], cvsSet, gitIntegrated);
       dm_form.menu_modificato := false;
     end
     // _______________________________________________ Servers and databases ___
     else if PageControl1.ActivePage = ts_database then
     begin
       f_export.db_export.Execute;
-      checkin(self, [dm_form.t_applicazionedbs.Value], cvsSet);
+      checkin(self, [dm_form.t_applicazionedbs.Value], cvsSet, gitIntegrated);
       dm_form.database_modificato := false;
     end
     // ______________________________________________________________ Tables ___
@@ -3674,7 +3744,8 @@ begin
                '__source__\nuindexes.cache',
                '__source__\nusegments.cache',
                '__source__\tables.md5'],
-              cvsSet);
+              cvsSet,
+              gitIntegrated);
       dm_form.tables_modificato := false;
     end
     // _____________________________________________________________ Program ___
@@ -3698,7 +3769,10 @@ begin
         if dm_form.t_programminome.Value <> '_o2viewmodels' then
         begin
           nomeprg := dm_form.t_programminome.Value;
-          checkin(self, [nomeprg + '.prg', nomeprg + '.prf'], cvsSet);
+          checkin(self,
+                  [nomeprg + '.prg', nomeprg + '.prf'],
+                  cvsSet,
+                  gitIntegrated);
           // muove i files cds
           // copia i files sources (cds)
           dircds      := f_work.prgdir + '__source__\' + nomeprg + '\';
@@ -3747,8 +3821,9 @@ begin
         begin
           checkin(self,
                   [dm_form.t_programminome.Value + '.prg',
-                   dm_form.t_applicazioneviews.Value],
-                  cvsSet);
+                  dm_form.t_applicazioneviews.Value],
+                  cvsSet,
+                  gitIntegrated);
         end;
         dm_form.program_modificato := false;
       end;

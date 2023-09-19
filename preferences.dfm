@@ -1,7 +1,7 @@
 object f_config: Tf_config
   Left = 432
   Top = 176
-  Width = 405
+  Width = 440
   Height = 620
   Caption = 'Settings'
   Color = clBtnFace
@@ -23,12 +23,12 @@ object f_config: Tf_config
     Caption = 'Call Program'
   end
   object PageControl1: TPageControl
-    Left = 0
+    Left = 20
     Top = 73
-    Width = 397
+    Width = 400
     Height = 469
     ActivePage = ts_generale
-    Align = alClient
+    Align = alCustom
     TabOrder = 0
     object ts_generale: TTabSheet
       Caption = 'General'
@@ -67,6 +67,42 @@ object f_config: Tf_config
         Height = 13
         Caption = 'Development layer:'
         Visible = False
+      end
+      object Label23: TLabel
+        Left = 24
+        Top = 280
+        Width = 156
+        Height = 13
+        Caption = 'Integrate local versioning system:'
+      end
+      object Label24: TLabel
+        Left = 55
+        Top = 324
+        Width = 314
+        Height = 29
+        AutoSize = False
+        Caption = 
+          'If ".git" folder is found in application root, then Git will be ' +
+          'used to COMMIT each CHECK-IN.'
+        WordWrap = True
+      end
+      object Label25: TLabel
+        Left = 55
+        Top = 400
+        Width = 314
+        Height = 30
+        AutoSize = False
+        Caption = 
+          '"check-in.bat" and "check-out.bat" scripts must be provided in B' +
+          'uilder folder.'
+        WordWrap = True
+      end
+      object Label26: TLabel
+        Left = 55
+        Top = 355
+        Width = 232
+        Height = 13
+        Caption = 'NOTE: "git" command must be provided to CMD.'
       end
       object e_def_user: TEdit
         Left = 170
@@ -135,14 +171,14 @@ object f_config: Tf_config
         OnClick = PathButton3Click
       end
       object e_cvs: TCheckBox
-        Left = 20
-        Top = 280
-        Width = 337
+        Left = 36
+        Top = 380
+        Width = 245
         Height = 21
-        Caption = 'Integrate external CVS'
+        Caption = 'Other CVS'
         Ctl3D = False
         ParentCtl3D = False
-        TabOrder = 8
+        TabOrder = 9
       end
       object e_layer: TComboBox
         Left = 170
@@ -156,6 +192,16 @@ object f_config: Tf_config
         Items.Strings = (
           'Application core'
           'Overriding layer')
+      end
+      object e_git: TCheckBox
+        Left = 36
+        Top = 304
+        Width = 245
+        Height = 21
+        Caption = 'Git'
+        Ctl3D = False
+        ParentCtl3D = False
+        TabOrder = 8
       end
     end
     object ts_actions: TTabSheet
@@ -1232,13 +1278,13 @@ object f_config: Tf_config
   object Panel1: TPanel
     Left = 0
     Top = 542
-    Width = 397
+    Width = 432
     Height = 51
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
     object Button1: TButton
-      Left = 166
+      Left = 182
       Top = 16
       Width = 75
       Height = 25
@@ -1250,7 +1296,7 @@ object f_config: Tf_config
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 397
+    Width = 432
     Height = 73
     Align = alTop
     BevelOuter = bvNone
@@ -1267,7 +1313,7 @@ object f_config: Tf_config
     object e_iniFile: TEdit
       Left = 20
       Top = 38
-      Width = 355
+      Width = 400
       Height = 19
       Ctl3D = False
       ParentCtl3D = False
@@ -1276,8 +1322,8 @@ object f_config: Tf_config
     end
   end
   object ActionList1: TActionList
-    Left = 460
-    Top = 192
+    Left = 348
+    Top = 144
     object carica_ini: TAction
       Caption = 'carica_ini'
       OnExecute = carica_iniExecute

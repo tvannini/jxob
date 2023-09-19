@@ -70,6 +70,11 @@ type
     e_brackets: TComboBox;
     e_layer: TComboBox;
     Label22: TLabel;
+    Label23: TLabel;
+    e_git: TCheckBox;
+    Label24: TLabel;
+    Label25: TLabel;
+    Label26: TLabel;
     procedure FormShow(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -112,6 +117,16 @@ begin
   f_work.settings.WriteInteger('O2_ENV', 'layer', e_layer.ItemIndex);
   f_work.settings.WriteString('O2_ENV', 'design_report', e_reppath.Text);
   f_work.settings.WriteBool('O2_ENV', 'cvs_versioning', e_cvs.Checked);
+  // ________________________________________________ Manage Git integration ___
+  f_work.settings.WriteBool('O2_ENV', 'git', e_git.Checked);
+  if (e_cvs.Checked and DirectoryExists(f_work.workdir + 'git')) then
+  begin
+    f_work.gitIntegrated := true;
+  end
+  else
+  begin
+    f_work.gitIntegrated := false;
+  end;
   // __________________________________________ Save brackets mode in editor ___
   if e_brackets.ItemIndex = 1 then
   begin
@@ -191,6 +206,7 @@ begin
   e_cvs.Checked     := f_work.settings.ReadBool('O2_ENV',
                                                 'cvs_versioning',
                                                 false);
+  e_git.Checked     := f_work.settings.ReadBool('O2_ENV', 'git', false);
   brackets          := f_work.settings.ReadString('Editor', 'brackets', 'N');
   // _____________________________________________________ Only open bracket ___
   if brackets = 'O' then

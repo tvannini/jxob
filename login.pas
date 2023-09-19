@@ -96,7 +96,8 @@ begin
   f_work.e_res_y.Text := f_work.settings.ReadString('Forms',
                                                     'Resolution_y',
                                                     '768');
-  loginOK := False;                                                    
+  loginOK := False;
+
 end;
 
 
