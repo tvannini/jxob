@@ -3330,7 +3330,7 @@ end;
 
 function Tf_work.cvs_checkin(ObjFile, TmpFile: String): Boolean;
 var
-  checkinBat, Params, gitBat: string;
+  checkinBat, Params, gitBat, saveDir: string;
   cvsSet, ResCode: Boolean;
   gitCmd: TStringList;
 begin
@@ -3361,8 +3361,8 @@ begin
     begin
       ObjFile := Copy(ObjFile, 1, length(ObjFile) - 1) + '*';
     end;
-    gitCmd := TStringList.Create;
-    gitCmd.Add('cd ' + f_work.prgdir);
+    saveDir := GetCurrentDir();
+    gitCmd  := TStringList.Create;
     gitCmd.Add('git add ' + f_work.prgdir + ObjFile);
     gitCmd.Add('git commit ' + f_work.prgdir + ObjFile +
                ' --file=' + TmpFile +
@@ -3372,11 +3372,14 @@ begin
       // ___________________________________________________ Execute command ___
     try
     begin
+      SetCurrentDir(f_work.prgdir);
       ExecAndWait(gitBat);
+      SetCurrentDir(saveDir);
       ResCode := true;
     end
     except on E : Exception do
       begin
+        SetCurrentDir(saveDir);
         ShowMessage(E.Message);
         ResCode := false;
       end;
