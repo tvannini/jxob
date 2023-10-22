@@ -152,7 +152,15 @@ begin
     repeat
       if t_azioniazione.Value <> '' then
       begin
-        Memo2.Add('o2def::act("' +  t_azioniazione.Value + '");');
+        if t_azionicatch_action.Value <> '' then
+        begin
+           Memo2.Add('o2def::act("' +  t_azioniazione.Value + '", "' +
+                                       t_azionicatch_action.Value + '");');
+        end
+        else
+        begin
+           Memo2.Add('o2def::act("' +  t_azioniazione.Value + '");');
+        end;
       end;
       t_azioni.Next
     until (t_azioni.EOF); // ___________________________ End loop on actions ___
@@ -1959,32 +1967,36 @@ begin
       until t_form.EOF;
 
 
-      // AZIONI
+      // ___________________________________________________________ ACTIONS ___
       t_azioni.First;
       repeat
         if t_azioniazione.Value <> '' then
         begin
           Memo3.Add('');
-
-
-          buffer := 'function ' + nomeprg + '§§' + t_azioniazione.Value + '_act(&$o2exe) {';
+          buffer := 'function ' + nomeprg + '§§' +
+                                  t_azioniazione.Value + '_act(&$o2exe) {';
           Memo3.Add(buffer);
+          // ________________________________________ If catch-action is set ___
+          if t_azionicatch_action.Value <> '' then
+          begin
+            buffer := chr(9) + 'try {';
+            Memo3.Add(buffer);
+          end;
           buffer := '';
 
-          //ISTRUZIONI DELL'AZIONE
+          // __________________________________________________ ACtion steps ___
           t_operazioni.First;
           repeat
-
             if (t_operazioniexp2.Value = 0) then
             begin
               condizione := 'True'
             end
             else begin
-              condizione := '(' + nomeprg + '_exp_' + t_operazioniexp2.AsString + '() || $o2exe->e())'
+              condizione := '(' + nomeprg + '_exp_' +
+                            t_operazioniexp2.AsString + '() || $o2exe->e())'
             end;
-            inizioact := chr(9) + '$o2exe->s(' + t_operazioniid.AsString + ') && ' +
-              condizione + ' && ';
-            //if t_operazionioperazione.Value='Go to program' then fineact:='&& $o2exe->t();' else fineact:='&& $o2exe->e();';
+            inizioact := chr(9) + '$o2exe->s(' + t_operazioniid.AsString +
+                         ') && ' + condizione + ' && ';
             fineact := '&& $o2exe->e();';
 
             if t_operazionioperazione.Value = 'Block' then
@@ -2476,7 +2488,15 @@ begin
 
             t_operazioni.Next;
           until t_operazioni.EOF;
-
+          // ________________________________________ If catch-action is set ___
+          if t_azionicatch_action.Value <> '' then
+          begin
+            Memo3.Add(chr(9) + '}');
+            Memo3.Add(chr(9) + 'catch (Throwable $error) {');
+            Memo3.Add(chr(9) + chr(9) + 'o2act::catch($error, $o2exe);');
+            Memo3.Add(chr(9) + chr(9) + '}');
+          end;
+          // _____________________________________________ End action script ___
           buffer := chr(9) + '} //|o2_fine_act|';
           Memo3.Add(buffer);
         end;

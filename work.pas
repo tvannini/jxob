@@ -483,6 +483,9 @@ type
     prepared_write: TDBCheckBox;
     lab_nomeview: TLabel;
     lab_prepared: TLabel;
+    catch_action_label: TLabel;
+    db_action_catched: TCheckBox;
+    db_catchaction: TLabel;
     procedure dbgrid_tabelle_savEnter(Sender: TObject);
     procedure DBGrid_campiEnter(Sender: TObject);
     procedure dbgrid_indiciEnter(Sender: TObject);
@@ -577,7 +580,9 @@ type
     procedure dbgrid_menuEnter(Sender: TObject);
     procedure Menu2Click(Sender: TObject);
     procedure new_viewExecute(Sender: TObject);
-    function new_actionExecute(Sender: TObject): string;
+    function  new_actionExecute(Sender: TObject): string;
+    function  new_actionCreate(action_name: string): TTreeNode;
+    procedure action_show(action: string);
     procedure Delete1Click(Sender: TObject);
     procedure dbgrid_parametriEnter(Sender: TObject);
     procedure prg_copiaExecute(Sender: TObject);
@@ -767,6 +772,7 @@ type
     procedure WriteFileMD5(FName: String; RepName: String; userVersion: Boolean);
     procedure preparedClick(Sender: TObject);
     procedure DBEdit24Change(Sender: TObject);
+    procedure db_action_catchedClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -1338,6 +1344,7 @@ end;
 
 procedure Tf_work.Memo1Enter(Sender: TObject);
 begin
+  memo1 := TJvMemo.Create(ts_prove);
   memo1.Clear;
   memo1.Lines.Append(dm_form.t_operazionicallparam.Value);
 end;
@@ -2364,10 +2371,8 @@ begin
               ((supertree.Selected.Text <> 'all') or
                (supertree.Selected.Parent <> nodo_azioni)) then
       begin
-        dm_form.t_azioni.Locate('azione', supertree.Selected.Text, []);
-        dbnav.DataSource         := dm_form.ds_azioni;
-        Pagecontrol2.ActivePage  := ts_azioni;
-        Panel_expression.Visible := False;
+        action_show(supertree.Selected.Text);
+        dbnav.DataSource := dm_form.ds_azioni;
       end
       // ______________ Selection inside active program (3 sub-nodes levels) ___
       {*
@@ -4336,54 +4341,100 @@ begin
 end;
 
 
+{**
+ * Show selected action
+ *}
+procedure Tf_work.action_show(action: String);
+begin
+  Panel_expression.Visible := False;
+  Pagecontrol2.ActivePage  := ts_azioni;
+  // _____________________________________ Check if action is a catch-action ___
+  if dm_form.t_azioni.Locate('fine', action, []) then
+  begin
+    catch_action_label.Visible := false;
+    db_action_catched.Visible  := false;
+    db_catchaction.Visible     := false;
+    dm_form.t_azioni.Locate('azione', action, []);
+  end
+  else
+  begin
+    dm_form.t_azioni.Locate('azione', action, []);
+    catch_action_label.Visible := true;
+    db_action_catched.Visible  := true;
+    // ____________________________________________ Manage catch action name ___
+    if dm_form.t_azionicatch_action.Value <> '' then
+    begin
+      db_action_catched.OnClick := nil;
+      db_action_catched.Checked := true;
+      db_action_catched.OnClick := db_action_catchedClick;
+      db_catchaction.Visible    := true;
+      db_catchaction.Caption    := dm_form.t_azionicatch_action.Value;
+    end
+    else
+    begin
+      db_action_catched.Checked := false;
+      db_catchaction.Visible    := false;
+      db_catchaction.Caption    := '';
+    end;
+  end;
+end;
+
+
 function Tf_work.new_actionExecute(Sender: TObject): string;
 var
-  nome_azione: string;
-  nodotemp:    TTreeNode;
-  azionepos, ope_pos: TBookmark;
+  act_name:         string;
+  new_action:       TTreeNode;
+  act_pos, ope_pos: TBookmark;
 begin
-  if InputQuery('New action', 'Action name', nome_azione) and
-     (nome_azione <> '') then
+  if InputQuery('New action', 'Action name', act_name) and (act_name <> '') then
   begin
-    nome_azione := dm_form.formatName(nome_azione);
+    act_name := dm_form.formatName(act_name);
     if dm_form.ds_operazioni.State = dsInsert then
     begin
       dm_form.t_operazioni.Post;
     end;
-    azionepos := dm_form.t_azioni.GetBookmark;
-    ope_pos   := dm_form.t_operazioni.GetBookmark;
+    act_pos := dm_form.t_azioni.GetBookmark;
+    ope_pos := dm_form.t_operazioni.GetBookmark;
     // __________________________________________ Action name already exists ___
-    if dm_form.t_azioni.Locate('azione', nome_azione, [loCaseInsensitive]) then
+    if dm_form.t_azioni.Locate('azione', act_name, [loCaseInsensitive]) then
     begin
-      ShowMessage('Action ' + nome_azione + ' already exists!');
+      ShowMessage('Action ' + act_name + ' already exists!');
       Result := '';
     end
     else
     begin
-      dm_form.t_azioni.Insert;
-      dm_form.t_azioni.Edit;
-      dm_form.t_azioniazione.Value := nome_azione;
-      dm_form.t_azioni.Post;
-      // ____________________________________________ Add new action to tree ___
-      nodotemp := supertree.Items.AddChild(nodo_azioni_all, nome_azione);
-      nodotemp.ImageIndex    := 29;
-      nodotemp.SelectedIndex := 29;
+      // __________________________________ Create action and add it to tree ___
+      new_action := new_actionCreate(act_name);
       if supertree.Selected.Text = 'Actions' then
       begin
-        dm_form.t_azioni.Locate('azione', nome_azione, []);
-        supertree.Selected       := nodotemp;
-        Pagecontrol2.ActivePage  := ts_azioni;
-        Panel_expression.Visible := False;
+        action_show(act_name);
+        supertree.Selected := new_action;
       end
       // ____________________________________________________ Reset datasets ___
       else
       begin
-        dm_form.t_azioni.GotoBookmark(azionepos);
+        dm_form.t_azioni.GotoBookmark(act_pos);
         dm_form.t_operazioni.GotoBookmark(ope_pos);
       end;
-      Result := nome_azione;
+      Result := act_name;
     end;
   end;
+end;
+
+
+function Tf_work.new_actionCreate(action_name: string): TTreeNode;
+var
+  nodotemp: TTreeNode;
+begin
+  dm_form.t_azioni.Insert;
+  dm_form.t_azioni.Edit;
+  dm_form.t_azioniazione.Value := action_name;
+  dm_form.t_azioni.Post;
+  // ________________________________________________ Add new action to tree ___
+  nodotemp := supertree.Items.AddChild(nodo_azioni_all, action_name);
+  nodotemp.ImageIndex    := 29;
+  nodotemp.SelectedIndex := 29;
+  Result                 := nodotemp;
 end;
 
 
@@ -6287,159 +6338,178 @@ end;
 
 procedure Tf_work.carica_singolo_prg(Sender: TObject; nomeprg: string);
 var
- nomeprg_local : string;
- id_immagine : integer;
- temp, temp2, temp3 : TTreeNode;
- pos_action:TBookmark;
- elenco_subactions: TStringList;
+ nomeprg_local:      string;
+ id_immagine:        integer;
+ temp, temp2, temp3: TTreeNode;
+ pos_action:         TBookmark;
+ elenco_subactions:  TStringList;
 begin
 
-  // ESPLODE PRG
-    //carica il programma selezionato
-        //programmi
-      if nomeprg <> '' then
+  // _______________________________________________________ Load passed prg ___
+  if nomeprg <> '' then
+  begin
+    nomeprg_local := nomeprg;
+    id_immagine   := supertree.Selected.SelectedIndex;
+  end
+  // _____________________________________________________ Load selected prg ___
+  else
+  begin
+    nomeprg_local := dm_form.elenco_prgnome.Value;
+    if dm_form.t_programmitipo.Value = 'Interface' then
+    begin
+      id_immagine := 17
+    end
+    else
+    begin
+      id_immagine := 21;
+    end;
+  end;
+
+  dm_form.attiva_disattiva_prg(True);
+  f_import.prg_importExecute(self, nomeprg_local);
+
+  mycheck_local := mycheck(nomeprg_local + '.prg');
+
+  if (trova_sottonodo(nodo_prg, nomeprg_local) = nil) then
+  begin
+    nodo_prg_attivo := supertree.Items.AddChildFirst(nodo_prg, nomeprg_local);
+    nodo_prg_attivo.ImageIndex    := id_immagine;
+    nodo_prg_attivo.SelectedIndex := id_immagine;
+  end
+  else
+  begin
+    nodo_prg_attivo := trova_sottonodo(nodo_prg, nomeprg_local);
+  end;
+  supertree.Selected := nodo_prg_attivo;
+  // _____________________________________ Add standard subnodes for program ___
+  if supertree.Selected.Text <> '_o2viewmodels' then
+  begin
+    temp := supertree.Items.AddChild(supertree.Selected, 'Program properties');
+    temp.ImageIndex    := 1;
+    temp.SelectedIndex := 1;
+    temp := supertree.Items.AddChild(supertree.Selected, 'Parameters');
+    temp.ImageIndex    := 13;
+    temp.SelectedIndex := 13;
+    temp := supertree.Items.AddChild(supertree.Selected, 'Variables');
+    temp.ImageIndex    := 14;
+    temp.SelectedIndex := 14;
+  end;
+  temp               := supertree.Items.AddChild(supertree.Selected, 'Views');
+  temp.ImageIndex    := 8;
+  temp.SelectedIndex := 8;
+
+
+  // _________________________________________________ Loop on program views ___
+  dm_form.t_task.First;
+  while not dm_form.t_task.EOF do
+  // ______________________________________________________ Load single view ___
+  begin
+    temp2               := supertree.Items.AddChild(temp,
+                                                    dm_form.t_tasknome.Value);
+    temp2.ImageIndex    := IfThen(dm_form.t_taskprepared_read.Value or
+                                  dm_form.t_taskprepared_write.Value, 34, 2);
+    temp2.SelectedIndex := temp2.ImageIndex;
+    temp3               := supertree.Items.AddChild(temp2, 'View properties');
+    temp3.ImageIndex := 1;
+    temp3.SelectedIndex := 1;
+
+    dm_form.t_task.Next
+  end;
+  // _______________________________________ Load all other program subnodes ___
+  if supertree.Selected.Text <> '_o2viewmodels' then
+  begin
+    // __________________________________________________ Program forms node ___
+    temp               := supertree.Items.AddChild(supertree.Selected,
+                                                   'Forms');
+    temp.ImageIndex    := 6;
+    temp.SelectedIndex := 6;
+    // ____________________________________________________ Program I/O node ___
+    temp               := supertree.Items.AddChild(supertree.Selected,
+                                                   'I/O Files');
+    temp.ImageIndex    := 22;
+    temp.SelectedIndex := 22;
+    // _____________________________________________ Program pèrotocols node ___
+    temp               := supertree.Items.AddChild(supertree.Selected,
+                                                   'Protocols');
+    temp.ImageIndex    := 18;
+    temp.SelectedIndex := 18;
+    // ________________________________________________ Program actions node ___
+    nodo_azioni               := supertree.Items.AddChild(supertree.Selected,
+                                                          'Actions');
+    nodo_azioni.ImageIndex    := 5;
+    nodo_azioni.SelectedIndex := 5;
+    // ____________________________________________ Program all-actions node ___
+    nodo_azioni_all               := supertree.Items.AddChild(nodo_azioni,
+                                                              'all');
+    nodo_azioni_all.ImageIndex    := 5;
+    nodo_azioni_all.SelectedIndex := 5;
+    // ________________________________________________ Load program actions ___
+    elenco_subactions := TStringList.Create;
+    with dm_form do
+    begin
+      // ___________________________________________ Loop on program actions ___
+      t_azioni.First;
+      while not (t_azioni.EOF) do
       begin
-       nomeprg_local:=nomeprg;
-       id_immagine:=supertree.Selected.SelectedIndex;
-      end
-      else
-      begin
-      // nomeprg_local:=dm_form.t_programminome.Value;
-       nomeprg_local:=dm_form.elenco_prgnome.Value;
-       if dm_form.t_programmitipo.Value = 'Interface' then id_immagine:=17 else id_immagine:=21;
-      end;
-
-      dm_form.attiva_disattiva_prg(True);
-      f_import.prg_importExecute(self, nomeprg_local);
-
-      mycheck_local := mycheck(nomeprg_local + '.prg');
-
-      if ( trova_sottonodo(nodo_prg, nomeprg_local) = nil) then
-      begin
-       nodo_prg_attivo:=supertree.Items.AddChildFirst(nodo_prg, nomeprg_local);
-       nodo_prg_attivo.ImageIndex:=id_immagine;
-       nodo_prg_attivo.SelectedIndex:=id_immagine;
-      end
-      else
-        nodo_prg_attivo := trova_sottonodo(nodo_prg, nomeprg_local);
-
-      supertree.Selected:=nodo_prg_attivo;
-
-      if supertree.Selected.Text <> '_o2viewmodels' then
-      begin
-        temp := supertree.Items.AddChild(supertree.Selected, 'Program properties');
-        temp.ImageIndex := 1;
-        temp.SelectedIndex := 1;
-
-        temp := supertree.Items.AddChild(supertree.Selected, 'Parameters');
-        temp.ImageIndex := 13;
-        temp.SelectedIndex := 13;
-
-        temp := supertree.Items.AddChild(supertree.Selected, 'Variables');
-        temp.ImageIndex := 14;
-        temp.SelectedIndex := 14;
-      end;
-
-      temp := supertree.Items.AddChild(supertree.Selected, 'Views');
-      temp.ImageIndex := 8;
-      temp.SelectedIndex := 8;
-
-
-      //loop sui task
-      dm_form.t_task.First;
-      while not dm_form.t_task.EOF do
-      begin
-        temp2 := supertree.Items.AddChild(temp, dm_form.t_tasknome.Value);
-        temp2.ImageIndex := IfThen(dm_form.t_taskprepared_read.Value or
-                                   dm_form.t_taskprepared_write.Value, 34, 2);
-        temp2.SelectedIndex := temp2.ImageIndex;
-        temp3:=supertree.Items.AddChild(temp2, 'View properties');
-        temp3.ImageIndex := 1;
-        temp3.SelectedIndex := 1;
-
-        dm_form.t_task.Next
-      end;
-
-
-      if supertree.Selected.Text <> '_o2viewmodels' then
-      begin
-        temp := supertree.Items.AddChild(supertree.Selected, 'Forms');
-        temp.ImageIndex := 6;
-        temp.SelectedIndex := 6;
-
-        temp := supertree.Items.AddChild(supertree.Selected, 'I/O Files');
-        temp.ImageIndex := 22;
-        temp.SelectedIndex := 22;
-
-
-        temp := supertree.Items.AddChild(supertree.Selected, 'Protocols');
-        temp.ImageIndex := 18;
-        temp.SelectedIndex := 18;
-
-
-
-        nodo_azioni := supertree.Items.AddChild(supertree.Selected, 'Actions');
-        nodo_azioni.ImageIndex := 5;
-        nodo_azioni.SelectedIndex := 5;
-
-        nodo_azioni_all := supertree.Items.AddChild(nodo_azioni, 'all');
-        nodo_azioni_all.ImageIndex := 5;
-        nodo_azioni_all.SelectedIndex := 5;
-
-
-        // carica le azioni
-        elenco_subactions:=TStringList.Create;
-        with dm_form do
+        if (azionediprimolivello(t_azioniazione.Value)) then
         begin
-          t_azioni.First;
-          while not (t_azioni.EOF) do
+          temp2 := supertree.Items.AddChild(nodo_azioni,
+                                            t_azioniazione.AsString);
+          if t_azionicatch_action.AsString <> '' then
           begin
-            if (azionediprimolivello(t_azioniazione.Value)) then
-            begin
-               temp2 := supertree.Items.AddChild(nodo_azioni, t_azioniazione.AsString);
-               temp2.ImageIndex := 29;
-               temp2.SelectedIndex := 29;
-
-               // genera albero delle subaction
-              try
-               dm_form.t_operazioni.Filter:='operazione = '+chr(39)+'Execute action'+chr(39);
-               dm_form.t_operazioni.Filtered:=true;
-
-               elenco_subactions.Clear;
-               pos_action:=t_azioni.GetBookmark;
-
-               creatreesubaction(temp2, t_azioniazione.Value, elenco_subactions);
-               finally
-                dm_form.t_operazioni.Filter := '';
-                dm_form.t_operazioni.Filtered := false;
-                t_azioni.GotoBookmark(pos_action);
-               end;
-            end ;
-
-               temp2 := supertree.Items.AddChild(nodo_azioni_all, t_azioniazione.AsString);
-               temp2.ImageIndex:=29;
-               temp2.SelectedIndex:=29;
-            t_azioni.Next
+            temp2.ImageIndex    := 35;
+            temp2.SelectedIndex := 35;
+          end
+          else
+          begin
+            temp2.ImageIndex    := 29;
+            temp2.SelectedIndex := 29;
           end;
-
+          // genera albero delle subaction
+          try
+            dm_form.t_operazioni.Filter   := 'operazione = ' + chr(39) +
+                                             'Execute action' + chr(39);
+            dm_form.t_operazioni.Filtered := true;
+            elenco_subactions.Clear;
+            pos_action := t_azioni.GetBookmark;
+            creatreesubaction(temp2, t_azioniazione.Value, elenco_subactions);
+          finally
+            dm_form.t_operazioni.Filter   := '';
+            dm_form.t_operazioni.Filtered := false;
+            t_azioni.GotoBookmark(pos_action);
+          end;
         end;
+        temp2 := supertree.Items.AddChild(nodo_azioni_all,
+                                          t_azioniazione.AsString);
+        if t_azionicatch_action.AsString <> '' then
+        begin
+          temp2.ImageIndex    := 35;
+          temp2.SelectedIndex := 35;
+        end
+        else
+        begin
+          temp2.ImageIndex    := 29;
+          temp2.SelectedIndex := 29;
+        end;
+        t_azioni.Next;
       end;
-      temp := supertree.Items.AddChild(supertree.Selected, 'Expressions');
-      temp.ImageIndex := 16;
-      temp.SelectedIndex := 16;
+    end;
+  end;
+  temp := supertree.Items.AddChild(supertree.Selected, 'Expressions');
+  temp.ImageIndex := 16;
+  temp.SelectedIndex := 16;
 
-      //apre il ramo del programma
-      supertree.Selected.Expand(False);
+  //apre il ramo del programma
+  supertree.Selected.Expand(False);
 
-      //azzera variabili del programma
-      ultima_form := '';
-      PageControl1.ActivePage := ts_programmi;
-      PageControl2.ActivePage := ts_prg_prop;
+  //azzera variabili del programma
+  ultima_form := '';
+  PageControl1.ActivePage := ts_programmi;
+  PageControl2.ActivePage := ts_prg_prop;
 
-      // _________________________________________________________ Set menus ___
-      Checkprogram1.Enabled := true;
-      refresh_bottoni_check(self);
-
+  // _____________________________________________________________ Set menus ___
+  Checkprogram1.Enabled := true;
+  refresh_bottoni_check(self);
 
 end;
 
@@ -6540,43 +6610,72 @@ begin
 end;
 
 
-procedure Tf_work.creatreesubaction(nodosel: TTreeNode; azione: string; elenco_azioni:TStringList);
+procedure Tf_work.creatreesubaction(nodosel:       TTreeNode;
+                                    azione:        string;
+                                    elenco_azioni: TStringList);
 var
- temp, CurItem : TTreeNode;
- nomesubaction :  string;
- i, n : integer;
- trovato_azione_in_parent:Boolean;
- pos_action, pos_operation:TBookmark;
-
+ temp, CurItem:             TTreeNode;
+ nomesubaction:             string;
+ i, n:                      integer;
+ trovato_azione_in_parent:  Boolean;
+ pos_action, pos_operation: TBookmark;
 begin
 
-    // va a ricercare eventuali subaction
-    dm_form.t_azioni.Locate('azione', azione,[]);
- //   ShowMessage('Azione:'+azione);
-//    ShowMessage('Subactions:'+elenco_azioni.Text);
-    dm_form.t_operazioni.First;
-    while not (dm_form.t_operazioni.Eof) do
-    begin
-        nomesubaction := ExtractWord(1, dm_form.t_operazionio2ref.Value, [':']);
-
-        if (elenco_azioni.IndexOf(nomesubaction)= -1 ) then
-        begin
-
-        temp := supertree.Items.AddChild(nodosel, nomesubaction);
-        temp.ImageIndex := 29;
+  elenco_azioni.Append(azione);
+  dm_form.t_azioni.Locate('azione', azione, []);
+  // _______________________________ Add subaction from catch-action, if any ___
+  nomesubaction := dm_form.t_azionicatch_action.Value;
+  pos_action    := dm_form.t_azioni.GetBookmark;
+  pos_operation := dm_form.t_operazioni.GetBookmark;
+  if (nomesubaction <> '') and
+     dm_form.t_azioni.Locate('azione', nomesubaction, []) then
+  begin
+      temp := supertree.Items.AddChild(nodosel, nomesubaction);
+      if dm_form.t_azionicatch_action.AsString <> '' then
+      begin
+        temp.ImageIndex    := 35;
+        temp.SelectedIndex := 35;
+      end
+      else
+      begin
+        temp.ImageIndex    := 29;
         temp.SelectedIndex := 29;
-        elenco_azioni.Append(nomesubaction);
-        pos_action:=dm_form.t_azioni.GetBookmark;
-        pos_operation:=dm_form.t_operazioni.GetBookmark;
-
-        creatreesubaction(temp, nomesubaction, elenco_azioni);
-        dm_form.t_azioni.GotoBookmark(pos_action);
-        dm_form.t_operazioni.GotoBookmark(pos_operation);
-        end;
-
-         dm_form.t_operazioni.Next;
+      end;
+      creatreesubaction(temp, nomesubaction, elenco_azioni);
+      dm_form.t_azioni.GotoBookmark(pos_action);
+      dm_form.t_operazioni.GotoBookmark(pos_operation);
   end;
+  // ______________________________ Add subactions from execute-action steps ___
+  dm_form.t_operazioni.First;
+  while not (dm_form.t_operazioni.Eof) do
+  begin
+    nomesubaction := ExtractWord(1, dm_form.t_operazionio2ref.Value, [':']);
+    if (elenco_azioni.IndexOf(nomesubaction) = -1 ) then
+    begin
+      temp := supertree.Items.AddChild(nodosel, nomesubaction);
+      if VarToStr(dm_form.t_azioni.Lookup('azione',
+                                          nomesubaction,
+                                          'fine')) <> '' then
+      begin
+        temp.ImageIndex    := 35;
+        temp.SelectedIndex := 35;
+      end
+      else
+      begin
+        temp.ImageIndex    := 29;
+        temp.SelectedIndex := 29;
+      end;
+      pos_action         := dm_form.t_azioni.GetBookmark;
+      pos_operation      := dm_form.t_operazioni.GetBookmark;
+      creatreesubaction(temp, nomesubaction, elenco_azioni);
+      dm_form.t_azioni.GotoBookmark(pos_action);
+      dm_form.t_operazioni.GotoBookmark(pos_operation);
+    end;
+    dm_form.t_operazioni.Next;
+  end;
+
 end;
+
 
 procedure Tf_work.call_mask_def(tipodato: string);
 begin
@@ -7557,6 +7656,47 @@ begin
     DBComboBox1.Enabled        := true;
   end;
 
+end;
+
+procedure Tf_work.db_action_catchedClick(Sender: TObject);
+var
+  catch_action: string;
+  act_pos:      TBookmark;
+  subact:       TTreeNode;
+begin
+  catch_action := db_nomeazione.Field.Value + '_catch_';
+  if db_action_catched.Checked then
+  begin
+    act_pos := dm_form.t_azioni.GetBookmark;
+    // ___________________________________________ Action not already exists ___
+    if not dm_form.t_azioni.Locate('azione', catch_action, [loCaseInsensitive])
+    then begin
+      new_actionCreate(catch_action);
+    end;
+    dm_form.t_azioni.GotoBookmark(act_pos);
+    dm_form.t_azioni.Edit;
+    dm_form.t_azionicatch_action.Value := catch_action;
+    db_catchaction.Caption             := catch_action;
+    db_catchaction.Visible             := true;
+    // ______________________________________ Add catch-action to subactions ___
+    subact := supertree.Items.AddChild(nodo_ultimo_selezionato, catch_action);
+    subact.ImageIndex                     := 29;
+    subact.SelectedIndex                  := 29;
+    nodo_ultimo_selezionato.ImageIndex    := 35;
+    nodo_ultimo_selezionato.SelectedIndex := 35;
+  end
+  else
+  begin
+    dm_form.t_azioni.Edit;
+    dm_form.t_azionicatch_action.Value := '';
+    db_catchaction.Caption             := '';
+    db_catchaction.Visible             := false;
+    // _________________________________ Remove catch-action from subactions ___
+    eliminasubitemtree(nodo_ultimo_selezionato, catch_action);
+    nodo_ultimo_selezionato.ImageIndex    := 29;
+    nodo_ultimo_selezionato.SelectedIndex := 29;
+  end;
+  dm_form.t_azioni.Post;
 end;
 
 end.

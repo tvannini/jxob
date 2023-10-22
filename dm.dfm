@@ -2183,7 +2183,7 @@ object dm_form: Tdm_form
       item
         Name = 'fine'
         DataType = ftString
-        Size = 20
+        Size = 50
       end
       item
         Name = 'exp_fine'
@@ -2226,8 +2226,10 @@ object dm_form: Tdm_form
       OnSetText = t_azioniazioneSetText
       Size = 40
     end
-    object t_azionifine: TStringField
+    object t_azionicatch_action: TStringField
+      DisplayLabel = 'catch_action'
       FieldName = 'fine'
+      Size = 50
     end
     object t_azioniexp_fine: TIntegerField
       FieldName = 'exp_fine'
@@ -3723,7 +3725,8 @@ object dm_form: Tdm_form
     DataSet = tab_ope
     Left = 872
     Top = 448
-  end  object tab_tipi_file: TClientDataSet
+  end
+  object tab_tipi_file: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 952

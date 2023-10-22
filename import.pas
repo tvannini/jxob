@@ -59,7 +59,6 @@ type
   public
     build_1_file: integer;
     build_file: string;
-    crossref_oggetto, crossref_ricerca, crossref_ricerca_parent : string;
     function decodifica_css(stringa: string): string;
     function decodifica_exp(stringa, nomeprogramma: string): string;
     function form_val_prop(proprieta, nomeform, selezione3: string;
@@ -77,7 +76,7 @@ var
 
 implementation
 
-uses dm, work, start, conversioni, crossref, sceltacampiprg, export;
+uses dm, work, start, conversioni, sceltacampiprg, export;
 
 {$R *.dfm}
 
@@ -354,24 +353,24 @@ begin
       programma.SelLength := r.MatchLen[0];
       selezione           := programma.SelText;
       r2.Expression       := '\(.*\)';
-
       if r2.exec(selezione) then
       begin
         selezione2 := copy(r2.match[0], 2, r2.MatchLen[0] - 2);
         // _____________________________________________________ Action name ___
         par1 := extractword(1, selezione2, [',']);
-        par1 := copy(par1, 2, length(trim(par1)) - 2);
+        par1 := copy(trim(par1), 2, length(trim(par1)) - 2);
+        // ____________________________________________________ Catch-action ___
+        par2 := extractword(2, selezione2, [',']);
+        par2 := copy(trim(par2), 2, length(trim(par2)) - 2);
         with dm_form do
         begin
           t_azioni.Insert;
-          t_azioniprg.Value    := nomeprg;
-          t_azioniazione.Value := par1;
+          t_azioniprg.Value          := nomeprg;
+          t_azioniazione.Value       := par1;
+          t_azionicatch_action.Value := par2;
           t_azioni.Post;
         end;
       end;
-
-
-
     until not r.ExecNext
   end;
 
@@ -1200,11 +1199,6 @@ begin
             dm_form.t_reportfield.InsertRecord(
               [nomeprg, t_reportalias.Value, num1, chr(127) + par1 + chr(129) + par2, par3, par4]);
 
-
-           if (crossref_oggetto = 'Application variable') and (crossref_ricerca = par2) and (par1 = '_o2SESSION') then
-                       f_crossref.Memo1.Lines.Append('Program: [' + nomeprg + ']' +chr(9)+ 'Protocol: [' + t_reportalias.Value + ']'
-                       +chr(9) + 'Line: [' + inttostr(num1) +']');
-
          end;
 
         until not r.ExecNext
@@ -1548,12 +1542,6 @@ begin
             // campo
             par8 := trim(extractword(5, selezione2, [',']));
             par8 := copy(par8, 2, length(trim(par8)) - 2);
-
-            if (crossref_oggetto = 'Application variable') and (crossref_ricerca = par8) and (par2 ='_o2SESSION')
-            then
-              f_crossref.Memo1.Lines.Append('Program: [' + nomeprg + ']' + chr(9) +
-                                            'Form: [' + t_formnomeform.Value + ']' + chr(9) +
-                                            'Control: [' + nomecontrollo + ']');
 
             //riferimento(task+campo)
             if (par2 <> '') then
@@ -2170,11 +2158,6 @@ begin
                 par8 := extractword(2, selezione3, [',']);
                 par8 := copy(trim(par8), 2, length(trim(par8)) - 2);
 
-                if (crossref_oggetto = 'Application variable') and (crossref_ricerca = par8) and (par3 = CHR(127) + '_o2SESSION') then
-                   f_crossref.Memo1.Lines.Append('Program: [' + nomeprg + ']' +chr(9)+ 'Action: [' + t_azioniazione.Value + ']'
-                   +chr(9) + 'Line: [' + par1 +']');
-
-
                 par3 := trim(par3) + chr(129) + par8;
                 //valore exp1
                 par6 := trim(extractword(3, selezione3, [',']));
@@ -2193,10 +2176,6 @@ begin
                 //alias campo
                 par8 := extractword(2, selezione3, [',']);
                 par8 := copy(trim(par8), 2, length(trim(par8)) - 2);
-
-                if (crossref_oggetto = 'Application variable') and (crossref_ricerca = par8) and (par3 = CHR(127) + '_o2SESSION') then
-                   f_crossref.Memo1.Lines.Append('Program: [' + nomeprg + ']' +chr(9)+ 'Action: [' + t_azioniazione.Value + ']'
-                   +chr(9) + 'Line: [' + par1 +']');
 
                 par3 := trim(par3) + chr(129) + par8;
                 //valore exp1
@@ -2324,11 +2303,6 @@ begin
                   end;
                   if pos('§§', par8) > 0 then
                   begin
-
-                    if (crossref_oggetto = 'Application variable') and (crossref_ricerca = extractword(2, par8, ['§'])) and (Pos('_o2SESSION', par8) > 0) then
-                       f_crossref.Memo1.Lines.Append('Program: [' + nomeprg + ']' +chr(9)+ 'Action: [' + t_azioniazione.Value + ']'
-                       +chr(9) + 'Line: [' + par1 +']');
-
                     par8 := chr(127) + Stringreplace(par8, '§§', chr(129), [rfReplaceAll])
                   end;
 
@@ -2387,9 +2361,6 @@ begin
                     par8 := copy(trim(par8), 2, length(trim(par8)) - 2);
                     if pos('§§', par8) > 0 then
                     begin
-                        if (crossref_oggetto = 'Application variable') and (crossref_ricerca = extractword(2, par8, ['§'])) and (Pos('_o2SESSION', par8) > 0) then
-                         f_crossref.Memo1.Lines.Append('Program: [' + nomeprg + ']' +chr(9)+ 'Action: [' + t_azioniazione.Value + ']'
-                         +chr(9) + 'Line: [' + par1 +']');
                       par8 := chr(127) + Stringreplace(par8, '§§', chr(129), [rfReplaceAll])
                     end;
                   end
@@ -2712,21 +2683,6 @@ begin
               t_espressioni.InsertRecord([nomeprg, i, par2, par1]);
             end;
 
-            if crossref_ricerca <> '' then
-            begin
-              // mette script e return in un' unica stringa
-              par2 := trim(par2) + trim(par1);
-              if (crossref_oggetto = 'Application variable') then par13:= '_o2SESSION';
-
-
-              r3.Expression:='o2(val|pre|zero)\((\x27|\")('+ par13 +')(\x27|\")\s*,\s*(\x27|\")('+ crossref_ricerca +')(\x27|\")';
-
-              if r3.Exec(par2) then
-                f_crossref.Memo1.Lines.Append('Program: [' + nomeprg + ']' +chr(9)+ 'Expression: [' + inttostr(i) + ']');
-
-  //          end;
-
-          end;
         end;
       until not r.ExecNext
     end;
@@ -2753,8 +2709,6 @@ begin
 
   // se non esistono i files cds li crea
   if dircds = '' then f_export.prgsavcdsExecute(self, nomeprg);
-  crossref_oggetto:='';
-  crossref_ricerca:='';
   dm_form.in_importazione:=false;
   f_work.abilitaprgtab.Execute;
 end; // fine import prg

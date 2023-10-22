@@ -145,7 +145,7 @@ type
     t_operazionio2ref: TStringField;
     t_azioniexp_fine: TIntegerField;
     t_azionichunk_size: TIntegerField;
-    t_azionifine: TStringField;
+    t_azionicatch_action: TStringField;
     t_programmiref: TStringField;
     t_controlliformscelte_possibili: TStringField;
     t_controlliformvocecss: TStringField;

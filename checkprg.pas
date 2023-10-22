@@ -1498,19 +1498,26 @@ begin
     t_azioni.First;
     while not t_azioni.EOF do
     begin
-
       nome_azione := t_azioniazione.Value;
-
-      // parte con le operazioni
+      // ________________________________________ Check catch-action, if any ___
+      if (t_azionicatch_action.Value <> '') and
+          errazione(t_azionicatch_action.Value, false) then
+      begin
+        Memo2.Lines.Append('Action: ' + nome_azione + '. Action "' +
+                           t_azionicatch_action.Value +
+                           '" requested as catch-action not found');
+      end;
+      // ________________________________________________ Loop on operations ___
       t_operazioni.First;
       while not t_operazioni.EOF do
       begin
-
-        // se c'è una condizione di esecuzione deve esistere per tutte le operazioni
+        // ____________________________ Check execution condition expression ___
         if errexp(t_operazioniexp2.AsString) then
         begin
-          Memo2.Lines.Append('Action: ' + nome_azione + ' Line: ' + t_operazioniid.AsString +
-            '. Expression "'+ t_operazioniexp2.AsString +'" not found')
+          Memo2.Lines.Append('Action: ' + nome_azione +
+                             ' Line: ' + t_operazioniid.AsString +
+                             '. Expression "' + t_operazioniexp2.AsString +
+                             '" not found');
         end;
 
         // _________________________ operatore RECORDSET (Controllo la view) ___
