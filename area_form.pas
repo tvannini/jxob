@@ -2026,7 +2026,7 @@ begin
 
         extra1  := control_flowbox.Tabs.Text;
         extra2  := IntToStr(control_flowbox.TabIndex);
-        vocecss := control_flowbox.Css;
+        vocecss := control_flowbox.Vocecss;
         salva_controlliExecute(self, control_flowbox);
       end
       // _____________________________________________________________ FRAME ___
@@ -2039,7 +2039,7 @@ begin
         taborder        := control_frame.TabOrder;
         Expand          := ExpandAsString(control_frame.Expand);
         parentinfo      := control_frame.Parentinfo;
-        vocecss         := control_frame.Css;
+        vocecss         := control_frame.Vocecss;
         salva_controlliExecute(self, control_frame);
       end
       // ____________________________________________________________ BUTTON ___
@@ -2724,7 +2724,7 @@ begin
       control_flowbox.Parentinfo  := dm_form.t_controlliformparent_info.Value;
       control_flowbox.Tabs.Text   := dm_form.t_controlliformextra1.Value;
       control_flowbox.TabIndex    := dm_form.t_controlliformextra2.AsInteger;
-      control_flowbox.Css         := dm_form.t_controlliformvocecss.Value;
+      control_flowbox.Vocecss     := dm_form.t_controlliformvocecss.Value;
       control_flowbox.Expand      :=
                             StringAsExpand(dm_form.t_controlliformExpand.Value);
     end
@@ -2747,7 +2747,7 @@ begin
       control_frame.Tag        := 99;
       control_frame.TabOrder   := dm_form.t_controlliformtaborder.Value;
       control_frame.Parentinfo := dm_form.t_controlliformparent_info.Value;
-      control_frame.Css        := dm_form.t_controlliformvocecss.Value;
+      control_frame.Vocecss    := dm_form.t_controlliformvocecss.Value;
       control_frame.Expand     :=
                             StringAsExpand(dm_form.t_controlliformExpand.Value);
     end

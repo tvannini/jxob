@@ -36,7 +36,7 @@ type
     property CtrlType: string Read fctrltype;
     property Visibile: integer Read fvisibile Write svisibile;
     property Abilitato: integer Read fabilitato Write sabilitato;
-    property Css: string Read fcss Write scss;
+    property Vocecss: string Read fcss Write scss;
     property Parentname: string Read fparentname Write sparentname;
     property Parentinfo: string Read fparentinfo Write sparentinfo;
     property TabOrder: TTabOrder Read ftaborder Write staborder;

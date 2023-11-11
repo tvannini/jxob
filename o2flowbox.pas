@@ -40,7 +40,7 @@ type
     property Visibile: integer Read fvisibile Write svisibile;
     property Parentname: string Read fparentname Write sparentname;
     property Parentinfo: string Read fparentinfo Write sparentinfo;
-    property Css: string Read fcss Write scss;
+    property Vocecss: string Read fcss Write scss;
     property TopExpr: integer Read ftopexpr Write stopexpr;
     property LeftExpr: integer Read fleftexpr Write sleftexpr;
     property HeightExpr: integer Read fheightexpr Write sheightexpr;
