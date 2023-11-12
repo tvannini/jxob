@@ -2034,6 +2034,14 @@ begin
       begin
         control_frame   := controllo.Controls[i] as To2frame;
         tipocontrollo   := 'frame';
+        // ______________________________________ Get parent Flowbox control ___
+        control_flowbox := control_frame.Parent as To2flowbox;
+        // ____________ Check if Panel is still defined in Flowbox container ___
+        if StrToInt(control_frame.Parentinfo) >= control_flowbox.Tabs.Count then
+        begin
+          // _________________________________ Skip control and its children ___
+          Continue;
+        end;
         visibile        := control_frame.Visibile;
         abilitato       := control_frame.Abilitato;
         taborder        := control_frame.TabOrder;
