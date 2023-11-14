@@ -2037,8 +2037,8 @@ begin
         // ______________________________________ Get parent Flowbox control ___
         control_flowbox := control_frame.Parent as To2flowbox;
         // ____________ Check if Panel is still defined in Flowbox container ___
-        if StrToInt(control_frame.Parentinfo) >= control_flowbox.Tabs.Count then
-        begin
+        if StrToIntSafe(control_frame.Parentinfo) >= control_flowbox.Tabs.Count
+        then begin
           // _________________________________ Skip control and its children ___
           Continue;
         end;
