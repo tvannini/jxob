@@ -206,7 +206,7 @@ begin
       if r.Exec(stringa_temp) then
       begin
         repeat
-          if err_o2par(r.Match[0]) then
+          if err_o2par(r.Match[1]) then
           begin
             Memo2.Lines.Append('Expression ' +
               IntToStr(idexp) + ': Parameter not found: ' + r.Match[0])
@@ -228,9 +228,7 @@ begin
         until not (r.ExecNext)
       end;
 
-
     end;
-
 
     if temp_espressioni.FieldValues['expr'] <> '' then
     begin
@@ -270,7 +268,7 @@ begin
       if r.Exec(stringa_temp) then
       begin
         repeat
-          if err_o2par(r.Match[0]) then
+          if err_o2par(r.Match[1]) then
           begin
             Memo2.Lines.Append('Expression ' +
               IntToStr(idexp) + ': Parameter not found: ' + r.Match[0])
@@ -1948,15 +1946,11 @@ end;
 
 function Tf_checkprg.err_o2par(testo: string): boolean;
 var
- appoggio : string;
+ par_id : Integer;
 begin
- // separa view e field
-  appoggio := trim(StrAfter('(', testo));
-  appoggio := StringReplace(appoggio, '(', '', [rfReplaceAll]);
-  appoggio := StringReplace(appoggio, ')', '', [rfReplaceAll]);
-  appoggio:=ExtractWord(1,appoggio, [',']);
-
-  Result:=(appoggio='') or (dm_form.t_parametri.Lookup('id',appoggio,'id') <> appoggio);
+  par_id := StrToIntDef(testo, 0);
+  Result := (par_id = 0) or
+            (dm_form.t_parametri.Lookup('id', par_id, 'id') <> testo);
 
 end;
 
