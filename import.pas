@@ -1852,14 +1852,14 @@ begin
               par12 := stringreplace(par12, ',', chr(13) + chr(10), [rfReplaceAll]);
               par13 := '0';
               // VOCE CSS
-              css1 := decodifica_css(ctrl_prop('css'));
+              par5 := decodifica_css(ctrl_prop('css'));
             end; //fine flowbox
 
             // controllo frame
             if tipo = 'frame' then
             begin
               // VOCE CSS
-              css1 := decodifica_css(ctrl_prop('css'));
+              par5 := decodifica_css(ctrl_prop('css'));
             end; //fine frame
 
             // controllo BUTTON
