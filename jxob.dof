@@ -113,8 +113,8 @@ RootDir=C:\Programmi\Borland\Delphi7\Bin\
 IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=2
-MinorVer=6
-Release=1
+MinorVer=9
+Release=2
 Build=0
 Debug=0
 PreRelease=0
@@ -126,13 +126,13 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=Janox.it
 FileDescription=Janox Open Builder
-FileVersion=2.6.1.0
+FileVersion=2.9.2.0
 InternalName=
-LegalCopyright=www.janox.it 2007-2020
+LegalCopyright=www.janox.it 2007-2024
 LegalTrademarks=
 OriginalFilename=
 ProductName=jxob
-ProductVersion=2.6.1.0
+ProductVersion=2.9.2.0
 Comments=
 [HistoryLists\hlConditionals]
 Count=2

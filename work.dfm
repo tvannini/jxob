@@ -837,7 +837,7 @@ object f_work: Tf_work
         Top = 0
         Width = 862
         Height = 660
-        ActivePage = ts_prg_prop
+        ActivePage = ts_azioni
         Align = alClient
         Style = tsButtons
         TabOrder = 1
@@ -1597,7 +1597,7 @@ object f_work: Tf_work
               Width = 90
               Height = 25
               Anchors = [akTop, akRight]
-              Caption = '&Copy action'
+              Caption = 'Copy action'
               TabOrder = 3
               TabStop = False
               OnClick = bt_copyactClick
