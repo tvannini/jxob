@@ -2493,6 +2493,7 @@ begin
           begin
             Memo3.Add(chr(9) + '}');
             Memo3.Add(chr(9) + 'catch (Throwable $error) {');
+            Memo3.Add(chr(9) + chr(9) + '$o2exe->e();');
             Memo3.Add(chr(9) + chr(9) + 'o2act::catch($error, $o2exe);');
             Memo3.Add(chr(9) + chr(9) + '}');
           end;
