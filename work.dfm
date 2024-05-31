@@ -837,7 +837,7 @@ object f_work: Tf_work
         Top = 0
         Width = 862
         Height = 660
-        ActivePage = ts_azioni
+        ActivePage = ts_form
         Align = alClient
         Style = tsButtons
         TabOrder = 1

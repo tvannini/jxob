@@ -2752,6 +2752,7 @@ begin
       control_frame.Width      := dm_form.t_controlliformlarghezza.Value;
       control_frame.Height     := dm_form.t_controlliformaltezza.Value;
       control_frame.Visibile   := dm_form.t_controlliformvisibile.Value;
+      control_frame.Abilitato  := dm_form.t_controlliformabilitato.Value;
       control_frame.Tag        := 99;
       control_frame.TabOrder   := dm_form.t_controlliformtaborder.Value;
       control_frame.Parentinfo := dm_form.t_controlliformparent_info.Value;
