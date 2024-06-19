@@ -2111,15 +2111,23 @@ try
           end;
           if (temp_table.FieldValues['tipo'] = 'SQL') then
           begin
-            // ____________________ Check expresion use in concat text lines ___
-            ConcatText.Clear;
-            ConcatText.Text := temp_table.FieldValues['sql'];
-            for i := 0 to ConcatText.Count - 1 do
+            // _________________________________ Expression used in SQL code ___ 
+            if (temp_table.FieldValues['init'] = t_espressioniidexp.Value) then
             begin
-              if ConcatText.Strings[i] = t_espressioniidexp.AsString then
+              exp_usata := true;
+            end
+            else
+            // ____________________ Check expresion use in concat text lines ___
+            begin
+              ConcatText.Clear;
+              ConcatText.Text := temp_table.FieldValues['sql'];
+              for i := 0 to ConcatText.Count - 1 do
               begin
-                exp_usata := true;
-                Break;
+                if ConcatText.Strings[i] = t_espressioniidexp.AsString then
+                begin
+                  exp_usata := true;
+                  Break;
+                end;
               end;
             end;
           end;
