@@ -165,7 +165,6 @@ end;
 
 procedure Tf_sceltaexpr.check_expExecute(Sender: TObject);
 var
-  buffer: string;
   r: TRegExpr;
 begin
   Memo1.Lines.Clear;
@@ -179,9 +178,11 @@ begin
     comandoTerminated(Sender);
     Exit;
   end;
-  buffer := '<?php function jxcheckexp() {' + dm_form.t_espressioniexpr.AsString +
-            ' return (' + dm_form.t_espressionireturn.Value + ');} ?>';
-  Memo1.Lines.add(buffer);
+  Memo1.Lines.add('<?php');
+  Memo1.Lines.add('function jxcheckexp() {');
+  Memo1.Lines.add(dm_form.t_espressioniexpr.AsString);
+  Memo1.Lines.add('return (' + dm_form.t_espressionireturn.Value + ');}');
+  Memo1.Lines.add('?>');
   Memo1.Lines.SaveToFile(f_work.tempdir + 'check_exp.tmp');
   Memo1.Lines.Clear;
 
