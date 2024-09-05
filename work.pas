@@ -7448,13 +7448,20 @@ var
   md5 : TIdHashMessageDigest5;
   fs  : TFileStream;
 begin
-  md5 := TIdHashMessageDigest5.Create;
-  fs  := TFileStream.Create(FName, fmOpenRead OR fmShareDenyWrite) ;
-  try
-    result := md5.AsHex(md5.HashValue(fs)) ;
-  finally
-    fs.Free;
-    md5.Free;
+  if FileExists(FName) then
+  begin
+    md5 := TIdHashMessageDigest5.Create;
+    fs  := TFileStream.Create(FName, fmOpenRead OR fmShareDenyWrite) ;
+    try
+      result := md5.AsHex(md5.HashValue(fs));
+    finally
+      fs.Free;
+      md5.Free;
+    end;
+  end
+  else
+  begin
+    result := '';
   end;
 end;
 

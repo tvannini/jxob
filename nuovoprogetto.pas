@@ -101,6 +101,7 @@ begin
     // ______________________________________ Import to create system tables ___
     f_import.tables_import.Execute;
     f_export.tables_export.Execute;
+    f_import.models_import.Execute;
     f_export.models_export.Execute;
     f_export.appvars_export.Execute;
     // _________________________________________________ Create default menu ___

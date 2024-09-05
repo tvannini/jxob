@@ -2964,6 +2964,7 @@ var
   withCheck : Boolean;
 begin
   da_Refresh := True;
+  programma.Clear;
   // ______________________________________________ Use user version of file ___
   if FileExists(f_work.userdir + dm_form.t_applicazioneModels.Value) then
   begin
