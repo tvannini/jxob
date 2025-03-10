@@ -18,7 +18,6 @@ type
     fcss: string;
     fparentinfo: string;
     fparentname: string;
-    ftaborder: TTabOrder;
     ffield: string;
     fview: string;
     fexpand: TCtrlExpand;
@@ -30,7 +29,6 @@ type
     procedure sparentinfo(const Value: string);
     procedure sparentname(const Value: string);
     procedure svisibile(const Value: integer);
-    procedure staborder(const Value: TTabOrder);
     procedure sfield(const Value: string);
     procedure sview(const Value: string);
     procedure sexpand(const Value: TCtrlExpand);
@@ -52,7 +50,6 @@ type
     property Vocecss: string Read fcss Write scss;
     property Parentname: string Read fparentname Write sparentname;
     property Parentinfo: string Read fparentinfo Write sparentinfo;
-    property TabOrder: TTabOrder Read ftaborder Write staborder;
     property View: string Read fview Write sview;
     property Field: string Read ffield Write sfield;
     property Expand: TCtrlExpand Read fexpand Write sexpand;
@@ -97,12 +94,6 @@ end;
 procedure To2tree.svisibile(const Value: integer);
 begin
   fvisibile := Value;
-end;
-
-
-procedure To2tree.staborder(const Value: TTabOrder);
-begin
-  ftaborder := Value;
 end;
 
 procedure To2tree.sview(const Value: string);

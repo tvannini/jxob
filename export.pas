@@ -245,7 +245,7 @@ begin
         nometask := 'prg§_§var';
         Memo3.Add('');
         buffer := 'function ' + nomeprg + '§§' + nometask +
-                  '_def(&$task_' + nometask + ') {';
+                  '_def($task_' + nometask + ') {';
         Memo3.Add(buffer);
         buffer := chr(9) + '$task_' + nometask + '->righe_vis = 1;';
         Memo3.Add(buffer);
@@ -272,7 +272,7 @@ begin
       if nometask <> '' then
       begin
         Memo3.Add('');
-        buffer := 'function ' + nomeprg + '§§' + nometask + '_def(&$task_' +
+        buffer := 'function ' + nomeprg + '§§' + nometask + '_def($task_' +
                   nometask + ', $_o2viewalias = "") {';
         Memo3.Add(buffer);
         if nomeprg <> '_o2viewmodels' then
@@ -614,7 +614,7 @@ begin
           Memo2.Add('');
           nomeform := t_reportalias.Value;
           buffer   := 'function ' + nomeprg + '§§' + nomeform +
-                      '_protocollo_def(&$protocollo_' + nomeform + ') {';
+                      '_protocollo_def($protocollo_' + nomeform + ') {';
           Memo3.Add(buffer);
           // _________________________________________ Loop on report fields ___
           t_reportfield.First;
@@ -658,7 +658,7 @@ begin
           end;
           // ______________________________________ Form definition function ___
           buffer := 'function ' + nomeprg + '§§' + nomeform +
-                    '_form_def(&$form_' + nomeform + ') {';
+                    '_form_def($form_' + nomeform + ') {';
           Memo3.Add(buffer);
           // ______________________________________________________ Position ___
           buffer := chr(9) + '$form_' + nomeform + '->x(' +
@@ -1006,7 +1006,7 @@ begin
               // la caption (label, pulsanti e images) potrebbe anche essere by expression....
               Caption := prepara_expression(t_controlliformcaption.Value,
                                             nomeprg);
-              buffer := chr(9) + '$ctrl_' + nomecontrollo + ' = &$form_' +
+              buffer := chr(9) + '$ctrl_' + nomecontrollo + ' = $form_' +
                         nomeform + '->ctrldef("' + nomecontrollo + '", "' +
                         tipo + '", ' +
                         parentname + ', "' +
@@ -1974,7 +1974,7 @@ begin
         begin
           Memo3.Add('');
           buffer := 'function ' + nomeprg + '§§' +
-                                  t_azioniazione.Value + '_act(&$o2exe) {';
+                                  t_azioniazione.Value + '_act($o2exe) {';
           Memo3.Add(buffer);
           // ________________________________________ If catch-action is set ___
           if t_azionicatch_action.Value <> '' then

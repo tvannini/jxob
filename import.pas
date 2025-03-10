@@ -2837,7 +2837,7 @@ begin
 
   // prima di tutto recupera tutti il controlli della form in questione
 
-  r5.Expression := '\$ctrl_' + nomecontrollo + '\s\=\s\&\$form_' + nomeform + '(.*?)\}';
+  r5.Expression := '\$ctrl_' + nomecontrollo + '\s\=\s\$form_' + nomeform + '(.*?)\}';
   if r5.exec(programma.Lines.Text) then
   begin
     programma.SelStart  := r5.MatchPos[0] - 1;

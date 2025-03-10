@@ -1002,9 +1002,9 @@ begin
     Self.Caption := Self.Caption + ' - Demo Edition'
   end;
   // _______________________________________________________________ Version ___
-  build_1 := 2;
+  build_1 := 3;
   // _______________________________________________________________ Release ___
-  build_2 := 9;
+  build_2 := 0;
   // ______________________________________________ Build release - NOT USED ___
   build_3 := 0;
   build   := IntToStr(build_1) + '.' + IntToStr(build_2);
