@@ -1488,13 +1488,22 @@ begin
                             t_controlliformZoomAction.Value + '");';
                   Memo3.Add(buffer);
                 end;
-                // _____________________________________________ Items array ___
-                if (strleft(exp2, 6) <> '[o2exp') then
+                // ___________________________________________________ Items ___
+                // _______ Function o2_view2list() may contain an expression ___
+                if (strleft(exp2, 12) = 'o2_view2list') and
+                   (newnomeprg <> '') then
                 begin
-                  if  strleft(exp2, 12) <> 'o2_view2list' then
-                  begin
-                    valori := 'array(' + valori + ')';
-                  end;
+                  valori := StringReplace(exp2,
+                                          trim(dm_form.t_programminome.Value) +
+                                          '_exp',
+                                          trim(newnomeprg) + '_exp',
+                                          [rfReplaceAll]);
+
+                end
+                // ___________________________________________ Items by list ___
+                else if (strleft(exp2, 6) <> '[o2exp') then
+                begin
+                  valori := 'array(' + valori + ')';
                 end
                 else
                 // _____________________________________ Items by expression ___
