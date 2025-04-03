@@ -2257,15 +2257,14 @@ try
          (temp_table.FieldValues['css14'] = '[o2exp_'+ t_espressioniidexp.AsString+']') or
          (temp_table.FieldValues['css15'] = '[o2exp_'+ t_espressioniidexp.AsString+']') or
          (PosEx('o2exp_'+ t_espressioniidexp.AsString+']', temp_table.FieldValues['parent_info'])>0) or
-          (PosEx('_exp_'+ t_espressioniidexp.AsString+'()', temp_table.FieldValues['parent_info'])>0) or
-
-        (temp_table.FieldValues['maschera'] = '[o2exp_'+ t_espressioniidexp.AsString+']') or
-         (temp_table.FieldValues['scelte_possibili'] = '[o2exp_'+ t_espressioniidexp.AsString+']')
+         (PosEx('_exp_'+ t_espressioniidexp.AsString+'()', temp_table.FieldValues['parent_info'])>0) or
+         (temp_table.FieldValues['maschera'] = '[o2exp_'+ t_espressioniidexp.AsString+']') or
+         (temp_table.FieldValues['scelte_possibili'] = '[o2exp_'+ t_espressioniidexp.AsString+']') or
+         (temp_table.FieldValues['TooltipExp'] = t_espressioniidexp.Value)
          then
          begin
-
-          exp_usata:=true;
-          Break;
+           exp_usata:=true;
+           Break;
          end;
       temp_table.Next
       end;
