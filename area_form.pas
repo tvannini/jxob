@@ -3453,7 +3453,7 @@ end;
 
 procedure Tf_areaform.flowbox_panels(flowbox: To2flowbox);
 var
-  i, t, ts: integer;
+  i, t, new_t, ts: integer;
   new_panel: To2frame;
   found: Boolean;
 begin
@@ -3478,7 +3478,24 @@ begin
     begin
       new_panel            := To2frame.Create(Self);
       new_panel.Tag        := 99; // _____________________ Disable skins ??? ___
-      new_panel.Name       := flowbox.Name + '_Panel' + IntToStr(t);
+      // _____________________________________________ Set panel unique name ___
+      new_t := t;
+      found := true;
+      while found do
+      begin
+        for i := 0 to flowbox.ControlCount - 1 do
+        begin
+          if flowbox.Controls[i].Name =
+             flowbox.Name + '_Panel' + IntToStr(new_t) then
+          begin
+            found := true;
+            new_t := new_t + 1;
+            Break;
+          end;
+          found := false;
+        end;
+      end;
+      new_panel.Name       := flowbox.Name + '_Panel' + IntToStr(new_t);
       new_panel.Caption    := '';
       new_panel.Top        := 22;
       new_panel.Left       := 2;

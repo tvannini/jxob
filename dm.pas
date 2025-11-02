@@ -1521,7 +1521,7 @@ end;
 procedure Tdm_form.t_variabili_prgaliasSetText(Sender: TField;
                                                const Text: string);
 var
-  newName, str_old, str_new: string;
+  newName, str_old, str_new, rep_exp, rep_ret: string;
   r: TRegExpr;
 begin
   // _______________________________ Format new name with only allowed chars ___
@@ -1533,7 +1533,6 @@ begin
     r := TRegExpr.Create;
     while not t_espressioni.EOF do
     begin
-      t_espressioni.Edit;
       // _________________________ Check and replace in o2val() and o2zero() ___
       r.Expression              := 'o2(\w+)\s*\(\s*["' + #39 + ']' +
                                    'prg§_§var["' + #39 + ']\s*,\s*["' + #39 +
@@ -1541,12 +1540,24 @@ begin
                                    '["' + #39 + ']\s*';
       str_new                   := 'o2$1(' + #39 + 'prg§_§var' + #39 + ',' +
                                              #39 + newName + #39;
-      t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
+
+      rep_ret                   := r.Replace(t_espressionireturn.Value,
                                              str_new,
                                              True);
-      t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value,
+      rep_exp                   := r.Replace(t_espressioniexpr.Value,
                                              str_new,
                                              True);
+      if (t_espressionireturn.Value <> rep_ret) or
+         (t_espressioniexpr.Value <> rep_exp) then
+      begin
+        t_espressioni.Edit;
+        t_espressionireturn.Value := r.Replace(t_espressionireturn.Value,
+                                               str_new,
+                                               True);
+        t_espressioniexpr.Value   := r.Replace(t_espressioniexpr.Value,
+                                               str_new,
+                                               True);
+      end;
       t_espressioni.Next
     end;
     // ____________________________________ Replace variable name in actions ___
