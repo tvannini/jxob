@@ -143,7 +143,6 @@ object f_export: Tf_export
       '?>')
     TabOrder = 3
     WordWrap = False
-    OnChange = memoappChange
   end
   object ActionList1: TActionList
     Left = 272
