@@ -3,6 +3,7 @@ object f_import: Tf_import
   Top = 238
   Width = 638
   Height = 448
+  VertScrollBar.Position = 157
   Caption = 'f_import'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -15,7 +16,7 @@ object f_import: Tf_import
   TextHeight = 13
   object programma: TMemo
     Left = 16
-    Top = 8
+    Top = -149
     Width = 145
     Height = 97
     Lines.Strings = (
@@ -25,7 +26,7 @@ object f_import: Tf_import
   end
   object selezione_intermedia: TMemo
     Left = 288
-    Top = 8
+    Top = -149
     Width = 145
     Height = 97
     Lines.Strings = (
@@ -35,14 +36,14 @@ object f_import: Tf_import
   end
   object tab_users: TMemo
     Left = 16
-    Top = 178
+    Top = 21
     Width = 281
     Height = 103
     Lines.Strings = (
       'o2def::tab("o2_users", "default", "o2sys_users", "o2user");'
       ''
-      #9'o2def::field("o2user", "o2user", "_o2alpha");'
-      #9'o2def::field("o2password", "o2password", "_o2sid");'
+      #9'o2def::field("o2user", "o2user", "jxuser");'
+      #9'o2def::field("o2password", "o2password", "o2sys_long_str");'
       #9'o2def::field("area", "asp_area", "_o2alpha");'
       #9'o2def::field("expire_date", "expire_date", "_o2date");'
       #9'o2def::field("last_date", "last_date", "_o2date");'
@@ -52,12 +53,14 @@ object f_import: Tf_import
       
         #9'o2def::field("force_pwd_change", "force_pwd_change", "_o2logica' +
         'l");'
-      #9'o2def::field("pwds_history", "pwds_history", "o2sys_long_str");'
+      #9'o2def::field("pwds_history", "pwds_history", "o2sys_full_str");'
       #9'o2def::field("no_pwd_change", "no_pwd_change", "_o2logical");'
       #9'o2def::field("creation_date", "creation_date", "_o2date");'
       #9'o2def::field("admin", "admin", "_o2logical");'
       #9'o2def::field("poweruser", "poweruser", "_o2logical");'
       #9'o2def::field("hidden", "hidden", "_o2logical");'
+      #9'o2def::field("email", "email", "o2sys_long_str");'
+      #9'o2def::field("mfa", "mfa", "jxmfa");'
       ''
       #9'o2def::index("o2user", "o2user","A");'
       #9'o2def::index("asp_area", "area","A", "o2user","A");')
@@ -66,7 +69,7 @@ object f_import: Tf_import
   end
   object tab_sessions: TMemo
     Left = 16
-    Top = 280
+    Top = 123
     Width = 281
     Height = 98
     Lines.Strings = (
@@ -101,7 +104,7 @@ object f_import: Tf_import
   end
   object tab_options: TMemo
     Left = 16
-    Top = 378
+    Top = 221
     Width = 281
     Height = 100
     Lines.Strings = (
@@ -117,7 +120,7 @@ object f_import: Tf_import
   end
   object prg_views: TMemo
     Left = 16
-    Top = 104
+    Top = -53
     Width = 209
     Height = 73
     Lines.Strings = (
@@ -133,7 +136,7 @@ object f_import: Tf_import
   end
   object prf_views: TMemo
     Left = 224
-    Top = 104
+    Top = -53
     Width = 209
     Height = 73
     Lines.Strings = (
@@ -145,7 +148,7 @@ object f_import: Tf_import
   end
   object tab_rights: TMemo
     Left = 16
-    Top = 478
+    Top = 321
     Width = 281
     Height = 100
     Lines.Strings = (
@@ -161,7 +164,7 @@ object f_import: Tf_import
   end
   object tab_roles: TMemo
     Left = 296
-    Top = 178
+    Top = 21
     Width = 281
     Height = 100
     Lines.Strings = (
@@ -175,7 +178,7 @@ object f_import: Tf_import
   end
   object tab_rightrole: TMemo
     Left = 296
-    Top = 278
+    Top = 121
     Width = 281
     Height = 100
     Lines.Strings = (
@@ -193,7 +196,7 @@ object f_import: Tf_import
   end
   object tab_rolesuser: TMemo
     Left = 296
-    Top = 378
+    Top = 221
     Width = 281
     Height = 100
     Lines.Strings = (
@@ -211,7 +214,7 @@ object f_import: Tf_import
   end
   object Memo1: TMemo
     Left = 160
-    Top = 8
+    Top = -149
     Width = 129
     Height = 97
     Lines.Strings = (

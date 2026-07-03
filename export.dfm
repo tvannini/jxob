@@ -57,7 +57,7 @@ object f_export: Tf_export
       ''
       '/**'
       ' * Janox Application Main Script'
-      ' * PHP5'
+      ' * PHP7/8'
       ' *'
       
         ' * This PHP script  file  is  part  of  an  application  realize' +
@@ -96,37 +96,39 @@ object f_export: Tf_export
       
         '// _________________ Use this variable to set Janox Runtime loca' +
         'tion ___'
-      '$jxrnt = "[_jnxrnt_]";'
+      '$jxrnt = '#39'[_jnxrnt_]'#39';'
       ''
       
         '// __________________________________ Command line parameter [jx' +
         'rnt] ___'
-      'if ($_SERVER["argc"] > 1) {'
-      ' foreach ($_SERVER["argv"] as $single_param) {'
-      '  list($par_name, $par_val) = explode("=", $single_param, 2);'
-      '  if ($par_name == "jxrnt") (@include $par_val) ||'
+      'if (isset($_SERVER['#39'argc'#39']) && ($_SERVER['#39'argc'#39'] > 1)) {'
+      ' foreach ($_SERVER['#39'argv'#39'] as $param) {'
       
-        '                             die("Wrong Janox Runtime ".$par_val' +
+        '  list($par_name, $par_val) = array_pad(explode('#39'='#39', $param, 2),' +
+        ' 2, '#39#39');'
+      '  if ($par_name == '#39'jxrnt'#39') (@include $par_val) ||'
+      
+        '                             die('#39'Wrong Janox Runtime '#39'.$par_val' +
         '."\n");'
       '  }'
       ' }'
       
         '// __ $o2_runtime is defined when called from inside a Janox con' +
         'text ___'
-      'if (!$o2_runtime) {'
+      'if (!isset($o2_runtime)) {'
       
         ' // ___________________________________ Script coded variable $j' +
         'xrnt ___'
-      
-        ' if ($jxrnt) (@include $jxrnt) || die("Wrong Janox Runtime ".$jx' +
-        'rnt."\n");'
+      ' if ($jxrnt) (@include $jxrnt) ||'
+      '              die('#39'Wrong Janox Runtime '#39'.$jxrnt."\n");'
       
         ' // ___________________________________ Environment variable [jx' +
         'rnt] ___'
-      ' elseif (getenv("JXRNT")) (@include getenv("JXRNT")) ||'
+      ' elseif (getenv('#39'JXRNT'#39')) (@include getenv('#39'JXRNT'#39')) ||'
       
-        '                           die("Wrong Janox Runtime ".getenv("JX' +
-        'RNT")."\n");'
+        '                           die('#39'Wrong Janox Runtime '#39'.getenv('#39'JX' +
+        'RNT'#39').'
+      '                               "\n");'
       
         ' // __________________________________________ Missing Janox Run' +
         'time ___'
@@ -134,13 +136,14 @@ object f_export: Tf_export
       ' }'
       ''
       
-        '// _______________________________________ Application istance s' +
+        '// ______________________________________ Application instance s' +
         'tart ___'
-      'o2def::app("[_jnxver_]");'
+      'o2def::app('#39'[_jnxver_]'#39');'
       ''
       '?>')
     TabOrder = 3
     WordWrap = False
+    OnChange = memoappChange
   end
   object ActionList1: TActionList
     Left = 272

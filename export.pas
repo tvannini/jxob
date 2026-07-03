@@ -33,6 +33,7 @@ type
     procedure appvars_exportExecute(Sender: TObject);
     procedure prgsavcdsExecute(Sender: TObject; nomeprg:string);
     procedure FormCreate(Sender: TObject);
+    procedure memoappChange(Sender: TObject);
   private
     posiz: integer;
 
